@@ -1,7 +1,8 @@
 from django import forms
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 import re
+from .utils import validationerror
 
 User = get_user_model()
 
@@ -24,34 +25,34 @@ class SignupForm(forms.ModelForm):
             "phone_no": forms.TextInput(attrs={"class": "form-control", "placeholder": "10-digit Phone No (optional)"}),
         }
 
-    # ✅ custom validations
+    # custom validations
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if User.objects.filter(email=email).exists():
-            raise ValidationError("Email already exists")
+            validationerror("Email already exists")
         else:
             return email
 
     def clean_phone_no(self):
         phone = self.cleaned_data.get("phone_no")
         if phone and (not phone.isdigit() or len(phone) != 10):
-            raise ValidationError("Phone number must be exactly 10 digits")
+            validationerror("Phone number must be exactly 10 digits")
         else:
             return phone
 
     def clean_password(self):
         password = self.cleaned_data.get("password")
-        # ✅ at least 8 chars, upper, lower, number, special char
+        # at least 8 chars, upper, lower, number, special char
         if len(password) < 8:
-            raise ValidationError("Password must be at least 8 characters long")
+            validationerror("Password must be at least 8 characters long")
         elif not re.search(r"[A-Z]", password):
-            raise ValidationError("Password must contain at least one uppercase letter")
+            validationerror("Password must contain at least one uppercase letter")
         elif not re.search(r"[a-z]", password):
-            raise ValidationError("Password must contain at least one lowercase letter")
+            raise validationerror("Password must contain at least one lowercase letter")
         elif not re.search(r"[0-9]", password):
-            raise ValidationError("Password must contain at least one digit")
+            raise validationerror("Password must contain at least one digit")
         elif not re.search(r"[@$!%*?&]", password):
-            raise ValidationError("Password must contain at least one special character (@, $, !, %, *, ?, &)")
+            raise validationerror("Password must contain at least one special character (@, $, !, %, *, ?, &)")
         else:
             return password
 

@@ -4,12 +4,12 @@ from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
-from django.contrib import messages
 from .models import CustomUser, UserOTP
 from .forms import SignupForm
 from django.utils import timezone
 from datetime import timedelta
 from  django.contrib.auth import authenticate, login, logout
+from .utils import success_notify, error_notify, warning_notify, info_notify
 
 
 
@@ -48,7 +48,7 @@ class SignupView(View):
             users = CustomUser.objects.get(email=emails)
             print("from signup user active", users.is_active)
 
-            messages.success(request, "We sent you an OTP. Please verify your email.")
+            success_notify(request, "We sent you an OTP. Please verify your email.")
             
             return redirect("verify-otp", user_id=user.id)
 
@@ -71,7 +71,7 @@ class VerifyOTPView(View):
             user.is_active = True
             user.save()
             otp_obj.delete()
-            messages.success(request, "Your account has been verified. You can log in now.")
+            success_notify(request, "Your account has been verified. You can log in now.")
             return redirect("signin")
         else:
             otp_obj.delete()
@@ -96,7 +96,7 @@ class ResendOTPView(View):
         email.attach_alternative(html_content, "text/html")
         email.send()
 
-        messages.success(request, "A new OTP has been sent to your email.")
+        success_notify(request, "A new OTP has been sent to your email.")
         return redirect("verify-otp", user_id=user.id)
         
     
@@ -113,11 +113,11 @@ class SigninView(View):
 
         if not emails:
             
-            messages.warning(request, "enter the mail")
+            info_notify(request, "enter the mail")
             return redirect('signin')
         if not passwords:
             
-            messages.warning(request, "enter your password")
+            info_notify(request, "enter your password")
             return redirect('signin')
         
 
@@ -129,7 +129,7 @@ class SigninView(View):
         # print("authenticated usser :",user.email)
         if user is not None:
             return redirect("cores-house", user_id=user.id)
-        messages.warning(request, "invalid cridentials")
+        warning_notify(request, "invalid cridentials")
         # return redirect('signin')
     
 class SignOutView(View):

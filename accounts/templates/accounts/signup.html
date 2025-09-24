@@ -43,7 +43,9 @@
         <input type="text" class="form-control" required placeholder="full name"> -->
         {{ form.full_name.label_tag }}
         {{ form.full_name }}
+        <div class="text-danger">
         {{ form.full_name.errors }}
+        </div>
       </div>
       <!-- <div class="mb-3 text-start">
         <label class="form-label">Username</label>
@@ -54,14 +56,18 @@
         <input type="email" name="email*-" class="form-control" required placeholder="email"> -->
         {{ form.email.label_tag }}
         {{ form.email }}
+        <div class="text-danger">
         {{ form.email.errors }}
+        </div>
       </div>
       <div class="mb-3 text-start">
         <!-- <label class="form-label">Mobile Number</label>
         <input type="text" class="form-control" required placeholder="phone no"> -->
         {{ form.phone_no.label_tag }}
         {{ form.phone_no }}
+        <div class="text-danger">
         {{ form.phone_no.errors }}
+        </div>
       </div>
       <div class="mb-3 text-start">
         {{ form.password.label_tag }}
@@ -70,7 +76,9 @@
           {{ form.password }}
           <span class="input-group-text"><i class="bi bi-eye"></i></span>
         </div>
+        <div class="text-danger">
         {{ form.password.errors }}
+        </div>
       </div>
       <div class="mb-3 text-start">
         <!-- <label class="form-label">Confirm password</label> -->
@@ -80,7 +88,9 @@
           {{ form.confirm_password }}
           <span class="input-group-text"><i class="bi bi-eye"></i></span>
         </div>
+        <div class="text-danger">
         {{ form.confirm_password.errors }}
+        </div>
       </div>
 
       <p class="small mt-2">Anyone has referred You? Claim the reward</p>
