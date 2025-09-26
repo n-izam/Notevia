@@ -10,6 +10,7 @@ from django.utils import timezone
 from datetime import timedelta
 from  django.contrib.auth import authenticate, login, logout
 from .utils import success_notify, error_notify, warning_notify, info_notify
+from django.contrib import messages
 
 
 
@@ -118,7 +119,7 @@ class SigninView(View):
         if not passwords:
             
             info_notify(request, "enter your password")
-            return redirect('signin')
+            #return redirect('signin')
         
 
         user = authenticate(request, email=emails, password=passwords)
@@ -129,8 +130,9 @@ class SigninView(View):
         # print("authenticated usser :",user.email)
         if user is not None:
             return redirect("cores-house", user_id=user.id)
+        # messages.success(request, "invalid credential")
         warning_notify(request, "invalid cridentials")
-        # return redirect('signin')
+        return redirect('signin')
     
 class SignOutView(View):
 
