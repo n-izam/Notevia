@@ -4,6 +4,7 @@
 {% load static %}
 
 {% block title %} Home Page {% endblock %}
+{% block head %} <link rel="stylesheet" href="{% static 'cores/fonts/font-icons.css' %}"> {% endblock %}
 
 {% block content %}
 
@@ -59,7 +60,7 @@
     <!-- /Slider -->
 
     <!-- Categories -->
-        <!-- <section class="flat-spacing-4 flat-categorie">
+        <section class="flat-spacing-4 flat-categorie">
             <div class="container-full">
             <div class="flat-title-v2">
                     <div class="box-sw-navigation">
@@ -107,8 +108,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div> -->
-                                <!-- <div class="swiper-slide" lazy="true">
+                                </div>
+                                <div class="swiper-slide" lazy="true">
                                     <div class="collection-item style-left hover-img">
                                         <div class="collection-inner">
                                             <a href="shop-default.html" class="collection-image img-style">
@@ -131,8 +132,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div> -->
-                            <!-- </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-4">
@@ -144,7 +145,7 @@
             </div>
             
             </div>
-        </section> -->
+        </section>
     <!-- /Categories -->
 
     <!-- Seller -->
@@ -855,17 +856,5 @@
             </div>
         </section>
     <!-- /Shop Gram -->
-     <div>
-        <form action="{% url 'signout' user_id=user_id %}" method="POST">
-            {% csrf_token %}
-            <p class="text-muted">how's your day going {{user.email}}.</p>
-            <input type="hidden" name="user_id" value="{{ user_id }}">
-     </div>
-     {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-
 
 {% endblock %}
