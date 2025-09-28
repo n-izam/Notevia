@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import HouseView
+from .views import HomeView
 
 
 urlpatterns = [
-    path('house/<int:user_id>/', HouseView.as_view(), name='cores-house'),
+    path('home/<int:user_id>/', HomeView.as_view(), name='cores-home'),
 ]
