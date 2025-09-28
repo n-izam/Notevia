@@ -28,6 +28,7 @@ class SignupForm(forms.ModelForm):
     # custom validations
     def clean_email(self):
         email = self.cleaned_data.get("email")
+        print("signup email:",email)
         if User.objects.filter(email=email).exists():
             validationerror("Email already exists")
         else:
@@ -42,6 +43,7 @@ class SignupForm(forms.ModelForm):
 
     def clean_password(self):
         password = self.cleaned_data.get("password")
+        print("signup pass:",password)
         # at least 8 chars, upper, lower, number, special char
         if len(password) < 8:
             validationerror("Password must be at least 8 characters long")

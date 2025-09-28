@@ -17671,5 +17671,14 @@ blockquote .text {
     justify-content: start;
   }
 }
+.icon-close {
+  cursor: pointer;      /* pointer on hover */
+  font-size: 1.2rem;    /* size of X */
+  color: #333;          /* color */
+}
+
+.icon-close-popup:hover {
+  color: red;           /* hover color */
+}
 
 /*# sourceMappingURL=styles.css.map */

@@ -14,9 +14,8 @@
 
    <!-- font -->
    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
-   {% block head %}  
-   
-   {% endblock %}
+   <link rel="stylesheet" href="cores/fonts/font-icons.css' %}"> 
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
    <link rel="stylesheet" href="{% static 'css/drift-basic.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/photoswipe.css' %}">
@@ -71,10 +70,10 @@
 
                         <div class="tf-currencies">
                             <select class="image-select center style-default type-currencies">
-                                <option data-thumbnail="images/country/fr.svg">EUR <span>€ | France</span></option>
-                                <option data-thumbnail="images/country/de.svg">EUR <span>€ | Germany</span></option>
-                                <option selected data-thumbnail="images/country/us.svg">USD <span>$ | United States</span></option>
-                                <option data-thumbnail="images/country/vn.svg">VND <span>₫ | Vietnam</span></option>
+                                <option data-thumbnail="{% static 'images/country/fr.svg">EUR <span>€ | France</span></option>
+                                <option data-thumbnail="{% static 'images/country/de.svg">EUR <span>€ | Germany</span></option>
+                                <option selected data-thumbnail="{% static 'images/country/us.svg">USD <span>$ | United States</span></option>
+                                <option data-thumbnail="{% static 'images/country/vn.svg">VND <span>₫ | Vietnam</span></option>
                             </select>
                         </div>
                         <div class="tf-languages">
@@ -119,7 +118,7 @@
                                     <a href="#" class="item-link">Products<i class="icon "></i></a>
                                 </li>
                                 <li class="menu-item position-relative">
-                                    <a href="#" class="item-link">Pages<i class="icon icon-arrow-down"></i></a>
+                                    <a href="#" class="item-link">Pages<i class="bi bi-caret-down"></i></a>
                                     <div class="sub-menu submenu-default">
                                         <ul class="menu-list">
                                             <!-- <li><a href="about-us.html" class="menu-link-text link text_black-2">About us</a></li> -->
@@ -150,10 +149,10 @@
                     </div>
                     <div class="col-xl-3 col-md-4 col-3">
                         <ul class="nav-icon d-flex justify-content-end align-items-center gap-20">
-                            <li class="nav-search"><a href="#canvasSearch" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="nav-icon-item"><i class="icon icon-search"></i></a></li>
-                            <li class="nav-account"><a href="#login" data-bs-toggle="modal" class="nav-icon-item"><i class="icon icon-account"></i></a></li>
-                            <li class="nav-wishlist"><a href="wishlist.html" class="nav-icon-item"><i class="icon icon-heart"></i><span class="count-box">0</span></a></li>
-                            <li class="nav-cart"><a href="#shoppingCart" data-bs-toggle="modal" class="nav-icon-item"><i class="icon icon-bag"></i><span class="count-box">0</span></a></li>
+                            <li class="nav-search"><a href="#canvasSearch" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="nav-icon-item"><i class="bi bi-search"></i></a></li>
+                            <li class="nav-account"><a href="#login" data-bs-toggle="modal" class="nav-icon-item"><i class="bi bi-person"></i></a></li>
+                            <li class="nav-wishlist"><a href="wishlist.html" class="nav-icon-item"><i class="bi bi-heart"></i><span class="count-box">0</span></a></li>
+                            <li class="nav-cart"><a href="#shoppingCart" data-bs-toggle="modal" class="nav-icon-item"><i class="bi bi-bag"></i><span class="count-box">0</span></a></li>
                         </ul>
                     </div>
                 </div>
@@ -194,13 +193,13 @@
                                             <p>Phone: <a href="#">(212) 555-1234</a></p>
                                         </li>
                                     </ul>
-                                    <a href="contact-1.html" class="tf-btn btn-line">Get direction<i class="icon icon-arrow1-top-left"></i></a>
+                                    <a href="contact-1.html" class="tf-btn btn-line">Get direction<i class="bi bi-arrow-up-right"></i></a>
                                     <ul class="tf-social-icon d-flex gap-10">
-                                        <li><a href="#" class="box-icon w_34 round social-facebook social-line"><i class="icon fs-14 icon-fb"></i></a></li>
-                                        <li><a href="#" class="box-icon w_34 round social-twiter social-line"><i class="icon fs-12 icon-Icon-x"></i></a></li>
-                                        <li><a href="#" class="box-icon w_34 round social-instagram social-line"><i class="icon fs-14 icon-instagram"></i></a></li>
-                                        <li><a href="#" class="box-icon w_34 round social-tiktok social-line"><i class="icon fs-14 icon-tiktok"></i></a></li>
-                                        <li><a href="#" class="box-icon w_34 round social-pinterest social-line"><i class="icon fs-14 icon-pinterest-1"></i></a></li>
+                                        <li><a href="#" class="box-icon w_34 round social-facebook social-line"><i class="bi fs-12 bi-facebook"></i></a></li>
+                                        <li><a href="#" class="box-icon w_34 round social-twiter social-line"><i class="bi fs-12  bi-x-lg"></i></a></li>
+                                        <li><a href="#" class="box-icon w_34 round social-instagram social-line"><i class="bi fs-12 bi-instagram"></i></a></li>
+                                        <li><a href="#" class="box-icon w_34 round social-tiktok social-line"><i class="bi fs-14 bi-tiktok"></i></a></li>
+                                        <li><a href="#" class="box-icon w_34 round social-pinterest social-line"><i class="bi fs-12 bi-pinterest"></i></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -273,28 +272,28 @@
                                                     <input type="email" name="email-form" class="subscribe-email" placeholder="Enter your email...." tabindex="0" aria-required="true">
                                                 </fieldset>
                                                 <div class="button-submit">
-                                                    <button id="" class="subscribe-button tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn" type="button">Subscribe<i class="icon icon-arrow1-top-left"></i></button>
+                                                    <button id="" class="subscribe-button tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn" type="button">Subscribe<i class="bi bi-arrow-up-right"></i></button>
                                                 </div>
                                             </div>
                                             <div class="subscribe-msg"></div>
                                         </form>
                                         <div class="tf-cur">
-                                            <div class="tf-currencies">
+                                            <!-- <div class="tf-currencies">
                                                 <select class="image-select center style-default type-currencies">
-                                                    <option data-thumbnail="images/country/fr.svg">EUR <span>€ | France</span></option>
-                                                    <option data-thumbnail="images/country/de.svg">EUR <span>€ | Germany</span></option>
-                                                    <option selected data-thumbnail="images/country/us.svg">USD <span>$ | United States</span></option>
-                                                    <option data-thumbnail="images/country/vn.svg">VND <span>₫ | Vietnam</span></option>
+                                                   <option data-thumbnail="{% static 'images/country/fr.svg">EUR <span>€ | France</span></option>
+                                                    <option data-thumbnail="{% static 'images/country/de.svg">EUR <span>€ | Germany</span></option>
+                                                    <option selected data-thumbnail="{% static 'images/country/us.svg">USD <span>$ | United States</span></option>
+                                                    <option data-thumbnail="{% static 'images/country/vn.svg">VND <span>₫ | Vietnam</span></option>
                                                 </select>
-                                            </div>
-                                            <div class="tf-languages">
+                                            </div>  -->
+                                            <!-- <div class="tf-languages">
                                                 <select class="image-select center style-default type-languages">
                                                     <option>English</option>
                                                     <option>العربية</option>
                                                     <option>简体中文</option>
                                                     <option>اردو</option>
                                                 </select>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -327,16 +326,16 @@
     </div>
 
     <!-- gotop -->
-    <div class="progress-wrap">
+    <!-- <div class="progress-wrap">
         <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
         <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 286.138;"></path>
         </svg>
-    </div>
+    </div> -->
     <!-- /gotop -->
 
     <!-- mobile menu -->
     <div class="offcanvas offcanvas-start canvas-mb" id="mobileMenu">
-        <span class="icon-close icon-close-popup" data-bs-dismiss="offcanvas" aria-label="Close"></span>
+        <span class="icon-close icon-close-popup bi bi-x-lg" data-bs-dismiss="offcanvas" aria-label="Close"></span>
         <div class="mb-canvas-content">
             <div class="mb-body">
                 <ul class="nav-ul-mb" id="wrapper-menu-navigation">
@@ -576,8 +575,8 @@
                 </ul>
                 <div class="mb-other-content">
                     <div class="d-flex group-icon">
-                        <a href="wishlist.html" class="site-nav-icon"><i class="icon icon-heart"></i>Wishlist</a>
-                        <a href="ViewCart" class="site-nav-icon"><i class="icon icon-order"></i>View Cart</a>
+                        <a href="wishlist.html" class="site-nav-icon"><i class="bi bi-heart"></i>Wishlist</a>
+                        <a href="ViewCart" class="site-nav-icon"><i class="bi bi-bag-check"></i>View Cart</a>
                     </div>
                     <div class="mb-notice">
                         <a href="contact-1.html" class="text-need">Need help ?</a>
@@ -590,24 +589,24 @@
                 </div>
             </div>
             <div class="mb-bottom">
-                <a href="login.html" class="site-nav-icon"><i class="icon icon-logout"></i>Logout</a>
+                <a href="login.html" class="site-nav-icon"><i class="bi bi-box-arrow-right"></i>Logout</a>
                 <div class="bottom-bar-language">
                     <!-- <div class="tf-currencies">
                         <select class="image-select center style-default type-currencies">
-                            <option data-thumbnail="images/country/fr.svg">EUR <span>€ | France</span></option>
-                            <option data-thumbnail="images/country/de.svg">EUR <span>€ | Germany</span></option>
-                            <option selected data-thumbnail="images/country/us.svg">USD <span>$ | United States</span></option>
-                            <option data-thumbnail="images/country/vn.svg">VND <span>₫ | Vietnam</span></option>
+                            <option data-thumbnail="{% static 'images/country/fr.svg">EUR <span>€ | France</span></option>
+                            <option data-thumbnail="{% static 'images/country/de.svg">EUR <span>€ | Germany</span></option>
+                            <option selected data-thumbnail="{% static 'images/country/us.svg">USD <span>$ | United States</span></option>
+                            <option data-thumbnail="{% static 'images/country/vn.svg">VND <span>₫ | Vietnam</span></option>
                         </select>
                     </div> -->
-                    <div class="tf-languages">
+                    <!-- <div class="tf-languages">
                         <select class="image-select center style-default type-languages">
                             <option>English</option>
                             <option>العربية</option>
                             <option>简体中文</option>
                             <option>اردو</option>
                         </select>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>       
@@ -621,7 +620,7 @@
                 <div class="title fw-5">
                     Search our site
                     <div class="close">
-                        <span class="icon-close icon-close-popup" data-bs-dismiss="offcanvas" aria-label="Close"></span>
+                        <span class="icon-close icon-close-popup bi bi-x-lg" data-bs-dismiss="offcanvas" aria-label="Close"></span>
                     </div>
                 </div>
                 <div class="tf-search-sticky">
@@ -629,7 +628,7 @@
                         <fieldset class="text">
                             <input type="text" placeholder="Search" class="" name="text" tabindex="0" value="" aria-required="true" required="">
                         </fieldset>
-                        <button class="" type="submit"><i class="icon-search"></i></button>
+                        <button class="" type="submit"><i class="bi bi-search"></i></button>
                     </form>
                 </div>
             </header>
@@ -659,7 +658,7 @@
                                 <div class="tf-loop-item">
                                     <div class="image">
                                         <a href="product-detail.html">
-                                            <img src="images/products/white-3.jpg" alt="">
+                                            <img src="{% static 'images/products/white-3.jpg" alt="">
                                         </a>
                                     </div>
                                     <div class="content">
@@ -673,7 +672,7 @@
                                 <div class="tf-loop-item">
                                     <div class="image">
                                         <a href="product-detail.html">
-                                            <img src="images/products/white-2.jpg" alt="">
+                                            <img src="{% static 'images/products/white-2.jpg" alt="">
                                         </a>
                                     </div>
                                     <div class="content">
@@ -686,7 +685,7 @@
                                 <div class="tf-loop-item">
                                     <div class="image">
                                         <a href="product-detail.html">
-                                            <img src="images/products/white-1.jpg" alt="">
+                                            <img src="{% static 'images/products/white-1.jpg" alt="">
                                         </a>
                                     </div>
                                     <div class="content">

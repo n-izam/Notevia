@@ -4,7 +4,7 @@
 {% load static %}
 
 {% block title %} Home Page {% endblock %}
-{% block head %} <link rel="stylesheet" href="{% static 'cores/fonts/font-icons.css' %}"> {% endblock %}
+<!-- {% block head %} {% endblock %} -->
 
 {% block content %}
 
@@ -19,7 +19,7 @@
                                 <div class="container">
                                     <h1 class="fade-item fade-item-1">Glamorous<br>Glam</h1>
                                     <p class="fade-item fade-item-2">From casual to formal, we've got you covered</p>
-                                    <a href="shop-default.html" class="fade-item fade-item-3 tf-btn btn-fill animate-hover-btn btn-xl radius-3"><span>Shop collection</span><i class="icon icon-arrow-right"></i></a>
+                                    <a href="shop-default.html" class="fade-item fade-item-3 tf-btn btn-fill animate-hover-btn btn-xl radius-3"><span>Shop collection</span></a>
                                 </div>
                             </div>
                         </div>
@@ -31,7 +31,7 @@
                                 <div class="container">
                                     <h1 class="fade-item fade-item-1">Simple <br class="md-hidden">Style</h1>
                                     <p class="fade-item fade-item-2">From casual to formal, we've got you covered</p>
-                                    <a href="shop-default.html" class="fade-item fade-item-3 tf-btn btn-fill animate-hover-btn btn-xl radius-3"><span>Shop collection</span><i class="icon icon-arrow-right"></i></a>
+                                    <a href="shop-default.html" class="fade-item fade-item-3 tf-btn btn-fill animate-hover-btn btn-xl radius-3"><span>Shop collection</span></a>
                                 </div>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                                 <div class="container">
                                     <h1 class="fade-item fade-item-1">Glamorous<br>Glam</h1>
                                     <p class="fade-item fade-item-2">From casual to formal, we've got you covered</p>
-                                    <a href="shop-default.html" class="fade-item fade-item-3 tf-btn btn-fill animate-hover-btn btn-xl radius-3"><span>Shop collection</span><i class="icon icon-arrow-right"></i></a>
+                                    <a href="shop-default.html" class="fade-item fade-item-3 tf-btn btn-fill animate-hover-btn btn-xl radius-3"><span>Shop collection</span></a>
                                 </div>
                             </div>
                             
@@ -64,8 +64,8 @@
             <div class="container-full">
             <div class="flat-title-v2">
                     <div class="box-sw-navigation">
-                        <div class="nav-sw nav-next-slider nav-next-collection"><span class="icon icon-arrow-left"></span></div>
-                        <div class="nav-sw nav-prev-slider nav-prev-collection"><span class="icon icon-arrow-right"></span></div>
+                        <div class="nav-sw nav-next-slider nav-next-collection"><span class="bi bi-arrow-left"></span></div>
+                        <div class="nav-sw nav-prev-slider nav-prev-collection"><span class="bi bi-arrow-right"></span></div>
                     </div>
                     <span class="text-3 fw-7 text-uppercase title wow fadeInUp" data-wow-delay="0s">SHOP BY CATEGORIES</span>
             </div>
@@ -77,10 +77,10 @@
                                     <div class="collection-item style-left hover-img">
                                         <div class="collection-inner">
                                             <a href="shop-default.html" class="collection-image img-style">
-                                                <img class="lazyload" data-src="images/collections/collection-17.jpg" src="images/collections/collection-17.jpg" alt="collection-img">
+                                                <img class="lazyload" data-src="{% static 'cores/images/collections/collection-17.jpg' %}" src="{% static 'cores/images/collections/collection-17.jpg' %}" alt="collection-img">
                                             </a>
                                             <div class="collection-content">
-                                                <a href="shop-default.html" class="tf-btn collection-title hover-icon fs-15"><span>Clothing</span><i class="icon icon-arrow1-top-left"></i></a>
+                                                <a href="shop-default.html" class="tf-btn collection-title hover-icon fs-15"><span>Clothing</span><i class="bi bi-arrow-up-right"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -89,10 +89,10 @@
                                     <div class="collection-item style-left hover-img">
                                         <div class="collection-inner">
                                             <a href="shop-default.html" class="collection-image img-style">
-                                                <img class="lazyload" data-src="images/collections/collection-14.jpg" src="images/collections/collection-14.jpg" alt="collection-img">
+                                                <img class="lazyload" data-src="{% static 'cores/images/collections/collection-14.jpg' %}" src="{% static 'cores/images/collections/collection-14.jpg' %}" alt="collection-img">
                                             </a>
                                             <div class="collection-content">
-                                                <a href="shop-default.html" class="tf-btn collection-title hover-icon fs-15"><span>Sunglasses</span><i class="icon icon-arrow1-top-left"></i></a>
+                                                <a href="shop-default.html" class="tf-btn collection-title hover-icon fs-15"><span>Sunglasses</span><i class="bi bi-arrow-up-right"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -101,10 +101,10 @@
                                     <div class="collection-item style-left hover-img">
                                         <div class="collection-inner">
                                             <a href="shop-default.html" class="collection-image img-style">
-                                                <img class="lazyload" data-src="images/collections/collection-18.jpg" src="images/collections/collection-18.jpg" alt="collection-demo-1">
+                                                <img class="lazyload" data-src="{% static 'cores/images/collections/collection-18.jpg' %}" src="{% static 'cores/images/collections/collection-18.jpg' %}" alt="collection-demo-1">
                                             </a>
                                             <div class="collection-content">
-                                                <a href="shop-default.html" class="tf-btn collection-title hover-icon fs-15"><span>Bags</span><i class="icon icon-arrow1-top-left"></i></a>
+                                                <a href="shop-default.html" class="tf-btn collection-title hover-icon fs-15"><span>Bags</span><i class="bi bi-arrow-up-right"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -113,10 +113,10 @@
                                     <div class="collection-item style-left hover-img">
                                         <div class="collection-inner">
                                             <a href="shop-default.html" class="collection-image img-style">
-                                                <img class="lazyload" data-src="images/collections/collection-15.jpg" src="images/collections/collection-15.jpg" alt="collection-demo-1">
+                                                <img class="lazyload" data-src="{% static 'cores/images/collections/collection-15.jpg' %}" src="{% static 'cores/images/collections/collection-15.jpg' %}" alt="collection-demo-1">
                                             </a>
                                             <div class="collection-content">
-                                                <a href="shop-default.html" class="tf-btn collection-title hover-icon fs-15"><span>Fashion</span><i class="icon icon-arrow1-top-left"></i></a>
+                                                <a href="shop-default.html" class="tf-btn collection-title hover-icon fs-15"><span>Fashion</span><i class="bi bi-arrow-up-right"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -125,10 +125,10 @@
                                     <div class="collection-item style-left hover-img">
                                         <div class="collection-inner">
                                             <a href="shop-default.html" class="collection-image img-style">
-                                                <img class="lazyload" data-src="images/collections/collection-20.jpg" src="images/collections/collection-20.jpg" alt="collection-demo-1">
+                                                <img class="lazyload" data-src="{% static 'cores/images/collections/collection-20.jpg' %}" src="{% static 'cores/images/collections/collection-20.jpg' %}" alt="collection-demo-1">
                                             </a>
                                             <div class="collection-content">
-                                                <a href="shop-default.html" class="tf-btn collection-title hover-icon fs-15"><span>Accessories</span><i class="icon icon-arrow1-top-left"></i></a>
+                                                <a href="shop-default.html" class="tf-btn collection-title hover-icon fs-15"><span>Accessories</span><i class="bi bi-arrow-up-right"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -139,7 +139,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-4">
                         <div class="discovery-new-item">
                             <h5>Discovery all new items</h5>
-                            <a href="shop-collection-list.html"><i class="icon-arrow1-top-left"></i></a>
+                            <a href="shop-collection-list.html"><i class="bi bi-arrow-up-right"></i></a>
                         </div>
                     </div>
             </div>
@@ -169,9 +169,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a>
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -197,17 +197,17 @@
                                 <li class="list-color-item color-swatch active">
                                     <span class="tooltip">Orange</span>
                                     <span class="swatch-value bg_orange-3"></span>
-                                    <img class="lazyload" data-src="images/products/orange-1.jpg" src="images/products/orange-1.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/orange-1.jpg' %}" src="{% static 'cores/images/products/orange-1.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Black</span>
                                     <span class="swatch-value bg_dark"></span>
-                                    <img class="lazyload" data-src="images/products/black-1.jpg" src="images/products/black-1.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/black-1.jpg' %}" src="{% static 'cores/images/products/black-1.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">White</span>
                                     <span class="swatch-value bg_white"></span>
-                                    <img class="lazyload" data-src="images/products/white-1.jpg" src="images/products/white-1.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/white-1.jpg' %}" src="{% static 'cores/images/products/white-1.jpg' %}" alt="image-product">
                                 </li>
                             </ul> -->
                         </div>
@@ -225,9 +225,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a>
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -255,17 +255,17 @@
                                 <li class="list-color-item color-swatch active">
                                     <span class="tooltip">Brown</span>
                                     <span class="swatch-value bg_brown"></span>
-                                    <img class="lazyload" data-src="images/products/brown.jpg" src="images/products/brown.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/brown.jpg' %}" src="{% static 'cores/images/products/brown.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Light Purple</span>
                                     <span class="swatch-value bg_purple"></span>
-                                    <img class="lazyload" data-src="images/products/purple.jpg" src="images/products/purple.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/purple.jpg' %}" src="{% static 'cores/images/products/purple.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Light Green</span>
                                     <span class="swatch-value bg_light-green"></span>
-                                    <img class="lazyload" data-src="images/products/green.jpg" src="images/products/green.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/green.jpg' %}" src="{% static 'cores/images/products/green.jpg' %}" alt="image-product">
                                 </li>
                             </ul> -->
                         </div>
@@ -283,9 +283,9 @@
                                     <span class="tooltip">Add to cart</span>
                                 </a> -->
                                 <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a>
                             <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -316,9 +316,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a>
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -344,17 +344,17 @@
                                 <li class="list-color-item color-swatch active">
                                     <span class="tooltip">White</span>
                                     <span class="swatch-value bg_white"></span>
-                                    <img class="lazyload" data-src="images/products/white-2.jpg" src="images/products/white-2.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/white-2.jpg' %}" src="{% static 'cores/images/products/white-2.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Pink</span>
                                     <span class="swatch-value bg_purple"></span>
-                                    <img class="lazyload" data-src="images/products/pink-1.jpg" src="images/products/pink-1.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/pink-1.jpg' %}" src="{% static 'cores/images/products/pink-1.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Black</span>
                                     <span class="swatch-value bg_dark"></span>
-                                    <img class="lazyload" data-src="images/products/black-2.jpg" src="images/products/black-2.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/black-2.jpg' %}" src="{% static 'cores/images/products/black-2.jpg' %}" alt="image-product">
                                 </li>
                             </ul> -->
                         </div>
@@ -363,8 +363,8 @@
                     <!-- <div class="card-product fl-item">
                         <div class="card-product-wrapper">
                             <a href="product-detail.html" class="product-img">
-                                <img class="lazyload img-product" data-src="images/products/brown-2.jpg" src="images/products/brown-2.jpg" alt="image-product">
-                                <img class="lazyload img-hover" data-src="images/products/brown-3.jpg" src="images/products/brown-3.jpg" alt="image-product">
+                                <img class="lazyload img-product" data-src="{% static 'cores/images/products/brown-2.jpg' %}" src="{% static 'cores/images/products/brown-2.jpg' %}" alt="image-product">
+                                <img class="lazyload img-hover" data-src="{% static 'cores/images/products/brown-3.jpg' %}" src="{% static 'cores/images/products/brown-3.jpg' %}" alt="image-product">
                             </a> -->
                             <!-- <div class="size-list">
                                 <span>S</span>
@@ -378,9 +378,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <!-- <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a> -->
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -400,12 +400,12 @@
                                 <li class="list-color-item color-swatch active">
                                     <span class="tooltip">Brown</span>
                                     <span class="swatch-value bg_brown"></span>
-                                    <img class="lazyload" data-src="images/products/brown-2.jpg" src="images/products/brown-2.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/brown-2.jpg' %}" src="{% static 'cores/images/products/brown-2.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">White</span>
                                     <span class="swatch-value bg_white"></span>
-                                    <img class="lazyload" data-src="images/products/white-5.jpg" src="images/products/white-5.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/white-5.jpg' %}" src="{% static 'cores/images/products/white-5.jpg' %}" alt="image-product">
                                 </li>
                             </ul> -->
                         <!-- </div>
@@ -414,8 +414,8 @@
                     <!-- <div class="card-product fl-item">
                         <div class="card-product-wrapper">
                             <a href="product-detail.html" class="product-img">
-                                <img class="lazyload img-product" data-src="images/products/light-green-1.jpg" src="images/products/light-green-1.jpg" alt="image-product">
-                                <img class="lazyload img-hover" data-src="images/products/light-green-2.jpg" src="images/products/light-green-2.jpg" alt="image-product">
+                                <img class="lazyload img-product" data-src="{% static 'cores/images/products/light-green-1.jpg' %}" src="{% static 'cores/images/products/light-green-1.jpg' %}" alt="image-product">
+                                <img class="lazyload img-hover" data-src="{% static 'cores/images/products/light-green-2.jpg' %}" src="{% static 'cores/images/products/light-green-2.jpg' %}" alt="image-product">
                             </a>
                             <div class="list-product-btn absolute-2"> -->
                                 <!-- <a href="#quick_add" data-bs-toggle="modal" class="box-icon bg_white quick-add tf-btn-loading">
@@ -423,9 +423,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <!-- <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a> -->
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -445,32 +445,32 @@
                                 <li class="list-color-item color-swatch active">
                                     <span class="tooltip">Light Green</span>
                                     <span class="swatch-value bg_light-green"></span>
-                                    <img class="lazyload" data-src="images/products/light-green-1.jpg" src="images/products/light-green-1.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/light-green-1.jpg' %}" src="{% static 'cores/images/products/light-green-1.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Black</span>
                                     <span class="swatch-value bg_dark"></span>
-                                    <img class="lazyload" data-src="images/products/black-3.jpg" src="images/products/black-3.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/black-3.jpg' %}" src="{% static 'cores/images/products/black-3.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Blue</span>
                                     <span class="swatch-value bg_blue-2"></span>
-                                    <img class="lazyload" data-src="images/products/blue.jpg" src="images/products/blue.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/blue.jpg' %}" src="{% static 'cores/images/products/blue.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Dark Blue</span>
                                     <span class="swatch-value bg_dark-blue"></span>
-                                    <img class="lazyload" data-src="images/products/dark-blue.jpg" src="images/products/dark-blue.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/dark-blue.jpg' %}" src="{% static 'cores/images/products/dark-blue.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">White</span>
                                     <span class="swatch-value bg_white"></span>
-                                    <img class="lazyload" data-src="images/products/white-6.jpg" src="images/products/white-6.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/white-6.jpg' %}" src="{% static 'cores/images/products/white-6.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Light Grey</span>
                                     <span class="swatch-value bg_light-grey"></span>
-                                    <img class="lazyload" data-src="images/products/light-grey.jpg" src="images/products/light-grey.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/light-grey.jpg' %}" src="{% static 'cores/images/products/light-grey.jpg' %}" alt="image-product">
                                 </li>
                             </ul> -->
                         <!-- </div>
@@ -479,8 +479,8 @@
                     <!-- <div class="card-product fl-item">
                         <div class="card-product-wrapper">
                             <a href="product-detail.html" class="product-img">
-                                <img class="lazyload img-product" data-src="images/products/black-4.jpg" src="images/products/black-4.jpg" alt="image-product">
-                                <img class="lazyload img-hover" data-src="images/products/black-5.jpg" src="images/products/black-5.jpg" alt="image-product">
+                                <img class="lazyload img-product" data-src="{% static 'cores/images/products/black-4.jpg' %}" src="{% static 'cores/images/products/black-4.jpg' %}" alt="image-product">
+                                <img class="lazyload img-hover" data-src="{% static 'cores/images/products/black-5.jpg' %}" src="{% static 'cores/images/products/black-5.jpg' %}" alt="image-product">
                             </a> -->
                             <!-- <div class="size-list">
                                 <span>S</span>
@@ -493,9 +493,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <!-- <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a> -->
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -515,27 +515,27 @@
                                 <li class="list-color-item color-swatch active">
                                     <span class="tooltip">Black</span>
                                     <span class="swatch-value bg_dark"></span>
-                                    <img class="lazyload" data-src="images/products/black-4.jpg" src="images/products/black-4.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/black-4.jpg' %}" src="{% static 'cores/images/products/black-4.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Dark Blue</span>
                                     <span class="swatch-value bg_dark-blue"></span>
-                                    <img class="lazyload" data-src="images/products/dark-blue-2.jpg" src="images/products/dark-blue-2.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/dark-blue-2.jpg' %}" src="{% static 'cores/images/products/dark-blue-2.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Beige</span>
                                     <span class="swatch-value bg_beige"></span>
-                                    <img class="lazyload" data-src="images/products/beige.jpg" src="images/products/beige.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/beige.jpg' %}" src="{% static 'cores/images/products/beige.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Light Blue</span>
                                     <span class="swatch-value bg_light-blue"></span>
-                                    <img class="lazyload" data-src="images/products/light-blue.jpg" src="images/products/light-blue.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/light-blue.jpg' %}" src="{% static 'cores/images/products/light-blue.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">White</span>
                                     <span class="swatch-value bg_white"></span>
-                                    <img class="lazyload" data-src="images/products/white-7.jpg" src="images/products/white-7.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/white-7.jpg' %}" src="{% static 'cores/images/products/white-7.jpg' %}" alt="image-product">
                                 </li>
                             </ul> -->
                         <!-- </div>
@@ -544,8 +544,8 @@
                     <!-- <div class="card-product fl-item">
                         <div class="card-product-wrapper">
                             <a href="product-detail.html" class="product-img">
-                                <img class="lazyload img-product" data-src="images/products/white-8.jpg" src="images/products/white-8.jpg" alt="image-product">
-                                <img class="lazyload img-hover" data-src="images/products/black-6.jpg" src="images/products/black-6.jpg" alt="image-product">
+                                <img class="lazyload img-product" data-src="{% static 'cores/images/products/white-8.jpg' %}" src="{% static 'cores/images/products/white-8.jpg' %}" alt="image-product">
+                                <img class="lazyload img-hover" data-src="{% static 'cores/images/products/black-6.jpg' %}" src="{% static 'cores/images/products/black-6.jpg' %}" alt="image-product">
                             </a> -->
                             <!-- <div class="size-list">
                                 <span>S</span>
@@ -559,9 +559,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <!-- <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a> -->
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -581,17 +581,17 @@
                                 <li class="list-color-item color-swatch active">
                                     <span class="tooltip">White</span>
                                     <span class="swatch-value bg_white"></span>
-                                    <img class="lazyload" data-src="images/products/white-8.jpg" src="images/products/white-8.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/white-8.jpg' %}" src="{% static 'cores/images/products/white-8.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Black</span>
                                     <span class="swatch-value bg_dark"></span>
-                                    <img class="lazyload" data-src="images/products/black-7.jpg" src="images/products/black-7.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/black-7.jpg' %}" src="{% static 'cores/images/products/black-7.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Blue</span>
                                     <span class="swatch-value bg_blue-2"></span>
-                                    <img class="lazyload" data-src="images/products/blue-2.jpg" src="images/products/blue-2.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/blue-2.jpg' %}" src="{% static 'cores/images/products/blue-2.jpg' %}" alt="image-product">
                                 </li>
                             </ul> -->
                         <!-- </div>
@@ -600,8 +600,8 @@
                     <!-- <div class="card-product fl-item">
                         <div class="card-product-wrapper">
                             <a href="product-detail.html" class="product-img">
-                                <img class="lazyload img-product" data-src="images/products/brown-4.jpg" src="images/products/brown-4.jpg" alt="image-product">
-                                <img class="lazyload img-hover" data-src="images/products/black-8.jpg" src="images/products/black-8.jpg" alt="image-product">
+                                <img class="lazyload img-product" data-src="{% static 'cores/images/products/brown-4.jpg' %}" src="{% static 'cores/images/products/brown-4.jpg' %}" alt="image-product">
+                                <img class="lazyload img-hover" data-src="{% static 'cores/images/products/black-8.jpg' %}" src="{% static 'cores/images/products/black-8.jpg' %}" alt="image-product">
                             </a> -->
                             <!-- <div class="size-list">
                                 <span>M</span>
@@ -614,9 +614,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <!-- <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a> -->
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -636,12 +636,12 @@
                                 <li class="list-color-item color-swatch active">
                                     <span class="tooltip">Brown</span>
                                     <span class="swatch-value bg_brown"></span>
-                                    <img class="lazyload" data-src="images/products/brown-4.jpg" src="images/products/brown-4.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/brown-4.jpg' %}" src="{% static 'cores/images/products/brown-4.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Black</span>
                                     <span class="swatch-value bg_dark"></span>
-                                    <img class="lazyload" data-src="images/products/black-8.jpg" src="images/products/black-8.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/black-8.jpg' %}" src="{% static 'cores/images/products/black-8.jpg' %}" alt="image-product">
                                 </li>
                             </ul> -->
                         <!-- </div>
@@ -650,8 +650,8 @@
                     <!-- <div class="card-product fl-item">
                         <div class="card-product-wrapper">
                             <a href="product-detail.html" class="product-img">
-                                <img class="lazyload img-product" data-src="images/products/black-9.jpg" src="images/products/black-9.jpg" alt="image-product">
-                                <img class="lazyload img-hover" data-src="images/products/black-10.jpg" src="images/products/black-10.jpg" alt="image-product">
+                                <img class="lazyload img-product" data-src="{% static 'cores/images/products/black-9.jpg' %}" src="{% static 'cores/images/products/black-9.jpg' %}" alt="image-product">
+                                <img class="lazyload img-hover" data-src="{% static 'cores/images/products/black-10.jpg' %}" src="{% static 'cores/images/products/black-10.jpg' %}" alt="image-product">
                             </a> -->
                             <!-- <div class="size-list">
                                 <span>S</span>
@@ -664,9 +664,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <!-- <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a> -->
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -686,12 +686,12 @@
                                 <li class="list-color-item color-swatch active">
                                     <span class="tooltip">Black</span>
                                     <span class="swatch-value bg_dark"></span>
-                                    <img class="lazyload" data-src="images/products/black-9.jpg" src="images/products/black-9.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/black-9.jpg' %}" src="{% static 'cores/images/products/black-9.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Black</span>
                                     <span class="swatch-value bg_white"></span>
-                                    <img class="lazyload" data-src="images/products/white-9.jpg" src="images/products/white-9.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/white-9.jpg' %}" src="{% static 'cores/images/products/white-9.jpg' %}" alt="image-product">
                                 </li>
                             </ul> -->
                         <!-- </div>
@@ -700,8 +700,8 @@
                     <!-- <div class="card-product fl-item">
                         <div class="card-product-wrapper">
                             <a href="product-detail.html" class="product-img">
-                                <img class="lazyload img-product" data-src="images/products/grey-2.jpg" src="images/products/grey-2.jpg" alt="image-product">
-                                <img class="lazyload img-hover" data-src="images/products/grey.jpg" src="images/products/grey.jpg" alt="image-product">
+                                <img class="lazyload img-product" data-src="{% static 'cores/images/products/grey-2.jpg' %}" src="{% static 'cores/images/products/grey-2.jpg' %}" alt="image-product">
+                                <img class="lazyload img-hover" data-src="{% static 'cores/images/products/grey.jpg' %}" src="{% static 'cores/images/products/grey.jpg' %}" alt="image-product">
                             </a> -->
                             <!-- <div class="size-list">
                                 <span>S</span>
@@ -714,9 +714,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <!-- <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a> -->
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -736,17 +736,17 @@
                                 <li class="list-color-item color-swatch active">
                                     <span class="tooltip">Grey</span>
                                     <span class="swatch-value bg_grey"></span>
-                                    <img class="lazyload" data-src="images/products/grey-2.jpg" src="images/products/grey-2.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/grey-2.jpg' %}" src="{% static 'cores/images/products/grey-2.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Pink</span>
                                     <span class="swatch-value bg_pink"></span>
-                                    <img class="lazyload" data-src="images/products/pink-2.jpg" src="images/products/pink-2.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/pink-2.jpg' %}" src="{% static 'cores/images/products/pink-2.jpg' %}" alt="image-product">
                                 </li>
                                 <li class="list-color-item color-swatch">
                                     <span class="tooltip">Light Pink</span>
                                     <span class="swatch-value bg_light-pink"></span>
-                                    <img class="lazyload" data-src="images/products/light-pink.jpg" src="images/products/light-pink.jpg" alt="image-product">
+                                    <img class="lazyload" data-src="{% static 'cores/images/products/light-pink.jpg' %}" src="{% static 'cores/images/products/light-pink.jpg' %}" alt="image-product">
                                 </li>
                             </ul> -->
                         <!-- </div>
@@ -755,8 +755,8 @@
                     <!-- <div class="card-product fl-item">
                         <div class="card-product-wrapper">
                             <a href="product-detail.html" class="product-img">
-                                <img class="lazyload img-product" data-src="images/products/black-11.jpg" src="images/products/black-11.jpg" alt="image-product">
-                                <img class="lazyload img-hover" data-src="images/products/black-12.jpg" src="images/products/black-12.jpg" alt="image-product">
+                                <img class="lazyload img-product" data-src="{% static 'cores/images/products/black-11.jpg' %}" src="{% static 'cores/images/products/black-11.jpg' %}" alt="image-product">
+                                <img class="lazyload img-hover" data-src="{% static 'cores/images/products/black-12.jpg' %}" src="{% static 'cores/images/products/black-12.jpg' %}" alt="image-product">
                             </a> -->
                             <!-- <div class="size-list">
                                 <span>S</span>
@@ -769,9 +769,9 @@
                                     <span class="tooltip">Quick Add</span>
                                 </a> -->
                                 <!-- <a href="javascript:void(0);" class="box-icon bg_white wishlist btn-icon-action">
-                                    <span class="icon icon-heart"></span>
+                                    <span class="bi bi-heart"></span>
                                     <span class="tooltip">Add to Wishlist</span>
-                                    <span class="icon icon-delete"></span>
+                                    <span class="bi bi-x-lg"></span>
                                 </a> -->
                                 <!-- <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
                                     <span class="icon icon-compare"></span>
@@ -814,7 +814,7 @@
                                     <div class="img-style">
                                         <img class="lazyload img-hover" data-src="{% static 'cores/images/shop/gallery/gallery-7.jpg' %}" src="{% static 'cores/images/shop/gallery/gallery-7.jpg' %}" alt="image-gallery">
                                     </div>
-                                    <a href="#quick_add" data-bs-toggle="modal" class="box-icon"><span class="icon icon-bag"></span> <span class="tooltip">Quick Add</span></a>
+                                    <a href="#quick_add" data-bs-toggle="modal" class="box-icon"><span class="bi bi-bag"></span> <span class="tooltip">Quick Add</span></a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
@@ -822,7 +822,7 @@
                                     <div class="img-style">
                                         <img class="lazyload img-hover" data-src="{% static 'cores/images/shop/gallery/gallery-3.jpg' %}" src="{% static 'cores/images/shop/gallery/gallery-3.jpg' %}" alt="image-gallery">
                                     </div>
-                                    <a href="#quick_add" data-bs-toggle="modal" class="box-icon"><span class="icon icon-bag"></span> <span class="tooltip">Quick Add</span></a>
+                                    <a href="#quick_add" data-bs-toggle="modal" class="box-icon"><span class="bi bi-bag"></span> <span class="tooltip">Quick Add</span></a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
@@ -830,7 +830,7 @@
                                     <div class="img-style">
                                         <img class="lazyload img-hover" data-src="{% static 'cores/images/shop/gallery/gallery-5.jpg' %}" src="{% static 'cores/images/shop/gallery/gallery-5.jpg' %}" alt="image-gallery">
                                     </div>
-                                    <a href="#quick_add" data-bs-toggle="modal" class="box-icon"><span class="icon icon-bag"></span> <span class="tooltip">Quick Add</span></a>
+                                    <a href="#quick_add" data-bs-toggle="modal" class="box-icon"><span class="bi bi-bag"></span> <span class="tooltip">Quick Add</span></a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
@@ -838,7 +838,7 @@
                                     <div class="img-style">
                                         <img class="lazyload img-hover" data-src="{% static 'cores/images/shop/gallery/gallery-8.jpg' %}" src="{% static 'cores/images/shop/gallery/gallery-8.jpg' %}" alt="image-gallery">
                                     </div>
-                                    <a href="product-detail.html" class="box-icon"><span class="icon icon-bag"></span> <span class="tooltip">View product</span></a>
+                                    <a href="product-detail.html" class="box-icon"><span class="bi bi-bag"></span> <span class="tooltip">View product</span></a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
@@ -846,7 +846,7 @@
                                     <div class="img-style">
                                         <img class="lazyload img-hover" data-src="{% static 'cores/images/shop/gallery/gallery-6.jpg' %}" src="{% static 'cores/images/shop/gallery/gallery-6.jpg' %}" alt="image-gallery">
                                     </div>
-                                    <a href="product-detail.html" class="box-icon"><span class="icon icon-bag"></span> <span class="tooltip">View product</span></a>
+                                    <a href="product-detail.html" class="box-icon"><span class="bi bi-bag"></span> <span class="tooltip">View product</span></a>
                                 </div>
                             </div>
                         </div>
@@ -856,5 +856,20 @@
             </div>
         </section>
     <!-- /Shop Gram -->
-
+     <div>
+    <form action="{% url 'signout' user_id=user_id %}" method="POST">
+        {% csrf_token %}
+        <p class="text-muted">how's your day going {{user.email}}.</p>
+        <input type="hidden" name="user_id" value="{{ user_id }}">
+  
+        <!-- Show Django messages -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+  
+        <button type="submit" class="btn btn-black w-100 mt-2">Log Out</button>
+      </form>
+    </div>
 {% endblock %}
