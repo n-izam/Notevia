@@ -17,4 +17,9 @@ class AdminDashView(View):
     def get(self, request, user_id):
         # user = CustomUser.objects.filter(id = user_id)
 
-        return render(request, 'adminpanel/house.html', {"user_id": user_id})
+        return render(request, 'adminpanel/admindash.html', {"user_id": user_id})
+
+class AdminProductView(View):
+    def get(self, request, user_id):
+
+        return render(request, 'adminpanel/product-main.html', {"user_id": user_id})

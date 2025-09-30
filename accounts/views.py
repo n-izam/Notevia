@@ -61,8 +61,8 @@ class SignupView(View):
             users = CustomUser.objects.get(email=emails)# add get_object_or_404
             print("from signup user active", users.is_active)
 
-            # make session
-            # request.session["signup_done"] = True
+            # destroying previous session
+            request.session.pop("otp_verified", None)
 
             success_notify(request, "We sent you an OTP. Please verify your email.")
             
@@ -178,7 +178,6 @@ class SigninView(View):
         
         print("email is", emails)
         print("password is ", passwords)
-        print(" usser db email :",user.email)
         print(" usser is authenticated :",user)
         if user is not None:
             user.status = True
@@ -202,10 +201,12 @@ class SignOutView(View):
     def get(self, request, user_id):
 
         user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        logout(request)
+        user.status = False
+        print("user status:",user.status)
+        
 
-        if user.is_authenticated():
-
-            return redirect('signin')
+        return redirect('signin')
     def post(self, request, user_id):
         user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         

@@ -50,4 +50,4 @@ class UserOTP(models.Model):
         return str(random.randint(100000, 999999))
     
     def __str__(self):
-        return f"{self.user.eamil} - {self.otp}"
+        return f"{self.user.email} - {self.otp}"
