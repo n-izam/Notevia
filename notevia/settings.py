@@ -21,6 +21,7 @@ import certifi
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import cloudinary_storage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
     'cart',
 
     'cloudinary',
+    'cloudinary_storage'
 
 ]
 
@@ -165,3 +167,5 @@ cloudinary.config(
     api_key = config('api_key'),
     api_secret = config('api_secret'),
 )
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"

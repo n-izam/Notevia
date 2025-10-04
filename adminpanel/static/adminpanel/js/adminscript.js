@@ -111,11 +111,12 @@ window.onclick = function(event) {
 
 // for menu toggle
 var el = document.getElementById("wrapper");
-        var toggleButton = document.getElementById("menu-toggle");
+var toggleButton = document.getElementById("menu-toggle");
 
-        toggleButton.onclick = function () {
-            el.classList.toggle("toggled");
-        };
+toggleButton.onclick = function () {
+  el.classList.toggle("toggled");
+
+};
 
 // for crop and image product
 

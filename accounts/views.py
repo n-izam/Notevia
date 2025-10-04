@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
@@ -58,7 +58,8 @@ class SignupView(View):
             
             #checking the user is active or not
             emails = form.cleaned_data["email"]
-            users = CustomUser.objects.get(email=emails)# add get_object_or_404
+            # users = CustomUser.objects.get(email=emails)# add get_object_or_404
+            users = get_object_or_404(CustomUser, email=emails)
             print("from signup user active", users.is_active)
 
             # destroying previous session
@@ -89,15 +90,19 @@ class VerifyOTPView(View):
 
             return redirect("signin")
         
-        user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        user = get_object_or_404(CustomUser, id=user_id)
         
         
         return render(request, "accounts/verify_otp.html", {"user_id": user_id, "user": user})
     
     def post(self, request, user_id):
         entered_otp = request.POST.get("otp")
-        user = CustomUser.objects.get(id=user_id)# add get_object_or_404
-        otp_obj = UserOTP.objects.get(user=user)# add get_object_or_404
+        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        user = get_object_or_404(CustomUser, id=user_id)
+        # otp_obj = UserOTP.objects.get(user=user)# add get_object_or_404
+        otp_obj = get_object_or_404(UserOTP, user=user)
+
 
         if not entered_otp:
             error_notify(request, "enter your otp")
@@ -123,7 +128,8 @@ class VerifyOTPView(View):
 @method_decorator(never_cache, name='dispatch')
 class ResendOTPView(View):
     def get(self, request, user_id):
-        user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        user = get_object_or_404(CustomUser, id=user_id)
         otp = UserOTP.generate_otp()
         print("resend otp is ", otp)
         print("full_name", user.full_name)
@@ -202,7 +208,8 @@ class SignOutView(View):
 
     def get(self, request, user_id):
 
-        user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        user = get_object_or_404(CustomUser, id=user_id)
         logout(request)
         user.status = False
         print("user status:",user.status)
@@ -210,7 +217,8 @@ class SignOutView(View):
 
         return redirect('signin')
     def post(self, request, user_id):
-        user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        user = get_object_or_404(CustomUser, id=user_id)
         
         logout(request)
         user.status = False

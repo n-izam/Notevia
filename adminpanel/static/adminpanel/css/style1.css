@@ -567,6 +567,27 @@ body {
 }
 /* /for customer details */
 
+/* add category style */
+
+/* Custom styles for the Add Category form */
+.form-control {
+    padding: 0.75rem 1rem; /* Slightly larger padding for a modern look */
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+    border-color: #343a40; /* Darker border on focus */
+    box-shadow: none; /* Removes the default blue glow */
+}
+
+.btn-dark {
+    padding: 0.6rem 1.5rem; /* Custom padding for the button */
+    font-weight: 500;
+}
+
+/* /add category style */
+
 @media (min-width: 768px) {
     #sidebar-wrapper {
         margin-left: 0;
