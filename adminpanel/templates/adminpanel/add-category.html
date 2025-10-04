@@ -1,0 +1,70 @@
+
+{% extends "adminbase.html" %}
+
+{% load static %}
+
+{% block title %} Add category {% endblock %}
+<!-- {% block head %} {% endblock %} -->
+
+{% block content %}
+<!-- Add Category Section -->
+<div class="container-fluid">
+
+    <div class="row">
+
+        <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
+
+            <!-- Page Header -->
+            <h2 class="h3 mb-4 text-dark">ADD A CATEGORY</h2>
+
+            <!-- Add Category Form Card -->
+            <div class="card border-0">
+                <div class="card-body p-4">
+                    <form action="{% url 'add-category' %}" method="POST">
+                        {% csrf_token %}
+                        <!-- Category Name -->
+                        <div class="mb-4">
+                            <label for="categoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" id="categoryName" name="category_name" placeholder="Type category name here...">
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label for="categoryDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here..."></textarea>
+                        </div>
+
+                        <!-- Status Radio Buttons -->
+                        <div class="mb-4">
+                            <label class="form-label d-block">Should be</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="categoryStatus" id="statusListed" value="listed" checked>
+                                <label class="form-check-label" for="statusListed">
+                                    Listed
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="categoryStatus" id="statusUnlisted" value="unlisted">
+                                <label class="form-check-label" for="statusUnlisted">
+                                    Unlisted
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-dark">Add Category</button>
+                        </div>
+                    </form>
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+                        {% endfor %}
+                        {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+{% endblock %}

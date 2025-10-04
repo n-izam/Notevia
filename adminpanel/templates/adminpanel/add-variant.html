@@ -1,0 +1,74 @@
+{% extends "adminbase.html" %}
+
+{% load static %}
+
+{% block title %} Add category {% endblock %}
+<!-- {% block head %} {% endblock %} -->
+
+{% block content %}
+
+<!-- Add Variant Section -->
+<div class="container-fluid">
+    <div class="row">
+        <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
+            <!-- Page Header -->
+            <div class="d-flex align-items-center mb-4">
+                <a href="{% url 'view-variant' %}" class="text-dark me-3" aria-label="Back to variants">
+                    <i class="fas fa-arrow-left fa-lg"></i>
+                </a>
+                <h2 class="h4 mb-0">Add New Variant</h2>
+            </div>
+
+            <!-- Add Variant Form Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form>
+                        {% csrf_token %}
+                        <!-- Variant Name -->
+                        <div class="mb-4">
+                            <label for="variantName" class="form-label">Variant Name</label>
+                            <input type="text" class="form-control" id="variantName" placeholder="e.g., Ruled, Unruled, Square Grid">
+                            <div class="form-text">This name must be unique for this product.</div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label for="variantDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="variantDescription" rows="4" placeholder="Describe this variant..."></textarea>
+                        </div>
+
+                        <!-- Price and Stock -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="variantPrice" class="form-label">Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rs.</span>
+                                    <input type="number" class="form-control" id="variantPrice" placeholder="0.00">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="variantStock" class="form-label">Stocks</label>
+                                <input type="number" class="form-control" id="variantStock" placeholder="0">
+                            </div>
+                        </div>
+
+                        <!-- Is Listed Status -->
+                        <div class="mb-4">
+                            <label class="form-label d-block">Initial Status</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="isListedSwitch" checked>
+                                <label class="form-check-label" for="isListedSwitch">Set as Listed (Visible to customers)</label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-dark">Save Variant</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
