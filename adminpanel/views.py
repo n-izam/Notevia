@@ -98,7 +98,7 @@ class AddCategoryView(View):
             category.save()
             print("category created")
 
-            return redirect('admin-category', user_id=request.user.id)
+            return redirect('admin-category')
         
 class AddCategoryOffer(View):
     def get(self, request, category_id):
@@ -168,7 +168,15 @@ class EditCategoryOffer(View):
         print("the offer title is :", offer.title)
         print("offer updated")
         return redirect('admin-category')
-        
+
+
+class RemoveCategoryOfferView(View):
+
+    def get(self, request, category_id):
+        category = get_object_or_404(Category, id=category_id)
+        category.offer = None
+        category.save()
+        return redirect('admin-category')
 
 
 
