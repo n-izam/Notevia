@@ -1,5 +1,7 @@
 from django.urls import path
 from .views import AdminDashView, AdminProductView, AdminCustomersView, AdminCategoryView, AddCategoryView, ViewVariantView, AddVariantView, TogglCategoryStatusView, AddCategoryOffer, EditCategoryOffer
+from .views import RemoveCategoryOfferView
+
 
 urlpatterns = [
     path('admindash/<int:user_id>/',AdminDashView.as_view() , name='admin-dash'),
@@ -12,5 +14,6 @@ urlpatterns = [
     path('toggle-status/<int:pk>/', TogglCategoryStatusView.as_view(), name='toggle_status'),
     path('admincategory/<int:category_id>/addcategory-offer', AddCategoryOffer.as_view(), name='addcategory_offer'),
     path('admincategory/<int:category_id>/editcategory-offer', EditCategoryOffer.as_view(), name='editcategory_offer'),
+    path('admincategory/<int:category_id>/remove-offer/', RemoveCategoryOfferView.as_view(), name='category_remove_offer'),
     
 ]
