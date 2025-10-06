@@ -66,47 +66,83 @@
 // for add and edit offers
 
 // Get modal
-var modal = document.getElementById("myModal");
+// var modal = document.getElementById("myModal");
 
-// Get title & submit button text
-var modalTitle = document.getElementById("modalTitle");
-var modalSubmitBtn = document.getElementById("modalSubmitBtn");
+// // Get title & submit button text
+// var modalTitle = document.getElementById("modalTitle");
+// var modalSubmitBtn = document.getElementById("modalSubmitBtn");
 
-// Get all buttons that open modal
-var openBtns = document.querySelectorAll(".openOfferModal");
+// // Get all buttons that open modal
+// var openBtns = document.querySelectorAll(".openOfferModal");
 
-// Get close span and cancel button
-var closeBtn = document.getElementsByClassName("close")[0];
-var cancelBtn = document.querySelector(".closeModal");
+// // Get close span and cancel button
+// var closeBtn = document.getElementsByClassName("close")[0];
+// var cancelBtn = document.querySelector(".closeModal");
 
-// When clicking Add/Edit buttons
-openBtns.forEach(function(btn) {
-  btn.onclick = function() {
-    var action = btn.getAttribute("data-action");
+// // When clicking Add/Edit buttons
+// openBtns.forEach(function(btn) {
+//   btn.onclick = function() {
+//     var action = btn.getAttribute("data-action");
 
-    if (action === "add") {
-      modalTitle.textContent = "Add the product Offer";
-      modalSubmitBtn.textContent = "Add";
-    } else if (action === "edit") {
-      modalTitle.textContent = "Edit the product Offer";
-      modalSubmitBtn.textContent = "Update";
-    }
+//     if (action === "add") {
+//       modalTitle.textContent = "Add the product Offer";
+//       modalSubmitBtn.textContent = "Add";
+//     } else if (action === "edit") {
+//       modalTitle.textContent = "Edit the product Offer";
+//       modalSubmitBtn.textContent = "Update";
+//     }
 
-    modal.style.display = "block";
-  };
-});
+//     modal.style.display = "block";
+//   };
+// });
 
-// Close modal on X or Cancel
-closeBtn.onclick = cancelBtn.onclick = function() {
-  modal.style.display = "none";
-};
+// // Close modal on X or Cancel
+// closeBtn.onclick = cancelBtn.onclick = function() {
+//   modal.style.display = "none";
+// };
 
-// Close modal on outside click
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-};
+// var modal = document.getElementById("myModal");// Get title & submit button text
+// var modalTitle = document.getElementById("modalTitle");
+// var modalSubmitBtn = document.getElementById("modalSubmitBtn");
+// var openBtns = document.querySelectorAll(".openOfferModal");// Get all buttons that open modal
+// var closeBtn = document.getElementsByClassName("close")[0];// Get close span and cancel button
+// var cancelBtn = document.querySelector(".closeModal");
+// // url path
+// var offerForm = document.getElementById("offerForm");
+
+// // When clicking Add/Edit buttons
+// openBtns.forEach(function(btn) {
+//   btn.onclick = function() {
+//     var action = btn.getAttribute("data-action");
+//     var categoryId = btn.getAttribute("data-category-id");
+
+//     if (action === "add") {
+//       modalTitle.textContent = "Add the Product Offer";
+//       modalSubmitBtn.textContent = "Add";
+//       // dynamically set form action using Django URL pattern
+//       offerForm.action = `/addcategoryoffer/${categoryId}/`;
+//     } else if (action === "edit") {
+//       modalTitle.textContent = "Edit the Product Offer";
+//       modalSubmitBtn.textContent = "Update";
+//       // set edit URL similarly if you have edit feature
+//       offerForm.action = `/edit-offer/${categoryId}/`;
+//     }
+
+//     modal.style.display = "block";
+//   };
+// });
+
+// // Close modal on X or Cancel
+// closeBtn.onclick = cancelBtn.onclick = function() {
+//   modal.style.display = "none";
+// };
+
+// // Close modal on outside click
+// window.onclick = function(event) {
+//   if (event.target == modal) {
+//     modal.style.display = "none";
+//   }
+// };
 
 
 // for menu toggle

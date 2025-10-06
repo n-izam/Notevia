@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %} Dashboard {% endblock %}
-<!-- {% block head %} {% endblock %} -->
+{% block head %} <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> {% endblock %}
 
 {% block content %}
 
@@ -63,10 +63,12 @@
                             <td>{{cat.name}}</td>
                             <!-- <td>15,020</td>
                             <td>2000</td> -->
-                            <td>29 Dec 2022</td>
+                            <td>{{cat.created_at}}</td>
                             <td>
                                 <div class="form-check form-switch ">
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked>
+                                <input class="form-check-input" 
+                                type="checkbox" role="switch" id="switch{{ cat.id }}" 
+                                {% if cat.is_list %}checked {% endif %} onchange="toggleStatus('{{cat.id}}')">
                                 
                                 </div>
                             </td>
@@ -76,54 +78,17 @@
                                 <button class="btn btn-sm text-danger"><i class="fas fa-trash"></i></button>
                             </td>
                             <td>
-                                <span>20% Off</span>
-                                <button class="btn btn-sm openOfferModal" data-action="edit"><i class="fas fa-edit"></i></button>
+                              {% if cat.offer %}
+                                <span>{{cat.offer.title}}</span>
+                                <a href="{% url 'editcategory_offer' cat.id %}" class="btn btn-sm "><i class="fas fa-edit"></i></a>
                                 <button class="btn btn-sm text-danger"><i class="fas fa-trash"></i></button>
+                                {% else %}
+                                <a href="{% url 'addcategory_offer' cat.id %}" class="text-decoration-none btn btn-dark btn-sm " >Add Offer</a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
-                        <tr>
-                            <td>2</td>
-                            <td>KING SIZE</td>
-                            <!-- <td>998</td>
-                            <td>700</td> -->
-                            <td>24 Dec 2022</td>
-                            <td>
-                                <div class="form-check form-switch ">
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked>
-                                
-                                </div>
-                            </td>
-                            <td class="action-icons">
-                                <button class="btn btn-sm"><i class="fas fa-eye"></i></button>
-                                <button class="btn btn-sm"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-sm text-danger" ><i class="fas fa-trash"></i></button>
-                            </td>
-                            <td><button class="btn btn-dark btn-sm openOfferModal" data-action="add" >Add Offer</button></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>A4 NOTEBOOK</td>
-                            <!-- <td>576</td>
-                            <td>500</td> -->
-                            <td>12 Dec 2022</td>
-                            <td>
-                                <div class="form-check form-switch ">
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked>
-                                
-                                </div>
-                            </td>
-                            <td class="action-icons">
-                                <button class="btn btn-sm"><i class="fas fa-eye"></i></button>
-                                <button class="btn btn-sm"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-sm text-danger"><i class="fas fa-trash"></i></button>
-                            </td>
-                            <td>
-                                <span>200rs Off</span>
-                                <button class="btn btn-sm openOfferModal" data-action="edit"><i class="fas fa-edit" class="editCategoryOffer"></i></button>
-                                <button class="btn btn-sm text-danger"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
+                        
                     </tbody>
                 </table>
             </div>
@@ -144,25 +109,25 @@
         <span class="close">&times;</span>
       </div>
       <div class="modal-body">
-        <form>
+        <form id="offerForm" method="POSST">
           <div class="form-group">
             <label for="offer-title">Offer Title</label>
             <input type="text" id="offer-title" name="offer-title" placeholder="Title">
           </div>
           <div class="form-group">
+            <label for="offerabout">About</label>
+            <textarea class="form-control" id="offerabout" name="about" rows="5" placeholder="Type offer description here..."></textarea>
+          </div>
+          <div class="form-group">
             <label>Discount</label>
             <div class="discount-inputs">
               <div class="discount-input">
-                <input type="text" placeholder="in percentage">
+                <input type="text" name="discount" placeholder="in percentage">
                 <span>%</span>
-              </div>
-              <span class="or">or</span>
-              <div class="discount-input">
-                <input type="text" placeholder="in rupees">
-                <span>rs</span>
               </div>
             </div>
           </div>
+
           <div class="form-group">
             <label>Date</label>
             <div class="date-inputs">
@@ -189,5 +154,30 @@
   </div>
   
       <!-- /The Modal for add offer -->
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+  function toggleStatus(categoryId) {
+    const csrfToken = '{{ csrf_token }}';
+
+    axios.post(`/adminpanel/toggle-status/${categoryId}/`, {}, {
+      headers: {
+        'X-CSRFToken': csrfToken
+      }
+    })
+    .then(response => {
+      if (response.data.success) {
+        const isListed = response.data.is_list;
+        console.log(`Category ${categoryId} is now:`, isListed ? 'Listed ✅' : 'Unlisted ❌');
+      }
+    })
+    .catch(error => {
+      console.error("Error updating status:", error);
+    });
+  }
+</script>
 
 {% endblock %}
