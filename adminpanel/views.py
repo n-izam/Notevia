@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
+from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.contrib import messages
-from django.views import View
+from django.views.generic import View, DeleteView, UpdateView
 from accounts.models import CustomUser
 from .models import Category, Offer
 from django.utils.decorators import method_decorator
@@ -11,6 +12,7 @@ from django.views.decorators.cache import never_cache
 from accounts.utils import warning_notify, info_notify
 from django.http import JsonResponse
 from datetime import datetime
+from accounts.utils import success_notify
 
 # Create your views here.
 
@@ -24,7 +26,7 @@ class AdminDashView(View):
     def get(self, request, user_id):
         # user = CustomUser.objects.filter(id = user_id)
 
-        return render(request, 'adminpanel/admindash.html', {"user_id": user_id})
+        return render(request, 'adminpanel/admindash.html', {"user_id": request.user.id})
 
 # admin product list view
 
@@ -99,7 +101,33 @@ class AddCategoryView(View):
             print("category created")
 
             return redirect('admin-category')
-        
+
+# edit categkory
+class CategoryUpdateView(UpdateView):
+    model = Category
+    fields = ['name', 'description']
+    template_name = 'adminpanel/add-category.html'
+    success_url = reverse_lazy('admin-category')
+
+    def form_valid(self, form):
+
+        name = form.cleaned_data['name']
+        category_id = self.get_object().id
+
+        if Category.objects.filter(name__iexact=name).exclude(id=category_id).exists():
+            form.add_error('name',"Category with this name already exists.")
+            return self.form_invalid(form)
+        success_notify(self.request, "Category update successfully")
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        print("🔍 request.user =", self.request.user)
+        print("🔍 type =", type(self.request.user))
+        context['user_id'] = self.request.user.id
+        return context
+    
 class AddCategoryOffer(View):
     def get(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
@@ -177,6 +205,19 @@ class RemoveCategoryOfferView(View):
         category.offer = None
         category.save()
         return redirect('admin-category')
+
+class CategoryDeleteView(DeleteView):
+
+    model = Category
+    template_name = "adminpanel/category_confirm_delete.html"
+    success_url = reverse_lazy('admin-category')
+
+    def post(self, request, *args, **kwargs):
+        category = self.get_object()
+        category.is_list = False  # Mark as unlisted
+        category.save()
+        return redirect(self.success_url)
+
 
 
 
