@@ -34,6 +34,12 @@ class AdminProductView(View):
     def get(self, request):
 
         return render(request, 'adminpanel/product-main.html', {"user_id": request.user.id})
+
+class ProductAddView(View):
+
+    def get(self, request):
+
+        return render(request, 'adminpanel/add_product1.html', {"user_id": request.user.id})
     
 
 # admin customers list view 
