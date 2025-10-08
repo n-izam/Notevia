@@ -15,19 +15,19 @@
         <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
 
             <!-- Page Header -->
-            <h2 class="h3 mb-4 text-dark">{% if request.resolver_match.url_name == 'addcategory_offer' %}ADD A CATEGORY {{category.name}} {% else %} EDIT CATEGORY OF {{category.name}} {% endif %}</h2>
+            <h2 class="h3 mb-4 text-dark">{% if request.resolver_match.url_name == 'add-category' %}ADD A CATEGORY {% else %} EDIT CATEGORY OF {{category.name}} {% endif %}</h2>
 
             <!-- Add Category Form Card -->
             <div class="card border-0">
                 <div class="card-body p-4">
-                    {% if request.resolver_match.url_name == 'addcategory_offer' %}
+                    {% if request.resolver_match.url_name == 'add-category' %}
                     <form action="{% url 'add-category' %}" method="POST">
                         {% else %}
                         <form method="post">
                             {% endif %}
                         {% csrf_token %}
                         <!-- Category Name -->
-                        {% if request.resolver_match.url_name == 'addcategory_offer' %}
+                        {% if request.resolver_match.url_name == 'add-category' %}
                         <div class="mb-4">
                             <label for="categoryName" class="form-label">Category Name</label>
                             <input type="text" class="form-control" id="categoryName" name="category_name" placeholder="Type category name here..." >
@@ -46,7 +46,7 @@
                         {% endif %}
 
                         <!-- Description -->
-                        {% if request.resolver_match.url_name == 'addcategory_offer' %}
+                        {% if request.resolver_match.url_name == 'add-category' %}
                         <div class="mb-4">
                             <label for="categoryDescription" class="form-label">Description</label>
                             <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here..."></textarea>
@@ -59,7 +59,7 @@
                         {% endif %}
 
                         <!-- Status Radio Buttons -->
-                        {% if request.resolver_match.url_name == 'addcategory_offer' %}
+                        {% if request.resolver_match.url_name == 'add-category' %}
                         <div class="mb-4">
                             <label class="form-label d-block">Should be</label>
                             <div class="form-check form-check-inline">

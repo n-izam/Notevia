@@ -29,6 +29,10 @@ urlpatterns = [
     path('adminpanel/',include('adminpanel.urls')),
     
 ]
+
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 def custom_page_not_found(request, exception):
     return render(request, "404.html", status=404)
 

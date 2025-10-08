@@ -7,20 +7,6 @@
     --dark-btn-bg: #212529;
 }
 
-/* active animation */
-.list-group-item {
-    transition: all 0.3s ease-in-out;
-}
-
-.list-group-item.active {
-    background-color: #f1f1f1;  /* highlight color */
-    color: #000;                /* text color */
-    font-weight: bold;
-    transform: translateX(5px); /* small slide effect */
-    border-left: 4px solid #007bff; /* blue highlight border */
-}
-
-
  /* from html */
 body {
     background-color: #f8f9fa;
@@ -90,7 +76,7 @@ body {
 }
 
 #wrapper {
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
     position: relative;
     z-index: 1000;
     overflow: hidden;

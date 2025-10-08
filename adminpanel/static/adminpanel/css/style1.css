@@ -91,6 +91,9 @@ body {
 
 #wrapper {
     overflow-x: hidden;
+    position: relative;
+    z-index: 100;
+    overflow: hidden;
 }
 
 #sidebar-wrapper {
@@ -300,6 +303,12 @@ body {
 }
 
 /* The Modal (background) */
+.modal {
+    z-index: 1055 !important;
+}
+.modal-backdrop {
+    z-index: 1055 !important;
+}
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
