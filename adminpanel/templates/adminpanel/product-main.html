@@ -82,11 +82,16 @@
                     <!-- Table Body -->
                     <tbody>
                         <!-- Product Item 1 (Listed / "UNLIST" state) -->
+                         {% for product in products %}
                         <tr>
                             <td>
-                                <img src="path/to/your/image.jpg" class="img-fluid rounded" alt="Product Image" style="max-width: 60px;">
+                                {% for imag in product.images.all %}
+                                {% if imag.is_main %}
+                                <img src="{{imag.image.url}}" class="img-fluid rounded" alt="Product Image" style="max-width: 60px;">
+                                {% endif %}
+                                {% endfor %}
                             </td>
-                            <td>Classmates</td>
+                            <td>{{product.name}}</td>
                             <td>SHORT NOTE</td>
                             <td>Rs. 30</td>
                             <td>
@@ -108,6 +113,7 @@
                                 <a href="#" class="btn btn-sm btn-outline-dark" aria-label="Delete"><i class="fas fa-eye"></i></a>
                             </td>
                         </tr>
+                        {% endfor %}
 
                         <!-- Product Item 2 (Unlisted / "LIST" state) -->
                         <tr>

@@ -1,18 +1,22 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
+# from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.views.decorators.http import require_POST
+import json
+import re
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.contrib import messages
 from django.views.generic import View, DeleteView, UpdateView
 from accounts.models import CustomUser
-from .models import Category, Offer
+from .models import Category, Offer, Brand, Product, ProductImage, Variant
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
-from accounts.utils import warning_notify, info_notify
+from accounts.utils import warning_notify, info_notify,success_notify
 from django.http import JsonResponse
 from datetime import datetime
-from accounts.utils import success_notify
+
 
 # Create your views here.
 
@@ -32,15 +36,132 @@ class AdminDashView(View):
 
 class AdminProductView(View):
     def get(self, request):
+        products = Product.objects.all()
+        productimages = ProductImage.objects.all()
+        return render(request, 'adminpanel/product-main.html', {"user_id": request.user.id, "products": products})
 
-        return render(request, 'adminpanel/product-main.html', {"user_id": request.user.id})
-
-class ProductAddView(View):
-
+class AddProductView(LoginRequiredMixin, View):
     def get(self, request):
-
-        return render(request, 'adminpanel/add_product1.html', {"user_id": request.user.id})
+        brands = Brand.objects.all()
+        categories = Category.objects.filter(is_list=True)
+        return render(request, 'adminpanel/product_add.html', {
+            'brands': brands,
+            'categories': categories, "user_id": request.user.id
+        })
     
+    def post(self, request):
+        try:
+            errors = {}
+
+            # --- Product Fields ---
+            product_name = request.POST.get('product_name', '').strip()
+            product_description = request.POST.get('product_description', '').strip()
+            category_id = request.POST.get('category')
+            brand_id = request.POST.get('brand')
+
+            print("brand is ",brand_id, "product name is ", product_name, "product description:", product_description, "category_id", category_id)
+
+            if not product_name:
+                errors['product_name'] = 'Product name is required.'
+            if not product_description:
+                errors['product_description'] = 'Product description is required.'
+            if not category_id or not Category.objects.filter(id=category_id, is_list=True).exists():
+                errors['category'] = 'Valid category is required.'
+            if not brand_id or not Brand.objects.filter(id=brand_id).exists():
+                errors['brand'] = 'Valid brand is required.'
+
+            # --- Images ---
+            for i in range(1, 4):
+                print(f"image {i} are:",request.FILES.get(f'cropped_image_{i}'))
+            
+            images = [request.FILES.get(f'cropped_image_{i}') for i in range(1, 4)]
+            images = [img for img in images if img]
+            
+            if len(images) < 3:
+                errors['images'] = 'At least 3 images are required.'
+
+            print("the viariant is listed :",request.POST.get('variant_is_listed') )
+            # --- Variant ---
+            variant_name = request.POST.get('variant_name', '').strip()
+            variant_description = request.POST.get('variant_description', '').strip()
+            variant_price = request.POST.get('variant_price', '').strip()
+            variant_discount = request.POST.get('variant_discount', '0').strip()
+            variant_stock = request.POST.get('variant_stock', '').strip()
+            variant_is_listed = request.POST.get('variant_is_listed') == 'on'
+
+            print("variant name :", variant_name,"variant description :", variant_description, "variant_price :", variant_price, "variant_discount :", variant_discount, "variant stock :", variant_stock, "variant is listed :", variant_is_listed)
+
+            if not variant_name:
+                errors['variant_name'] = 'Variant name is required.'
+            if not variant_price or not re.match(r'^\d+(\.\d{1,2})?$', variant_price):
+                errors['variant_price'] = 'Variant price must be a valid number (e.g., 99.99).'
+            if not variant_stock.isdigit() or int(variant_stock) < 0:
+                errors['variant_stock'] = 'Variant stock must be a non-negative integer.'
+            if not re.match(r'^\d+(\.\d{1,2})?$|^0$', variant_discount):
+                errors['variant_discount'] = 'Variant discount must be a valid number (e.g., 10.00) or 0.'
+
+            if errors:
+                return JsonResponse({'success': False, 'errors': errors}, status=400)
+
+            # --- Save Product ---
+            # product = Product.objects.create(
+            #     name=product_name,
+            #     description=product_description,
+            #     category=category_id,
+            #     brand=brand_id
+            # )
+            category = get_object_or_404(Category, id=category_id)
+            brand = get_object_or_404(Brand, id=brand_id)
+
+            print("category:",category, "brand:",brand)
+            product = Product.objects.create(name=product_name, description=product_description, category=category, brand=brand)
+            print("product is added", product)
+
+            variant = Variant.objects.create(product=product, name=variant_name, description=variant_description, price=variant_price, discount=variant_discount, stock=variant_stock, is_listed=variant_is_listed)
+            print("variant is added", variant)
+
+            # --- Save Images ---
+            for index, image in enumerate(images):
+                productimage = ProductImage.objects.create(
+                    product=product,
+                    image=image,
+                    is_main=(index == 0)
+                )
+                print("product image is added", productimage)
+
+            
+
+            # --- Save Variant ---
+            # Variant.objects.create(
+            #     product=product,
+            #     name=variant_name,
+            #     description=variant_description,
+            #     price=float(variant_price),
+            #     discount=float(variant_discount),
+            #     stock=int(variant_stock),
+            #     is_listed=variant_is_listed
+            # )
+
+            return JsonResponse({'success': True, 'message': 'Product added successfully!'})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    
+class AddBrandView(LoginRequiredMixin, View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            brand_name = data.get('brand_name', '').strip()
+            if not brand_name:
+                return JsonResponse({'success': False, 'error': 'Brand name is required.'}, status=400)
+            if Brand.objects.filter(name__iexact=brand_name).exists():
+                return JsonResponse({'success': False, 'error': 'Brand already exists.'}, status=400)
+            brand = Brand.objects.create(name=brand_name)
+            return JsonResponse({'success': True, 'brand': {'id': brand.id, 'name': brand.name}})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON payload.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 # admin customers list view 
 
@@ -143,6 +264,7 @@ class AddCategoryOffer(View):
 
     def post(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
+        print(category)
         # offer = get_object_or_404(Offer, id=category.o)
 
         title = request.POST.get('offer-title')
@@ -160,7 +282,7 @@ class AddCategoryOffer(View):
             title=title, offer_percent=discount, about=about,
             start_date=start_date, end_date=end_date,
         )
-        print("offer created")
+        print("offer created", offer)
 
         category.offer = offer
         category.save()
