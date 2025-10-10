@@ -3,7 +3,8 @@
 {% load static %}
 
 {% block title %} productlist {% endblock %}
-<!-- {% block head %} {% endblock %} -->
+
+{% block head %} <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -48,16 +49,17 @@
                         <li><a class="dropdown-item" href="#">A4 Notebook</a></li>
                     </ul>
                     </div>
+                    
                     <!-- Add other dropdowns for Price and Brand similarly -->
                 </div>
-                <div class="d-flex align-items-center">
+                <!-- <div class="d-flex align-items-center">
                     <span class="me-3">Sort:</span>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-outline-secondary">Price High-Low</button>
                         <button type="button" class="btn btn-outline-secondary">Price Low-High</button>
                         <button type="button" class="btn btn-outline-secondary active">Last added first</button>
                     </div>
-                </div>
+                </div> -->
                 </div>
             </div>
 
@@ -71,7 +73,7 @@
                             <th scope="col">Image</th>
                             <th scope="col">Product Name</th>
                             <th scope="col">Category</th>
-                            <th scope="col">Price</th>
+                            <!-- <th scope="col">Price</th> -->
                             <th scope="col">Variants</th>
                             <th scope="col">List/Unlist</th>
                             <th scope="col">Brand Name</th>
@@ -82,35 +84,52 @@
                     <!-- Table Body -->
                     <tbody>
                         <!-- Product Item 1 (Listed / "UNLIST" state) -->
+                         {% for product in products %}
                         <tr>
                             <td>
-                                <img src="path/to/your/image.jpg" class="img-fluid rounded" alt="Product Image" style="max-width: 60px;">
+                                {% for imag in product.images.all %}
+                                {% if imag.is_main %}
+                                <img src="{{imag.image.url}}" class="img-fluid rounded" alt="Product Image" style="max-width: 60px;">
+                                {% endif %}
+                                {% endfor %}
                             </td>
-                            <td>Classmates</td>
-                            <td>SHORT NOTE</td>
-                            <td>Rs. 30</td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.category}} </td>
+                            <!-- <td>Rs. 30</td> -->
                             <td>
-                                <a href="{% url 'view-variant' %}" class="btn btn-sm btn-outline-secondary">View variants</a> <!-- here we wanto pass the product id also -->
+                                <a href="{% url 'view-variant' product.id  %}" class="btn btn-sm btn-outline-secondary">View variants</a> <!-- here we wanto pass the product id also -->
                             </td>
                             <td>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="productSwitch1" checked>
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                     id="switch{{ product.id }}"
+                                     {% if product.is_listed %} checked {% endif %}
+                                      onchange="toggleStatus('{{product.id}}')">
+                                      <!-- <input class="form-check-input" type="checkbox" role="switch" 
+                                      id="switch{{ product.id }}" 
+                                      {% if product.is_listed %} checked {% endif %}
+                                      onchange="toggleStatus('{{ product.id }}')"> -->
                                     <label class="form-check-label" for="productSwitch1"></label>
                                 </div>
                             </td>
                             <td>Classmates</td>
-                            <td><div>30% off</div>
-                                <button class="btn btn-sm openOfferModal" data-action="edit"><i class="fas fa-edit" class="editCategoryOffer"></i></button>
-                                <button class="btn btn-sm text-danger"><i class="fas fa-trash"></i></button>
+                            {% if product.offer %}
+                            <td><div> {{product.offer.offer_percent}}% off</div>
+                                <a href="{% url 'editproduct_offer' product.id %}" class="btn btn-sm " data-action="edit"><i class="fas fa-edit" class="editCategoryOffer"></i></a>
+                                <a href="{% url 'remove_product_offer' product.id %}" class="btn btn-sm text-danger"><i class="fas fa-trash"></i></a>
                             </td>
+                            {% else %}
+                            <td><a href="{% url 'addproduct_offer' product.id %}" class="btn btn-dark btn-sm " data-action="add" >Add Offer</a></td>
+                            {% endif %}
                             <td class="text-end">
-                                <a href="#" class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                <a href="#" class="btn btn-sm btn-outline-dark" aria-label="Delete"><i class="fas fa-eye"></i></a>
+                                <a href="{% url 'edit_product' product.id %}" class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fas fa-pencil-alt"></i></a>
+                                <!-- <a href="#" class="btn btn-sm btn-outline-dark" aria-label="Delete"><i class="fas fa-eye"></i></a> -->
                             </td>
                         </tr>
+                        {% endfor %}
 
                         <!-- Product Item 2 (Unlisted / "LIST" state) -->
-                        <tr>
+                        <!-- <tr>
                             <td>
                                 <img src="path/to/another/image.jpg" class="img-fluid rounded" alt="Product Image" style="max-width: 60px;">
                             </td>
@@ -132,8 +151,53 @@
                                 <a href="#" class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fas fa-pencil-alt"></i></a>
                                 <a href="#" class="btn btn-sm btn-outline-dark" aria-label="Delete"><i class="fas fa-eye"></i></a>
                             </td>
-                        </tr>
-                        
+                        </tr> -->
+                        <!-- <tr>
+                            <td>
+                                <img src="path/to/another/image.jpg" class="img-fluid rounded" alt="Product Image" style="max-width: 60px;">
+                            </td>
+                            <td>NoteVia</td>
+                            <td>KING SIZE</td>
+                            <td>Rs. 65</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-outline-secondary">View variants</a>
+                            </td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="productSwitch2">
+                                    <label class="form-check-label" for="productSwitch2"></label>
+                                </div>
+                            </td>
+                            <td>NoteVia</td>
+                            <td><button class="btn btn-dark btn-sm openOfferModal" data-action="add" >Add Offer</button></td>
+                            <td class="text-end">
+                                <a href="#" class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fas fa-pencil-alt"></i></a>
+                                <a href="#" class="btn btn-sm btn-outline-dark" aria-label="Delete"><i class="fas fa-eye"></i></a>
+                            </td>
+                        </tr> -->
+                        <!-- <tr>
+                            <td>
+                                <img src="path/to/another/image.jpg" class="img-fluid rounded" alt="Product Image" style="max-width: 60px;">
+                            </td>
+                            <td>NoteVia</td>
+                            <td>KING SIZE</td>
+                            <td>Rs. 65</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-outline-secondary">View variants</a>
+                            </td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="productSwitch2">
+                                    <label class="form-check-label" for="productSwitch2"></label>
+                                </div>
+                            </td>
+                            <td>NoteVia</td>
+                            <td><button class="btn btn-dark btn-sm openOfferModal" data-action="add" >Add Offer</button></td>
+                            <td class="text-end">
+                                <a href="#" class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fas fa-pencil-alt"></i></a>
+                                <a href="#" class="btn btn-sm btn-outline-dark" aria-label="Delete"><i class="fas fa-eye"></i></a>
+                            </td>
+                        </tr> -->
                         <!-- Repeat this <tr> block for other products -->
 
                     </tbody>
@@ -215,5 +279,30 @@
   </div>
   
       <!-- /The Modal for add offer -->
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    function toggleStatus(productId) {
+      const csrfToken = '{{ csrf_token }}';
+  
+      axios.post(`/adminpanel/toggles-status/${productId}/`, {}, {
+        headers: {
+          'X-CSRFToken': csrfToken
+        }
+      })
+      .then(response => {
+        if (response.data.success) {
+          const isListed = response.data.is_listed;
+          console.log(`Product ${productId} is now:`, isListed ? 'Listed ✅' : 'Unlisted ❌');
+        }
+      })
+      .catch(error => {
+        console.error("Error updating status:", error);
+      });
+    }
+  </script>
 
 {% endblock %}

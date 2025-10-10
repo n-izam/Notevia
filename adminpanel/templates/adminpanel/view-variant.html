@@ -3,7 +3,8 @@
 {% load static %}
 
 {% block title %} Add category {% endblock %}
-<!-- {% block head %} {% endblock %} -->
+
+{% block head %} <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> {% endblock %}
 
 {% block content %}
 
@@ -22,10 +23,10 @@
                         </ol>
                         </nav>
                         <div class="mt-5">
-                        <h2 class="h4 mt-1 mb-0">Variants for 'NoteVia KING SIZE'</h2>
+                        <h2 class="h4 mt-1 mb-0">Variants for '{{product.name}}-{{product.category.name}}'</h2>
                     </div>
                     </div>
-                    <a href="{% url 'add-variant' %}" class="btn btn-dark">+ Add Variant</a>
+                    <a href="{% url 'add-variant' product.id %}" class="btn btn-dark">+ Add Variant</a>
                 </div>
 
                 <!-- Variants Table Card -->
@@ -46,27 +47,35 @@
                                 </thead>
                                 <tbody>
                                     <!-- Variant Item 1: Ruled -->
+                                     {% for variant in variants %}
                                     <tr>
-                                        <td><strong>Ruled</strong></td>
-                                        <td>Standard ruled lines for writing.</td>
-                                        <td>Rs. 65</td>
-                                        <td>700</td>
-                                        <td>24 Dec 2022</td>
+                                        <td><strong>{{variant.name}} </strong></td>
+                                        <td>{{ variant.description }}</td>
+                                        <td>{{ variant.price }}</td>
+                                        <td>{{ variant.stock }}</td>
+                                        <td>{{ variant.updated_at.date }}</td>
                                         <td>
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch" id="variantSwitch1" checked>
+                            
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                    id="switch{{ variant.id }}" 
+                                                    {% if variant.is_listed %} checked {% endif %}
+                                                    onchange="toggleStatus('{{ variant.id }}')">
                                                 <label class="form-check-label" for="variantSwitch1"></label>
                                             </div>
                                         </td>
                                         <td class="text-end">
+                                            <a href="{% url 'edit_variant' variant.id %}" class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fas fa-pencil-alt"></i></a>
                                             <button class="btn btn-sm btn-outline-danger" aria-label="Delete">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
+                                            
                                         </td>
                                     </tr>
+                                    {% endfor %}
 
                                     <!-- Variant Item 2: Unruled -->
-                                    <tr>
+                                    <!-- <tr>
                                         <td><strong>Unruled</strong></td>
                                         <td>Blank pages for sketching and notes.</td>
                                         <td>Rs. 60</td>
@@ -83,10 +92,10 @@
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                     
                                     <!-- Variant Item 3: Dotted Grid (Unlisted) -->
-                                    <tr>
+                                    <!-- <tr>
                                         <td><strong>Dotted Grid</strong></td>
                                         <td>Dotted grid for bullet journaling.</td>
                                         <td>Rs. 70</td>
@@ -103,7 +112,7 @@
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                     
                                 </tbody>
                             </table>
@@ -113,4 +122,27 @@
             </main>
         </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function toggleStatus(variantId) {
+      const csrfToken = '{{ csrf_token }}';
+  
+      axios.post(`/adminpanel/toggles-status-variant/${variantId}/`, {}, {
+        headers: {
+          'X-CSRFToken': csrfToken
+        }
+      })
+      .then(response => {
+        if (response.data.success) {
+          const isListed = response.data.is_listed;
+          console.log(`Variant ${variantId} is now:`, isListed ? 'Listed ✅' : 'Unlisted ❌');
+        }
+      })
+      .catch(error => {
+        console.error("Error updating status:", error);
+      });
+    }
+  </script>
 {% endblock %}
