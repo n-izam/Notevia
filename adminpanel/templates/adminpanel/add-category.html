@@ -3,7 +3,7 @@
 
 {% load static %}
 
-{% block title %} Add category {% endblock %}
+{% block title %}{% if request.resolver_match.url_name == 'add-category' %}Add category {% else %} Edit category {% endif %}Add category {% endblock %}
 <!-- {% block head %} {% endblock %} -->
 
 {% block content %}

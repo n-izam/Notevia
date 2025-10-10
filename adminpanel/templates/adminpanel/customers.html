@@ -26,9 +26,9 @@
                 <input type="text" class="form-control" placeholder="Search customer...">
                 <span class="input-group-text"><i class="bi bi-search"></i></span>
                 </div>
-                <button class="btn btn-outline-secondary">
+                <!-- <button class="btn btn-outline-secondary">
                 <i class="fas fa-sliders-h"></i> Filters
-                </button>
+                </button> -->
             </div>
             </div>
         
@@ -39,7 +39,7 @@
                     <th scope="col">Customer Name</th>
                     <th scope="col">Phone</th>
                     <th scope="col">Orders</th>
-                    <th scope="col">Balance</th>
+                    <!-- <th scope="col">Balance</th> -->
                     <th scope="col">Status</th>
                     <th scope="col">BLOCK/UNBLOCK</th>
                     <th scope="col">Action</th>
@@ -47,24 +47,25 @@
                 </thead>
                 <tbody>
                 <!-- Example Row 1 -->
+                 {% for customer in customers %}
                 <tr>
                     <td>
                     <div class="d-flex align-items-center">
-                        <img
+                        <!-- <img
                             src="https://mdbootstrap.com/img/new/avatars/8.jpg"
                             alt=""
                             style="width: 45px; height: 45px"
                             class="rounded-circle"
-                            />
+                            /> -->
                         <div class="ms-3">
-                        <p class="fw-bold mb-1">John Bushmill</p>
-                        <p class="text-muted mb-0">johnb@mail.com</p>
+                        <p class="fw-bold mb-1">{{customer.full_name}}</p>
+                        <p class="text-muted mb-0">{{customer.email}}</p>
                         </div>
                     </div>
                     </td>
-                    <td>078 5054 8877</td>
+                    <td>{{customer.phone_no}}</td>
                     <td>124</td>
-                    <td>$121.00</td>
+                    <!-- <td>$121.00</td> -->
                     <td><span class="badge bg-danger rounded-pill">Blocked</span></td>
                     <td>
                     <div class="form-check form-switch  ">
@@ -73,6 +74,7 @@
                     </td>
                     <td><a href="customerdetail.html"><i class="bi bi-eye"></i></a></td>
                 </tr>
+                {% endfor %}
                 <!-- Example Row 2 -->
                 <tr>
                     <td>
