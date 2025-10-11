@@ -110,12 +110,12 @@
                         <nav class="box-navigation text-center">
                             <ul class="box-nav-ul d-flex align-items-center justify-content-center gap-30">
                                 <li class="menu-item">
-                                    <a href="#" class="item-link">Home<i class="icon"></i></a>
+                                    <a href="{% url 'cores-home' user_id=user_id %}" class="item-link">Home<i class="icon"></i></a>
                                    
                                 </li>
                                 
                                 <li class="menu-item">
-                                    <a href="#" class="item-link">Products<i class="icon "></i></a>
+                                    <a href="{% url 'shop_products' %}" class="item-link">Products<i class="icon "></i></a>
                                 </li>
                                 <li class="menu-item position-relative">
                                     <a href="#" class="item-link">Pages<i class="bi bi-caret-down"></i></a>
@@ -632,7 +632,7 @@
                     </form>
                 </div>
             </header>
-            <div class="canvas-body p-0">
+            <!-- <div class="canvas-body p-0">
                 <div class="tf-search-content">
                     <div class="tf-cart-hide-has-results">
                         <div class="tf-col-quicklink">
@@ -699,7 +699,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <!-- /canvasSearch -->

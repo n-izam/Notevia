@@ -8,7 +8,7 @@
 {% block content %}
 
 <!-- customers content start from -->
-<div class="container-fluid">
+<div class="container-fluid right-main">
     <div class="row">
 
         <main class="col-md-9 col-lg-10 px-md-4 right-main">
@@ -36,6 +36,7 @@
             <table class="table align-middle ">
                 <thead >
                 <tr>
+                    <th scope="col">SNO</th>
                     <th scope="col">Customer Name</th>
                     <th scope="col">Phone</th>
                     <th scope="col">Orders</th>
@@ -49,6 +50,7 @@
                 <!-- Example Row 1 -->
                  {% for customer in customers %}
                 <tr>
+                    <td>{{forloop.counter}}</td>
                     <td>
                     <div class="d-flex align-items-center">
                         <!-- <img
