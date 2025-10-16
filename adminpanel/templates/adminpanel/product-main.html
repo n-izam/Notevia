@@ -70,6 +70,7 @@
                     <!-- Table Head -->
                     <thead class="table-dark">
                         <tr>
+                            <th scope="col" >SNO</th>
                             <th scope="col">Image</th>
                             <th scope="col">Product Name</th>
                             <th scope="col">Category</th>
@@ -86,6 +87,7 @@
                         <!-- Product Item 1 (Listed / "UNLIST" state) -->
                          {% for product in products %}
                         <tr>
+                            <td>{{forloop.counter}}</td>
                             <td>
                                 {% for imag in product.images.all %}
                                 {% if imag.is_main %}

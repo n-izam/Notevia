@@ -13,7 +13,7 @@ from adminpanel.models import Category, Offer, Product, ProductImage, Variant
 class HomeView(View):
 
     def get(self, request, user_id):
-        latest_products = Product.objects.filter(is_deleted=False, is_listed=True).order_by('-created_at')[:9]
+        latest_products = Product.objects.filter(is_deleted=False, is_listed=True).order_by('-created_at')[:4]
 
         product_with_image = []
         for product in latest_products:
@@ -29,7 +29,7 @@ class HomeView(View):
             "user_id": user_id,
         }
         
-        return render(request, 'cores/home.html', context)
+        return render(request, 'cores/home1.html', context)
     
 class ProductlistingView(View):
 
@@ -45,15 +45,30 @@ class ProductlistingView(View):
                 "main_image": main_image
             })
 
-            context = {
-                "product_with_image": product_with_image,
-                "user_id": request.user.id,
-            }
+        # print(product_with_image)
+        context = {
+            "product_with_image": product_with_image,
+            "user_id": request.user.id,
+        }
 
-        return render(request, 'cores/productlist.html', context)
+        return render(request, 'cores/productlist1.html', context)
     
 class ProductDetailsView(View):
 
-    def get(self, request):
+    def get(self, request, product_id):
 
-        return render(request, 'cores/productdetail.html', {"user_id": request.user.id})
+
+
+
+        main_product = get_object_or_404(Product, id=product_id)
+
+        images = main_product.images.all()
+        print("images are", images)
+
+        context = {
+            "main_product": main_product,
+            "images": images,
+            "user_id":request.user.id,
+        }
+
+        return render(request, 'cores/productdetail1.html', context)

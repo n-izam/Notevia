@@ -34,9 +34,8 @@
         
             <div class="table-responsive">
             <table class="table align-middle ">
-                <thead >
-                <tr>
-                    <th scope="col">SNO</th>
+                <thead class="table-dark">
+                <tr>       
                     <th scope="col">Customer Name</th>
                     <th scope="col">Phone</th>
                     <th scope="col">Orders</th>
@@ -50,7 +49,6 @@
                 <!-- Example Row 1 -->
                  {% for customer in customers %}
                 <tr>
-                    <td>{{forloop.counter}}</td>
                     <td>
                     <div class="d-flex align-items-center">
                         <!-- <img
