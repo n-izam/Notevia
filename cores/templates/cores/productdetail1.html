@@ -1,0 +1,257 @@
+{% extends "base1.html" %}
+
+{% load static %}
+
+{% block title %} Shope Page {{main_product.name}} {% endblock %}
+<!-- {% block head %} {% endblock %} -->
+
+{% block content %}
+
+<div>
+    <div class="product-details-container container my-5">
+    
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Products</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Product details</li>
+            </ol>
+        </nav>
+        <div class="row">
+            <!-- Column 1: Product Image Gallery -->
+            <div class="col-md-7">
+                <!-- Main container for the product image and thumbnails -->
+                <div class="d-flex">
+                    <!-- Thumbnails -->
+                    <div class="product-thumbnails d-flex flex-column me-3 ">
+                        {% for pro_image in images %}
+                        
+                        <img src="{{pro_image.image.url}}" class="img-fluid mb-2 thumbnail {% if pro_image.is_main %}active {% endif %}" alt="Thumbnail {{forloop.counter}}" onclick="changeImage(this)">
+                        {% endfor %}
+                        <!-- <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760154643/products/azkm4byzkqlah8tz8rhi.png" class="img-fluid mb-2 thumbnail" alt="Thumbnail 2" onclick="changeImage(this)">
+                        <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" class="img-fluid thumbnail" alt="Thumbnail 3" onclick="changeImage(this)"> -->
+                    </div>
+
+                    <!-- NEW: Wrapper for main image to handle zoom -->
+                    <div class="product-zoom-container">
+                        <!-- Main Image Display -->
+                        <div class="main-image-container position-relative">
+                            {% for main_image in images %}
+                            {% if main_image.is_main %}
+                            <img src="{{main_image.image.url}}" id="mainProductImage" class="img-fluid" alt="Main Product Image">
+                            {% endif %}
+                            {% endfor %}
+                            <div class="image-nav">
+                                <button id="prevBtn" class="btn btn-light"><i class="fas fa-chevron-left"></i></button>
+                                <button id="nextBtn" class="btn btn-light"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Column 2: Product Information -->
+            <div class="col-md-5">
+                <h2 class="product-title">{{main_product.name}} - {{main_product.category.name}}</h2>
+                <div class="price-section d-flex align-items-center mb-3">
+                    <span class="final-price">Rs. 30</span>
+                    <del class="base-price ms-2">Rs. 50</del>
+                    <span class="discount-badge ms-2">40% OFF</span>
+                </div>
+                
+                <div class="options-section mb-4">
+                    <p class="fw-bold mb-1">Ruling type: <span id="ruling-type-text">Single Line</span></p>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-ruling active">Single Line</button>
+                        <button type="button" class="btn btn-ruling">Unruled</button>
+                    </div>
+                </div>
+    
+                <div class="quantity-section mb-4">
+                    <p class="fw-bold mb-1">Quantity</p>
+                    <div class="input-group quantity-selector">
+                        <button class="btn btn-outline-secondary" type="button" id="minus-btn">-</button>
+                        <input type="text" class="form-control text-center" value="1" id="quantity-input">
+                        <button class="btn btn-outline-secondary" type="button" id="plus-btn">+</button>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center mb-4">
+                    <button class="btn btn-dark btn-lg w-100 me-3" type="button">Add to cart - $8.00</button>
+                    <button class="btn btn-outline-dark wishlist-btn" type="button"><i class="far fa-heart"></i></button>
+                </div>
+    
+                <div class="shipping-info">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-truck-fast me-2"></i>
+                        <span>Free delivery on orders over $50</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        <span>Secure and encrypted transaction</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container my-5">
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs" id="productInfoTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="false">Review</button>
+            </li>
+        </ul>
+    
+        <!-- Tab Content -->
+        <div class="tab-content" id="productInfoTabsContent">
+            
+            <!-- Description Pane -->
+            <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                <p>Papergrid Notebooks use finest quality paper in India without any compromise in quality.</p>
+                <h6 class="fw-bold">Features</h6>
+                <ul>
+                    <li>Single Colour, Matt Finish Cover.</li>
+                    <li>Available in attractive colours. Pack contains assortment of different colours.</li>
+                    <li>The cover design of the notebook is subject to change, it depends on stock availability.</li>
+                </ul>
+            </div>
+    
+            <!-- Review Pane -->
+            <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                <!-- Existing Reviews -->
+                <div class="row g-4">
+                    <!-- Sample Review Card 1 -->
+                    <div class="col-md-6">
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <div class="reviewer-info">
+                                    <strong>Samantha D.</strong>
+                                    <i class="fas fa-check-circle verified-icon"></i>
+                                </div>
+                                <a href="#" class="options-icon"><i class="fas fa-ellipsis-h"></i></a>
+                            </div>
+                            <p class="review-text">Stylish and reliable, this watch blends elegance with functionality. Its sleek design, comfortable fit, and precise timekeeping make it a perfect choice for everyday use or special occasions.</p>
+                            <p class="review-date">Posted on August 14, 2025</p>
+                        </div>
+                    </div>
+                    <!-- Sample Review Card 2 -->
+                    <div class="col-md-6">
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="stars">
+                                   <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <div class="reviewer-info">
+                                    <strong>Samantha D.</strong>
+                                    <i class="fas fa-check-circle verified-icon"></i>
+                                </div>
+                                <a href="#" class="options-icon"><i class="fas fa-ellipsis-h"></i></a>
+                            </div>
+                            <p class="review-text">Stylish and reliable, this watch blends elegance with functionality. Its sleek design, comfortable fit, and precise timekeeping make it a perfect choice for everyday use or special occasions.</p>
+                            <p class="review-date">Posted on August 14, 2025</p>
+                        </div>
+                    </div>
+                    <!-- Add more review cards as needed -->
+                </div>
+    
+                <!-- Write a Review Form -->
+                <div class="write-review-section mt-5">
+                    <hr>
+                    <h3 class="fw-bold">Write a Review</h3>
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">What is it like to Product?</label>
+                            <div class="write-review-stars">
+                               <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reviewContent" class="form-label">Review Content</label>
+                            <textarea class="form-control" id="reviewContent" rows="4" placeholder="This watch combines modern elegance with everyday practicality..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-dark">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5 py-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Similar products</h2>
+        </div>
+        <div class="row">
+            <!-- Product 1 -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card border-0 text-center">
+                    <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" class="card-img-top" alt="Papergrid - SHORT NOTE">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="text-start me-auto">
+                                <p class="card-title mb-0">Papergrid - SHORT NOTE</p>
+                                <p class="card-text fw-bold">$16.95</p>
+                            </div>
+                            <a href="#" class="text-dark fs-5"><i class="far fa-heart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product 2 -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card border-0 text-center">
+                    <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="card-img-top" alt="Classmates - SHORT NOTE">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="text-start me-auto">
+                                <p class="card-title mb-0">Classmates - SHORT NOTE</p>
+                                <p class="card-text fw-bold">From $18.95</p>
+                            </div>
+                            <a href="#" class="text-dark fs-5"><i class="far fa-heart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product 3 -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card border-0 text-center">
+                    <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" class="card-img-top" alt="Papergrid - A4 Notebook">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="text-start me-auto">
+                                <p class="card-title mb-0">Papergrid - A4 Notebook</p>
+                                <p class="card-text fw-bold">$10.00</p>
+                            </div>
+                            <a href="#" class="text-dark fs-5"><i class="far fa-heart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product 4 -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card border-0 text-center">
+                    <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="card-img-top" alt="Papergrid - KING SIZE">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="text-start me-auto">
+                               <p class="card-title mb-0">Papergrid - KING SIZE</p>
+                               <p class="card-text fw-bold">$16.95</p>
+                            </div>
+                            <a href="#" class="text-dark fs-5"><i class="far fa-heart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

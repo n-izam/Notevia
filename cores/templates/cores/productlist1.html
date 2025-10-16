@@ -1,0 +1,227 @@
+{% extends "base1.html" %}
+
+{% load static %}
+
+{% block title %} Shope Page {% endblock %}
+<!-- {% block head %} {% endblock %} -->
+
+{% block content %}
+
+<main class="container my-5">
+    <!-- Page Title -->
+    <div class="text-center my-5 py-3">
+        <h1>New Arrival</h1>
+        <p class="text-muted">Shop through our latest selection of Fashion</p>
+    </div>
+
+    <!-- Toolbar: View options and Sorting -->
+    <div class="d-flex justify-content-end mb-4">
+        <div class="dropdown">
+            <a class="form-select" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                Featured
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" href="#">Price, low to high</a></li>
+                <li><a class="dropdown-item" href="#">Price, high to low</a></li>
+                <li><a class="dropdown-item" href="#">Newest</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sidebar with Filters -->
+        <aside class="col-lg-3 border-end border-dark border-1">
+
+            <!-- Each filter section now works independently -->
+        
+            <!-- 1. Product Categories Section -->
+            <div class="filter-section mb-2">
+                <h5 class="filter-title">
+                    <a class="text-dark text-decoration-none d-block p-2" data-bs-toggle="collapse" href="#categoryCollapse" role="button" aria-expanded="true" aria-controls="categoryCollapse">
+                        Product Categories
+                        <i class="fas fa-chevron-down float-end"></i>
+                    </a>
+                </h5>
+                <!-- Collapsible Content (data-bs-parent removed) -->
+                <div class="collapse show" id="categoryCollapse">
+                    <ul class="list-unstyled filter-list mt-2 ps-2">
+                        <li><a href="#" class="active text-decoration-none">ALL</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted">SHORT BOOK</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted">KING SIZE</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted">A4 NOTEBOOK</a></li>
+                    </ul>
+                </div>
+            </div>
+        
+            <hr>
+        
+            <!-- 2. Availability Section -->
+            <div class="filter-section mb-2">
+                <h5 class="filter-title">
+                        <a class="text-dark text-decoration-none d-block p-2" data-bs-toggle="collapse" href="#availabilityCollapse" role="button" aria-expanded="false" aria-controls="availabilityCollapse">
+                        Availability
+                        <i class="fas fa-chevron-down float-end"></i>
+                    </a>
+                </h5>
+                <!-- Collapsible Content (data-bs-parent removed) -->
+                <div class="collapse" id="availabilityCollapse">
+                    <ul class="list-unstyled filter-list mt-2 ps-2">
+                        <li>
+                            <input type="checkbox" id="inStock" name="availability" value="inStock">
+                            <label for="inStock"> In stock (14)</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="outOfStock" name="availability" value="outOfStock">
+                            <label for="outOfStock"> Out of stock (2)</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        
+            <hr>
+        
+            <!-- 3. Brand Section -->
+            <div class="filter-section">
+                <h5 class="filter-title">
+                    <a class="text-dark text-decoration-none d-block p-2" data-bs-toggle="collapse" href="#brandCollapse" role="button" aria-expanded="false" aria-controls="brandCollapse">
+                        Brand
+                        <i class="fas fa-chevron-down float-end"></i>
+                    </a>
+                </h5>
+                <!-- Collapsible Content (data-bs-parent removed) -->
+                <div class="collapse" id="brandCollapse">
+                    <ul class="list-unstyled filter-list mt-2 ps-2">
+                        <li>
+                            <input type="checkbox" id="papergrid" name="brand" value="papergrid">
+                            <label for="papergrid"> Papergrid (8)</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="classmates" name="brand" value="classmates">
+                            <label for="classmates"> Classmates (8)</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="notevia" name="brand" value="notevia">
+                            <label for="notevia"> NoteVia (8)</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        
+        </aside>
+        
+        
+          
+
+        <!-- Product Grid -->
+        <div class="col-lg-9 border rounded">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxxl-4 g-4">
+                <!-- Repeat this .col block for each product -->
+                 {% for item in product_with_image %}
+                <div class="col">
+                    <div class="card h-100 border-0 product-card gram-image-wrapper">
+                        <a href="{% url 'shop_productdetail' item.product.id %}">
+                            <img src="{{item.main_image.image.url}}" class="card-img-top" alt="Product Image">
+                        </a>
+                        <div class="card-body text-center">
+                            <a href="{% url 'shop_productdetail' item.product.id %}" class="text-dark text-decoration-none">
+                            <h6 class="card-title">{{item.product.name}} - {{ item.product.category.name }}</h6>
+                            <p class="card-text">Rs. 65</p>
+                        </a>
+                        </div>
+                        <a href="#" class="wishlist-icon"><i class="far fa-heart"></i></a>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- <div class="col">
+                    <div class="card h-100 border-0 product-card gram-image-wrapper">
+                        <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" class="card-img-top" alt="Product Image">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">NoteVia - KING SIZE</h6>
+                            <p class="card-text">Rs. 65</p>
+                        </div>
+                        <a href="#" class="wishlist-icon"><i class="far fa-heart"></i></a>
+                    </div>
+                </div>
+                 <div class="col">
+                    <div class="card h-100 border-0 product-card gram-image-wrapper">
+                        <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760154643/products/azkm4byzkqlah8tz8rhi.png" class="card-img-top" alt="Product Image">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Papergrid - SHORT NOTE</h6>
+                            <p class="card-text">Rs. 30</p>
+                        </div>
+                        <a href="#" class="wishlist-icon"><i class="far fa-heart"></i></a>
+                    </div>
+                </div>
+                 <div class="col">
+                    <div class="card h-100 border-0 product-card gram-image-wrapper">
+                        <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="card-img-top" alt="Product Image">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Classmates - A4 NOTEBOOK</h6>
+                            <p class="card-text">Rs. 80</p>
+                        </div>
+                        <a href="#" class="wishlist-icon"><i class="far fa-heart"></i></a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-0 product-card gram-image-wrapper">
+                        <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="card-img-top" alt="Product Image">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Classmates - A4 NOTEBOOK</h6>
+                            <p class="card-text">Rs. 80</p>
+                        </div>
+                        <a href="#" class="wishlist-icon"><i class="far fa-heart"></i></a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-0 product-card gram-image-wrapper">
+                        <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="card-img-top" alt="Product Image">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Classmates - A4 NOTEBOOK</h6>
+                            <p class="card-text">Rs. 80</p>
+                        </div>
+                        <a href="#" class="wishlist-icon"><i class="far fa-heart"></i></a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-0 product-card gram-image-wrapper">
+                        <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="card-img-top" alt="Product Image">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Classmates - A4 NOTEBOOK</h6>
+                            <p class="card-text">Rs. 80</p>
+                        </div>
+                        <a href="#" class="wishlist-icon"><i class="far fa-heart"></i></a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-0 product-card gram-image-wrapper">
+                        <div class="gram-image-wrapper">
+                            <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="card-img-top" alt="Product Image">
+                        </div>
+                        <div class="card-body text-center">
+                            <h6 class="card-title">Classmates - A4 NOTEBOOK</h6>
+                            <p class="card-text">Rs. 80</p>
+                        </div>
+                        <a href="#" class="wishlist-icon"><i class="far fa-heart"></i></a>
+                    </div>
+                </div> -->
+                <!-- Add more product columns as needed... -->
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="d-flex justify-content-center mt-5">
+                <ul class="pagination">
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&rsaquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
