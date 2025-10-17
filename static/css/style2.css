@@ -1,0 +1,581 @@
+
+/* this css for add and edilt product */
+
+:root {
+    --main-bg-color: #f8f9fa;
+    --sidebar-bg-color: #ffffff;
+    --active-link-color: #f0f0f0;
+    --text-color: #212529;
+    --light-text-color: #6c757d;
+    --dark-btn-bg: #212529;
+}
+
+ /* from html */
+body {
+    background-color: #f8f9fa;
+}
+.main-content {
+    padding: 2rem;
+}
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.category-header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 0.5rem;
+}
+.search-and-sort {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.search-bar {
+    position: relative;
+}
+.search-bar input {
+    padding-left: 2.5rem;
+}
+.search-bar .fa-search {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+.sort-buttons .btn {
+    margin-left: 0.5rem;
+}
+.table {
+    background-color: #fff;
+}
+.table th, .table td {
+    vertical-align: middle;
+}
+.table .btn-sm {
+    margin-right: 0.5rem;
+}
+.table .form-check-input {
+    margin-top: 0;
+}
+.action-icons .btn {
+    background: transparent;
+    border: none;
+    color: #6c757d;
+}
+/* /from html */
+
+body {
+    background-color: var(--main-bg-color);
+    font-family: 'Poppins', sans-serif;
+}
+
+#wrapper {
+    /* overflow-x: hidden; */
+    position: relative;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    margin-left: -15rem;
+    transition: margin 0.25s ease-out;
+    background-color: var(--sidebar-bg-color);
+    width: 250px;
+    border-right: 1px solid #e7e7e7;
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 1.5rem 1.25rem;
+    font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+    width: 15rem;
+}
+
+#sidebar-wrapper .list-group-item {
+    border: none;
+    padding: 1rem 1.25rem;
+    color: var(--light-text-color);
+    font-weight: 500;
+}
+#sidebar-wrapper .list-group-item i{
+    opacity: 0.6;
+}
+
+#sidebar-wrapper .list-group-item-action.active {
+    background-color: var(--active-link-color);
+    color: var(--text-color);
+    border-left: 4px solid var(--text-color);
+    font-weight: bold;
+}
+#sidebar-wrapper .list-group-item-action.active i{
+    opacity: 1;
+}
+
+
+#sidebar-wrapper .list-group-item-action:hover {
+    background-color: var(--active-link-color);
+    color: var(--text-color);
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+#menu-toggle {
+    cursor: pointer;
+}
+
+.sidebar-footer {
+    padding: 1.25rem;
+    margin-top: auto;
+}
+
+.account-btn, .logout-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.account-btn {
+    background-color: #fff;
+    color: #000;
+    border: 2px solid #000;
+}
+
+.account-btn:hover {
+    background-color: #f8f9fa;
+}
+
+.logout-btn {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #000;
+}
+
+.logout-btn:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+.admin-card {
+    background-color: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.welcome-text {
+    font-size: 0.8rem;
+    color: var(--light-text-color);
+    letter-spacing: 2px;
+}
+
+.admin-title {
+    font-weight: bold;
+    margin-top: -5px;
+}
+
+.admin-avatar {
+    width: 80px;
+    height: 80px;
+}
+
+.admin-name {
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.form-label {
+    color: var(--light-text-color);
+    font-size: 0.9rem;
+}
+
+.form-control {
+    background-color: #f3f3f3;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 15px;
+}
+
+.form-control:focus {
+    background-color: #e9e9e9;
+    box-shadow: none;
+}
+
+.btn-dark {
+    background-color: var(--dark-btn-bg);
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.breadcrumb-item a {
+    text-decoration: none;
+    color: var(--secondary-text-color);
+}
+.breadcrumb-item.active {
+    color: var(--main-text-color);
+}
+/* for adjest the right content */
+.right-main{
+    margin-top: 1%;
+    margin-left: 5%;
+}
+
+/* Change ON color */
+.form-check-input:checked {
+    background-color: #28a745;   /* green */
+    border-color: #28a745;
+}
+
+  /* Optional: Change OFF color */
+.form-check-input {
+    background-color: #ffffff;
+    border-color: #ae2020;
+}
+
+
+/* for offer add model */
+body {
+    font-family: sans-serif;
+    background-color: #f8f9fa;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-dark {
+    background-color: #343a40;
+    color: white;
+}
+
+.btn-light {
+    background-color: #f8f9fa;
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
+
+/* The Modal (background) */
+.modal {
+    z-index: 1055 !important;
+}
+.modal-backdrop {
+    z-index: 1050 !important;
+}
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 500px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box; /* To include padding and border in the element's total width and height */
+}
+
+.discount-inputs, .date-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.discount-input, .date-input {
+    position: relative;
+    flex-grow: 1;
+}
+
+.discount-input span, .date-input .calendar-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.date-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.date-input label {
+     margin-bottom: 5px;
+}
+
+.date-input input {
+    padding-right: 30px; /* Make space for the icon */
+}
+
+.or {
+    color: #6c757d;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* crop and add products */
+
+/* Main heading style */
+.h2 {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Dark theme form styles */
+.add-product-form {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: none;
+    border-radius: 16px;
+    padding: 24px;
+}
+.add-product-form .form-label {
+    color: #e0e0e0;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+.add-product-form .form-control,
+.add-product-form .form-select,
+.add-product-form .input-group-text {
+    background-color: #333333;
+    color: #fff;
+    border: 1px solid #444444;
+    border-radius: 12px;
+    padding: 12px;
+}
+.add-product-form .form-control::placeholder {
+    color: #888;
+}
+.add-product-form .input-group-text {
+    border-right: none;
+}
+.add-product-form .form-control:focus,
+.add-product-form .form-select:focus {
+    background-color: #333;
+    color: #fff;
+    border-color: #8A63D2;
+    box-shadow: none;
+}
+.add-product-form .btn-cancel {
+    background-color: #fff;
+    color: #1a1a1a;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+.add-product-form .btn-save {
+    background-color: #8A63D2; /* Purple from your design */
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+/* Image upload slot styles */
+.image-upload-slot {
+    position: relative;
+    width: 100%;
+    padding-top: 60%; /* Aspect ratio for the box */
+    background-color: #333333;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+.image-upload-slot .default-view {
+    display: flex;
+    align-items: center;
+    color: #888;
+}
+.image-upload-slot .default-view .icon {
+    font-size: 1.5rem;
+    padding: 10px;
+    background-color: #fff;
+    color: #333;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+.image-upload-slot .image-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none; /* Hidden by default */
+}
+
+/* Cropper.js modal styles */
+.img-container {
+    max-height: 60vh;
+}
+#imageToCrop {
+    max-width: 100%;
+}
+
+
+/* for customer details  */
+/* Custom utility classes for badge colors */
+.bg-success-light {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+.text-success {
+    color: #28a745 !important;
+}
+
+.bg-warning-light {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+.text-warning {
+    color: #ffc107 !important;
+}
+
+.bg-info-light {
+     background-color: rgba(23, 162, 184, 0.1);
+}
+.text-info {
+    color: #17a2b8 !important;
+}
+
+.bg-primary-light {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Styled icon boxes for summary cards */
+.icon-box {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    font-size: 1.25rem;
+}
+
+/* Profile Card Styling */
+.card-body .list-group-item {
+    padding-left: 0;
+    padding-right: 0;
+}
+/* /for customer details */
+
+@media (min-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: -15rem;
+    }
+}

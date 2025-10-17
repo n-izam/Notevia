@@ -572,6 +572,11 @@ class EditVariantView(View):
         
         variant = get_object_or_404(Variant, id=variant_id)
         product = get_object_or_404(Product, id=variant.product.id)
+    
+        # the offer final price test
+        # print("main discount:", variant.final_price)
+        # print("variant price:", variant.price, "variant discount", variant.discount)
+        # print("product category offer", variant.product.category.offer.offer_percent)
 
         return render(request, 'adminpanel/add-variant.html', {"variant":variant, "user_id": request.user.id, "product": product})
 

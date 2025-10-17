@@ -34,21 +34,27 @@ class HomeView(View):
 class ProductlistingView(View):
 
     def get(self, request):
+
+        category = Category.objects.all()
         
         products = Product.objects.filter(is_deleted=False, is_listed=True).order_by('-created_at')
 
         product_with_image = []
         for product in products:
             main_image = product.images.filter(is_main=True).first()
+            main_variant = product.variants.filter(is_listed=True).order_by('-stock').first()
+            print(main_variant)
             product_with_image.append({
                 "product": product,
-                "main_image": main_image
+                "main_image": main_image,
+                "main_variant":main_variant,
             })
 
         # print(product_with_image)
         context = {
             "product_with_image": product_with_image,
             "user_id": request.user.id,
+            "categories": category,
         }
 
         return render(request, 'cores/productlist1.html', context)

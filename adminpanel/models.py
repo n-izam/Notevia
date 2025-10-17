@@ -45,9 +45,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    offer = models.ForeignKey(
-        Offer, on_delete=models.SET_NULL, null=True, blank=True, related_name="products"
-    ) 
+    offer = models.ForeignKey(Offer, on_delete=models.SET_NULL, null=True, blank=True, related_name="products") 
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)
     is_listed = models.BooleanField(default=True)

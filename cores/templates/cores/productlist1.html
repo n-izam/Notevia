@@ -5,6 +5,43 @@
 {% block title %} Shope Page {% endblock %}
 <!-- {% block head %} {% endblock %} -->
 
+{% block style %}
+
+<style>
+
+    .search-listing{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .clearable-input {
+      position: relative;
+      width: 250px; /* adjust width as you like */
+    }
+    .clearable-input input {
+      padding-right: 2.2rem; /* space for the clear “×” button */
+    }
+    .clearable-input .clear-btn {
+      position: absolute;
+      top: 50%;
+      right: 0.6rem;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      color: #888;
+      display: none;
+    }
+    .clearable-input .clear-btn.visible {
+      display: block;
+    }
+  </style>
+
+{% endblock %}
+
 {% block content %}
 
 <main class="container my-5">
@@ -16,6 +53,17 @@
 
     <!-- Toolbar: View options and Sorting -->
     <div class="d-flex justify-content-end mb-4">
+        <div class="search-listing mx-3">
+            <form method="GET" action="#" class="d-flex align-items-center">
+                <div class="clearable-input me-2">
+                  <input type="text" name="q" class="form-control form-control-sm" placeholder="Search..." id="searchField" autocomplete="off" />
+                  <button type="button" class="clear-btn" id="btnClear" aria-label="Clear">&times;</button>
+                </div>
+                <button type="submit" class="btn btn-sm btn-dark">
+                  <i class="fas fa-search"></i>
+                </button>
+              </form>
+        </div>
         <div class="dropdown">
             <a class="form-select" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                 Featured
@@ -125,7 +173,7 @@
                         <div class="card-body text-center">
                             <a href="{% url 'shop_productdetail' item.product.id %}" class="text-dark text-decoration-none">
                             <h6 class="card-title">{{item.product.name}} - {{ item.product.category.name }}</h6>
-                            <p class="card-text">Rs. 65</p>
+                            <p class="card-text">Rs.{{item.main_variant.price}}</p>
                         </a>
                         </div>
                         <a href="#" class="wishlist-icon"><i class="far fa-heart"></i></a>
@@ -223,5 +271,37 @@
         </div>
     </div>
 </main>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    const input = document.getElementById("searchField");
+    const clearBtn = document.getElementById("btnClear");
+
+    // Show or hide clear button depending on input value
+    input.addEventListener("input", () => {
+      if (input.value.length > 0) {
+        clearBtn.classList.add("visible");
+      } else {
+        clearBtn.classList.remove("visible");
+      }
+    });
+
+    // Clear input when × clicked
+    clearBtn.addEventListener("click", () => {
+      input.value = "";
+      clearBtn.classList.remove("visible");
+      input.focus();
+    });
+
+    // On page load, if field has prefilled text, show clear button
+    window.addEventListener("load", () => {
+      if (input.value.length > 0) {
+        clearBtn.classList.add("visible");
+      }
+    });
+  </script>
 
 {% endblock %}
