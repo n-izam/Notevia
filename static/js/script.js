@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const rulingButtons = document.querySelectorAll('.btn-ruling');
     const rulingTypeText = document.getElementById('ruling-type-text');
     rulingButtons.forEach(button => {
-        button.addEventListener('click', () => {
+        link.addEventListener('click', () => {
             rulingButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
             rulingTypeText.textContent = button.textContent;

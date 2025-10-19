@@ -1,5 +1,7 @@
 
 
+/* this css for main pages */
+
 body, html {
     margin: 0;
     padding: 0;
@@ -950,3 +952,5 @@ footer hr {
     opacity: 0.7;
     cursor: pointer; /* Ensures the cursor changes to a pointer on the buttons. */
 }
+
+

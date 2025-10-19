@@ -68,7 +68,7 @@
                                 <div class="form-check form-switch ">
                                 <input class="form-check-input" 
                                 type="checkbox" role="switch" id="switch{{ cat.id }}" 
-                                {% if cat.is_list %}checked {% endif %} onchange="toggleStatus('{{cat.id}}')">
+                                {% if cat.is_listed %}checked {% endif %} onchange="toggleStatus('{{cat.id}}')">
                                 
                                 </div>
                             </td>
@@ -79,7 +79,7 @@
                             </td>
                             <td>
                               {% if cat.offer %}
-                                <span>{{cat.offer.title}}</span>
+                                <span>{{cat.offer.title}} {{cat.offer.start_date}} {{cat.offer.end_date}}</span>
                                 <a href="{% url 'editcategory_offer' cat.id %}" class="btn btn-sm "><i class="fas fa-edit"></i></a>
                                 <a href="{% url 'category_remove_offer' cat.id %}" class="btn btn-sm text-danger"><i class="fas fa-trash"></i></button>
                                 {% else %}

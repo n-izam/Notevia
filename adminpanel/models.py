@@ -1,5 +1,6 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
+from django.db.models import Min
 
 # Create your models here.
 
@@ -15,6 +16,12 @@ class Offer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # @property
+    # def is_active(self):
+    #     from django.utils import timezone
+    #     today = timezone.now().date()
+    #     return self.is_listed and self.start_date <= today <= self.end_date
+
     def __str__(self):
         return f"{self.title} ({self.offer_percent}%)"
     
@@ -27,7 +34,7 @@ class Category(models.Model):
     offer = models.ForeignKey(
         Offer, on_delete=models.SET_NULL, null=True, blank=True, related_name="categories"
     ) 
-    is_list = models.BooleanField(default=True)
+    is_listed = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -45,17 +52,42 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    offer = models.ForeignKey(
-        Offer, on_delete=models.SET_NULL, null=True, blank=True, related_name="products"
-    ) 
+    offer = models.ForeignKey(Offer, on_delete=models.SET_NULL, null=True, blank=True, related_name="products") 
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    base_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
     is_listed = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def calc_base_price(self):
+
+        highest_stock_variant = self.variants.order_by('-stock').first()
+        return highest_stock_variant.price if highest_stock_variant else None
+    
+    def save(self, *args, **kwargs):
+        """
+        Override save() to automatically update base_price.
+        """
+        self.base_price = self.calc_base_price  # 👈 updates before saving
+        super().save(*args, **kwargs)
+    
+    @property
+    def high_price(self):
+
+        highest_price_variant = self.variants.order_by('-price').first()
+        return highest_price_variant.price if highest_price_variant else None
+    
+
+    @property
+    def main_image(self):
+        return self.images.filter(is_main=True).first() or self.images.first()
+
     def __str__(self):
         return f"product name is : {self.name}"
+    
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
@@ -78,24 +110,70 @@ class Variant(models.Model):
 
     @property
     def final_price(self):
-        """
-        Calculates final price after discount and offer.
-        Priority: variant.discount > product.offer > category.offer
-        """
         price = float(self.price)
-        discount = float(self.discount or 0)
+        discounts = []
 
-        # Product level offer
+        if self.discount:
+            discounts.append(float(self.discount))
         if self.product.offer:
-            discount = max(discount, float(self.product.offer.offer_percent))
-
-        # Category level offer
+            discounts.append(float(self.product.offer.offer_percent))
         if self.product.category and self.product.category.offer:
-            discount = max(discount, float(self.product.category.offer.offer_percent))
+            discounts.append(float(self.product.category.offer.offer_percent))
 
-        # Apply discount
-        final_price = price - (price * discount / 100)
-        return round(final_price, 2)
+        if discounts:
+            max_discount = max(discounts)
+            price -= price * (max_discount / 100)
+
+        return round(price, 2)
+    
+    @property
+    def discount_percent(self):
+        
+        discounts = []
+
+        if self.discount:
+            discounts.append(float(self.discount))
+        if self.product.offer:
+            discounts.append(float(self.product.offer.offer_percent))
+        if self.product.category and self.product.category.offer:
+            discounts.append(float(self.product.category.offer.offer_percent))
+
+        if discounts:
+            max_discount = max(discounts)
+            
+
+        return round(max_discount, 2)
+    
+    def save(self, *args, **kwargs):
+        """
+        After saving a variant, update its product's base price.
+        """
+        super().save(*args, **kwargs)
+        # Update product base price after variant change
+        self.product.save()
+
+    # @property
+    # def final_price(self):
+    #     """
+    #     Calculates final price after discount and offer.
+    #     Priority: variant.discount > product.offer > category.offer
+    #     """
+    #     price = float(self.price)
+    #     discount = float(self.discount or 0)
+
+    #     # Product level offer
+    #     if self.product.offer:
+    #         discount = max(discount, float(self.product.offer.offer_percent))
+
+    #     # Category level offer
+    #     if self.product.category and self.product.category.offer:
+    #         discount = max(discount, float(self.product.category.offer.offer_percent))
+
+    #     # Apply discount
+    #     final_price = price - (price * discount / 100)
+    #     return round(final_price, 2)
+    
+    
 
     def __str__(self):
         return self.name
