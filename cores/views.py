@@ -135,18 +135,49 @@ class ProductDetailsView(View):
 
     def get(self, request, product_id):
 
-
+        main_get = request.GET.get('main','').strip()
+        print("main new ", main_get)
 
 
         main_product = get_object_or_404(Product, id=product_id)
 
+        
+
         images = main_product.images.all()
         print("images are", images)
+
+        variants = main_product.variants.filter(is_listed=True)
+        print(" variants", variants)
+        variants = variants.order_by('-stock')
+        print('variants based on stock', variants)
+
+        if not main_get:
+            main_variant = variants.first()
+        else:
+            main_variant = variants.get(name=main_get)
+        print("main variant discount", main_variant.discount)
+
+        # for related products
+
+        related_products = Product.objects.filter(is_deleted=False, is_listed=True).order_by('-created_at')[:4]
+
+        product_with_image = []
+        for product in related_products:
+            main_image = product.images.filter(is_main=True).first()
+            product_with_image.append({
+                "product": product,
+                "main_image": main_image,
+            })
+
+
 
         context = {
             "main_product": main_product,
             "images": images,
             "user_id":request.user.id,
+            "variants" : variants,
+            "main_variant": main_variant,
+            "product_with_image":product_with_image,
         }
 
         return render(request, 'cores/productdetail1.html', context)

@@ -126,6 +126,24 @@ class Variant(models.Model):
 
         return round(price, 2)
     
+    @property
+    def discount_percent(self):
+        
+        discounts = []
+
+        if self.discount:
+            discounts.append(float(self.discount))
+        if self.product.offer:
+            discounts.append(float(self.product.offer.offer_percent))
+        if self.product.category and self.product.category.offer:
+            discounts.append(float(self.product.category.offer.offer_percent))
+
+        if discounts:
+            max_discount = max(discounts)
+            
+
+        return round(max_discount, 2)
+    
     def save(self, *args, **kwargs):
         """
         After saving a variant, update its product's base price.
