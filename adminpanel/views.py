@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.views.decorators.http import require_POST
+from django.utils import timezone
 import json
 import re
 from django.urls import reverse_lazy
@@ -46,7 +47,7 @@ class AdminProductView(View):
 class AddProductView(LoginRequiredMixin, View):
     def get(self, request):
         brands = Brand.objects.all()
-        categories = Category.objects.filter(is_list=True)
+        categories = Category.objects.filter(is_listed=True)
         return render(request, 'adminpanel/product_add.html', {
             'brands': brands,
             'categories': categories, "user_id": request.user.id
@@ -68,7 +69,7 @@ class AddProductView(LoginRequiredMixin, View):
                 errors['product_name'] = 'Product name is required.'
             if not product_description:
                 errors['product_description'] = 'Product description is required.'
-            if not category_id or not Category.objects.filter(id=category_id, is_list=True).exists():
+            if not category_id or not Category.objects.filter(id=category_id, is_listed=True).exists():
                 errors['category'] = 'Valid category is required.'
             if not brand_id or not Brand.objects.filter(id=brand_id).exists():
                 errors['brand'] = 'Valid brand is required.'
@@ -157,7 +158,7 @@ class EditProductView(View):
     def get(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
         brands = Brand.objects.all()
-        categories = Category.objects.filter(is_list=True)
+        categories = Category.objects.filter(is_listed=True)
 
         return render(request, 'adminpanel/edit_product.html', {"product": product, "user_id":request.user.id, "brands":brands, "categories":categories})
     def post(self, request, product_id):
@@ -176,7 +177,7 @@ class EditProductView(View):
                 errors['product_name'] = 'Product name is required.'
             if not product_description:
                 errors['product_description'] = 'Product description is required.'
-            if not category_id or not Category.objects.filter(id=category_id, is_list=True).exists():
+            if not category_id or not Category.objects.filter(id=category_id, is_listed=True).exists():
                 errors['category'] = 'Valid category is required.'
             if not brand_id or not Brand.objects.filter(id=brand_id).exists():
                 errors['brand'] = 'Valid brand is required.'
@@ -234,10 +235,22 @@ class AddProductOfferView(View):
         start_date = request.POST.get('start-date')
         end_date = request.POST.get('end-date')
 
+
+
         print("title",title)
 
         start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
         end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
+
+        today = timezone.now().date()
+
+        print(start_date,"today",today)
+        if not start_date >= today:
+            error_notify(self.request, 'Start date must be greater than equal to today ' )
+            return redirect('addproduct_offer', product_id=product_id)
+        if not end_date > today:
+            error_notify(self.request, 'End date must be greater than today' )
+            return redirect('addproduct_offer', product_id=product_id)
 
         offer = Offer.objects.create(
             title=title, offer_percent=discount, about=about,
@@ -257,6 +270,20 @@ class EditProductOfferView(View):
     
     def post(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
+
+        start_date = datetime.strptime(request.POST.get('start-date'), '%m/%d/%Y').date()
+
+        end_date = datetime.strptime(request.POST.get('end-date'), '%m/%d/%Y').date()
+
+        today = today = timezone.now().date()
+
+        print(start_date,"today",today)
+        if not start_date >= today:
+            error_notify(self.request, 'Start date must be greater than equal to today ' )
+            return redirect('editproduct_offer', product_id=product_id)
+        if not end_date > today:
+            error_notify(self.request, 'End date must be greater than today' )
+            return redirect('editproduct_offer', product_id=product_id)
 
         offer = get_object_or_404(Offer, id=product.offer_id)
 
@@ -339,10 +366,10 @@ class AdminCategoryView(View):
 class TogglCategoryStatusView(View):
     def post(self, request, pk):
         category = get_object_or_404(Category, pk=pk)
-        category.is_list = not category.is_list
+        category.is_listed = not category.is_listed
         category.save()
-        print("category is listed", category.is_list)
-        return JsonResponse({'success': True, 'is_list': category.is_list})
+        print("category is listed", category.is_listed)
+        return JsonResponse({'success': True, 'is_list': category.is_listed})
     
 
 # category add view 
@@ -362,9 +389,9 @@ class AddCategoryView(View):
         # return HttpResponse(f"the status is {status}")
 
         if status == 'listed':
-            is_list = True
+            is_listed = True
         else:
-            is_list = False
+            is_listed = False
 
         if not category_name:
             
@@ -376,7 +403,7 @@ class AddCategoryView(View):
             return redirect('add-category')
         
         else:
-            category = Category.objects.create(name=category_name, description=description, is_list=is_list)
+            category = Category.objects.create(name=category_name, description=description, is_listed=is_listed)
             category.save()
             print("category created")
 
@@ -411,6 +438,8 @@ class CategoryUpdateView(UpdateView):
 class AddCategoryOffer(View):
     def get(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
+        today = timezone.now().date()
+        print(today)
         
         print("category id", category.id)
         return render(request, 'adminpanel/addcategory-offer.html', {"user_id":request.user.id, "category": category})
@@ -427,9 +456,18 @@ class AddCategoryOffer(View):
         end_date = request.POST.get('end-date')
 
         print("title",title)
+        today = timezone.now().date()
 
         start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
         end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
+
+        print(start_date,"today",today)
+        if not start_date >= today:
+            error_notify(self.request, 'Start date must be greater than equal to today ' )
+            return redirect('addcategory_offer', category_id=category_id)
+        if not end_date > today:
+            error_notify(self.request, 'End date must be greater than today' )
+            return redirect('addcategory_offer', category_id=category_id)
 
         offer = Offer.objects.create(
             title=title, offer_percent=discount, about=about,
@@ -458,6 +496,22 @@ class EditCategoryOffer(View):
         # find offer using foreign key
         offer = get_object_or_404(Offer, id=category.offer_id)
         print("the offer title is :", offer.title)
+
+
+        start_date = datetime.strptime(request.POST.get('start-date'), '%m/%d/%Y').date()
+
+        end_date = datetime.strptime(request.POST.get('end-date'), '%m/%d/%Y').date()
+
+        today = today = timezone.now().date()
+
+        print(start_date,"today",today)
+        if not start_date >= today:
+            error_notify(self.request, 'Start date must be greater than equal to today ' )
+            return redirect('editcategory_offer', category_id=category_id)
+        if not end_date > today:
+            error_notify(self.request, 'End date must be greater than today' )
+            return redirect('editcategory_offer', category_id=category_id)
+
 
         offer.title = request.POST.get('offer-title')
         offer.about = request.POST.get('about')
@@ -495,7 +549,7 @@ class CategoryDeleteView(DeleteView):
 
     def post(self, request, *args, **kwargs):
         category = self.get_object()
-        category.is_list = False  # Mark as unlisted
+        category.is_listed = False  # Mark as unlisted
         category.save()
         return redirect(self.success_url)
 

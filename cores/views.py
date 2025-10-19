@@ -4,7 +4,9 @@ from accounts.models import CustomUser
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
-from adminpanel.models import Category, Offer, Product, ProductImage, Variant
+from django.db.models import Q, Min
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from adminpanel.models import Category, Offer, Product, ProductImage, Variant, Brand
 
 # Create your views here.
 
@@ -35,26 +37,96 @@ class ProductlistingView(View):
 
     def get(self, request):
 
-        category = Category.objects.all()
-        
-        products = Product.objects.filter(is_deleted=False, is_listed=True).order_by('-created_at')
+        search_q = request.GET.get('q', '').strip()
+        sort_option = request.GET.get('sort', '').strip()
+        cat_option = request.GET.get('cat', '').strip()
+        brand_option = request.GET.getlist('brand')
+        page = request.GET.get('page', 1)
 
+        print("search for ",search_q, "| sort by:", sort_option, "| category by :", cat_option, "| brand:", brand_option, "| page:", page)
+
+        category = Category.objects.filter(is_listed=True)
+        brand = Brand.objects.all()
+        
+        products = Product.objects.filter(is_deleted=False, is_listed=True)
+
+        if search_q:
+            products = products.filter(Q(brand__name__icontains=search_q)| 
+                                       Q(category__name__icontains=search_q) | 
+                                       Q(variants__name__icontains=search_q)).distinct()
+            
+        if brand_option:
+            products = products.filter(brand__name__in=brand_option)
+
+        # apply category selection
+            
+        if cat_option and cat_option.lower() != 'clear':
+            products = products.filter(category__name__iexact=cat_option)
+            
+
+            
+        # apply sorting
+        if sort_option == "price_asc":
+
+            # products = products.order_by('base_price')
+            products = products.order_by('base_price')
+
+            # print("products", products)
+        
+        elif sort_option == "price_desc":
+            # products = products.order_by('-base_price')
+            products = products.order_by('-base_price')
+
+        elif sort_option == "name_asc":
+            products = products.order_by('name')
+        elif sort_option == "name_desc":
+            products = products.order_by('-name')
+        elif sort_option == "newest":
+            products = products.order_by('-created_at')
+
+            
+        elif sort_option == "clear":
+            products = products.order_by('-created_at')
+            sort_option = ''
+        else:
+            products = products.order_by('-created_at')
+
+        
+        # prepare for display data
         product_with_image = []
         for product in products:
             main_image = product.images.filter(is_main=True).first()
-            main_variant = product.variants.filter(is_listed=True).order_by('-stock').first()
-            print(main_variant)
+            # main_variant = product.variants.filter(is_listed=True).order_by('-stock').first()
+            # print(main_variant.price)
             product_with_image.append({
                 "product": product,
                 "main_image": main_image,
-                "main_variant":main_variant,
+                # "main_variant":main_variant,
             })
+
+        # Pagination — 6 items per page
+
+        paginator = Paginator(product_with_image, 6)
+        try:
+            paginated_products = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_products = paginator.page(1)
+        except EmptyPage:
+            paginated_products = paginator.page(paginator.num_pages)
+
 
         # print(product_with_image)
         context = {
-            "product_with_image": product_with_image,
+            "product_with_image": paginated_products,
             "user_id": request.user.id,
             "categories": category,
+            "brands": brand,
+            "query": search_q,
+            "sort_option": sort_option,
+            "cat_option" : cat_option,
+            "brand_option" : brand_option,
+            "paginator" : paginator,
+            "page_obj" : paginated_products,
         }
 
         return render(request, 'cores/productlist1.html', context)

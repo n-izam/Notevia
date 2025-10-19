@@ -71,7 +71,12 @@
             <button type="submit" class="btn btn-primary">Add Offer</button>
             <button type="button" class="btn btn-secondary">Cancel</button>
         </form>
-    </div>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mt-2" style="color: orangered;">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+</div>
 </div>
 {% endblock %}
 
