@@ -24,8 +24,8 @@ from .views import Custom404View
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),
-    path('cores/', include('cores.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('', include('cores.urls')),
     path('adminpanel/',include('adminpanel.urls')),
     
 ]
