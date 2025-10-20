@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from accounts.models import CustomUser
 from django.utils.decorators import method_decorator
@@ -13,6 +13,13 @@ from adminpanel.models import Category, Offer, Product, ProductImage, Variant, B
 class StaticHomeView(View):
 
     def get(self, request):
+
+        if request.user.is_authenticated:
+            if request.user.is_superuser:
+                return redirect('admin-dash', user_id= request.user.id)
+            else:
+                return redirect("cores-home", user_id=request.user.id)
+
         latest_products = Product.objects.filter(is_deleted=False, is_listed=True).order_by('-created_at')[:4]
 
         product_with_image = []
