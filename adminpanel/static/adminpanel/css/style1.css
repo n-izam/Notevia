@@ -611,3 +611,37 @@ body {
         margin-left: -15rem;
     }
 }
+
+
+
+/* search field of product page its not working it's already adden in the template*/
+
+.search-listing{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clearable-input {
+  position: relative;
+  width: 250px; /* adjust width as you like */
+}
+.clearable-input input {
+  padding-right: 2.2rem; /* space for the clear “×” button */
+}
+.clearable-input .clear-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #888;
+  display: none;
+}
+.clearable-input .clear-btn.visible {
+  display: block;
+}
