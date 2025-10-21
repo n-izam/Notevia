@@ -1,3 +1,4 @@
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,10 +63,10 @@
         <hr class="flex-grow-1">
       </div>
 
-      <button type="button" class="btn google-btn w-100">
+      <a type="button" href="{% provider_login_url 'google' %}" class="btn google-btn w-100">
         <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" class="me-2">
         Google
-      </button>
+      </a>
     </form>
     {% if messages %}
         {% for message in messages %}

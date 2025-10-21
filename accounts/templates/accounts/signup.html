@@ -1,3 +1,4 @@
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,7 +97,7 @@
       <p class="small mt-2">Anyone has referred You? Claim the reward</p>
       <button type="button" class="btn btn-outline-dark btn-sm mb-3">REFERRAL CODE</button>
 
-      <p class="small">Already have an account? <a href="/">Log in</a></p>
+      <p class="small">Already have an account? <a href="{% url 'signin' %}">Log in</a></p>
       
       <button type="submit" class="btn btn-black w-100 mb-3">Sign Up</button>
 
@@ -106,10 +107,10 @@
         <hr class="flex-grow-1">
       </div>
 
-      <button type="button" class="btn google-btn w-100">
+      <a type="button" href="{% provider_login_url 'google' %}" class="btn google-btn w-100">
         <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" class="me-2">
         Google
-      </button>
+      </a>
     </form>
   </div>
 

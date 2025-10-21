@@ -38,17 +38,6 @@
                 </a>
 
                 <!-- 3. Account Icon (Right on Mobile) -->
-                <div class="d-lg-none">
-                    <div class="btn-group">
-                        <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'signout' user_id=user_id %}">Logout</a></li>
-                        </ul>
-                    </div>
-                </div>
 
 
                 <!-- ===== COLLAPSIBLE CONTENT (Desktop View & Mobile Dropdown) ===== -->
@@ -61,8 +50,8 @@
 
                     <!-- 2. Navigation Links (Centered on Desktop / Top of Mobile Menu) -->
                     <ul class="navbar-nav mx-auto">
-                        <li class="nav-item"><a href="{% url 'cores-home' user_id=user_id %}" class="nav-link px-3 text-dark">Home</a></li>
-                        <li class="nav-item"><a href="{% url 'shop_products' %}" class="nav-link px-3 text-dark">Products</a></li>
+                        <li class="nav-item"><a href="{% url 'static_home' %}" class="nav-link px-3 text-dark">Home</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link px-3 text-dark">Products</a></li>
                         <li class="nav-item"><a href="#" class="nav-link px-3 text-dark">About us</a></li>
                     </ul>
 
@@ -71,24 +60,15 @@
                         <!-- <button type="button" class="btn"><i class="fas fa-search"></i></button> -->
                         
                         <!-- Account Icon for Desktop -->
-                        <div class="btn-group d-none d-lg-block">
-                            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="{% url 'signout' user_id=user_id %}">Logout</a></li>
-                            </ul>
-                        </div>
                         
-                        <button type="button" class="btn position-relative">
-                            <i class="fas fa-heart"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
-                        </button>
-                        <button type="button" class="btn position-relative">
-                            <i class="fas fa-shopping-bag"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
-                        </button>
+                        <a type="button" href="{% url 'signup' %}" class="btn position-relative">
+                            <i class="">Signup</i>
+                            
+                        </a>
+                        <a type="button" href="{% url 'signin' %}" class="btn position-relative">
+                            <i class="">Signin</i>
+                            
+                        </a>
                     </div>
                 </div>
             </div>
