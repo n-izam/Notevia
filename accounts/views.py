@@ -184,8 +184,19 @@ class SigninView(View):
             
             info_notify(request, "enter your password")
             return redirect('signin')
+        
+        if CustomUser.objects.filter(email=emails).exists():
+
+            user = get_object_or_404(CustomUser, email=emails)
+            print("the customer active status:", user.is_active)
+            if not user.is_active:
+                warning_notify(request, "this mail is blocked, use different mail")
+                return redirect("signin")
+    
         # user1 = CustomUser.objects.get(email=emails)
         user = authenticate(request, email=emails, password=passwords)
+
+        # print("user status active: ", user.is_active)
         
         print("email is", emails)
         print("password is ", passwords)

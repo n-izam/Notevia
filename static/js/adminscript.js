@@ -119,29 +119,29 @@ var el = document.getElementById("wrapper");
 
 // search script (it only workd on template level)
 
-const input = document.getElementById("searchField");
-const clearBtn = document.getElementById("btnClear");
+// const input = document.getElementById("searchField");
+// const clearBtn = document.getElementById("btnClear");
 
-// Show or hide clear button depending on input value
-input.addEventListener("input", () => {
-  if (input.value.length > 0) {
-    clearBtn.classList.add("visible");
-  } else {
-    clearBtn.classList.remove("visible");
-  }
-});
+// // Show or hide clear button depending on input value
+// input.addEventListener("input", () => {
+//   if (input.value.length > 0) {
+//     clearBtn.classList.add("visible");
+//   } else {
+//     clearBtn.classList.remove("visible");
+//   }
+// });
 
-// Clear input when × clicked
-clearBtn.addEventListener("click", () => {
-  input.value = "";
-  clearBtn.classList.remove("visible");
-  input.focus();
-});
+// // Clear input when × clicked
+// clearBtn.addEventListener("click", () => {
+//   input.value = "";
+//   clearBtn.classList.remove("visible");
+//   input.focus();
+// });
 
-// On page load, if field has prefilled text, show clear button
-window.addEventListener("load", () => {
-  if (input.value.length > 0) {
-    clearBtn.classList.add("visible");
-  }
-});
+// // On page load, if field has prefilled text, show clear button
+// window.addEventListener("load", () => {
+//   if (input.value.length > 0) {
+//     clearBtn.classList.add("visible");
+//   }
+// });
 
