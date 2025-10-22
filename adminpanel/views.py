@@ -18,6 +18,9 @@ from accounts.utils import warning_notify, info_notify,success_notify, error_not
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 
 # Create your views here.
@@ -39,10 +42,46 @@ class AdminDashView(View):
 class AdminProductView(View):
     def get(self, request):
 
+        search_q = request.GET.get('q', '').strip()
+        cat_option = request.GET.get('cat', '').strip()
+        print("search query: ", search_q, "category query", cat_option)
 
         products = Product.objects.all().order_by('-updated_at')
+        categories = Category.objects.filter(is_listed=True)
+
+        if search_q:
+            products = products.filter(Q(brand__name__icontains=search_q)| 
+                                       Q(category__name__icontains=search_q))
+            
+        if cat_option and cat_option.lower() != 'clear':
+            products = products.filter(category__name__iexact=cat_option)
+
+        page_number = request.GET.get('page', 1)
+        per_page = 5  # e.g., show 5 items per page
+        paginator = Paginator(products, per_page)
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g., page_number too high), deliver last page.
+            page_obj = paginator.page(paginator.num_pages)
+
         productimages = ProductImage.objects.all()
-        return render(request, 'adminpanel/product-main.html', {"user_id": request.user.id, "products": products})
+
+        contex = {
+            "user_id": request.user.id,
+            "products": page_obj.object_list,
+            "page_obj": page_obj,
+            "paginator": paginator,
+            "categories": categories,
+            "query": search_q,
+            "cat_option" : cat_option,
+            "per_page": per_page,
+        }
+
+        return render(request, 'adminpanel/product-main.html', contex)
 
 class AddProductView(LoginRequiredMixin, View):
     def get(self, request):

@@ -1,0 +1,99 @@
+{% extends "static_base.html" %}
+
+{% load static %}
+{% load socialaccount %}
+
+{% block title %} Home Page {% endblock %}
+<!-- {% block head %} {% endblock %} -->
+
+{% block style %}
+
+<style>
+
+    body{
+        background-color: #f9f9f9;
+    }
+    .main-cont {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+         /* A light grey background to see the form container */
+    }
+
+    .signup-container {
+      width: 100%;
+      max-width: 400px;
+    }
+    .btn-black {
+      background-color: #000;
+      color: #fff;
+    }
+    .btn-black:hover {
+      background-color: #333;
+      color: #fff;
+    }
+    .google-btn {
+      border: 1px solid #ddd;
+      background-color: #fff;
+    }
+  </style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="main-cont">
+    <div class="signup-container text-center">
+        <h3 class="mb-4 fw-bold">Log in</h3>
+        
+        <form action="{% url 'signin'  %}" method="POST" novalidate>
+          {% csrf_token %}
+          <div class="mb-3 text-start">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="Label (required)">
+          </div>
+          
+          <div class="mb-3 text-start">
+            <label class="form-label">Password</label>
+            <div class="input-group">
+              <input type="password" class="form-control" name="password" placeholder="Label (required)">
+              <span class="input-group-text"><i class="bi bi-eye"></i></span>
+            </div>
+          </div>
+    
+          
+          <p class="small text-end"><a class="text-decoration-none" href="{% url 'forgot_pass' %}">Forgot Password?</a></p>
+        
+          
+          <button type="submit" class="btn btn-black w-100 mb-3">Log in</button>
+    
+          <div class="d-flex align-items-center mb-3">
+            <hr class="flex-grow-1">
+            <span class="px-2 text-muted">Or Register with</span>
+            <hr class="flex-grow-1">
+          </div>
+    
+          <a type="button" href="{% provider_login_url 'google' %}" class="btn google-btn w-100">
+            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" class="me-2">
+            Google
+          </a>
+          <p class="small">Create an account <a href="{% url 'signup' %}">Sign up</a></p>
+        </form>
+        {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+      </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+{% endblock %}

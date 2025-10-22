@@ -51,9 +51,10 @@
           <span class="input-group-text"><i class="bi bi-eye"></i></span>
         </div>
       </div>
-      
 
-      <p class="small">Create an account <a href="{% url 'signup' %}">Sign up</a></p>
+      
+      <p class="small text-end"><a class="text-decoration-none" href="{% url 'signup' %}">Forgot Password?</a></p>
+    
       
       <button type="submit" class="btn btn-black w-100 mb-3">Log in</button>
 
@@ -67,6 +68,7 @@
         <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" class="me-2">
         Google
       </a>
+      <p class="small">Create an account <a href="{% url 'signup' %}">Sign up</a></p>
     </form>
     {% if messages %}
         {% for message in messages %}
