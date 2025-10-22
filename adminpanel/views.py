@@ -386,9 +386,36 @@ class AdminCustomersView(View):
     
     def get(self, request):
 
+        search_q = request.GET.get('q', '').strip()
+
         customers = CustomUser.objects.all().exclude(is_superuser=True)
 
+        if search_q:
+            customers = customers.filter(Q(full_name__icontains=search_q)| 
+                                       Q(email__icontains=search_q))
+
+
+
         return render(request, 'adminpanel/customers.html', {"user_id": request.user.id, "customers": customers})
+    
+@method_decorator(csrf_exempt, name='dispatch')
+class ToggleCustomerStatusView(View):
+
+    def post(self, request, pk):
+        user = get_object_or_404(CustomUser, pk=pk)
+        
+        # print("the variants are ", variants)
+        user.is_active = not user.is_active
+        user.save()
+
+        # Variant.objects.filter(product=product).update(is_listed=product.is_listed)
+        # variants = get_object_or_404(Variant, product_id=product.id)
+        # print("the variants are ", variants)
+
+        print("customer is active :", user.is_active)
+        return JsonResponse({'success': True, 'is_active': user.is_active})
+    
+
     
 # admin category list view
 
@@ -396,7 +423,12 @@ class AdminCategoryView(View):
 
     def get(self, request):
 
+        search_q = request.GET.get('q', '').strip()
+
         category = Category.objects.all()
+
+        if search_q:
+            category = category.filter(Q(name__icontains=search_q))
 
         return render(request, 'adminpanel/category.html', {"category": category, "user_id":request.user.id})
 

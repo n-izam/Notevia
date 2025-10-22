@@ -2,8 +2,47 @@
 
 {% load static %}
 
-{% block title %} Dashboard {% endblock %}
-<!-- {% block head %} {% endblock %} -->
+{% block title %} productlist {% endblock %}
+
+{% block head %} <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> {% endblock %}
+
+{% block style %}
+
+<style>
+
+    .search-listing{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .clearable-input {
+      position: relative;
+      width: 250px; /* adjust width as you like */
+    }
+    .clearable-input input {
+      padding-right: 2.2rem; /* space for the clear “×” button */
+    }
+    .clearable-input .clear-btn {
+      position: absolute;
+      top: 50%;
+      right: 0.6rem;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      color: #888;
+      display: none;
+    }
+    .clearable-input .clear-btn.visible {
+      display: block;
+    }
+  </style>
+
+{% endblock %}
+
 
 {% block content %}
 
@@ -22,9 +61,16 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
             <h2>CUSTOMER LIST</h2>
             <div class="d-flex">
-                <div class="input-group me-2">
-                <input type="text" class="form-control" placeholder="Search customer...">
-                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <div class="search-listing mx-3">
+                    <form method="GET" action="" class="d-flex align-items-center">
+                        <div class="clearable-input me-2">
+                          <input type="text" name="q" class="form-control form-control-sm" placeholder="Search..." value="{{ query }}" id="searchField" autocomplete="off" />
+                          <button type="button" class="clear-btn" id="btnClear" aria-label="Clear">&times;</button>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-dark">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </form>
                 </div>
                 <!-- <button class="btn btn-outline-secondary">
                 <i class="fas fa-sliders-h"></i> Filters
@@ -66,11 +112,19 @@
                     <td>{{customer.phone_no}}</td>
                     <td>124</td>
                     <!-- <td>$121.00</td> -->
-                    <td><span class="badge bg-danger rounded-pill">Blocked</span></td>
                     <td>
-                    <div class="form-check form-switch  ">
-                        <input class="form-check-input " type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                    </div>
+                        {% if customer.is_active %}
+                        <span class="badge bg-success rounded-pill">Active</span></td>
+                        {% else %}
+                        <span class="badge bg-danger rounded-pill">Blocked</span></td>
+                        {% endif %}
+                    <td>
+                        <div class="form-check form-switch ">
+                        <input class="form-check-input" 
+                        type="checkbox" role="switch" id="switch{{ customer.id }}" 
+                        {% if customer.is_active %}checked {% endif %} onchange="toggleStatus('{{customer.id}}')">
+                        
+                        </div>
                     </td>
                     <td><a href="customerdetail.html"><i class="bi bi-eye"></i></a></td>
                 </tr>
@@ -127,5 +181,56 @@
 
     </div>
 </div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    function toggleStatus(customerId) {
+      const csrfToken = '{{ csrf_token }}';
+  
+      axios.post(`/adminpanel/toggles-status-customer/${customerId}/`, {}, {
+        headers: {
+          'X-CSRFToken': csrfToken
+        }
+      })
+      .then(response => {
+        if (response.data.success) {
+          const isActive = response.data.is_active;
+          console.log(`Customer ${customerId} is now:`, isActive ? 'Listed ✅' : 'Unlisted ❌');
+        }
+      })
+      .catch(error => {
+        console.error("Error updating status:", error);
+      });
+    }
+
+    const input = document.getElementById("searchField");
+    const clearBtn = document.getElementById("btnClear");
+
+    // Show or hide clear button depending on input value
+    input.addEventListener("input", () => {
+      if (input.value.length > 0) {
+        clearBtn.classList.add("visible");
+      } else {
+        clearBtn.classList.remove("visible");
+      }
+    });
+
+    // Clear input when × clicked
+    clearBtn.addEventListener("click", () => {
+      input.value = "";
+      clearBtn.classList.remove("visible");
+      input.focus();
+    });
+
+    // On page load, if field has prefilled text, show clear button
+    window.addEventListener("load", () => {
+      if (input.value.length > 0) {
+        clearBtn.classList.add("visible");
+      }
+    });
+  </script>
 
 {% endblock %}
