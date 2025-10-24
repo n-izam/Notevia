@@ -197,9 +197,11 @@ class EditProductView(View):
     def get(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
         brands = Brand.objects.all()
+        images = product.images.all()
+
         categories = Category.objects.filter(is_listed=True)
 
-        return render(request, 'adminpanel/edit_product.html', {"product": product, "user_id":request.user.id, "brands":brands, "categories":categories})
+        return render(request, 'adminpanel/edit_product.html', {"product": product, "user_id":request.user.id, "brands":brands, "categories":categories, "images": images})
     def post(self, request, product_id):
         try:
             errors = {}
@@ -274,6 +276,21 @@ class AddProductOfferView(View):
         start_date = request.POST.get('start-date')
         end_date = request.POST.get('end-date')
 
+        if not title:
+            error_notify(self.request, 'Leave offer title ' )
+            return redirect('addproduct_offer', product_id=product_id)
+        if not about:
+            error_notify(self.request, 'Leave offer discription ' )
+            return redirect('addproduct_offer', product_id=product_id)
+        if not discount:
+            error_notify(self.request, 'Leave product offer discount ' )
+            return redirect('addproduct_offer', product_id=product_id)
+        if not start_date:
+            error_notify(self.request, 'Set product offer start date ' )
+            return redirect('addproduct_offer', product_id=product_id)
+        if not end_date:
+            error_notify(self.request, 'Set product offer End date ' )
+            return redirect('addproduct_offer', product_id=product_id)
 
 
         print("title",title)
@@ -310,10 +327,38 @@ class EditProductOfferView(View):
     def post(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
 
-        start_date = datetime.strptime(request.POST.get('start-date'), '%m/%d/%Y').date()
+        title = request.POST.get('offer-title', '').strip()
 
-        end_date = datetime.strptime(request.POST.get('end-date'), '%m/%d/%Y').date()
+        description = request.POST.get('about', '').strip()
 
+        offer_discount = request.POST.get('discount')
+
+        start_date = request.POST.get('start-date')
+
+        end_date = request.POST.get('end-date')
+
+       
+
+        if not title:
+            error_notify(self.request, 'Leave offer title ' )
+            return redirect('editproduct_offer', product_id=product_id)
+        if not description:
+            error_notify(self.request, 'Leave offer discription ' )
+            return redirect('editproduct_offer', product_id=product_id)
+        if not offer_discount:
+            error_notify(self.request, 'Leave product offer discount ' )
+            return redirect('editproduct_offer', product_id=product_id)
+        if not start_date:
+            error_notify(self.request, 'Set product offer start date ' )
+            return redirect('editproduct_offer', product_id=product_id)
+        if not end_date:
+            error_notify(self.request, 'Set product offer End date ' )
+            return redirect('editproduct_offer', product_id=product_id)
+        
+        start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
+
+        end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
+        
         today = today = timezone.now().date()
 
         print(start_date,"today",today)
@@ -326,11 +371,11 @@ class EditProductOfferView(View):
 
         offer = get_object_or_404(Offer, id=product.offer_id)
 
-        offer.title = request.POST.get('offer-title')
-        offer.about = request.POST.get('about')
-        offer.offer_percent = request.POST.get('discount')
-        offer.start_date = datetime.strptime(request.POST.get('start-date'), '%m/%d/%Y').date()
-        offer.end_date = datetime.strptime(request.POST.get('end-date'), '%m/%d/%Y').date()
+        offer.title = title
+        offer.about = description
+        offer.offer_percent = offer_discount
+        offer.start_date = start_date
+        offer.end_date = end_date
 
         offer.save()
 
