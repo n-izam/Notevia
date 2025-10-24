@@ -124,17 +124,17 @@ header {
 
 @media (min-width: 992px) {
     .navbar-brand img {
-        height: 80px; /* Adjust desktop logo height */
+        height: 60px; /* Adjust desktop logo height */
     }
 }
 
 /* Perfectly center the logo on mobile */
 @media (max-width: 991.98px) {
-    .navbar-brand-mobile {
+    /* .navbar-brand-mobile {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-    }
+    } */
     .navbar-collapse {
         /* Adds a top border to separate the dropdown menu from the header on mobile */
         border-top: 1px solid #dee2e6;
@@ -403,7 +403,7 @@ footer hr {
     border-radius: 0 !important;
 }
 .btn-ruling.active {
-    background-color: #000;
+    background-color: #000000c0;
     color: #fff;
 }
 .quantity-selector {
