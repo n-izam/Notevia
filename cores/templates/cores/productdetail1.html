@@ -72,23 +72,37 @@
 
                     <div class="btn-group" role="group">
                         {% for variant in variants %}
-                        <a href="?main={{variant}}" class=" btn btn-ruling {% if main_variant == variant %} active {% endif %}">{{ variant.name }}</a>
+                        <div class="border border-end mx-1">
+                            <a href="?main={{variant}}" class=" btn btn-ruling {% if main_variant == variant %} active {% endif %} border-0">{{ variant.name }} <br>
+                                {% if variant.stock %}
+                                <span class="text-success">In stoke</span>
+                                {% else %}
+                                <span class="text-danger">Out of stoke</span>
+                                {% endif %}
+                            </a>
+                        </div>
                         {% endfor %}
                     </div>
                 </div>
-                
+                <div>
+                    {% if main_variant.stock <= 0 %}
+                    <span class="text-danger">Out of stock</span>
+                    {% elif main_variant.stock < 5 %}
+                    <span class="text-warning"><i class="fas fa-warning me-2"></i>Only {{ main_variant.stock }} left!</span>
+                    {% endif %}
+                </div>
     
-                <div class="quantity-section mb-4">
+                <div class="quantity-section my-4">
                     <p class="fw-bold mb-1">Quantity</p>
                     <div class="input-group quantity-selector">
                         <button class="btn btn-outline-secondary" type="button" id="minus-btn">-</button>
-                        <input type="text" class="form-control text-center" value="1" id="quantity-input">
+                        <input type="number" class="form-control text-center" value="1" id="quantity-input" min="1">
                         <button class="btn btn-outline-secondary" type="button" id="plus-btn">+</button>
                     </div>
                 </div>
                 
                 <div class="d-flex align-items-center mb-4">
-                    <button class="btn btn-dark btn-lg w-100 me-3" type="button">Add to cart</button>
+                    <a id="addToCartBtn" href="#" class="btn btn-dark btn-lg w-100 me-3" role="button" >Add to cart</a>
                     <button class="btn btn-outline-dark wishlist-btn" type="button"><i class="far fa-heart"></i></button>
                 </div>
     
@@ -99,6 +113,7 @@
                     </div>
                     <div class="d-flex align-items-center">
                         <i class="fas fa-shield-alt me-2"></i>
+                        <i class="fas fa-warning me-2"></i>
                         <span>Secure and encrypted transaction</span>
                     </div>
                 </div>
@@ -271,5 +286,64 @@
     </div>
 
 </div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    const btn = document.getElementById('addToCartBtn');
+    const stock = parseInt("{{ main_variant.stock|default:0 }}", 10);
+  
+    if (stock <= 0) {
+      btn.classList.add('disabled');
+      btn.setAttribute('aria-disabled', 'true');
+      btn.removeAttribute('href');
+      btn.innerText = 'Out of stock';
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const minusBtn = document.getElementById("minus-btn");
+        const plusBtn  = document.getElementById("plus-btn");
+        const input    = document.getElementById("quantity-input");
+        // Replace with actual stock value from server
+        //const stock    = 10;  
+        const stock = parseInt("{{ main_variant.stock|default:0 }}", 10);
+      
+        // Set the max attribute
+        input.max = stock;
+      
+        minusBtn.addEventListener("click", () => {
+          let current = parseInt(input.value, 10);
+          if (isNaN(current)) current = 0;
+          if (current > parseInt(input.min, 10)) {
+            input.value = current - 1;
+          }
+        });
+      
+        plusBtn.addEventListener("click", () => {
+          let current = parseInt(input.value, 10);
+          if (isNaN(current)) current = 0;
+          if (current < stock) {
+            input.value = current + 1;
+          } else {
+            // optionally show a message: “Max stock reached”
+            input.value = stock;
+          }
+        });
+      
+        // Also handle direct input editing
+        input.addEventListener("change", () => {
+          let val = parseInt(input.value, 10);
+          if (isNaN(val) || val < parseInt(input.min,10)) {
+            input.value = input.min;
+          } else if (val > stock) {
+            input.value = stock;
+          }
+        });
+      });
+
+</script>
+  
 
 {% endblock %}
