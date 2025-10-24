@@ -144,6 +144,26 @@ class Variant(models.Model):
 
         return round(max_discount, 2)
     
+    @property
+    def main_offer(self):
+        # Determine the best offer (excluding the variant's own discount)
+        best_offer = None
+        best_percent = 0
+        
+        if self.product.offer:
+            product_offer_percent = float(self.product.offer.offer_percent)
+            if product_offer_percent > best_percent:
+                best_percent = product_offer_percent
+                best_offer = self.product.offer
+
+        if self.product.category and self.product.category.offer:
+            category_offer_percent = float(self.product.category.offer.offer_percent)
+            if category_offer_percent > best_percent:
+                best_percent = category_offer_percent
+                best_offer = self.product.category.offer
+
+        return best_offer
+    
     def save(self, *args, **kwargs):
         """
         After saving a variant, update its product's base price.

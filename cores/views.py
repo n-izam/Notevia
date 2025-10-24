@@ -182,7 +182,8 @@ class ProductDetailsView(View):
             main_variant = variants.first()
         else:
             main_variant = variants.get(name=main_get)
-        print("main variant discount", main_variant.discount)
+        print("main variant discount", main_variant.discount_percent)
+        print("main variant main_offer", main_variant.main_offer)
 
         # for related products
 
@@ -196,7 +197,12 @@ class ProductDetailsView(View):
                 "main_image": main_image,
             })
 
-
+        # breadcrumb
+        breadcrumb = [
+            {"name": "Home", "url": "/"},
+            {"name": main_product.category.name.capitalize(), "url": f"/shop_product_list/?cat={main_product.category.name}"},
+            {"name": main_product.name.capitalize(), "url": ""},
+        ]
 
         context = {
             "main_product": main_product,
@@ -205,6 +211,7 @@ class ProductDetailsView(View):
             "variants" : variants,
             "main_variant": main_variant,
             "product_with_image":product_with_image,
+            "breadcrumb": breadcrumb,
         }
 
         return render(request, 'cores/productdetail1.html', context)
