@@ -31,6 +31,10 @@ class SignupView(View):
             
         # if request.session.get("signup_done"):
         #     return redirect("verify-otp", user_id=request.user.id)
+
+        # this is important because chaange password safety
+        if request.session.get("forgot_otp_verified"):
+            request.session.pop("forgot_otp_verified", None)
         
         form = SignupForm()
         return render(request, 'accounts/signup1.html', {"form": form})
@@ -163,8 +167,10 @@ class SigninView(View):
                 return redirect('admin-dash', user_id= request.user.id)
             else:
                 return redirect("cores-home", user_id=request.user.id)
-            
-
+        
+        # this is important because chaange password safety
+        if request.session.get("forgot_otp_verified"):
+            request.session.pop("forgot_otp_verified", None)
 
         # if request.session.get("otp_verified"):
         #     return redirect("sig")
@@ -179,11 +185,11 @@ class SigninView(View):
 
         if not emails:
             
-            info_notify(request, "enter the mail")
+            warning_notify(request, "enter the mail")
             return redirect('signin')
         if not passwords:
             
-            info_notify(request, "enter your password")
+            warning_notify(request, "enter your password")
             return redirect('signin')
         
         if CustomUser.objects.filter(email=emails).exists():
@@ -191,7 +197,7 @@ class SigninView(View):
             user = get_object_or_404(CustomUser, email=emails)
             print("the customer active status:", user.is_active)
             if not user.is_active:
-                warning_notify(request, "this mail is blocked, use different mail")
+                error_notify(request, "this mail is blocked, use different mail")
                 return redirect("signin")
     
         # user1 = CustomUser.objects.get(email=emails)
@@ -216,7 +222,7 @@ class SigninView(View):
                 login(request, user)
 
                 return redirect("cores-home", user_id=user.id)
-        warning_notify(request, "invalid cridentials")
+        error_notify(request, "invalid credentials")
         return redirect('signin')
     
 class SignOutView(View):
@@ -254,6 +260,9 @@ class ForgotPassView(View):
             else:
                 return redirect("cores-home", user_id=request.user.id)
             
+        if request.session.get("forgot_otp_verified"):
+            request.session.pop("forgot_otp_verified", None)
+            
         # if request.session.get("forgot_otp_verified"):
 
         #     return render(request, '')
@@ -263,9 +272,6 @@ class ForgotPassView(View):
     def post(self, request):
 
         email = request.POST.get('email')
-
-
-        
 
 
         if not CustomUser.objects.filter(email=email).exists():
@@ -313,6 +319,7 @@ class VerifyForgotOTPView(View):
         
         if request.session.get("forgot_otp_verified"):
 
+            warning_notify(request, "Change password then move forward")
             return redirect('new_pass', user_id=user_id)
         
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
@@ -384,6 +391,14 @@ class ResetPasswordView(View):
     def get(self, request, user_id):
 
         user = get_object_or_404(CustomUser, id=user_id)
+
+        if not request.session.get("forgot_otp_verified"):
+
+            error_notify(request, "You can't able to change password try again")
+            return redirect("forgot_pass")
+
+
+
         return render(request, 'accounts/newpass.html', {"user_id": user_id, "user": user})
     
     def post(self, request, user_id):

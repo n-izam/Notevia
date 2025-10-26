@@ -70,7 +70,8 @@ class Product(models.Model):
         """
         Override save() to automatically update base_price.
         """
-        self.base_price = self.calc_base_price  # 👈 updates before saving
+        if self.pk:
+            self.base_price = self.calc_base_price  # 👈 updates before saving
         super().save(*args, **kwargs)
     
     @property

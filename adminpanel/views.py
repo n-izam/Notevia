@@ -165,11 +165,8 @@ class AddProductView(LoginRequiredMixin, View):
 
             # --- Save Images ---
             for index, image in enumerate(images):
-                productimage = ProductImage.objects.create(
-                    product=product,
-                    image=image,
-                    is_main=(index == 0)
-                )
+                productimage = ProductImage.objects.create( product=product, image=image, is_main=(index == 0) )
+                
                 print("product image is added", productimage)
 
             
