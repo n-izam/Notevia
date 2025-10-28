@@ -3,6 +3,10 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 from django.conf import settings
 import random
+from cloudinary.models import CloudinaryField
+
+
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, full_name, password=None, **extra_fields):
@@ -51,3 +55,46 @@ class UserOTP(models.Model):
     
     def __str__(self):
         return f"{self.user.email} - {self.otp}"
+
+#  user profile and address model
+
+class UserProfile(models.Model):
+    user = models.OneToOneField( settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile' )
+    
+    image = CloudinaryField('image', folder='user_profiles/', blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"profile of {self.user.full_name}"
+    
+# ADDRESS MODEL
+
+class Address(models.Model):
+    ADDRESS_TYPES = [
+        ('home', 'Home'),
+        ('work', 'Work'),
+        ('other', 'Other'),
+    ]
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='addresses'
+    )
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone_no = models.CharField(max_length=10)
+    address = models.TextField()
+    district = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    pin_code = models.CharField(max_length=10)
+    address_type = models.CharField(max_length=100, choices=ADDRESS_TYPES, default='home')
+    is_default = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.full_name} - {self.address_type}"
+    
+    class Meta:
+        verbose_name_plural = "Addresses"
+        ordering = ['-is_default', 'id'] # Default address appears first

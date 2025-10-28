@@ -103,12 +103,51 @@
 
     <main>
         
-        {% block content %}
+        <!-- Main Content -->
+        <main class="main-container">
+            <div class="container profile-container mt-5 mb-5">
+                <div >
+                    <div class="row">
+                        <!-- Left Sidebar -->
+                        
+                        <div class="col-lg-3 col-md-4">
+                            <aside class="profile-sidebar">
+                                <div class="profile-header">
+                                    <div class="profile-avatar">
+                                        <a href="#">
+                                            <img src="{{user_profile.image.url}}" alt="profile" class="profile-img border border-3">
+                                        </a>
+                                    </div>
+                                    <span class="profile-name">{{user.full_name}}</span>
+                                </div>
+                                <nav class="nav flex-column profile-nav">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'profile' %} active {% endif %} 
+                                    {% if request.resolver_match.url_name == 'profile_edit' %} active {% endif %}"
+                                    href="{% url 'profile' %}"><i class="bi bi-person"></i> My Profile</a>
 
-        {% endblock %}
-        {% block content2 %}
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'address' %} active {% endif %} 
+                                    {% if request.resolver_match.url_name == 'add_address' %} active {% endif %}
+                                    {% if request.resolver_match.url_name == 'edit_address' %} active {% endif %}" 
+                                    href="{% url 'address' %}"><i class="bi bi-send"></i> My Address</a>
 
-        {% endblock %}
+                                    <a class="nav-link" href="#"><i class="bi bi-box-seam"></i> My Order</a>
+                                    <a class="nav-link" href="#"><i class="bi bi-heart"></i> My Wishlist (4)</a>
+                                    <a class="nav-link" href="#"><i class="bi bi-wallet2"></i> My Wallet</a>
+                                    <a class="nav-link" href="#"><i class="bi bi-ticket-perforated"></i> My Coupon</a>
+                                    <a class="nav-link" href="#"><i class="bi bi-lock"></i> Change password</a>
+                                    <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i> Log out</a>
+                                    <a class="nav-link" href="#"><i class="bi bi-people"></i> Refferal Code</a>
+                                </nav>
+                            </aside>
+                        </div>
+                        {% block content2 %}
+
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </main>
+
     </main>
 
     <footer class="bg-light pt-5 pb-4">

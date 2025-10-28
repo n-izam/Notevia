@@ -38,9 +38,14 @@
     <p class="text-muted">We’ve sent a 6-digit OTP to your email {{user.email}}.</p>
 
     <!-- OTP Form -->
+    {% if request.resolver_match.url_name == 'verify-otp' %}
     <form method="post" action="{% url 'verify-otp' user_id=user_id %}" novalidate>
+      {% elif request.resolver_match.url_name == 'verify_profile' %}
+      <form method="post" action="{% url 'verify_profile' %}" novalidate>
+      {% endif %}
       {% csrf_token %}
       <input type="hidden" name="user_id" value="{{ user_id }}">
+
       
       <div class="mb-3 text-start">
         <label class="form-label">Enter OTP</label>
@@ -61,7 +66,11 @@
     <!-- Resend OTP -->
     <p class="small mt-3">
       Didn’t get the OTP? 
+      {% if request.resolver_match.url_name == 'verify-otp' %}
       <a href="{% url 'resend-otp' user_id=user_id %}" class="fw-bold">Resend OTP</a>
+      {% elif request.resolver_match.url_name == 'verify_profile' %}
+      <a href="{% url 'resend_profile' %}" class="fw-bold">Resend OTP</a>
+      {% endif %}
     </p>
   </div>
 

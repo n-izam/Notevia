@@ -26,6 +26,14 @@ class SignupForm(forms.ModelForm):
         }
 
     # custom validations
+    def clean_full_name(self):
+        full_name = self.cleaned_data.get("full_name")
+        print("signup email:",full_name)
+        if not re.match(r'^[A-Za-z\s]+$', full_name):
+            validationerror("Name can contain only alphabets and spaces.")
+        else:
+            return full_name
+
     def clean_email(self):
         email = self.cleaned_data.get("email")
         print("signup email:",email)

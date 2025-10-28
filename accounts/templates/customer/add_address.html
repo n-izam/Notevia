@@ -1,0 +1,135 @@
+
+{% extends 'base_user.html' %}
+
+{% load static %}
+
+{% block title %} {% if request.resolver_match.url_name == 'add_address' %} Add Address {% else %} Edit Address {% endif %} {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<link rel="stylesheet" href="{% static 'css/profile_style.css' %}">
+
+{% endblock %}
+
+
+{% block content2 %}
+
+<!-- Right Content -->
+<div class="col-lg-9 col-md-8 mt-4 mt-md-0">
+    <!-- <div>
+        <p class="text-muted small mb-4">Profile ></p>
+    </div> -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            {% for crumb in breadcrumb %}
+                {% if forloop.last %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ crumb.name }}</li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+    <section class="profile-content">
+        <h2 class="text-center mb-4" style="letter-spacing: 1px;">{% if request.resolver_match.url_name == 'add_address' %}Add New Address {% else %} Edit your Address {% endif %}</h2>
+
+        <div class="add-address-form-container p-4 p-md-5">
+            <h4 class="form-section-title mb-3">Personal Information</h4>
+            <hr class="mb-4">
+            {% if request.resolver_match.url_name == 'add_address' %}
+            <form action="{% url 'add_address' %}" method="POST" novalidate>
+            {% else %}
+            <form action="{% url 'edit_address' edit_address.id %}" method="POST" novalidate>
+            {% endif %}
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Full Name -->
+                    <div class="col-md-6 mb-4">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" name="full_name" placeholder="John" value="{{edit_address.full_name}}">
+                    </div>
+                    <!-- Email -->
+                    <div class="col-md-6 mb-4">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="example@gmail.com" value="{{edit_address.email}}" >
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="mb-4">
+                    <label for="address" class="form-label">Address</label>
+                    <textarea class="form-control" id="address" name="address" rows="3" placeholder="House Name, House Number, Locality">{{edit_address.address}}</textarea>
+                </div>
+
+                <div class="row">
+                    <!-- District -->
+                    <div class="col-md-6 mb-4">
+                        <label for="district" class="form-label">District</label>
+                        <input type="text" class="form-control" id="district" name="district" placeholder="eg: Ernakulam" value="{{edit_address.district}}" >
+                    </div>
+                    <!-- State -->
+                    <div class="col-md-6 mb-4">
+                        <label for="state" class="form-label">State</label>
+                        <input type="text" class="form-control" id="state" name="state" placeholder="eg: Kerala" value="{{edit_address.state}}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- City -->
+                    <div class="col-md-6 mb-4">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="city" name="city" placeholder="eg: Kochi" value="{{edit_address.city}}" >
+                    </div>
+                    <!-- Pin Code -->
+                    <div class="col-md-6 mb-4">
+                        <label for="pinCode" class="form-label">Pin Code</label>
+                        <input type="text" class="form-control" id="pinCode" name="pincode" placeholder="eg: 689230" value="{{edit_address.pin_code}}" >
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <!-- Address Type -->
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Address Type</label>
+                        <div class="d-flex mt-2">
+                            <div class="form-check me-4">
+                                <input class="form-check-input" type="radio" name="addressType" value="Home" id="home" checked>
+                                <label class="form-check-label" for="home">Home</label>
+                            </div>
+                            <div class="form-check me-4">
+                                <input class="form-check-input" type="radio" name="addressType" value="Work" id="work">
+                                <label class="form-check-label" for="work">Work</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="addressType" value="Other" id="other">
+                                <label class="form-check-label" for="other">Other</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Phone Number -->
+                    <div class="col-md-6 mb-4">
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" name="phone_no" placeholder="eg: +91 6892303458" value="{{edit_address.phone_no}}" >
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end mt-4">
+                    <a type="button" href="{% url 'address' %}" class="btn btn-cancel me-3">CANCEL</a>
+                    <button type="submit" class="btn btn-add-address">ADD ADDRESS</button>
+                </div>
+            </form>
+        </div>
+        {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} mt-2"
+            {% if message.tags == 'error' %}style="color: red;"{% endif %}
+            >{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
+
+
