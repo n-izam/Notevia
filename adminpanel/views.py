@@ -160,6 +160,7 @@ class AddProductView(LoginRequiredMixin, View):
                 
                 errors['product_name'] = 'Another product with this name, brand, and category already exists.'
             
+            
             if errors:
                 return JsonResponse({'success': False, 'errors': errors}, status=400)
 
@@ -247,6 +248,7 @@ class EditProductView(View):
             if Product.objects.filter(name__iexact=product_name, brand=brand, category=category).exclude(id=product.id).exists():
                 
                 errors['product_name'] = 'Another product with this name, brand, and category already exists.'
+
 
             if errors:
                 return JsonResponse({'success': False, 'errors': errors}, status=400)
