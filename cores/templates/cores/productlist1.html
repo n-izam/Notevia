@@ -38,6 +38,43 @@
     .clearable-input .clear-btn.visible {
       display: block;
     }
+
+    .d-flex.justify-content-end.mb-4 {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1.5rem;
+    }
+    
+    .search-listing {
+        margin-right: 1rem;
+    }
+    
+    /* Responsive styles for small screens */
+    @media (max-width: 768px) {
+        .d-flex.justify-content-end.mb-4 {
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        .search-listing {
+            width: 80%; /* Reduce the width of the search container */
+            margin-right: 0;
+            margin-bottom: 1rem; /* Add some space between search and sort */
+        }
+    
+        .search-listing .d-flex {
+            width: 100%;
+        }
+    
+        .search-listing .clearable-input {
+            width: 100%;
+        }
+    
+        .sort-dropdown {
+            align-self: flex-end; /* Keep the sort dropdown to the right */
+            margin-right: 10%; /* Adjust margin to align with the search bar */
+        }
+    }
   </style>
 
 {% endblock %}
@@ -52,7 +89,7 @@
     </div>
 
     <!-- Toolbar: View options and Sorting -->
-    <div class="d-flex justify-content-end mb-4">
+    <!-- <div class="d-flex justify-content-end mb-4">
         <div class="search-listing mx-3">
             <form method="GET" action="{% url 'shop_products' %}" class="d-flex align-items-center">
                 <div class="clearable-input me-2">
@@ -82,6 +119,41 @@
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-danger" href="?sort=clear{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Clear Sort</a></li>
 
+                </ul>
+            </div>
+        </div>
+    </div> -->
+    
+    
+    <div class="d-flex justify-content-end mb-4 flex-wrap-reverse">
+        <div class="search-listing mx-3">
+            <form method="GET" action="{% url 'shop_products' %}" class="d-flex align-items-center">
+                <div class="clearable-input me-2">
+                  <input type="text" name="q" class="form-control form-control-sm" placeholder="Search..." value="{{ query }}" id="searchField" autocomplete="off" />
+                  <button type="button" class="clear-btn" id="btnClear" aria-label="Clear">&times;</button>
+                </div>
+                <button type="submit" class="btn btn-sm btn-dark">
+                  <i class="fas fa-search"></i>
+                </button>
+              </form>
+        </div>
+        <div class="sort-dropdown">
+            <div class="dropdown">
+                <a class="form-select" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if sort_option %}
+                        <p class="text-muted">Sorted by: {{ sort_option|title }}</p>
+                    {% else %}
+                    Sort
+                    {% endif %}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="?sort=price_asc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Price, low to high</a></li>
+                    <li><a class="dropdown-item" href="?sort=price_desc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Price, high to low</a></li>
+                    <li><a class="dropdown-item" href="?sort=newest{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Newest</a></li>
+                    <li><a class="dropdown-item" href="?sort=name_asc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Name, A - Z</a></li>
+                    <li><a class="dropdown-item" href="?sort=name_desc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Name, Z - A</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="?sort=clear{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Clear Sort</a></li>
                 </ul>
             </div>
         </div>
@@ -141,7 +213,7 @@
             <hr>
         
             <!-- 3. Brand Section -->
-            <div class="filter-section">
+            <div class="filter-section mb-4">
                 <h5 class="filter-title">
                     <a class="text-dark text-decoration-none d-block p-2" data-bs-toggle="collapse" href="#brandCollapse" role="button" aria-expanded="false" aria-controls="brandCollapse">
                         Brand
@@ -193,7 +265,7 @@
                         <a href="{% url 'shop_productdetail' item.product.id %}">
                             <img src="{{item.main_image.image.url}}" class="card-img-top" alt="Product Image">
                         </a>
-                        <div class="card-body text-center">
+                        <div class="card-body text-center my-2">
                             <!-- <a href="{% url 'shop_productdetail' item.product.id %}" class="text-dark text-decoration-none"> -->
                             <h6 class="card-title">{{item.product.name}} - {{ item.product.category.name }}</h6>
                             <p class="card-text">Rs.{{item.product.base_price}}</p>
