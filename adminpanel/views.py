@@ -156,6 +156,13 @@ class AddProductView(LoginRequiredMixin, View):
             category = get_object_or_404(Category, id=category_id)
             brand = get_object_or_404(Brand, id=brand_id)
 
+            if Product.objects.filter(name__iexact=product_name, brand=brand, category=category).exists():
+                
+                errors['product_name'] = 'Another product with this name, brand, and category already exists.'
+            
+            if errors:
+                return JsonResponse({'success': False, 'errors': errors}, status=400)
+
             print("category:",category, "brand:",brand)
             product = Product.objects.create(name=product_name, description=product_description, category=category, brand=brand)
             print("product is added", product)
@@ -237,6 +244,13 @@ class EditProductView(View):
             brand = get_object_or_404(Brand, id=brand_id)
 
             product = get_object_or_404(Product, id=product_id)
+            if Product.objects.filter(name__iexact=product_name, brand=brand, category=category).exclude(id=product.id).exists():
+                
+                errors['product_name'] = 'Another product with this name, brand, and category already exists.'
+
+            if errors:
+                return JsonResponse({'success': False, 'errors': errors}, status=400)
+
 
             product.name = product_name
             product.description = product_description

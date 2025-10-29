@@ -91,20 +91,28 @@
                     <span class="text-warning"><i class="fas fa-warning me-2"></i>Only {{ main_variant.stock }} left!</span>
                     {% endif %}
                 </div>
-    
-                <div class="quantity-section my-4">
-                    <p class="fw-bold mb-1">Quantity</p>
-                    <div class="input-group quantity-selector">
-                        <button class="btn btn-outline-secondary" type="button" id="minus-btn">-</button>
-                        <input type="number" class="form-control text-center" value="1" id="quantity-input" min="1">
-                        <button class="btn btn-outline-secondary" type="button" id="plus-btn">+</button>
+
+                <form action="#" method="POST">
+                    {% csrf_token %}
+
+                    {% if main_variant %}
+                        <input type="hidden" name="main" value="{{ main_variant }}">
+                        <input type="hidden" name="product" value="{{ main_variant.product.id }}">
+                    {% endif %}
+                    <div class="quantity-section my-4">
+                        <p class="fw-bold mb-1">Quantity</p>
+                        <div class="input-group quantity-selector">
+                            <button class="btn btn-outline-secondary" type="button" id="minus-btn">-</button>
+                            <input type="number" name="quantity" class="form-control text-center" value="1" id="quantity-input" min="1">
+                            <button class="btn btn-outline-secondary" type="button" id="plus-btn">+</button>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="d-flex align-items-center mb-4">
-                    <a id="addToCartBtn" href="#" class="btn btn-dark btn-lg w-100 me-3" role="button" >Add to cart</a>
-                    <button class="btn btn-outline-dark wishlist-btn" type="button"><i class="far fa-heart"></i></button>
-                </div>
+                    
+                    <div class="d-flex align-items-center mb-4">
+                        <button id="addToCartBtn" class="btn btn-dark btn-lg w-100 me-3" role="button" >Add to cart</button>
+                        <button class="btn btn-outline-dark wishlist-btn" type="button"><i class="far fa-heart"></i></button>
+                    </div>
+                </form>
     
                 <div class="shipping-info">
                     <div class="d-flex align-items-center mb-2">

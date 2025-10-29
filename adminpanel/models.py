@@ -1,6 +1,7 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.db.models import Min
+from django.db.models import UniqueConstraint
 
 # Create your models here.
 
@@ -59,6 +60,11 @@ class Product(models.Model):
     is_listed = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['name', 'brand', 'category'], name='unique_product_per_brand_category')
+        ]
 
     @property
     def calc_base_price(self):

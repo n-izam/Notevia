@@ -199,16 +199,18 @@
                                         <div class="input-group">
                                             <span class="input-group-text">Rs.</span>
                                             <input type="number" class="form-control" name="variant_price" id="variantPrice" step="0.01" placeholder="0.00">
-                                            <span class="error" id="error_variant_price"></span>
+                                            
                                         </div>
+                                        <span class="error" id="error_variant_price"></span>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="variantDiscount" class="form-label">Discount Percentage</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" name="variant_discount" id="variantDiscount" step="0.01" placeholder="0">
                                             <span class="input-group-text">%</span>
-                                            <span class="error" id="error_variant_discount"></span>
+                                            
                                         </div>
+                                        <span class="error" id="error_variant_discount"></span>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="variantStock" class="form-label">Stocks</label>
@@ -291,253 +293,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <!-- YOUR CUSTOM SCRIPT -->
-    <!-- <script>
-        var el = document.getElementById("wrapper");
-        var toggleButton = document.getElementById("menu-toggle");
-        
-        toggleButton.onclick = function () {
-            el.classList.toggle("toggled");
-        };
-        
-        document.addEventListener('DOMContentLoaded', function () {
-            // --- Add Brand without Reload ---
-            const addBrandForm = document.getElementById('addBrandForm');
-            const addBrandModalEl = document.getElementById('addBrandModal');
-            const addBrandModal = new bootstrap.Modal(addBrandModalEl);
-            const brandTypeSelect = document.getElementById('brandType');
-        
-            addBrandForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const brandNameInput = document.getElementById('newBrandName');
-                const brandName = brandNameInput.value.trim();
-                document.getElementById('error_brand_name').textContent = '';
-        
-                if (!brandName) {
-                    document.getElementById('error_brand_name').textContent = 'Brand name is required.';
-                    return;
-                }
-        
-                const csrfTokenInput = addBrandForm.querySelector('[name=csrfmiddlewaretoken]');
-                const csrfToken = csrfTokenInput ? csrfTokenInput.value.trim() : null;
-                console.log('CSRF Token from addBrandForm:', csrfToken); // Debug token
-                if (!csrfToken || csrfToken.length !== 64) {
-                    document.getElementById('error_brand_name').textContent = 'Invalid CSRF token. Please reload the page.';
-                    return;
-                }
-        
-                fetch('/adminpanel/api/add-brand/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    body: JSON.stringify({ brand_name: brandName })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        const newOption = new Option(data.brand.name, data.brand.id, true, true);
-                        brandTypeSelect.add(newOption);
-                        addBrandModal.hide();
-                        brandNameInput.value = '';
-                    } else {
-                        document.getElementById('error_brand_name').textContent = data.error || 'Could not add brand.';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error adding brand:', error);
-                    document.getElementById('error_brand_name').textContent = 'An error occurred. Please try again.';
-                });
-            });
-        
-            // --- Image Cropper Logic ---
-            const cropperModalEl = document.getElementById('cropperModal');
-            const cropperModal = new bootstrap.Modal(cropperModalEl);
-            const imageToCrop = document.getElementById('imageToCrop');
-            const cropButton = document.getElementById('cropButton');
-            const imageUploadSlots = document.querySelectorAll('.image-upload-slot');
-            let cropper;
-            let activeSlot = null;
-            const croppedImagesData = { 1: null, 2: null, 3: null };
-        
-            imageUploadSlots.forEach(slot => {
-                slot.addEventListener('click', () => {
-                    activeSlot = slot.dataset.slot;
-                    document.querySelector(`.image-upload-input[data-slot="${activeSlot}"]`).click();
-                });
-            });
-        
-            document.querySelectorAll('.image-upload-input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    const files = e.target.files;
-                    if (files && files.length > 0) {
-                        const file = files[0];
-                        if (!['image/png', 'image/jpeg'].includes(file.type)) {
-                            alert('Only PNG or JPEG images are allowed.');
-                            input.value = '';
-                            return;
-                        }
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                            imageToCrop.src = reader.result;
-                            cropperModal.show();
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            });
-        
-            cropperModalEl.addEventListener('shown.bs.modal', () => {
-                cropper = new Cropper(imageToCrop, {
-                    aspectRatio: NaN,
-                    viewMode: 1,
-                    dragMode: 'move',
-                    background: false,
-                    autoCropArea: 0.8,
-                    responsive: true,
-                    zoomable: true,
-                    movable: true,
-                    cropBoxResizable: true,
-                    cropBoxMovable: true,
-                });
-            });
-        
-            cropperModalEl.addEventListener('hidden.bs.modal', () => {
-                if (cropper) {
-                    cropper.destroy();
-                    cropper = null;
-                }
-                const activeInput = document.querySelector(`.image-upload-input[data-slot="${activeSlot}"]`);
-                if (activeInput) activeInput.value = '';
-            });
-        
-            cropButton.addEventListener('click', () => {
-                if (!cropper) return;
-        
-                const canvas = cropper.getCroppedCanvas({
-                    width: 512,
-                    height: 512,
-                    imageSmoothingQuality: 'high',
-                });
-        
-                const previewEl = document.querySelector(`.image-upload-slot[data-slot="${activeSlot}"] .image-preview`);
-                previewEl.src = canvas.toDataURL();
-                previewEl.style.display = 'block';
-        
-                document.querySelector(`.image-upload-slot[data-slot="${activeSlot}"] .default-view`).style.display = 'none';
-        
-                canvas.toBlob((blob) => {
-                    croppedImagesData[activeSlot] = blob;
-                });
-        
-                cropperModal.hide();
-            });
-        
-            // --- Form Submission ---
-            document.getElementById('productForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-        
-                // Clear previous errors
-                document.querySelectorAll('.error').forEach(el => el.textContent = '');
-        
-                // Client-side validation
-                const productName = document.getElementById('productName').value.trim();
-                const productDescription = document.getElementById('productDescription').value.trim();
-                const category = document.getElementById('productType').value;
-                const brand = document.getElementById('brandType').value;
-                const variantName = document.getElementById('variantName').value.trim();
-                const variantPrice = document.getElementById('variantPrice').value.trim();
-                const variantStock = document.getElementById('variantStock').value.trim();
-                const variantDiscount = document.getElementById('variantDiscount').value.trim();
-                const imagesUploaded = Object.values(croppedImagesData).filter(img => img).length;
-        
-                let errors = [];
-                if (!productName) errors.push({ field: 'product_name', message: 'Product name is required.' });
-                if (!productDescription) errors.push({ field: 'product_description', message: 'Product description is required.' });
-                if (!category || category === '') errors.push({ field: 'category', message: 'Category is required.' });
-                if (!brand || brand === '') errors.push({ field: 'brand', message: 'Brand is required.' });
-                if (imagesUploaded < 3) errors.push({ field: 'images', message: 'At least 3 images are required.' });
-                if (!variantName) errors.push({ field: 'variant_name', message: 'Variant name is required.' });
-                if (!variantPrice || isNaN(variantPrice) || parseFloat(variantPrice) <= 0) {
-                    errors.push({ field: 'variant_price', message: 'Variant price must be a positive number.' });
-                }
-                if (!variantStock || !/^\d+$/.test(variantStock) || parseInt(variantStock) < 0) {
-                    errors.push({ field: 'variant_stock', message: 'Variant stock must be a non-negative integer.' });
-                }
-                if (variantDiscount && (isNaN(variantDiscount) || parseFloat(variantDiscount) < 0)) {
-                    errors.push({ field: 'variant_discount', message: 'Variant discount must be a non-negative number.' });
-                }
-        
-                if (errors.length > 0) {
-                    errors.forEach(({ field, message }) => {
-                        const errorEl = document.getElementById(`error_${field}`);
-                        if (errorEl) errorEl.textContent = message;
-                        else document.getElementById('error_general').textContent = message;
-                    });
-                    return;
-                }
-        
-                // Prepare FormData
-                const formData = new FormData(this);
-                for (const slot in croppedImagesData) {
-                    if (croppedImagesData[slot]) {
-                        formData.append(`cropped_image_${slot}`, croppedImagesData[slot], `image_${slot}.png`);
-                    }
-                }
-        
-                // Disable submit button
-                const submitBtn = document.querySelector('button[type="submit"]');
-                submitBtn.disabled = true;
-        
-                fetch('/adminpanel/addproduct/', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                    },
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('Product added successfully!');
-                        this.reset();
-                        document.querySelectorAll('.image-preview').forEach(img => {
-                            img.src = '';
-                            img.style.display = 'none';
-                        });
-                        document.querySelectorAll('.default-view').forEach(div => div.style.display = 'block');
-                        for (const slot in croppedImagesData) croppedImagesData[slot] = null;
-                        window.location.href = '/adminpanel/product/';
-                    } else {
-                        for (const [field, error] of Object.entries(data.errors || {})) {
-                            const errorEl = document.getElementById(`error_${field}`);
-                            if (errorEl) errorEl.textContent = error;
-                            else document.getElementById('error_general').textContent = error;
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('error_general').textContent = 'An error occurred. Please try again.';
-                })
-                .finally(() => {
-                    submitBtn.disabled = false;
-                });
-            });
-        });
-    </script> -->
     
- <script>
+    
+ <!-- <script>
     var el = document.getElementById("wrapper");
 var toggleButton = document.getElementById("menu-toggle");
 
@@ -745,9 +503,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
- </script>
+ </script> -->
 
- <!-- <script>
+ <script>
     var el = document.getElementById("wrapper");
 var toggleButton = document.getElementById("menu-toggle");
 
@@ -898,9 +656,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('productForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // Disable submit button
         const submitBtn = document.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
+
+        // --- Clear all previous error messages ---
+        document.querySelectorAll('.error').forEach(el => el.textContent = '');
 
         const formData = new FormData(this);
         for (const slot in croppedImagesData) {
@@ -916,41 +676,45 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: formData
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))
+        .then(({ status, body }) => {
+            if (body.success) {
                 alert('Product added successfully!');
-                this.reset();
-                document.querySelectorAll('.image-preview').forEach(img => {
-                    img.src = '';
-                    img.style.display = 'none';
-                });
-                document.querySelectorAll('.default-view').forEach(div => div.style.display = 'block');
-                for (const slot in croppedImagesData) croppedImagesData[slot] = null;
-                window.location.href = '/adminpanel/product/';
+                // Redirect or clear form as needed
+                window.location.href = '/adminpanel/adminproduct/';
             } else {
-                document.getElementById('error_general').textContent = data.error || 'Failed to add product.';
+                // --- NEW ERROR HANDLING LOGIC ---
+                if (body.errors) {
+                    // Handle field-specific errors returned from the view
+                    for (const field in body.errors) {
+                        const errorElement = document.getElementById(`error_${field}`);
+                        if (errorElement) {
+                            errorElement.textContent = body.errors[field];
+                        } else {
+                            // If a specific error span isn't found, show in the general error area
+                            document.getElementById('error_general').textContent += body.errors[field] + ' ';
+                        }
+                    }
+                } else if (body.error) {
+                    // Handle a single, general error message
+                    document.getElementById('error_general').textContent = body.error;
+                } else {
+                    // Fallback for an unknown error format
+                    document.getElementById('error_general').textContent = 'An unknown error occurred. Please try again.';
+                }
             }
         })
         .catch(error => {
-            console.error('Error Details:', {
-                message: error.message,
-                stack: error.stack,
-                name: error.name
-            });
-            document.getElementById('error_general').textContent = 'An error occurred: ' + error.message;
+            console.error('Error submitting form:', error);
+            document.getElementById('error_general').textContent = 'A network or server error occurred. Please check your connection and try again.';
         })
         .finally(() => {
+            // Re-enable the submit button after the process is complete
             submitBtn.disabled = false;
         });
     });
 });
- </script> -->
+ </script>
     
 
 </body>
