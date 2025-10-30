@@ -5,11 +5,76 @@
 {% block title %} Cart Page {% endblock %}
 <!-- {% block head %} {% endblock %} -->
 
+{% block style %}
+<style>
+    html, body {
+      height: 100%; /* ensure full height */
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* make body fill the viewport height */
+    }
+
+    main {
+      flex: 1; /* make main take up remaining space */
+      margin-bottom: 5%;
+    }
+
+    footer {
+      background-color: #f8f9fa;
+      text-align: center;
+      padding: 10px 0;
+    }
+
+     /* empty cart style */
+
+     .empty-cart {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        padding: 50px 30px;
+        max-width: 450px;
+        width: 100%;
+      }
+  
+      .empty-cart h3 {
+        font-weight: 600;
+        color: #333;
+        margin-top: 15px;
+      }
+  
+      .empty-cart p {
+        color: #777;
+        margin: 10px 0 25px;
+      }
+  
+      .btn-custom {
+        border: 2px solid #000;
+        background-color: #000;
+        color: #fff;
+        font-weight: 600;
+        padding: 10px 30px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+  
+      .btn-custom:hover {
+        background-color: #fff;
+        color: #000;
+      }
+
+  </style>
+{% endblock %}
 
 
 {% block content %}
 
 <div class="mx-2 my-2">
+
+    {% if cart_items %}
 
     <main class="container my-2 py-2">
         <!-- Page Title -->
@@ -28,31 +93,44 @@
                     <div class="col-md-2 text-end"><h6 class="text-muted">Total</h6></div>
                 </div>
     
+                {% for item in cartitem_with_image %}
                 <!-- Cart Item 1 -->
                 <div class="row cart-item align-items-center border border-1 rounder">
                     <div class="col-md-5">
                         <div class="d-flex align-items-center">
-                            <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Product Image" class="cart-item-img me-3">
-                            <div>
-                                <p class="mb-0">Papergrid – SHORT NOTE</p>
-                                <a href="#" class="remove-link">Remove</a>
+                            <img src="{{item.main_image.image.url}}" alt="Product Image" class="cart-item-img me-3">
+                            <div class="mb-2">
+                                <p class="mb-0">{{item.cart_item.product.brand.name}} – {{item.cart_item.product.category.name}} {{item.cart_item.product.name}}</p>
+                                <p class="mb-0"><span class="text-muted fst-italic fw-light" style="font-size: 14px;">variant type: </span>{{item.cart_item.variant.name}}</p>
+                                <a href="{% url 'remove_from_cart' %}?remove_product={{item.cart_item.id}}" class="remove-link"> <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#000000;" >Remove</span></a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2 text-center price-col">Rs. 30</div>
+                    <div class="col-md-2 text-center price-col">Rs. {{item.cart_item.variant.price}}</div>
                     <div class="col-md-3">
-                        <div class="input-group quantity-selector mx-auto">
-                            <button class="btn btn-outline-secondary" type="button">-</button>
-                            <input type="text" class="form-control text-center" value="1">
-                            <button class="btn btn-outline-secondary" type="button">+</button>
+                        {% if item.cart_item.variant.stock %}
+                        <form action="{% url 'cart_quantity_update' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="cart_product" value="{{item.cart_item.id}}">
+                            <div class="input-group quantity-selector mx-auto" data-stock="{{ item.cart_item.variant.stock }}">
+                                <button class="btn btn-outline-secondary btn-decrease"  type="submit">-</button>
+                                <input type="text" class="form-control text-center quantity-input" name="quantity" value="{{item.cart_item.quantity}}">
+                                <button class="btn btn-outline-secondary btn-increase"  type="submit">+</button>
+                            </div>
+                        </form>
+                        {% else %}
+                        <div>
+                            <span class="text-danger fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#daf5f5;">Stock is not available for now!..</span>
                         </div>
+                        {% endif %}
                     </div>
-                    <div class="col-md-2 text-end total-col"><strong>Rs. 30</strong></div>
+                    <div class="col-md-2 text-end total-col"><strong>Rs. {{item.cart_item.main_subtotal}}</strong></div>
                 </div>
                 <hr class="cart-divider">
+                {% endfor %}
     
                 <!-- Cart Item 2 -->
-                <div class="row cart-item align-items-center border border-1 rounder">
+                <!-- <div class="row cart-item align-items-center border border-1 rounder">
                     <div class="col-md-5">
                         <div class="d-flex align-items-center">
                             <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760154643/products/azkm4byzkqlah8tz8rhi.png" alt="Product Image" class="cart-item-img me-3">
@@ -72,10 +150,10 @@
                     </div>
                     <div class="col-md-2 text-end total-col"><strong>Rs. 80</strong></div>
                 </div>
-                <hr class="cart-divider">
+                <hr class="cart-divider"> -->
     
                 <!-- Cart Item 3 -->
-                <div class="row cart-item align-items-center border border-1 rounder">
+                <!-- <div class="row cart-item align-items-center border border-1 rounder">
                     <div class="col-md-5">
                         <div class="d-flex align-items-center">
                             <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" alt="Product Image" class="cart-item-img me-3">
@@ -95,13 +173,18 @@
                     </div>
                     <div class="col-md-2 text-end total-col"><strong>Rs. 65</strong></div>
                 </div>
-                <hr class="cart-divider">
+                <hr class="cart-divider"> -->
     
                 <!-- Add Order Note -->
                 <div class="mt-4">
                     <label for="orderNote" class="form-label">Add Order Note</label>
                     <textarea class="form-control" id="orderNote" rows="4" placeholder="How can we help you?"></textarea>
                 </div>
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} mt-2" {% if message.tags == 'error' %}style="color: red;"{% endif %}>{{ message }}</div>
+                {% endfor %}
+                {% endif %}
             </div>
     
             <!-- Right Column: Order Summary -->
@@ -114,7 +197,7 @@
                     <hr>
                     <div class="d-flex justify-content-between align-items-center my-3">
                         <h5 class="mb-0">Subtotal</h5>
-                        <h5 class="mb-0">Rs. 175.00</h5>
+                        <h5 class="mb-0">Rs. {{cart.total_price}}</h5>
                     </div>
                     <p class="text-muted small">Taxes and <a href="#" class="text-dark">shipping</a> calculated at checkout.</p>
                     <div class="form-check my-3">
@@ -138,6 +221,25 @@
             </div>
         </div>
     </main>
+    {% else %}
+
+    <main class="container my-2 py-2">
+        <!-- Page Title -->
+        <div class="text-center mb-5 py-5">
+            <h1 class="fw-light">Shopping Cart Is Empty</h1>
+        </div>
+        <div class="d-flex justify-content-center align-item-center h-100">
+            <div class="empty-cart">
+                <div style="font-size: 60px;">📦</div>
+                <h3>Your cart is empty</h3>
+                <p>Add some products to get started!</p>
+                <a href="{% url 'shop_products' %}" class="btn btn-custom">CONTINUE SHOPPING</a>
+            </div>
+        </div>
+        
+    </main>
+
+    {% endif %}
 </div>
 
 {% endblock %}
@@ -197,6 +299,33 @@
       });
 
 </script> -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectors = document.querySelectorAll('.quantity-selector');
+    
+        selectors.forEach(function(selector) {
+            const decreaseBtn = selector.querySelector('.btn-decrease');
+            const increaseBtn = selector.querySelector('.btn-increase');
+            const input = selector.querySelector('.quantity-input');
+            const maxStock = parseInt(selector.dataset.stock);
+    
+            decreaseBtn.addEventListener('click', () => {
+                let currentValue = parseInt(input.value) || 1;
+                if (currentValue > 1) {
+                    input.value = currentValue - 1;
+                }
+            });
+    
+            increaseBtn.addEventListener('click', () => {
+                let currentValue = parseInt(input.value) || 1;
+                if (currentValue < maxStock) {
+                    input.value = currentValue + 1;
+                }
+            });
+        });
+    });
+    </script>
   
 
 {% endblock %}
