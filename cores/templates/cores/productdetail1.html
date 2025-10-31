@@ -92,7 +92,7 @@
                     {% endif %}
                 </div>
 
-                <form action="#" method="POST">
+                <form action="{% url 'add_to_cart' %}" method="POST">
                     {% csrf_token %}
 
                     {% if main_variant %}
@@ -292,7 +292,13 @@
             </div> -->
         </div>
     </div>
-
+    <!-- just for  testing properly setup swal -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-2" {% if message.tags == 'error' %}style="color: red;"{% endif %}>{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    <!-- just for  testing properly setup sweet alert -->
 </div>
 
 {% endblock %}
