@@ -79,9 +79,15 @@
                         {% endif %}
 
                         <!-- Submit Button -->
+                        {% if request.resolver_match.url_name == 'add-category' %}
                         <div class="mt-4">
                             <button type="submit" class="btn btn-dark">Add Category</button>
                         </div>
+                        {% else %}
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-dark">Edit Category</button>
+                        </div>
+                        {% endif %}
                     </form>
                         {% if messages %}
                         {% for message in messages %}

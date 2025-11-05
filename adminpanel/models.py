@@ -134,6 +134,24 @@ class Variant(models.Model):
         return round(price, 2)
     
     @property
+    def discount_price(self):
+        price = float(self.price)
+        discounts = []
+
+        if self.discount:
+            discounts.append(float(self.discount))
+        if self.product.offer:
+            discounts.append(float(self.product.offer.offer_percent))
+        if self.product.category and self.product.category.offer:
+            discounts.append(float(self.product.category.offer.offer_percent))
+
+        if discounts:
+            max_discount = max(discounts)
+            price = price * (max_discount / 100)
+
+        return round(price, 2)
+    
+    @property
     def discount_percent(self):
         
         discounts = []

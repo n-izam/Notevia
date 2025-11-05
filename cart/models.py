@@ -23,6 +23,16 @@ class Cart(models.Model):
     def total_quantity(self):
         items_total_quantity = sum(item.quantity for item in self.items.all())
         return float(items_total_quantity)
+    
+    @property
+    def main_total_price(self):
+        items_total_price = sum(item.after_subtotal() for item in self.items.all())
+        return float(items_total_price)
+    
+    @property
+    def deduct_amount(self):
+        items_total_price = sum(item.discount_subtotal_amount() for item in self.items.all())
+        return float(items_total_price)
 
     def __str__(self):
         return f"Cart {{self.user}}"
@@ -50,10 +60,34 @@ class CartItem(models.Model):
         price = self.variant.price
         return price * self.quantity
     
+    def after_subtotal(self):
+        price = self.variant.final_price
+        return price * self.quantity
+    
+    def discount_subtotal_amount(self):
+        price = self.variant.discount_price
+        return price * self.quantity
+
+
+    
     @property
     def main_subtotal(self):
         price = float(self.variant.price)
         return price * float(self.quantity)
+    
+    @property
+    def after_discount_subtotal(self):
+        price = float(self.variant.final_price)
+        return price * float(self.quantity)
+    
+    @property
+    def discount_subtotal(self):
+        price = float(self.variant.discount_price)
+        return price * float(self.quantity)
+    
+    
+    
+
     
 
     def __str__(self):

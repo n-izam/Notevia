@@ -1,0 +1,246 @@
+{% extends "base1.html" %}
+
+{% load static %}
+
+{% block title %} Order Placed {% endblock %}
+{% block head %} <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> {% endblock %}
+
+{% block style %}
+<style>
+    /* === BASE STYLES (Desktop First) === */
+
+    .thank-you-title {
+        font-family: 'serif';
+        font-weight: bold;
+        font-size: 2.8rem; /* Slightly larger for more impact */
+        margin-bottom: 1rem;
+        color: #212529;
+    }
+
+    .success-illustration {
+        width: 100%;         /* Make the image fluid and responsive */
+        height: auto;        /* Maintain the correct aspect ratio */
+        max-width: 500px;    /* Increase max-width to make it larger */
+        border-radius: 1rem;
+    }
+
+    .payment-success-card {
+        background-color: #fff;
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        font-family: sans-serif;
+        border: 1px solid #e9ecef; /* Add a subtle border for depth */
+    }
+
+    .success-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+        border-radius: 50%;
+        background-color: #e0f8e9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .success-icon-wrapper .bi-check-lg {
+        color: #28a745;
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    .details-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0; /* Use padding for better spacing */
+        color: #6c757d;
+        border-bottom: 1px solid #f0f0f0; /* Add subtle separators */
+    }
+    .details-row:last-of-type {
+        border-bottom: none;
+    }
+
+    .details-row span:last-child {
+        color: #212529;
+        text-align: right; /* Ensure right-aligned text doesn't wrap oddly */
+    }
+
+    .amount-row {
+        border-bottom: none;
+        padding-top: 1rem;
+    }
+
+    .shop-button { /* General button styling */
+        border-radius: 25px;
+        padding: 10px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #3d8bfd;
+        border-color: #3d8bfd;
+    }
+    .btn-primary:hover {
+        background-color: #1a73e8;
+        border-color: #1a73e8;
+    }
+
+    .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    /* === RESPONSIVE STYLES === */
+
+    /* For Tablets and smaller (< 992px) */
+    @media (max-width: 991.98px) {
+        .thank-you-container {
+            text-align: center; /* Center everything when columns stack */
+        }
+
+        .success-illustration {
+            max-width: 400px; /* Reduce image size slightly for tablets */
+        }
+    }
+
+    /* For Mobile devices (< 768px) */
+    @media (max-width: 767.98px) {
+        .thank-you-title {
+            font-size: 2rem; /* Reduce title font size for mobile */
+        }
+
+        .payment-success-card {
+            padding: 1.5rem; /* Reduce card padding on small screens */
+        }
+
+        /* Stack payment details on mobile for readability */
+        .details-row {
+            font-size: 0.9rem;
+            flex-direction: column;
+            align-items: flex-start;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .details-row span:last-child {
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .amount-row {
+            flex-direction: row; /* Keep the final amount on one line */
+            align-items: center;
+        }
+
+        /* Stack the action buttons vertically on mobile */
+        .action-buttons {
+            flex-direction: column;
+            width: 100%;
+            align-items: center; /* Ensure buttons are centered */
+        }
+
+        .action-buttons .btn {
+            width: 100%;
+            max-width: 300px; /* Give buttons a max-width */
+            margin-bottom: 10px;
+        }
+
+        .action-buttons .btn.me-3 {
+            margin-right: 0 !important; /* Remove horizontal margin */
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="mx-2 my-2">
+
+    <main class="container my-5 py-5">
+        <div class="row align-items-center g-5">
+            <!-- Left Column: Thank You Message -->
+            <div class="col-lg-6 text-center text-lg-start">
+                <div class="thank-you-container">
+                    <h1 class="thank-you-title">Thank You for Your Order!</h1>
+                    <p class="text-muted mb-4">Your order has been successfully placed. Here are your order details:</p>
+                    <div>
+                        <!-- The image will now be controlled by the new CSS -->
+                        <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1761915784/generated-image_1_ytr0sf.png" alt="Order Success Illustration" class="img-fluid success-illustration mb-4">
+                    </div>
+                    <p class="text-muted">You will receive an email confirmation shortly with the details of your order.</p>
+        
+                    <!-- Added 'action-buttons' class for better CSS targeting -->
+                    <div class="d-flex justify-content-center justify-content-lg-start mt-4 action-buttons">
+                        <a href="{% url 'order_listing' %}" class="btn btn-primary me-3 shop-button">View Orders</a>
+                        <a href="{% url 'shop_products' %}" class="btn btn-outline-secondary shop-button">CONTINUE SHOPPING</a>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Right Column: Payment Details Card -->
+            <div class="col-lg-6">
+                <div class="payment-success-card">
+                    <div class="success-icon-wrapper mb-3">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <h4 class="text-center mb-4">Payment Success!</h4>
+                    
+                    <hr>
+        
+                    <div class="details-row">
+                        <span>Order Id</span>
+                        <span class="fw-bold">{{order.order_id}}</span>
+                    </div>
+                    <div class="details-row">
+                        <span>Payment Time</span>
+                        <span class="fw-bold">{{order.created_at.date}}, {{order.created_at}}</span>
+                    </div>
+                    <div class="details-row">
+                        <span>Payment Method</span>
+                        <span class="fw-bold">{{ order.payment_method }}</span>
+                    </div>
+                    <div class="details-row">
+                        <span>Sender Name</span>
+                        <span class="fw-bold">{{order.user.full_name}}</span>
+                    </div>
+                    
+                    <hr class="my-4">
+        
+                    <div class="details-row amount-row">
+                        <span class="text-muted">Amount</span>
+                        <span class="fw-bold h5 mb-0"> Rs. {{order.over_all_amount}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+{% if messages %}
+{% for message in messages %}
+<script>
+    Swal.fire({
+      icon: "{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}",
+      title: "{{ message }}",
+      showConfirmButton: false,
+      timer: 2000
+    });
+  
+</script>
+{% endfor %}
+{% endif %}
+  
+
+{% endblock %}

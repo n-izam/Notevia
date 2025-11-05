@@ -1,0 +1,323 @@
+
+{% extends 'base_user.html' %}
+
+{% load static %}
+
+{% block title %} Address {% endblock %}
+
+{% block head %}
+
+    {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<link rel="stylesheet" href="{% static 'css/profile_style.css' %}">
+
+<style>
+    .order-details-container {
+        font-family: sans-serif;
+    }
+    
+    .summary-card,
+    .order-list-card {
+        background-color: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .status-pending {
+        color: #f1a831;
+        background-color: rgba(230, 201, 60, 0.296);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-shipped {
+        color: #2883a7;
+        background-color: rgba(40, 167, 159, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-cancelled {
+        color: #a73128;
+        background-color: rgba(167, 40, 40, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-deliverd {
+        color: #28a745;
+        background-color: rgba(186, 72, 37, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    
+    
+    .product-count {
+        background-color: #e9ecef;
+        color: #495057;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 0.8em;
+        font-weight: normal;
+    }
+    
+    .product-item {
+        border-bottom: 1px solid #dee2e6;
+    }
+    .product-item:last-child {
+        border-bottom: none;
+    }
+    
+    .product-thumbnail {
+        width: 50px;
+        height: 50px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+    }
+    .product-image {
+        width: 100px;
+        height: 100px; /* Made the image square for consistency */
+        object-fit: cover; /* Prevents image from stretching */
+        border-radius: 10px;
+        border: 1px solid #e9ecef; /* Added a proper border */
+    }
+    
+    .sku-link {
+        color: #0d6efd;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .sku-link:hover {
+        text-decoration: underline;
+    }
+    
+    .totals-section {
+        border-top: 1px solid #dee2e6;
+    }
+</style>
+
+{% endblock %}
+
+
+
+{% block content2 %}
+
+<!-- Right Content -->
+<div class="col-lg-9">
+    <div class="container my-4 my-md-5 order-details-container">
+        <!-- Breadcrumb Header -->
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                {% for crumb in breadcrumb %}
+                    {% if forloop.last %}
+                        <li class="breadcrumb-item active" aria-current="page">{{ crumb.name }}</li>
+                    {% else %}
+                        <li class="breadcrumb-item"><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </nav>
+    
+        <h2 class="mb-4 fw-bold">Order Details</h2>
+    
+        <div class="row">
+            <!-- Left Column: Order Summary -->
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <div class="summary-card p-4">
+                    <p class="fw-bold">Order# {{order.order_id}}</p>
+                    <p class="text-muted mb-2">Ordered on {{ order.created_at|date:"j F Y" }}</p>
+                    
+                    <hr>
+                    <div class="d-flex justify-content-between border-top border-bottom border-2">
+                        <h6 class="fw-bold">Shipping Address</h6>
+                        <h6 class="fw-bold text-end">Payment Method</h6>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p class="text-muted small">
+                            Address type: {{order.orders_address.address_type}},<br>
+                            {{order.orders_address.full_name}},<br>
+                            {{order.orders_address.address}},<br>
+                            {{order.orders_address.city}}, {{order.orders_address.district}}<br>
+                            {{order.orders_address.state}} - {{order.orders_address.pin_code}}<br>
+                            Contact Number : {{order.orders_address.phone_no}}
+                        </p>
+                        <p class="text-muted small text-end">
+                            {{order.payment_method}}
+                        </p>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Status :</h6>
+                        {% if order.status == 'Delivered' %}
+                        <div class="status-deliverd">{{order.status}}</div>
+                        {% elif order.status == 'Pending' %}
+                        <div class="status-pending">{{order.status}}</div>
+                        {% elif order.status == 'Processing' %}
+                        <div class="status-pending">{{order.status}}</div>
+                        {% elif order.status == 'Cancelled' %}
+                        <div class="status-cancelled">{{order.status}}</div>
+                        {% elif order.status == 'Shipped' %}
+                        <div class="status-shipped">{{order.status}}</div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid mt-4">
+                        <a href="{% url 'order_tracking' order.id %}" class="btn btn-dark btn-lg">Track Order</a>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Right Column: Order List & Totals -->
+            <div class="col-lg-8">
+                <div class="order-list-card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-3 text-start">Order List <span class="product-count">{{order.items.count}} Products </span></h5>
+                        {% if  order.status == 'Delivered' %}
+                        <a href="{% url 'download_invoice' order.id %}" class="btn btn-outline-dark btn-end"><i class="fas fa-file-invoice me-2"></i>Invoice</a>
+                        {% endif %}
+                    </div>
+                    <!-- Table Header -->
+                    <div class="d-none d-md-flex row text-muted mb-2">
+                        <div class="col-md-5">Product</div>
+                        <div class="col-md-2">Brand</div>
+                        <div class="col-md-2 text-center">Price</div>
+                        <div class="col-md-1 text-end">QTY</div>
+                        <div class="col-md-2 text-end">Total</div>
+                    </div>
+
+                    {% for item in orderitem_with_image %}
+                    <!-- Product Item 1 -->
+                    <div class="row align-items-center product-item py-3">
+                        <div class="col-5 col-md-5 d-flex align-items-center">
+                            <a href=" {% url 'shop_productdetail' item.order_item.product.id %}"><img src="{{item.main_image.image.url}}" alt="Product Image" class="product-image"></a>
+
+                            <div class="ms-1">
+                                <p class="mb-0 fw-bold">{{item.order_item.product.name}}</p>
+                                <span class="fw-light text-muted" >variant type: {{item.order_item.variant.name}} </span>
+                                {% if order.status != 'Delivered' and order.status != 'Shipped' %}
+                                <div>
+                                    {% if not item.order_item.is_cancel %}
+                                    <form action="{% url 'cancel_order_item' item.order_item.order.id item.order_item.id %}" method="POST" class="delete-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class=" text-decoration-none text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#000000;">Cancel item</button>
+                                    </form>
+                                    {% else %}
+                                    <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#953535;">item cancelled</span>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-2 col-md-2"><a href="#" class="sku-link">{{item.order_item.product.brand.name}}</a></div>
+                        <div class="col-2 col-md-2 text-md-center">₹{{item.order_item.real_price}}</div>
+                        <div class="col-3 col-md-1 text-end">{{item.order_item.quantity}}pcs</div>
+                        <div class="col-12 col-md-2 text-end fw-bold mt-2 mt-md-0" >
+                            <del class="fw-light text-muted">₹{{item.order_item.sub_real_price}}</del>
+                            <p class="m-0">₹{{item.order_item.total_price}}</p>
+                            <span class="fw-light text-success">-₹{{item.order_item.sub_discount}}</span>
+                        </div> 
+                    </div>
+                    {% endfor %}
+
+                    <!-- Product Item 2 -->
+                    <!-- <div class="row align-items-center product-item py-3">
+                        <div class="col-5 col-md-5 d-flex align-items-center">
+                            <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Product Image" class="product-image">
+                            <div>
+                                <p class="mb-0 fw-bold">Papergrid - KING SIZE</p>
+                                <a href="#" class="small text-muted">Remove item</a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-md-2"><a href="#" class="sku-link">302011</a></div>
+                        <div class="col-2 col-md-2 text-md-center">1 pcs</div>
+                        <div class="col-3 col-md-1 text-end">₹65</div>
+                        <div class="col-12 col-md-2 text-end fw-bold mt-2 mt-md-0">₹65</div>
+                    </div> -->
+    
+                    <!-- Totals Section -->
+                    <div class="totals-section mt-4">
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Subtotal :</span>
+                            <span>₹{{order.total_items_amount}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-success">Discount :</span>
+                            <span class="text-success">-₹{{order.total_discount}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Tax :</span>
+                            <div class="text-end">
+                                <span>+₹{{order.tax_amount}}</span><br>
+                                <span class="text-muted fw-light">(Tax calculated from subtotal)</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">delivery charg :</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Coupon : <span class="fw-bold text-dark"></span></span>
+                            <span>-₹0.00</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between py-2 fw-bold h5">
+                            <span>Grand Total</span>
+                            <span>₹{{order.over_all_amount}}</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end mt-4">
+                    <button class="btn btn-dark me-2">GO Back</button>
+                    {% if order.status != 'Delivered' and  order.status != 'Shipped' and order.status != 'Cancelled' %}
+                    <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger">Cancel Order</a>
+                    {% endif %}
+
+                    {% if  order.status == 'Delivered' %}
+                    {% if not order.return_requests.reason %}
+                    <a href="{% url 'return_order' order.id %}" class="btn btn-danger"><i class="fas fa-redo me-2"></i>Return</a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script>
+    document.querySelectorAll('.delete-form').forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "This action cannot be undone. after cancel the item.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, delete it!',
+          customClass: {
+            confirmButton: 'btn btn-danger me-1' ,
+            cancelButton: 'btn btn-dark ms-1' ,
+          },
+          buttonsStyling: false
+        }).then((result) => {
+          if (result.isConfirmed) {
+            form.submit();
+          }
+        });
+      });
+    });
+</script>
+
+{% endblock %}

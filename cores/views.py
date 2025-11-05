@@ -168,6 +168,9 @@ class ProductDetailsView(View):
 
         main_product = get_object_or_404(Product, id=product_id)
 
+        if not main_product.is_listed:
+            return redirect('shop_products')
+
         
 
         images = main_product.images.all()

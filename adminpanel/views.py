@@ -446,7 +446,7 @@ class AdminCustomersView(View):
 
         search_q = request.GET.get('q', '').strip()
 
-        customers = CustomUser.objects.all().exclude(is_superuser=True)
+        customers = CustomUser.objects.all().exclude(is_superuser=True).order_by('-id')
 
         if search_q:
             customers = customers.filter(Q(full_name__icontains=search_q)| 

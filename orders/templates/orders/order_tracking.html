@@ -1,0 +1,305 @@
+
+{% extends 'base_user.html' %}
+
+{% load static %}
+
+{% block title %} Address {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<link rel="stylesheet" href="{% static 'css/profile_style.css' %}">
+
+<style>
+    .track-order-card {
+        background-color: #fff;
+        border-radius: 1.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        font-family: sans-serif;
+    }
+    
+    .product-image-track {
+        width: 100px;
+        height: 100px;
+        border-radius: 1rem;
+        object-fit: cover;
+        margin-right: 2rem;
+    }
+    
+    .status-processing {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .status-pending {
+        color: #f1a831;
+        background-color: rgba(230, 201, 60, 0.296);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-shipped {
+        color: #2883a7;
+        background-color: rgba(40, 167, 159, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-cancelled {
+        color: #a73128;
+        background-color: rgba(167, 40, 40, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-deliverd {
+        color: #28a745;
+        background-color: rgba(186, 72, 37, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    
+    /* Progress Tracker Styling */
+    .progress-tracker-container {
+        position: relative;
+        text-align: center;
+    }
+    
+    .step {
+        text-align: center;
+        position: relative;
+        width: 25%;
+        z-index: 2;
+    }
+    
+    .step-icon {
+        width: 45px;
+        height: 45px;
+        border: 2px solid #e0e0e0;
+        background-color: #fff;
+        border-radius: 50%;
+        margin: 0 auto 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+    
+    .step-icon i {
+        font-size: 1.4rem;
+        color: #9e9e9e;
+        transition: color 0.3s;
+    }
+    
+    /* Active Step Styling */
+    .step.active .step-icon {
+        border-color: #28a745;
+        background-color: #28a745;
+    }
+    
+    .step.active .step-icon i {
+        color: #fff;
+    }
+    
+    .step.active .step-label {
+        color: #28a745;
+    }
+    
+    .step-label {
+        font-size: 0.9em;
+        font-weight: bold;
+        color: #9e9e9e;
+    }
+    
+    .step-date {
+        font-size: 0.8em;
+        color: #9e9e9e;
+        margin-top: 5px;
+    }
+    
+    /* Progress Bar Styling */
+    .progress-bar-wrapper {
+        position: absolute;
+        top: 22px; /* Vertically center with the icons */
+        left: 12.5%; /* Start after half of the first step */
+        right: 12.5%; /* End before half of the last step */
+        height: 4px;
+        z-index: 1;
+    }
+    
+    .progress-bar-line {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #e0e0e0;
+        border-radius: 2px;
+    }
+    
+    .progress-bar-line-active {
+        position: absolute;
+        height: 100%;
+        background-color: #28a745;
+        border-radius: 2px;
+        transition: width 0.5s ease-in-out;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .step-label {
+            font-size: 0.8em; /* Smaller text on mobile */
+        }
+        .step-icon {
+            width: 40px;
+            height: 40px;
+        }
+        .step-icon i {
+            font-size: 1.2rem;
+        }
+        .progress-bar-wrapper {
+            top: 19px;
+        }
+    }
+    
+</style>
+
+{% endblock %}
+
+
+
+{% block content2 %}
+
+<!-- Right Content -->
+<div class="col-lg-9">
+    <div class="container my-4 my-md-5">
+        <!-- Breadcrumb Header -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                {% for crumb in breadcrumb %}
+                    {% if forloop.last %}
+                        <li class="breadcrumb-item active" aria-current="page">{{ crumb.name }}</li>
+                    {% else %}
+                        <li class="breadcrumb-item"><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </nav>
+
+        <h2 class="mb-4 fw-bold">Track Order</h2>
+
+        <!-- Main Tracking Card -->
+        <div class="track-order-card p-4 p-md-5">
+            <!-- Order Info Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between text-muted mb-4">
+                <span>Ordered on {{ order.created_at|date:"j F Y" }}</span>
+                <span class="fw-bold text-dark">Order# {{ order.order_id}}</span>
+            </div>
+
+            <!-- Order Details Section -->
+            <div class="d-flex flex-column flex-md-row align-items-start">
+                <img src="{{order.get_first_product_image}}" alt="Product Image" class="product-image-track mb-3 mb-md-0">
+                <div class="row w-100">
+                    <div class="col-md-7">
+                        <h6 class="fw-bold">Shipping Address</h6>
+                        <p class="text-muted small">
+                            Address type: {{order.orders_address.address_type}},<br>
+                            {{order.orders_address.full_name}},<br>
+                            {{order.orders_address.address}},<br>
+                            {{order.orders_address.city}}, {{order.orders_address.district}}<br>
+                            {{order.orders_address.state}} - {{order.orders_address.pin_code}}<br>
+                            Contact Number : {{order.orders_address.phone_no}}
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                        <h6 class="fw-bold">Payment Method</h6>
+                        <p class="text-muted small">{{order.payment_method}}</p>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <h6 class="fw-bold">Status :</h6>
+                        <!-- <p class="status-processing text-center">PROCESSING</p> -->
+                        {% if order.status == 'Delivered' %}
+                        <div class="status-deliverd text-center">{{order.status|upper}}</div>
+                        {% elif order.status == 'Pending' %}
+                        <div class="status-pending text-center">{{order.status|upper}}</div>
+                        {% elif order.status == 'Processing' %}
+                        <div class="status-pending text-center">{{order.status|upper}}</div>
+                        {% elif order.status == 'Cancelled' %}
+                        <div class="status-cancelled text-center">{{order.status|upper}}</div>
+                        {% elif order.status == 'Shipped' %}
+                        <div class="status-shipped text-center">{{order.status|upper}}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-5">
+
+            <!-- 
+                HOW TO CONTROL THE TRACKER:
+                1. Add the 'active' class to the completed <div class="step"> stages.
+                2. Update the inline 'style="width: ..."' on the <div class="progress-bar-line-active">.
+                - Order Confirmed: width: 0%;
+                - Shipped: width: 33%;
+                - Out for Delivery: width: 66%;
+                - Delivered: width: 100%;
+            -->
+
+            <!-- Progress Tracker -->
+            <div class="progress-tracker-container">
+                <div class="d-flex justify-content-between">
+                    <!-- Step 1: Order Confirmed -->
+                    <div class="step {% if order.status == 'Pending' or order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %} active {% endif %} ">
+                        <div class="step-icon"><i class="bi bi-box-seam"></i></div>
+                        <div class="step-label">Order Confirmed</div>
+                        {% if order.status == 'Pending' %}
+                        <div class="step-date">{{ order.created_at|date:"j F Y" }}</div>
+                        {% endif %}
+                    </div>
+                    <!-- Step 2: Shipped -->
+                    <div class="step {% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %} active {% endif %}">
+                        <div class="step-icon"><i class="bi bi-hourglass-split"></i></div>
+                        <div class="step-label">Processing</div>
+                        {% if order.status == 'Processing' %}
+                        <div class="step-date">{{ order.updated_at|date:"j F Y" }}</div>
+                        {% endif %}
+                    </div>
+                    <!-- Step 3: Out for Delivery -->
+                    <div class="step {% if order.status == 'Shipped' or order.status == 'Delivered' %} active {% endif %}">
+                        <div class="step-icon"><i class="bi bi-truck"></i></div>
+                        <div class="step-label">Shipped</div>
+                        {% if order.status == 'Shipped' %}
+                        <div class="step-date">{{ order.updated_at|date:"j F Y" }}</div>
+                        {% endif %}
+                    </div>
+                    <!-- Step 4: Delivered (Endpoint) -->
+                    <div class="step {% if order.status == 'Delivered' %} active {% endif %}">
+                        <div class="step-icon"><i class="bi bi-house-check-fill"></i></div>
+                        <div class="step-label">Delivered</div>
+                        {% if order.status == 'Delivered' %}
+                        <div class="step-date">{{ order.updated_at|date:"j F Y" }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Progress Bar -->
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar-line"></div>
+                    {% if order.status == 'Pending' %}
+                    <div class="progress-bar-line-active" style="width: 25%;"></div>
+                    {% elif order.status == 'Processing' %}
+                    <div class="progress-bar-line-active" style="width: 50%;"></div>
+                    {% elif order.status == 'Shipped' %}
+                    <div class="progress-bar-line-active" style="width: 75%;"></div>
+                    {% elif order.status == 'Delivered' %}
+                    <div class="progress-bar-line-active" style="width: 100%;"></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
