@@ -27,6 +27,15 @@ from reportlab.lib import colors
 from reportlab.lib.units import inch
 from io import BytesIO
 
+import razorpay
+from django.conf import settings
+
+import hmac, hashlib
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+
+client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 # Create your views here.
 
@@ -70,7 +79,8 @@ class AddressSelectionView(View):
 
         return render(request, 'orders/address_select.html', context)
     
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ConfirmationCartView(View):
 
     def get(self, request):
@@ -127,26 +137,24 @@ class ConfirmationCartView(View):
             "order_total_price": order_total_price,
             
         }
-
+    
         return render(request, 'orders/final_confirmation.html', context)
     
+    
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class PlaceOrderView(View):
-
-    # def get(self, request):
-
-    #     context = {
-    #         "user_id": request.user.id,
-    #     }
-
-    #     return render(request, 'orders/success_order.html', context)
 
     def get(self, request):
         address_id = request.GET.get('address')
+        payment_method = request.GET.get('payment')
+
+
         if not address_id:
-            info_notify(request, "select your delivery please.. ")
+            info_notify(request, "Select your delivery address please..")
             return redirect('address_selection')
         
-        address = get_object_or_404(Address, id=address_id)
+        
 
         if not request.GET.get('payment'):
             info_notify(request, "select your payment method please.. ")
@@ -154,11 +162,13 @@ class PlaceOrderView(View):
             url = f'{reverse("order_confirmation")}?address={address.id}'
             return redirect(url)
         
-        payment_method = request.GET.get('payment')
-
-        if not Cart.objects.filter(user=request.user):
+        address = get_object_or_404(Address, id=address_id)
+        
+        if not Cart.objects.filter(user=request.user).exists():
 
             return redirect('cart_page')
+        
+
         cart = get_object_or_404(Cart, user=request.user)
 
         cart_items = (
@@ -176,6 +186,7 @@ class PlaceOrderView(View):
         if not cart_items:
             return redirect('cart_page')
         
+        #  creating order
         order = Order.objects.create(
             user=request.user,
             order_id = f"ORD{uuid.uuid4().hex[:10].upper()}",
@@ -192,10 +203,6 @@ class PlaceOrderView(View):
         )
 
         for item in cart_items:
-            # print("product: ", item.product.name, "variant :", item.variant.name)
-            # print("product real price: ", item.variant.price)
-            # print("product final price: ", item.variant.final_price)
-            # print("product discount price: ", item.variant.discount_price, "product discount percent: ", item.variant.discount_percent)
             OrderItem.objects.create(
                 order=order, product=item.product, variant=item.variant,
                 quantity=item.quantity, price=item.variant.final_price,
@@ -208,18 +215,121 @@ class PlaceOrderView(View):
             item.variant.stock -= item.quantity
             item.variant.save()
         
-        cart_items.delete()
+        # cart.items.filter(is_active=True).delete()
+
+        if order.razorpay_order_id:   # ← already paid once
+            return redirect('razorpay_checkout', order_id=order.order_id)
 
         print('payment method is :', payment_method,"address id:", address_id)
 
-        context = {
+        if payment_method == 'COD':
+            cart = get_object_or_404(Cart, user=request.user)
+            cart.items.filter(is_active=True).delete()
+
+
+            context = {
             "user_id": request.user.id,
             "order": order,
-        }
-        success_notify(request, "Order placed successfully!")
-        return render(request, 'orders/success_order.html', context)
-    
+            }
+            success_notify(request, "Order placed successfully!")
+            return render(request, 'orders/success_order.html', context)
+        
+        elif payment_method == 'ONLINE':
+            amount_in_paise = int(order.over_all_amount * 100)   # Razorpay uses paise
+            razorpay_order = client.order.create({
+                "amount": amount_in_paise,
+                "currency": "INR",
+                "receipt": order.order_id,
+            })
+            order.razorpay_order_id = razorpay_order['id']
+            order.save()
 
+            context = {
+                'user_id': request.user.id,
+                'order': order,
+                'razorpay_key_id': settings.RAZORPAY_KEY_ID,
+                'amount': amount_in_paise,
+                'currency': 'INR',
+                'real_amount': order.over_all_amount,
+                'callback_url': request.build_absolute_uri(reverse('razorpay_callback')),
+                # 'cancel_url': request.build_absolute_uri(reverse('order_cancel')),
+            }
+            return render(request, 'orders/razorpay_checkout.html', context)
+
+@csrf_exempt
+def razorpay_callback(request):
+    if request.method != "POST":
+        return redirect('cart_page')
+
+    payment_id = request.POST.get('razorpay_payment_id')
+    order_id   = request.POST.get('razorpay_order_id')
+    signature  = request.POST.get('razorpay_signature')
+    order_identity = request.POST.get('order_idetity')
+
+    print('razorpay_payment_id', order_id," - ", order_identity)
+    print('razorpay_payment_id', payment_id)
+
+    cart = get_object_or_404(Cart, user=request.user)
+
+    try:
+        order = Order.objects.get(razorpay_order_id=order_id)
+    except Order.DoesNotExist:
+        return redirect('cart_page')
+
+    # Verify signature
+    generated_signature = hmac.new(
+        settings.RAZORPAY_KEY_SECRET.encode(),
+        f"{order_id}|{payment_id}".encode(),
+        hashlib.sha256
+    ).hexdigest()
+
+    
+    if generated_signature == signature:
+        order.is_paid = True
+        order.razorpay_payment_id = payment_id
+        order.razorpay_signature = signature
+        order.status = 'Pending'
+        order.save()
+
+        cart.items.filter(is_active=True).delete()
+        return redirect('order_success', order_id=order.order_id)
+    else:
+        order.items.all().delete()
+        order.orders_address.all().delete()
+        order.delete()
+        return redirect('order_cancel_return_cart', order_id=order.id)
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
+class OrderSuccessView(View):
+    def get(self, request, order_id):
+        order = get_object_or_404(Order, order_id=order_id, user=request.user)
+        success_notify(request, "Order placed successfully!")
+        return render(request, 'orders/success_order.html', {'user_id': request.user.id ,'order': order})
+    
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
+class OrderCancelReturnCartView(View):
+    def get(self, request, order_id):
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+        order.items.all().delete()
+        order.orders_address.delete()
+        order.delete()
+        return redirect('cart_page')
+    
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
+class PaymentFailedView(View):
+    def get(self, request, order_id):
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+        order.status='Payment Failed'
+        order.save()
+        error_notify(request, "Payment Failed..!")
+        return render(request, 'orders/payment_failed.html', {'user_id': request.user.id ,'order': order})
+
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class OrderStatusUpdateByDateMixin:
     def dispatch(self, request, *args, **kwargs):
         # Update all orders for this user before view runs
@@ -255,7 +365,7 @@ class OrderListingView(OrderStatusUpdateByDateMixin, View):
         page = request.GET.get('page', 1)
         query = request.GET.get('q', '').strip()
 
-        orders = Order.objects.filter(user=request.user).order_by('-updated_at')
+        orders = Order.objects.filter(user=request.user).exclude(status='Payment Failed').order_by('-updated_at')
 
         if query:
             orders = orders.filter(Q(status__icontains=query))
@@ -367,6 +477,8 @@ class OrderTrackingView(View):
     
     # cancellation 
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class CancelOrderView(View):
     def get(self, request, order_id):
 
@@ -564,7 +676,7 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
 
         page = request.GET.get('page', 1)
 
-        orders = Order.objects.all().order_by('-updated_at')
+        orders = Order.objects.all().order_by('-status')
 
         if query:
             orders = orders.filter(Q(status__icontains=query))
@@ -641,6 +753,9 @@ class AdminOrderDetailView(View):
 
         return render(request, "orders/admin_order_detail.html", context)
     
+    
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')    
 class OrderStatusUpdateView(View):
 
     def get(self, request, order_id, new_status):

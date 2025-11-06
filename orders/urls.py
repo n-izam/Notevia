@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import AddressSelectionView, ConfirmationCartView, PlaceOrderView, OrderListingView, OrderDetailView, OrderTrackingView, AdminSideOrderListingView
-from .views import AdminOrderDetailView, OrderStatusUpdateView, CancelOrderView, CancelOrderItemView, ReturnOrderView, ReturnUpdateView, InvoiceDownloadView
+from .views import AdminOrderDetailView, OrderStatusUpdateView, CancelOrderView, CancelOrderItemView, ReturnOrderView, ReturnUpdateView, InvoiceDownloadView, OrderSuccessView, PaymentFailedView
+from . import views
 
 
 
@@ -9,6 +10,11 @@ urlpatterns = [
     path('order_address/', AddressSelectionView.as_view(), name='address_selection'),
     path('order_confirmation/', ConfirmationCartView.as_view(), name='order_confirmation'),
     path('place_order/', PlaceOrderView.as_view(), name='place_order'),
+    path('order/razorpay/callback/', views.razorpay_callback, name='razorpay_callback'),
+    # path('order/success/<str:order_id>/', views.OrderSuccessView.as_view(), name='order_success'),
+    path('order/success/<str:order_id>/', OrderSuccessView.as_view(), name='order_success'),
+    path('order/cancel/<int:order_id>/', views.OrderCancelReturnCartView.as_view(), name='order_cancel_return_cart'),
+    path('order/payment/failed/<int:order_id>/',PaymentFailedView.as_view(), name='payment_failed'),
 
     path('order_listing/', OrderListingView.as_view(), name='order_listing'),
     path('order_detail/<int:order_id>/', OrderDetailView.as_view(), name='order_details'),

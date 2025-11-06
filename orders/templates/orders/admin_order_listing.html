@@ -293,6 +293,8 @@
                         <div class="status status-cancelled">Status : {{order.status}}</div>
                         {% elif order.status == 'Shipped' %}
                         <div class="status status-Shipped">Status : {{order.status}}</div>
+                        {% elif order.status == 'Payment Failed' %}
+                        <div class="status status-cancelled">Status : {{order.status}}</div>
                         {% endif %}
                     </div>
                     <div class="order-body">
@@ -308,7 +310,10 @@
                                 <!-- <button class="btn btn-outline-dark"><i class="fas fa-file-invoice me-2"></i>Invoice</button> -->
                                 <a href="{% url 'admin_order_detail' order.id %}" class="btn btn-dark">View Details</a>
                             </div>
+                            {% if order.status == 'Cancelled' or order.status == 'Payment Failed' %}
+                            {% else %}
                             <div class="mt-3 delivery-date">{{order.delivery_date|date:"j F Y"}}</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -434,12 +439,12 @@
 
     // this is a reload script
 
-    //window.addEventListener("pageshow", function(event) {
-        // If the page is loaded from the browser's back/forward cache
-        //if (event.persisted) {
-            //window.location.reload();
-        //}
-    //});
+    window.addEventListener("pageshow", function(event) {
+        //If the page is loaded from the browser's back/forward cache
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
 
 
     const input = document.getElementById("searchField");

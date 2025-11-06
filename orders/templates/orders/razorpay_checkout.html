@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Payment</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .payment-container {
+            max-width: 500px;
+            width: 100%;
+            padding: 2.5rem;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .store-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3399cc;
+            margin-bottom: 0.5rem;
+        }
+        .payment-title {
+            font-size: 1.75rem;
+            font-weight: 500;
+            color: #343a40;
+            margin-bottom: 1rem;
+        }
+        .payment-info {
+            color: #6c757d;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .button-group .btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            min-width: 220px;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background-color: #3399cc;
+            border-color: #3399cc;
+        }
+        .btn-primary:hover {
+            background-color: #287ca8;
+            border-color: #287ca8;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .secure-payment-badge {
+            margin-top: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .secure-payment-badge i {
+            color: #28a745;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-container">
+        <div class="store-logo">Your Store</div>
+        <h2 class="payment-title">Pay ₹{{ real_amount|floatformat:2 }} with Razorpay</h2>
+        
+        <p class="payment-info">
+            You are just one step away from completing your order. Please click the "Pay Now" button below to proceed to our secure payment gateway. Your transaction is safe and encrypted.
+        </p>
+
+        <div class="button-group">
+            <button class="btn btn-primary" id="rzp-button">Pay Now</button>
+            <br>
+            <a class="btn btn-danger" href="{% url 'order_cancel_return_cart' order_id=order.id %}">Cancel & Return to Cart</a>
+        </div>
+
+        <div class="secure-payment-badge">
+            <!-- You can use a lock icon from a library like Font Awesome if you have it -->
+            <span>&#128274; Secure and Encrypted Payment</span>
+        </div>
+    </div>
+
+    <script>
+        var options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": "{{ amount }}",
+            "currency": "{{ currency }}",
+            "name": "Your Store",
+            "description": "Order {{ order.order_id }}",
+            "order_id": "{{ order.razorpay_order_id }}",
+    
+            "handler": function (response) {
+                // SUCCESS → Submit form to your backend for verification
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{{ callback_url }}";
+    
+                const fields = {
+                    'razorpay_payment_id': response.razorpay_payment_id,
+                    'razorpay_order_id': response.razorpay_order_id,
+                    'razorpay_signature': response.razorpay_signature,
+                    'csrfmiddlewaretoken': "{{ csrf_token }}",
+                    'order_id': "{{ order.id }}"
+                };
+    
+                for (const [key, value] of Object.entries(fields)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = value;
+                    form.appendChild(input);
+                }
+                document.body.appendChild(form);
+                form.submit();
+            },
+    
+            "prefill": {
+                "name": "{{ request.user.full_name|default:'' }}",
+                "email": "{{ request.user.email|default:'' }}",
+                "contact": "{{ order.orders_address.phone_no|default:'' }}"
+            },
+    
+            "theme": { "color": "#3399cc" },
+    
+            "modal": {
+                "ondismiss": function() {
+                    // This function is called when the user closes the Razorpay popup
+                    console.log("Payment modal closed by user.");
+                    window.location = "{% url 'payment_failed' order_id=order.id %}";
+                }
+            }
+        };
+    
+        // Attach the click handler to the button
+        document.getElementById('rzp-button').onclick = function(e) {
+            const rzp = new Razorpay(options);
+            
+            // This event handles payment failures, like a card decline
+            rzp.on('payment.failed', function (response) {
+                // Use SweetAlert for a nicer message
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Failed',
+                    text: response.error.description || 'An unknown error occurred. Please try again.',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location = "{% url 'payment_failed' order_id=order.id %}";
+                });
+            });
+    
+            rzp.open();
+            e.preventDefault();
+        };
+    
+        // Optional: If you want the payment modal to open automatically when the page loads
+        /*
+        window.onload = function() {
+            document.getElementById('rzp-button').click();
+        };
+        */
+    </script>
+
+</body>
+</html>
+
+<!-- <script>
+    var options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ amount }}",
+        "currency": "{{ currency }}",
+        "name": "Your Store",
+        "description": "Order {{ order.order_id }}",
+        "order_id": "{{ order.razorpay_order_id }}",
+
+        "handler": function (response) {
+            // SUCCESS → Submit form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{{ callback_url }}";
+
+            const fields = {
+                'razorpay_payment_id': response.razorpay_payment_id,
+                'razorpay_order_id': response.razorpay_order_id,
+                'razorpay_signature': response.razorpay_signature,
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+                'order_id': "{{ order.id }}"
+            };
+
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            }
+            document.body.appendChild(form);
+            form.submit();
+        },
+
+        "prefill": {
+            "name": "{{ request.user.full_name|default:'' }}",
+            "email": "{{ request.user.email|default:'' }}",
+            "contact": "{{ order.orders_address.phone_no|default:'' }}"
+        },
+
+        "theme": { "color": "#3399cc" },
+
+        // NEW: Handle FAILURE
+        "modal": {
+            "ondismiss": function() {
+                // User closed popup → go back to cart
+                alert("Payment cancelled. Returning to cart...");
+                window.location = "{% url 'payment_failed' order_id=order.id %}";
+            }
+        }
+    };
+
+    // Auto-open on page load (optional)
+    document.getElementById('rzp-button').onclick = function(e) {
+        const rzp = new Razorpay(options);
+        
+        // Handle any error (card decline, etc.)
+        rzp.on('payment.failed', function (response) {
+            alert("Payment Failed: " + (response.error.description || "Try again"));
+            window.location = "{% url 'payment_failed' order_id=order.id %}";
+        });
+
+        rzp.open();
+        e.preventDefault();
+    };
+
+    // OPTIONAL: Auto-open popup when page loads
+    //window.onload = function() {
+        //document.getElementById('rzp-button').click();
+    //};
+</script> -->
+
+<!-- <script>
+    var options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ amount }}",
+        "currency": "{{ currency }}",
+        "name": "Your Store",
+        "description": "Order {{ order.order_id }}",
+        "order_id": "{{ order.razorpay_order_id }}",
+        "handler": function (response){
+            // SEND AS FORM DATA (NOT JSON)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{{ callback_url }}";
+    
+            const fields = {
+                'razorpay_payment_id': response.razorpay_payment_id,
+                'razorpay_order_id': response.razorpay_order_id,
+                'razorpay_signature': response.razorpay_signature,
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+                'order_idetity':"{{order.id}}"
+            };
+    
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            }
+    
+            document.body.appendChild(form);
+            form.submit();
+        },
+        "prefill": {
+            "name": "{{ request.user.full_name|default:'' }}",
+            "email": "{{ request.user.email|default:'' }}",
+            "contact": "{{ order.orders_address.phone_no|default:'' }}"
+        },
+        "theme": { "color": "#3399cc" }
+    };
+    
+    document.getElementById('rzp-button').onclick = function(e){
+        new Razorpay(options).open();
+        e.preventDefault();
+    };
+    </script> -->
+
+
+     <!-- <script>
+        var options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": "{{ amount }}",
+            "currency": "{{ currency }}",
+            "name": "Your Store",
+            "description": "Order {{ order.order_id }}",
+            "order_id": "{{ order.razorpay_order_id }}",
+    
+            "handler": function (response) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{{ callback_url }}";
+    
+                const fields = {
+                    'razorpay_payment_id': response.razorpay_payment_id,
+                    'razorpay_order_id': response.razorpay_order_id,
+                    'razorpay_signature': response.razorpay_signature,
+                    'csrfmiddlewaretoken': "{{ csrf_token }}",
+                    'order_id': "{{ order.id }}"
+                };
+    
+                for (const [key, value] of Object.entries(fields)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = value;
+                    form.appendChild(input);
+                }
+                document.body.appendChild(form);
+                form.submit();
+            },
+    
+            "prefill": {
+                "name": "{{ request.user.full_name|default:'' }}",
+                "email": "{{ request.user.email|default:'' }}",
+                "contact": "{{ order.orders_address.phone_no|default:'' }}"
+            },
+    
+            "theme": { "color": "#3399cc" },
+    
+            "modal": {
+                "ondismiss": function() {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Payment Cancelled",
+                        text: "You closed the payment window. Order is safe!",
+                        confirmButtonText: "Back to Cart",
+                        confirmButtonColor: "#d33",
+                        timer: 5000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        window.location = "{% url 'cart_page' %}";
+                    });
+                }
+            }
+        };
+    
+        document.getElementById('rzp-button').onclick = function(e) {
+            const rzp = new Razorpay(options);
+    
+            // BEAUTIFUL FAILURE POPUP
+            rzp.on('payment.failed', function (response) {
+                const errorMsg = response.error.description || "Payment failed. Try again!";
+                const reason = response.error.reason || "unknown";
+    
+                Swal.fire({
+                    icon: "error",
+                    title: "Payment Failed!",
+                    html: `
+                        <p><strong>${errorMsg}</strong></p>
+                        <small>Reason: <code>${reason}</code></small>
+                    `,
+                    confirmButtonText: "Try Again",
+                    cancelButtonText: "Back to Cart",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        rzp.open(); // Retry payment
+                    } else {
+                        window.location = "{% url 'cart_page' %}";
+                    }
+                });
+            });
+    
+            rzp.open();
+            e.preventDefault();
+        };
+    
+        // Auto-open on load
+        window.onload = function() {
+            document.getElementById('rzp-button').click();
+        };
+    </script> -->

@@ -20,6 +20,7 @@ class Order(models.Model):
         ('Shipped', 'Shipped'),
         ('Delivered', 'Delivered'),
         ('Cancelled', 'Cancelled'),
+        ('Payment Failed', 'Payment Failed'),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
@@ -29,10 +30,16 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     cancel_reason = models.TextField(blank=True, null=True)
+    is_paid = models.BooleanField(default=False)
+
+
+    razorpay_order_id = models.CharField(max_length=255, blank=True, null=True)
+    razorpay_payment_id = models.CharField(max_length=255, blank=True, null=True)
+    razorpay_signature = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"Order {self.order_id} - {self.user.full_name}"
-    
+    @property
     def over_all_amount(self):
         tax = 5
         total_main_amount = self.total_amount() + (self.total_items_amount()*tax/100)

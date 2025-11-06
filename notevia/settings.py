@@ -212,3 +212,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL = 'signin'   # after login, go to home
 LOGOUT_REDIRECT_URL = 'signin'  # after logout, go to home
 
+# razorpay setup
+
+RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET')
