@@ -202,7 +202,7 @@
                             <div class="ms-1">
                                 <p class="mb-0 fw-bold">{{item.order_item.product.name}}</p>
                                 <span class="fw-light text-muted" >variant type: {{item.order_item.variant.name}} </span>
-                                {% if order.status != 'Delivered' and order.status != 'Shipped' %}
+                                {% if order.status != 'Delivered' and order.status != 'Shipped' and order.status != 'Payment Failed' %}
                                 <div>
                                     {% if not item.order_item.is_cancel %}
                                     <form action="{% url 'cancel_order_item' item.order_item.order.id item.order_item.id %}" method="POST" class="delete-form">
@@ -278,7 +278,7 @@
                 <!-- Action Buttons -->
                 <div class="d-flex justify-content-end mt-4">
                     <button class="btn btn-dark me-2">GO Back</button>
-                    {% if order.status != 'Delivered' and  order.status != 'Shipped' and order.status != 'Cancelled' %}
+                    {% if order.status != 'Delivered' and  order.status != 'Shipped' and order.status != 'Cancelled' and order.status != 'Payment Failed' %}
                     <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger">Cancel Order</a>
                     {% endif %}
 
@@ -286,6 +286,9 @@
                     {% if not order.return_requests.reason %}
                     <a href="{% url 'return_order' order.id %}" class="btn btn-danger"><i class="fas fa-redo me-2"></i>Return</a>
                     {% endif %}
+                    {% endif %}
+                    {% if  order.status == 'Payment Failed' and order.razorpay_order_id %}
+                    <a href="#" class="btn btn-danger"><i class="fas fa-redo me-2"></i>Re try</a>
                     {% endif %}
                 </div>
             </div>

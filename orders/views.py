@@ -58,6 +58,8 @@ class AddressSelectionView(View):
                 models.Q(variant__isnull=True) | models.Q(variant__is_listed=True)
             )
         )
+        if not cart_items:
+            return redirect('cart_page')
         
 
         cartitem_with_image = []
@@ -85,6 +87,19 @@ class ConfirmationCartView(View):
 
     def get(self, request):
 
+        if request.session.get('payment_confirm'):
+            order_id = request.session.get('session_order')
+            session_order = get_object_or_404(Order, id=order_id)
+            session_order.items.all().delete()
+            session_order.orders_address.delete()
+            session_order.delete()
+            request.session.pop('payment_confirm', None)
+            del request.session['session_order']
+            
+            error_notify(request, 'Try again, payment gateway failed..!')
+            return redirect('cart_page')
+            
+
         address_id = request.GET.get('address')
         print("address id", address_id)
 
@@ -111,6 +126,8 @@ class ConfirmationCartView(View):
                 models.Q(variant__isnull=True) | models.Q(variant__is_listed=True)
             )
         )
+        if not cart_items:
+            return redirect('cart_page')
         
 
         cartitem_with_image = []
@@ -137,7 +154,7 @@ class ConfirmationCartView(View):
             "order_total_price": order_total_price,
             
         }
-    
+        
         return render(request, 'orders/final_confirmation.html', context)
     
     
@@ -148,7 +165,8 @@ class PlaceOrderView(View):
     def get(self, request):
         address_id = request.GET.get('address')
         payment_method = request.GET.get('payment')
-
+        # if not request.session.get('payment_confirm'):
+        #     return redirect('order_listing')
 
         if not address_id:
             info_notify(request, "Select your delivery address please..")
@@ -244,7 +262,65 @@ class PlaceOrderView(View):
             order.razorpay_order_id = razorpay_order['id']
             order.save()
 
-            context = {
+            request.session["payment_confirm"] = True
+            request.session['session_order'] = order.id
+
+            pay_url = f'{reverse("razorpay_callback")}?order={order.id}'
+            return redirect(pay_url)
+
+@csrf_exempt
+def razorpay_callback(request):
+    if request.method == "POST":
+        
+
+        payment_id = request.POST.get('razorpay_payment_id')
+        order_id   = request.POST.get('razorpay_order_id')
+        signature  = request.POST.get('razorpay_signature')
+        order_identity = request.POST.get('order_idetity')
+
+        print('razorpay_payment_id', order_id," - ", order_identity)
+        print('razorpay_payment_id', payment_id)
+
+        cart = get_object_or_404(Cart, user=request.user)
+
+        try:
+            order = Order.objects.get(razorpay_order_id=order_id)
+        except Order.DoesNotExist:
+            return redirect('cart_page')
+
+        # Verify signature
+        generated_signature = hmac.new(
+            settings.RAZORPAY_KEY_SECRET.encode(),
+            f"{order_id}|{payment_id}".encode(),
+            hashlib.sha256
+        ).hexdigest()
+
+        
+        if generated_signature == signature:
+            order.is_paid = True
+            order.razorpay_payment_id = payment_id
+            order.razorpay_signature = signature
+            order.status = 'Pending'
+            order.save()
+
+            
+            cart.items.filter(is_active=True).delete()
+            return redirect('order_success', order_id=order.order_id)
+        else:
+            order.items.all().delete()
+            order.orders_address.all().delete()
+            order.delete()
+
+            
+            return redirect('order_cancel_return_cart', order_id=order.id)
+    else:
+        if not request.session.get('payment_confirm'):
+            return redirect('cart_page')
+        
+        order_id = request.GET.get('order')
+        order = get_object_or_404(Order, id=order_id)
+        amount_in_paise = int(order.over_all_amount * 100)
+        context = {
                 'user_id': request.user.id,
                 'order': order,
                 'razorpay_key_id': settings.RAZORPAY_KEY_ID,
@@ -254,55 +330,17 @@ class PlaceOrderView(View):
                 'callback_url': request.build_absolute_uri(reverse('razorpay_callback')),
                 # 'cancel_url': request.build_absolute_uri(reverse('order_cancel')),
             }
-            return render(request, 'orders/razorpay_checkout.html', context)
-
-@csrf_exempt
-def razorpay_callback(request):
-    if request.method != "POST":
-        return redirect('cart_page')
-
-    payment_id = request.POST.get('razorpay_payment_id')
-    order_id   = request.POST.get('razorpay_order_id')
-    signature  = request.POST.get('razorpay_signature')
-    order_identity = request.POST.get('order_idetity')
-
-    print('razorpay_payment_id', order_id," - ", order_identity)
-    print('razorpay_payment_id', payment_id)
-
-    cart = get_object_or_404(Cart, user=request.user)
-
-    try:
-        order = Order.objects.get(razorpay_order_id=order_id)
-    except Order.DoesNotExist:
-        return redirect('cart_page')
-
-    # Verify signature
-    generated_signature = hmac.new(
-        settings.RAZORPAY_KEY_SECRET.encode(),
-        f"{order_id}|{payment_id}".encode(),
-        hashlib.sha256
-    ).hexdigest()
-
-    
-    if generated_signature == signature:
-        order.is_paid = True
-        order.razorpay_payment_id = payment_id
-        order.razorpay_signature = signature
-        order.status = 'Pending'
-        order.save()
-
-        cart.items.filter(is_active=True).delete()
-        return redirect('order_success', order_id=order.order_id)
-    else:
-        order.items.all().delete()
-        order.orders_address.all().delete()
-        order.delete()
-        return redirect('order_cancel_return_cart', order_id=order.id)
+        return render(request, 'orders/razorpay_checkout.html', context)
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class OrderSuccessView(View):
     def get(self, request, order_id):
+        if not request.session.get('payment_confirm'):
+            return redirect('cart_page')
+        if request.session.get('payment_confirm'):
+            request.session.pop('payment_confirm', None)
+            del request.session['session_order']
         order = get_object_or_404(Order, order_id=order_id, user=request.user)
         success_notify(request, "Order placed successfully!")
         return render(request, 'orders/success_order.html', {'user_id': request.user.id ,'order': order})
@@ -311,6 +349,11 @@ class OrderSuccessView(View):
 @method_decorator(never_cache, name='dispatch')
 class OrderCancelReturnCartView(View):
     def get(self, request, order_id):
+        if not request.session.get('payment_confirm'):
+            return redirect('cart_page')
+        if request.session.get('payment_confirm'):
+            request.session.pop('payment_confirm', None)
+            del request.session['session_order']
         order = get_object_or_404(Order, id=order_id, user=request.user)
         order.items.all().delete()
         order.orders_address.delete()
@@ -321,6 +364,12 @@ class OrderCancelReturnCartView(View):
 @method_decorator(never_cache, name='dispatch')
 class PaymentFailedView(View):
     def get(self, request, order_id):
+        if not request.session.get('payment_confirm'):
+            return redirect('cart_page')
+        if request.session.get('payment_confirm'):
+            request.session.pop('payment_confirm', None)
+            del request.session['session_order']
+            
         order = get_object_or_404(Order, id=order_id, user=request.user)
         order.status='Payment Failed'
         order.save()
