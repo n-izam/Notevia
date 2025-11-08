@@ -1,12 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.urls import reverse
 from adminpanel.models import Product, Variant
-from .models import Cart, CartItem
+from .models import Cart, CartItem, Wallet, WalletTransaction
 from django.db import models
-from accounts.utils import success_notify, info_notify, error_notify
+from accounts.utils import success_notify, info_notify, error_notify, profile
+from decimal import Decimal
 
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+
+import razorpay
+from django.conf import settings
+
+import hmac, hashlib
+
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
+client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 class CartPageView(View):
 
@@ -167,3 +180,166 @@ class RemoveFromCartView(View):
 
         success_notify(request, "Cart updated successfully")
         return redirect('cart_page')
+    
+
+#  wallet integration
+
+class UserWalletView(View):
+
+    def get(self, request):
+        if request.session.get('wallet_payment_confirm'):
+            transaction_id = request.session.get('session_transaction')
+            session_transaction = get_object_or_404(WalletTransaction, id=transaction_id)
+            session_transaction.delete()
+            request.session.pop('wallet_payment_confirm', None)
+            del request.session['session_transaction']
+            error_notify(request, 'Try again, payment gateway failed..!')
+            return redirect('wallet')
+
+        wallet, create = Wallet.objects.get_or_create(user=request.user)
+        transactions = wallet.transactions.all().order_by('-created_at')
+
+        user_profile = profile(request)
+        context = {
+            "user_id": request.user.id,
+            "user_profile": user_profile,
+            "wallet": wallet,
+            "transactions": transactions
+
+
+        }
+
+        return render(request, 'cart/main_wallet.html', context)
+    
+    def post(self, request):
+        amount = request.POST.get('money')
+        print('amount need to add wallet:', amount)
+        wallet = get_object_or_404(Wallet, user=request.user)
+        if float(amount)<=0:
+            error_notify(request, 'must enter the amount greater than zero')
+            return redirect('wallet')
+        transaction = wallet.credit(Decimal(amount), message="amount added to wallet")
+        print('transaction', transaction.id)
+
+        amount_in_paise = int(transaction.amount * 100)
+        razorpay_transaction = client.order.create({
+                "amount": amount_in_paise,
+                "currency": "INR",
+                "receipt": transaction.transaction_id,
+            })
+        transaction.razorpay_order_id = razorpay_transaction['id']
+        transaction.save()
+
+        request.session["wallet_payment_confirm"] = True
+        request.session['session_transaction'] = transaction.id
+
+        pay_url = f'{reverse("razorpay_callback_wallet")}?transaction={transaction.id}'
+        return redirect(pay_url)
+
+
+
+@csrf_exempt
+def razorpay_callback_wallet(request):
+
+    if request.method == 'POST':
+
+        payment_id = request.POST.get('razorpay_payment_id')
+        order_id   = request.POST.get('razorpay_order_id')
+        signature  = request.POST.get('razorpay_signature')
+        transaction_identity = request.POST.get('order_idetity')
+
+        print('razorpay_payment_id', order_id," - ", transaction_identity)
+        print('razorpay_payment_id', payment_id)
+
+        try:
+            transaction = WalletTransaction.objects.get(razorpay_order_id=order_id)
+        except WalletTransaction.DoesNotExist:
+            return redirect('wallet')
+        
+        # Verify signature
+        generated_signature = hmac.new(
+            settings.RAZORPAY_KEY_SECRET.encode(),
+            f"{order_id}|{payment_id}".encode(),
+            hashlib.sha256
+        ).hexdigest()
+
+        if generated_signature == signature:
+            transaction.razorpay_payment_id = payment_id
+            transaction.razorpay_signature = signature
+            transaction.save()
+
+            return redirect('wallet_payment_success', trxct_id=transaction.id)
+        else:
+            transaction.delete()
+
+            return redirect('cancel_return_wallet', trxct_id=transaction.id)
+        
+
+        pass
+    else:
+        if not request.session.get('wallet_payment_confirm'):
+            return redirect('wallet')
+        transaction_id = request.GET.get('transaction')
+        print('transaction id:', transaction_id)
+        transaction = get_object_or_404(WalletTransaction, id=transaction_id)
+        amount_in_paise = int(transaction.amount * 100)
+        print(amount_in_paise)
+        context = {
+            "transaction": transaction,
+            "razorpay_key_id": settings.RAZORPAY_KEY_ID,
+            "amount": amount_in_paise,
+            'currency': 'INR',
+            'real_amount': transaction.amount,
+            'callback_url': request.build_absolute_uri(reverse('razorpay_callback_wallet')),
+        }
+        return render(request, 'cart/razorpay_checkout_wallet.html', context)
+    
+
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
+class WalletPaymentSuccessView(View):
+    def get(self, request, trxct_id):
+
+        if request.session.get('wallet_payment_confirm'):
+            request.session.pop('wallet_payment_confirm', None)
+            del request.session['session_transaction']
+
+        transaction = get_object_or_404(WalletTransaction, id=trxct_id)
+        success_notify(request, "payment success, added money to your wallet")
+        return redirect('wallet')
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
+class PaymentCancelReturnWalletView(View):
+    def get(self, request, trxct_id):
+
+        if request.session.get('wallet_payment_confirm'):
+            request.session.pop('wallet_payment_confirm', None)
+            del request.session['session_transaction']
+
+        transaction = get_object_or_404(WalletTransaction, id=trxct_id)
+        wallet = transaction.wallet
+        wallet.balance -= transaction.amount
+        wallet.save()
+        transaction.delete()
+        error_notify(request, "cancelled payment, try again")
+        return redirect('wallet')
+
+    
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
+class WalletPaymentFailedView(View):
+    def get(self, request, trxct_id):
+
+        if request.session.get('wallet_payment_confirm'):
+            request.session.pop('wallet_payment_confirm', None)
+            del request.session['session_transaction']
+            
+        transaction = get_object_or_404(WalletTransaction, id=trxct_id)
+        wallet = transaction.wallet
+        wallet.balance -= transaction.amount
+        wallet.save()
+        transaction.delete()
+        error_notify(request, "payment failed, try again")
+        return redirect('wallet')

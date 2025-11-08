@@ -117,15 +117,15 @@ class Variant(models.Model):
 
     @property
     def final_price(self):
-        price = float(self.price)
+        price = self.price
         discounts = []
 
         if self.discount:
-            discounts.append(float(self.discount))
+            discounts.append(self.discount)
         if self.product.offer:
-            discounts.append(float(self.product.offer.offer_percent))
+            discounts.append(self.product.offer.offer_percent)
         if self.product.category and self.product.category.offer:
-            discounts.append(float(self.product.category.offer.offer_percent))
+            discounts.append(self.product.category.offer.offer_percent)
 
         if discounts:
             max_discount = max(discounts)
@@ -135,15 +135,15 @@ class Variant(models.Model):
     
     @property
     def discount_price(self):
-        price = float(self.price)
+        price = self.price
         discounts = []
 
         if self.discount:
-            discounts.append(float(self.discount))
+            discounts.append(self.discount)
         if self.product.offer:
-            discounts.append(float(self.product.offer.offer_percent))
+            discounts.append(self.product.offer.offer_percent)
         if self.product.category and self.product.category.offer:
-            discounts.append(float(self.product.category.offer.offer_percent))
+            discounts.append(self.product.category.offer.offer_percent)
 
         if discounts:
             max_discount = max(discounts)

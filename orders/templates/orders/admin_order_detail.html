@@ -174,6 +174,8 @@
                                 <div class="status-shipped">{{order.status}}</div>
                                 {% elif order.status == 'Payment Failed' %}
                                 <div class="status-cancelled">{{order.status}}</div>
+                                {% elif order.status == 'Returned' %}
+                                <div class="status-pending">{{order.status}}</div>
                                 {% endif %}
                             </div>
                             <div class="d-grid mt-4">
@@ -219,21 +221,25 @@
                         
 
                             {% if order.return_requests.reason %}
-                            <form method="POST" action="{% url 'return_update' order.id order.user.id %}" onsubmit="return confirm('Are you sure you want to confirm?');">
+                            <!-- onsubmit="return confirm('Are you sure you want to confirm?');" -->
+                            <form method="POST" action="{% url 'return_update' order.id order.user.id %}" class="delete-form">
                                 {% csrf_token %}
                                 
                                 <div class="mb-3">
-                                    <label for="status" class="form-label">Return Status</label>
-                                    <select name="status" id="status" class="form-select" required>
+                                    <label for="status" class="form-label">Return Status: {{order.return_requests.status}}</label>
+                                    {% if not order.return_requests.status == 'Approved' and not order.return_requests.status == 'Rejected' %}
+                                    <select name="status" id="status" class="form-select mb-3" required>
                                         {% for value, label in return_status_choices %}
-                                            <option value="{{ value }}" {% if value == return_request.status %}selected{% endif %}>
+                                            <option value="{{ value }}" {% if value == return_request.status %} selected {% endif %}>
                                                 {{ label }}
                                             </option>
                                         {% endfor %}
                                     </select>
+                                    <button type="submit" class="btn btn-success">Confirm</button>
+                                    {% endif %}
                                 </div>
                             
-                                <button type="submit" class="btn btn-success">Confirm</button>
+                                
                             </form>
                             {% endif %}
                         </div>
@@ -363,24 +369,48 @@
         }
     });
 
+    //document.querySelectorAll('.delete-form').forEach(form => {
+      //form.addEventListener('submit', function(e) {
+        //e.preventDefault();
+        //Swal.fire({
+          //title: 'Are you sure?',
+          //text: "This action cannot be undone.",
+          //icon: 'warning',
+          //showCancelButton: true,
+          //confirmButtonColor: '#3085d6',
+          //cancelButtonColor: '#d33',
+          //confirmButtonText: 'Yes, delete it!'
+        //}).then((result) => {
+          //if (result.isConfirmed) {
+            //form.submit();
+          //}
+        //});
+      //});
+    //});
+
+    
     document.querySelectorAll('.delete-form').forEach(form => {
-      form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function(e) {
         e.preventDefault();
         Swal.fire({
-          title: 'Are you sure?',
-          text: "This action cannot be undone.",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
+            title: 'Are you sure?',
+            text: "This action cannot be undone. after the Approval or rejection.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, go on!',
+            customClass: {
+            confirmButton: 'btn btn-danger me-1' ,
+            cancelButton: 'btn btn-dark ms-1' ,
+            },
+            buttonsStyling: false
         }).then((result) => {
-          if (result.isConfirmed) {
+            if (result.isConfirmed) {
             form.submit();
-          }
+            }
         });
-      });
+        });
     });
+    
 </script>
 
 {% endblock %}

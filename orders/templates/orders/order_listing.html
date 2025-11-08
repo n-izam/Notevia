@@ -285,6 +285,8 @@
                 <div class="status status-cancelled">Status : {{order.status}}</div>
                 {% elif order.status == 'Shipped' %}
                 <div class="status status-Shipped">Status : {{order.status}}</div>
+                {% elif order.status == 'Returned' %}
+                <div class="status status-processing">Status : {{order.status}}</div>
                 {% endif %}
                 
             </div>

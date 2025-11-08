@@ -1,5 +1,7 @@
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from accounts.models import UserProfile
+from django.shortcuts import get_object_or_404
 
 # message notification
 
@@ -19,3 +21,7 @@ def info_notify(request, msg="here is some info"):
 
 def validationerror(msg="invalid cridentials"):
     raise ValidationError(msg)
+
+def profile(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+    return profile

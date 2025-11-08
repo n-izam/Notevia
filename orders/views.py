@@ -3,7 +3,7 @@ from django.views import View
 from django.db import models
 from accounts.models import Address, UserProfile, CustomUser
 from adminpanel.models import Product, Variant
-from cart.models import Cart, CartItem
+from cart.models import Cart, CartItem, Wallet, WalletTransaction
 from orders.models import Order, OrderItem, OrderAddress, ReturnRequest
 from django.urls import reverse
 from accounts.utils import error_notify, info_notify, success_notify, warning_notify
@@ -34,6 +34,9 @@ import hmac, hashlib
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+from decimal import Decimal
+
+from django.core.mail import EmailMultiAlternatives
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -139,10 +142,7 @@ class ConfirmationCartView(View):
             })
 
         tax = 5
-        tax_amount = cart.total_price*tax/100
-        print("tax ",tax_amount)
-
-        order_total_price = tax_amount + cart.main_total_price
+        
         
         context = {
             "user_id": request.user.id,
@@ -150,8 +150,6 @@ class ConfirmationCartView(View):
             "cartitem_with_image": cartitem_with_image,
             "select_address": select_address,
             "tax": tax,
-            "tax_amount": tax_amount,
-            "order_total_price": order_total_price,
             
         }
         
@@ -172,7 +170,7 @@ class PlaceOrderView(View):
             info_notify(request, "Select your delivery address please..")
             return redirect('address_selection')
         
-        
+        address = get_object_or_404(Address, id=address_id)
 
         if not request.GET.get('payment'):
             info_notify(request, "select your payment method please.. ")
@@ -244,6 +242,32 @@ class PlaceOrderView(View):
             cart = get_object_or_404(Cart, user=request.user)
             cart.items.filter(is_active=True).delete()
 
+
+            context = {
+            "user_id": request.user.id,
+            "order": order,
+            }
+            success_notify(request, "Order placed successfully!")
+            return render(request, 'orders/success_order.html', context)
+        elif payment_method == 'Wallet':
+
+            wallet = get_object_or_404(Wallet, user=request.user)
+            if wallet.balance < order.over_all_amount:
+                order.items.all().delete()
+                order.orders_address.delete()
+                order.delete()
+
+                error_notify(request, "Insufficient wallet balance, try an another method")
+                url = f'{reverse("order_confirmation")}?address={address.id}'
+                return redirect(url)
+            
+            order.is_paid=True
+            order.save()
+
+            cart = get_object_or_404(Cart, user=request.user)
+            cart.items.filter(is_active=True).delete()
+
+            transaction = wallet.debit(Decimal(order.over_all_amount), message=f"Order #{order.order_id} payment")
 
             context = {
             "user_id": request.user.id,
@@ -398,7 +422,9 @@ class OrderStatusUpdateByDateMixin:
 
             if timezone.now() >= order.delivery_date and order.status == "Shipped" :
                 order.status = "Delivered"
-                order.save(update_fields=["status", "updated_at"])
+                if order.payment_method in ['COD', 'Cash on Delivery']:
+                    order.is_paid
+                order.save()
 
         # continue to the original view
         return super().dispatch(request, *args, **kwargs)
@@ -543,22 +569,28 @@ class CancelOrderView(View):
         order = get_object_or_404(Order, id=order_id, user=request.user)
 
         if order.status not in ['Pending', 'Processing']:
+            error_notify(request, "Order can't able to cancel after processing")
             return redirect('order_details', order_id-order.id )
         
         order.cancel_reason = request.POST.get('reason', '')
         order.status = 'Cancelled'
+        order.is_paid=False
         order.save()
+        
 
         if order.items.filter(is_cancel=False).exists():
+            if order.payment_method not in ['COD', 'Cash on Delivery']:
+                wallet = get_object_or_404(Wallet, user=request.user)
+                transaction = wallet.credit(Decimal(order.over_all_amount), message=f"Order {order.order_id} cancellation amount" )
             for item in order.items.filter(is_cancel=False):
                 if item.variant:
                     item.variant.stock += item.quantity
                     item.is_cancel = True
                     item.variant.save()
-                    item.save() 
+                    item.save()
 
         
-
+        success_notify(request, "order cancelled successfully")
         return redirect('order_details', order_id=order.id)     
 
 
@@ -572,21 +604,29 @@ class CancelOrderItemView(View):
 
         order = get_object_or_404(Order, id=order_id, user=request.user)
         if order.status not in ['Pending', 'Processing']:
+            error_notify(request, "Order can't able to cancel after processing")
             return redirect('order_details', order_id-order.id )
         
         item = get_object_or_404(OrderItem, id=item_id, order=order)
-
+        print('irem discoount')
         print("hi")
+        
         if item.variant:
+            if order.payment_method not in ['COD', 'Cash on Delivery']:
+                wallet = get_object_or_404(Wallet, user=request.user)
+                transaction = wallet.credit(Decimal(item.return_with_tax_price()), message=f"Order #{order.order_id} refund for item:{item.product.name} ")
             item.variant.stock += item.quantity
             item.is_cancel = True
             item.variant.save()
             item.save()
+            
 
         if not order.items.filter(is_cancel=False).exists():
             order.status = 'Cancelled'
+            order.is_paid=False
             order.save()
 
+        success_notify(request, "item removes successfully")
         return redirect('order_details', order_id=order.id )
 
         
@@ -682,7 +722,7 @@ class InvoiceDownloadView(View):
         totals_data = [
             ['Subtotal:', f'Rs. {order.total_items_amount():.2f}'],
             ['Tax (5%):', f'Rs. {order.tax_amount():.2f}'],
-            ['Grand Total:', f'Rs. {order.over_all_amount():.2f}']
+            ['Grand Total:', f'Rs. {order.over_all_amount:.2f}']
         ]
 
         totals_table = Table(totals_data, colWidths=[1.5*inch, 1*inch])
@@ -818,6 +858,9 @@ class OrderStatusUpdateView(View):
                 item.variant.stock += item.quantity
                 item.is_cancel = True
                 item.save()
+        if order.status == 'Delivered':
+            order.is_paid=True
+            order.save()
 
         return redirect('admin_order_detail', order_id=order.id)
 
@@ -825,11 +868,67 @@ class OrderStatusUpdateView(View):
 class ReturnUpdateView(View):
 
     def post(self, request, order_id, user_id):
+        if not CustomUser.objects.filter(id=user_id).exists():
+            return redirect('admin_order_detail', order_id=order_id)
+        return_status = request.POST.get('status')
+        if not return_status:
+            return redirect('admin_order_detail', order_id=order_id)
+
 
         user = get_object_or_404(CustomUser, id=user_id)
 
         order = get_object_or_404(Order, id=order_id, user=user)
+        if return_status in ['Approved']:
+            wallet = get_object_or_404(Wallet, user=user)
+            transaction = wallet.credit(Decimal(order.over_all_amount), message=f"Order {order.order_id} Return Amount" )
+            for item in order.items.filter(is_cancel=False):
+                
+                item.variant.stock += item.quantity
+                item.is_cancel = True
+                item.save()
 
+            order.return_requests.status = 'Approved'
+            order.return_requests.save()
+            order.status='Returned'
+            order.is_paid=False
+            order.save()
+            # email for approval
+            html_content = render_to_string("emails/approve_return.html", {"order": order})
+            email = EmailMultiAlternatives(
+                subject="Verify Your Account",
+                body=f"Your OTP is ",
+                from_email=settings.EMAIL_HOST_USER,
+                to=[user.email],
+            )
+
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+
+            return redirect('admin_order_detail', order_id=order.id)
+        
+        elif return_status in ['Rejected']:
+
+            # email for rejection
+            html_content = render_to_string("emails/return_reject.html", {"order": order})
+            email = EmailMultiAlternatives(
+                subject="Verify Your Account",
+                body=f"Your OTP is ",
+                from_email=settings.EMAIL_HOST_USER,
+                to=[user.email],
+            )
+
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+
+            order.return_requests.status = 'Rejected'
+            order.return_requests.save()
+
+            return redirect('admin_order_detail', order_id=order.id)
         return redirect('admin_order_detail', order_id=order.id)
+
+        
+
+
+        
     
 

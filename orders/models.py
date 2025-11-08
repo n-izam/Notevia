@@ -11,7 +11,8 @@ from django.utils import timezone
 class Order(models.Model):
     PAYMENT_METHOD_CHOICES = [
         ('COD', 'Cash on Delivery'),
-        ('ONLINE', 'Online Payment')
+        ('ONLINE', 'Online Payment'),
+        ('Wallet', 'Wallet'),
     ]
 
     STATUS_CHOICES = [
@@ -21,6 +22,7 @@ class Order(models.Model):
         ('Delivered', 'Delivered'),
         ('Cancelled', 'Cancelled'),
         ('Payment Failed', 'Payment Failed'),
+        ('Returned', 'Returned'),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
@@ -42,12 +44,12 @@ class Order(models.Model):
     @property
     def over_all_amount(self):
         tax = 5
-        total_main_amount = self.total_amount() + (self.total_items_amount()*tax/100)
+        total_main_amount = self.total_amount() + (self.total_amount()*tax/100)
         return total_main_amount
     
     def tax_amount(self):
         tax = 5
-        total_tax_amount =self.total_items_amount()*tax/100
+        total_tax_amount =self.total_amount()*tax/100
         return total_tax_amount
     
     #  without discount and tax
@@ -56,13 +58,13 @@ class Order(models.Model):
 
     #  not applied tax but with discount
     def total_amount(self):
-        return sum(item.total_price() for item in self.items.all())
+        return sum(item.total_price() for item in self.items.filter(is_cancel=False))
     
     def total_quantity(self):
-        return sum(item.quantity for item in self.items.all())
+        return sum(item.quantity for item in self.items.filter(is_cancel=False))
     
     def total_discount(self):
-        return sum(item.sub_discount() for item in self.items.all())
+        return sum(item.sub_discount() for item in self.items.filter(is_cancel=False))
     
     
     @property
@@ -142,13 +144,21 @@ class OrderItem(models.Model):
     def sub_offer(self):
         return self.discount_percent * self.quantity
     
+    # real price for i tem 
     @property
     def real_price(self):
         return float(self.price + self.discount_price)
+    
+    # real price * quantity = sub real price
     @property
     def sub_real_price(self):
         return float(self.real_price*self.quantity)
     
+    #  return price with tax
+    def return_with_tax_price(self):
+        tax_price = (self.total_price()/self.order.total_amount()) * self.order.tax_amount()
+        return float(self.total_price() + tax_price)
+        
     
     
     def __str__(self):

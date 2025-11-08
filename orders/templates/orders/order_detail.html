@@ -152,7 +152,11 @@
                         </p>
                         <p class="text-muted small text-end">
                             {{order.payment_method}}
+                            {% if order.is_paid %}
+                            <span class="badge pillow bg-success rounded">Paid</span>
+                            {% endif %}
                         </p>
+                        
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between align-items-center">
@@ -167,6 +171,8 @@
                         <div class="status-cancelled">{{order.status}}</div>
                         {% elif order.status == 'Shipped' %}
                         <div class="status-shipped">{{order.status}}</div>
+                        {% elif order.status == 'Returned' %}
+                        <div class="status-pending">{{order.status}}</div>
                         {% endif %}
                     </div>
                     <div class="d-grid mt-4">
@@ -278,7 +284,7 @@
                 <!-- Action Buttons -->
                 <div class="d-flex justify-content-end mt-4">
                     <button class="btn btn-dark me-2">GO Back</button>
-                    {% if order.status != 'Delivered' and  order.status != 'Shipped' and order.status != 'Cancelled' and order.status != 'Payment Failed' %}
+                    {% if order.status != 'Delivered' and  order.status != 'Shipped' and order.status != 'Cancelled' and order.status != 'Payment Failed' and order.status != 'Returned' %}
                     <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger">Cancel Order</a>
                     {% endif %}
 
@@ -298,6 +304,8 @@
 {% endblock %}
 
 {% block script %}
+
+
 
 <script>
     document.querySelectorAll('.delete-form').forEach(form => {
@@ -322,5 +330,19 @@
       });
     });
 </script>
+
+{% if messages %}
+{% for message in messages %}
+<script>
+    Swal.fire({
+      icon: "{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}",
+      title: "{{ message }}",
+      showConfirmButton: false,
+      timer: 2000
+    });
+  
+</script>
+{% endfor %}
+{% endif %}
 
 {% endblock %}

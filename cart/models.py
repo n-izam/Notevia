@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from adminpanel.models import Product, Variant
 from django.db.models import UniqueConstraint
+import uuid
+from django.utils import timezone
 
 # Create your models here.
 
@@ -18,7 +20,7 @@ class Cart(models.Model):
     @property
     def total_price(self):
         items_total_price = sum(item.subtotal() for item in self.items.all())
-        return float(items_total_price)
+        return items_total_price
     @property
     def total_quantity(self):
         items_total_quantity = sum(item.quantity for item in self.items.all())
@@ -27,12 +29,21 @@ class Cart(models.Model):
     @property
     def main_total_price(self):
         items_total_price = sum(item.after_subtotal() for item in self.items.all())
-        return float(items_total_price)
+        return items_total_price
     
     @property
     def deduct_amount(self):
         items_total_price = sum(item.discount_subtotal_amount() for item in self.items.all())
-        return float(items_total_price)
+        return items_total_price
+    @property
+    def over_all_amount(self):
+        final = self.main_total_price + self.tax_amount()
+        return final
+    
+    def tax_amount(self):
+        tax = 5
+        total_tax_amount =self.main_total_price*tax/100
+        return total_tax_amount
 
     def __str__(self):
         return f"Cart {{self.user}}"
@@ -72,18 +83,18 @@ class CartItem(models.Model):
     
     @property
     def main_subtotal(self):
-        price = float(self.variant.price)
-        return price * float(self.quantity)
+        price = self.variant.price
+        return price * self.quantity
     
     @property
     def after_discount_subtotal(self):
-        price = float(self.variant.final_price)
-        return price * float(self.quantity)
+        price = self.variant.final_price
+        return price * self.quantity
     
     @property
     def discount_subtotal(self):
-        price = float(self.variant.discount_price)
-        return price * float(self.quantity)
+        price = self.variant.discount_price
+        return price * self.quantity
     
     
     
@@ -94,3 +105,67 @@ class CartItem(models.Model):
         if self.variant:
             return f"{self.product.name} ({self.variant.name}) x {self.quantity}"
         return f"{self.product.name} x {self.quantity}"
+    
+
+#  Wallet implementation in our project
+
+class Wallet(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='wallets'
+    )
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def __str__(self):
+        return f"{self.user.full_name}'s Wallet - ₹{self.balance}"
+    
+    def credit(self, amount, message="Amount credited"):
+        """Add money to wallet and record transaction."""
+        self.balance += amount
+        self.save()
+        transaction = WalletTransaction.objects.create(
+            wallet=self,
+            amount=amount,
+            transaction_type="Credit",
+            message=message
+        )
+        return transaction
+
+    def debit(self, amount, message="Amount debited"):
+        """Deduct money from wallet and record transaction."""
+        if self.balance < amount:
+            raise ValueError("Insufficient balance")
+        self.balance -= amount
+        self.save()
+        transaction = WalletTransaction.objects.create(
+            wallet=self,
+            amount=amount,
+            transaction_type="Debit",
+            message=message
+        )
+        return transaction
+
+def generate_transaction_id():
+    return f"TXN-{timezone.now().strftime('%Y%m%d')}-{uuid.uuid4().hex[:4].upper()}"
+    
+class WalletTransaction(models.Model):
+
+    TRANSACTION_TYPES = (
+        ('Credit', 'Credit'),
+        ('Debit', 'Debit'),
+    )
+
+    wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transactions')
+    transaction_id = models.CharField(max_length=30, default=generate_transaction_id, unique=True, editable=False)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
+    message = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    razorpay_order_id = models.CharField(max_length=255, blank=True, null=True)
+    razorpay_payment_id = models.CharField(max_length=255, blank=True, null=True)
+    razorpay_signature = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.transaction_type} ₹{self.amount} - {self.message} ({self.transaction_id})"

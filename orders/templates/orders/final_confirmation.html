@@ -426,6 +426,13 @@
                                             <small class="d-block text-muted">Pay using UPI, Card, or Net Banking</small>
                                         </label>
                                     </div>
+                                    <div class="payment-option">
+                                        <input type="radio" id="wallet" name="payment" value="Wallet" >
+                                        <label for="wallet">
+                                            <span class="fw-bold">PAYMENT THROUGH WALLET</span>
+                                            <small class="d-block text-muted">Wallet Payment is Beneficial</small>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -439,7 +446,7 @@
                                     <div class="d-flex justify-content-between mb-2 text-success"><span>Discount on MRP</span> <span>- Rs. {{cart.deduct_amount}}</span></div>
                                     <div class="d-flex justify-content-between mb-2"><span>Subtotal</span> <span>Rs. {{cart.main_total_price}}</span></div>
                                     <div class="d-flex justify-content-between mb-2"><span>Delivery Charges</span> <span>Free</span></div>
-                                    <div class="d-flex justify-content-between mb-2"><span>Tax ({{tax}}%)</span> <span>Rs. {{tax_amount}}</span></div>
+                                    <div class="d-flex justify-content-between mb-2"><span>Tax ({{tax}}%)</span> <span>Rs. {{cart.tax_amount}}</span></div>
                                     <div class="d-flex justify-content-between mb-3 text-success"><span>Coupon Discount</span> <span>- Rs. 00.00</span></div>
                                 </div>
                                 <div class="input-group mb-3">
@@ -453,7 +460,7 @@
                                         <h5 class="mb-0">Total</h5>
                                         <small class="fw-normal text-muted">incl. taxes</small>
                                     </div>
-                                    <h4 class="mb-0">Rs. {{order_total_price}}</h4>
+                                    <h4 class="mb-0">Rs. {{cart.over_all_amount}}</h4>
                                 </div>
                                 <form action="" method="get">
                                     

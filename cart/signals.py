@@ -8,6 +8,7 @@ from .models import CartItem
 
 
 
+
 @receiver(post_save, sender=Product)
 def remove_unlisted_or_deleted_products(sender, instance, **kwargs):
     """
@@ -55,3 +56,5 @@ def remove_unlisted_variants(sender, instance, **kwargs):
 
     if not instance.is_listed:
         CartItem.objects.filter(product__category=instance).update(is_active=False)
+
+
