@@ -238,7 +238,7 @@
         <!-- </nav> -->
 
         <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
-            {% if orders %}
+            
             <div class="container my-5 orders-container">
                 <!-- Breadcrumb Navigation -->
                 <nav aria-label="breadcrumb" class="mb-4">
@@ -269,7 +269,44 @@
                         <!-- <a href="{% url 'add_product' %}" class="btn btn-dark">+ Add Product</a> -->
                     </div>
                 </div>
+                <div>
+                    <div class="btn-group">
+                        <!-- Main button shows current status -->
+                        <button type="button" class="btn btn-dark btn-lg">
+                            {% if stat %}
+                            {{stat}}
+                          {% else %}
+                          Filter
+                          {% endif %}
+                        </button>
+                    
+                        <!-- Dropdown toggle -->
+                        <button type="button" class="btn btn-dark btn-lg dropdown-toggle dropdown-toggle-split" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                          <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                    
+                        <!-- Dropdown items (loop through all status choices) -->
+                        <ul class="dropdown-menu">
+                          {% for value, label in status_choices %}
+                            <li>
+                              <a class="dropdown-item {% if value == order.status %}active{% endif %}" 
+                                 href="?stat={{value}}{% if query %}&q={{query}}{% endif %}">
+                                {{ label }}
+                              </a>
+                            </li>
+                          {% endfor %}
+                          <li>
+                            <a class="dropdown-item {% if value == order.status %}active{% endif %}" 
+                                 href="?stat={% if query %}&q={{query}}{% endif %}">
+                                Clear
+                              </a>
+                          </li>
+                        </ul>
+                      </div>
+                </div>
 
+                {% if orders %}
                 {% for order in orders %}
                 <!-- Order 1: Delivered -->
                 <div class="order-card">
@@ -324,7 +361,32 @@
                     </div>
                 </div>
                 {% endfor %}
-        
+                {% else %}
+            <!-- EMPTY ORDERS STATE -->
+            <div class="container my-5 text-center">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <!-- You can use an emoji or a Font Awesome icon -->
+                                <div class="empty-icon mb-4" style="font-size: 5rem; color: #6c757d;">
+                                    &#128722; <!-- Shopping Cart Emoji -->
+                                    <!-- Or use a Font Awesome icon: -->
+                                    <!-- <i class="fas fa-shopping-bag"></i> -->
+                                </div>
+                                <h3 class="fw-bold mb-3">Your Orders History is Empty</h3>
+                                <p class="text-muted mb-4">
+                                    Customers haven't placed any orders yet. All your future orders will be saved here for you to view and track.
+                                </p>
+                                <!-- <a href="{% url 'shop_products' %}" class="btn btn-dark btn-lg">
+                                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                                </a> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
                 <!-- Order 2: Processing -->
                 <!-- <div class="order-card">
                     <div class="order-header">
@@ -405,32 +467,7 @@
                     </ul>
                 </nav>
             </div>
-            {% else %}
-            <!-- EMPTY ORDERS STATE -->
-            <div class="container my-5 text-center">
-                <div class="row justify-content-center">
-                    <div class="col-md-8 col-lg-6">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <!-- You can use an emoji or a Font Awesome icon -->
-                                <div class="empty-icon mb-4" style="font-size: 5rem; color: #6c757d;">
-                                    &#128722; <!-- Shopping Cart Emoji -->
-                                    <!-- Or use a Font Awesome icon: -->
-                                    <!-- <i class="fas fa-shopping-bag"></i> -->
-                                </div>
-                                <h3 class="fw-bold mb-3">Your Orders History is Empty</h3>
-                                <p class="text-muted mb-4">
-                                    Customers haven't placed any orders yet. All your future orders will be saved here for you to view and track.
-                                </p>
-                                <!-- <a href="{% url 'shop_products' %}" class="btn btn-dark btn-lg">
-                                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
-                                </a> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+            
               
         </main>
     </div>

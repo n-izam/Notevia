@@ -39,26 +39,39 @@ class Order(models.Model):
     razorpay_payment_id = models.CharField(max_length=255, blank=True, null=True)
     razorpay_signature = models.CharField(max_length=255, blank=True, null=True)
 
+    coupon_code = models.CharField(max_length=50, blank=True, null=True)
+    coupon_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+
     def __str__(self):
         return f"Order {self.order_id} - {self.user.full_name}"
     @property
     def over_all_amount(self):
         tax = 5
-        total_main_amount = self.total_amount() + (self.total_amount()*tax/100)
-        return total_main_amount
+        total_main_amount = self.total_amount()
+        if self.coupon_amount:
+            total_main_amount = self.total_amount() - self.coupon_amount
+        total_main_amount = total_main_amount + self.tax_amount()
+        return round(total_main_amount, 2)
     
     def tax_amount(self):
+
         tax = 5
-        total_tax_amount =self.total_amount()*tax/100
-        return total_tax_amount
+        total_main_amount = self.total_amount()
+        if self.coupon_amount:
+            total_main_amount = self.total_amount() - self.coupon_amount
+        total_tax_amount = total_main_amount*tax/100
+        return round(total_tax_amount, 2)
     
     #  without discount and tax
     def total_items_amount(self):
         return self.total_amount() + self.total_discount()
 
-    #  not applied tax but with discount
+    #  not applied tax but with discount if coupon is applied
     def total_amount(self):
-        return sum(item.total_price() for item in self.items.filter(is_cancel=False))
+        total = sum(item.total_price() for item in self.items.filter(is_cancel=False))
+        
+        return round(total, 2)
     
     def total_quantity(self):
         return sum(item.quantity for item in self.items.filter(is_cancel=False))
@@ -157,7 +170,17 @@ class OrderItem(models.Model):
     #  return price with tax
     def return_with_tax_price(self):
         tax_price = (self.total_price()/self.order.total_amount()) * self.order.tax_amount()
-        return float(self.total_price() + tax_price)
+        total_return = self.total_price()
+        if self.order.coupon_amount:
+            coupon_price = round((self.total_price()/self.order.total_amount()) * self.order.coupon_amount, 2)
+            
+            print("order coupon amount", coupon_price)
+            total_return = self.total_price() - round(coupon_price, 2)
+        if coupon_price:
+            self.order.coupon_amount = self.order.coupon_amount - round(coupon_price, 2)
+            self.order.save()
+        print("order coupon amount", self.order.coupon_amount)
+        return round(total_return + tax_price, 2)
         
     
     
