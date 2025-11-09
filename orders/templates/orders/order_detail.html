@@ -259,6 +259,10 @@
                             <span class="text-success">-₹{{order.total_discount}}</span>
                         </div>
                         <div class="d-flex justify-content-between py-2">
+                            <span class="text-success">Discount_total :</span>
+                            <span class="text-success">-₹{{order.total_amount}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
                             <span class="text-muted">Tax :</span>
                             <div class="text-end">
                                 <span>+₹{{order.tax_amount}}</span><br>
@@ -271,7 +275,7 @@
                         </div>
                         <div class="d-flex justify-content-between py-2">
                             <span class="text-muted">Coupon : <span class="fw-bold text-dark"></span></span>
-                            <span>-₹0.00</span>
+                            <span>-₹{{order.coupon_amount}}</span>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between py-2 fw-bold h5">

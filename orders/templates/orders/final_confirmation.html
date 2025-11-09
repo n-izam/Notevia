@@ -241,6 +241,123 @@
         object-fit: cover;
         border-radius: 8px;
     }
+
+    /* modal style start here */
+
+    /* Modal Styling Only */
+    .modal-header {
+        background-color: #212529;
+        color: white;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .modal-body {
+        background-color: #f8f9fa;
+        padding: 20px;
+    }
+
+    .coupon-scroll {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    /* Coupon Card Styling */
+    .coupon-card {
+        background: white;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 12px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .coupon-card:hover {
+        border-color: #212529;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .coupon-code {
+        font-size: 18px;
+        font-weight: bold;
+        color: #212529;
+        word-break: break-all;
+        font-family: 'Courier New', monospace;
+        background-color: #e9ecef;
+        padding: 8px 10px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+    }
+
+    .coupon-discount {
+        color: #28a745;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .coupon-expiry {
+        color: #6c757d;
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    .copy-btn {
+        background-color: #212529;
+        color: white;
+        border: none;
+        padding: 6px 16px;
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        width: 100%;
+    }
+
+    .copy-btn:hover {
+        background-color: #0d6efd;
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Scrollbar Styling */
+    .coupon-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .coupon-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .coupon-scroll::-webkit-scrollbar-thumb {
+        background: #212529;
+        border-radius: 10px;
+    }
+
+    .coupon-scroll::-webkit-scrollbar-thumb:hover {
+        background: #0d6efd;
+    }
+
+    .modal-footer {
+        background-color: #f8f9fa;
+    }
+
+    /* Responsive */
+    @media (max-width: 576px) {
+        .coupon-card {
+            padding: 12px;
+        }
+
+        .coupon-code {
+            font-size: 16px;
+        }
+
+        .coupon-scroll {
+            max-height: 60vh;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -406,6 +523,9 @@
                         {% if select_address %}
                         <input type="hidden" name="address" value="{{select_address.id}}">
                         {% endif %}
+                        {% if applied_coupon %}
+                        <input type="hidden" name="apply_coupon" value="{{valid_coupon}}">
+                        {% endif %}
                         <!-- Payment Method Card -->
                         <div>
                             <div class="checkout-card mb-4">
@@ -446,21 +566,36 @@
                                     <div class="d-flex justify-content-between mb-2 text-success"><span>Discount on MRP</span> <span>- Rs. {{cart.deduct_amount}}</span></div>
                                     <div class="d-flex justify-content-between mb-2"><span>Subtotal</span> <span>Rs. {{cart.main_total_price}}</span></div>
                                     <div class="d-flex justify-content-between mb-2"><span>Delivery Charges</span> <span>Free</span></div>
-                                    <div class="d-flex justify-content-between mb-2"><span>Tax ({{tax}}%)</span> <span>Rs. {{cart.tax_amount}}</span></div>
-                                    <div class="d-flex justify-content-between mb-3 text-success"><span>Coupon Discount</span> <span>- Rs. 00.00</span></div>
+                                    <div class="d-flex justify-content-between mb-2 text-success"><span>Coupon Discount</span> 
+                                        {% if not applied_coupon %}<span>- Rs. 00.00</span>{% else %}
+                                        <span>- Rs. {{applied_coupon}}</span>{% endif %}
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-3"><span>Tax ({{tax}}%)</span> <span>Rs. {{final_tax_with_coupon}}</span></div>
+                                    
                                 </div>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="KAKAKA">
-                                    <button class="btn btn-dark" type="button">APPLY</button>
-                                    <button class="btn btn-dark" type="button">VIEW COUPONS</button>
-                                </div>
+                                {% if not applied_coupon %}
+                                    <div class="input-group mb-3">
+                                            <input type="text" id="couponInput" name="applied_coupon" class="form-control rounded" placeholder="KAKAKA">
+                                            <button class="btn btn-dark mx-2 rounded" id="applyCoupon" type="button">APPLY</button>
+                                            <!-- VIEW COUPONS Button that triggers modal -->
+                                            <button class="btn btn-dark rounded" type="button" data-bs-toggle="modal" data-bs-target="#couponModal">VIEW COUPONS</button>
+                                    </div>
+                                    {% else %}
+                                    <div class="input-group mb-3">
+                                        
+                                        <input type="text" id="couponInput" class="form-control rounded" value="" placeholder="{{valid_coupon}}" disabled>
+                                        <button class="btn btn-dark mx-2 rounded" id="applyCoupon" type="button">REMOVE COUPON</button>
+                                        <!-- VIEW COUPONS Button that triggers modal -->
+                                        <!-- <button class="btn btn-dark rounded" type="button" data-bs-toggle="modal" data-bs-target="#couponModal">VIEW COUPONS</button> -->
+                                    </div>
+                                {% endif %}
                                 <hr>
                                 <div class="d-flex justify-content-between align-items-center fw-bold">
                                     <div>
                                         <h5 class="mb-0">Total</h5>
                                         <small class="fw-normal text-muted">incl. taxes</small>
                                     </div>
-                                    <h4 class="mb-0">Rs. {{cart.over_all_amount}}</h4>
+                                    <h4 class="mb-0">Rs. {{final_over_all_amount}}</h4>
                                 </div>
                                 <form action="" method="get">
                                     
@@ -485,6 +620,94 @@
 
 {% endblock %}
 
+{% block modal %}
+
+<!-- Coupon Modal -->
+<div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="couponModalLabel">🎟️ Active Coupons</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% if coupons %}
+            <!-- Modal Body with Scrollable Coupons -->
+            <div class="modal-body">
+                <div class="coupon-scroll">
+                    {% for coupon in coupons %}
+                    <!-- Coupon 1 -->
+                    <div class="coupon-card">
+                        <div class="coupon-code text-center">{{coupon.code}}</div>
+                        <div class="coupon-discount d-flex justify-content-between align-item-center">
+                            <div class=""><span class="fw-light">min purchase:{{coupon.min_purchase_amount}}</span></div>
+                            <div class="">💰 Get {{coupon.discount_percentage}}% Off</div>
+                        </div>
+                        <div class="coupon-expiry d-flex justify-content-between align-item-center">
+                            <div>⏰ Expires: {{coupon.valid_to|date:"j M Y"}}</div>
+                            <div>usage limit is {{coupon.usage_limit}}</div>
+                        </div>
+                        <button class="copy-btn" onclick="copyToClipboard('{{coupon.code}}')">📋 Copy Code</button>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Coupon 2 -->
+                    <!-- <div class="coupon-card">
+                        <div class="coupon-code">FLAT50</div>
+                        <div class="coupon-discount">💰 Get $50 Off</div>
+                        <div class="coupon-expiry">⏰ Expires: Dec 25, 2024</div>
+                        <button class="copy-btn" onclick="copyToClipboard('FLAT50')">📋 Copy Code</button>
+                    </div> -->
+
+                    <!-- Coupon 3 -->
+                    <!-- <div class="coupon-card">
+                        <div class="coupon-code">FREESHIP</div>
+                        <div class="coupon-discount">🚚 Free Shipping</div>
+                        <div class="coupon-expiry">⏰ Expires: Jan 15, 2025</div>
+                        <button class="copy-btn" onclick="copyToClipboard('FREESHIP')">📋 Copy Code</button>
+                    </div> -->
+
+                    <!-- Coupon 4 -->
+                    <!-- <div class="coupon-card">
+                        <div class="coupon-code">WELCOME15</div>
+                        <div class="coupon-discount">💰 Get 15% Off</div>
+                        <div class="coupon-expiry">⏰ Expires: Jan 20, 2025</div>
+                        <button class="copy-btn" onclick="copyToClipboard('WELCOME15')">📋 Copy Code</button>
+                    </div> -->
+
+                    <!-- Coupon 5 -->
+                    <!-- <div class="coupon-card">
+                        <div class="coupon-code">TRIPLE10</div>
+                        <div class="coupon-discount">💰 Get 10% Off (Every 3 purchases)</div>
+                        <div class="coupon-expiry">⏰ Expires: Feb 1, 2025</div>
+                        <button class="copy-btn" onclick="copyToClipboard('TRIPLE10')">📋 Copy Code</button>
+                    </div> -->
+
+                    <!-- Coupon 6 -->
+                    <!-- <div class="coupon-card">
+                        <div class="coupon-code">VIP100</div>
+                        <div class="coupon-discount">💰 Get 25% Off + Free Shipping</div>
+                        <div class="coupon-expiry">⏰ Expires: Jan 30, 2025</div>
+                        <button class="copy-btn" onclick="copyToClipboard('VIP100')">📋 Copy Code</button>
+                    </div> -->
+                </div>
+            </div>
+            {% else %}
+            <div class="modal-body">
+                <h4 class="text-warning" > there is no coupons available </h4>
+
+            </div>
+            {% endif %}
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
 {% block script %}
 
 <script>
@@ -496,6 +719,35 @@
             window.location.reload();
         }
     });
+
+    async function copyToClipboard(code) {
+        try {
+            // Use the modern Clipboard API
+            await navigator.clipboard.writeText(code);
+            //alert('Code copied to clipboard: ' + code); // optional feedback
+        } catch (err) {
+            // Fallback for older browsers
+            const tempInput = document.createElement('input');
+            tempInput.value = code;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('Code copied to clipboard (fallback): ' + code);
+        }
+    }
+
+    document.getElementById('applyCoupon').addEventListener('click', function() {
+        const coupon = document.getElementById('couponInput').value;
+    
+        // Update the URL query parameter
+        const url = new URL(window.location);
+        url.searchParams.set('applied_coupon', coupon);
+    
+        // Navigate to the new URL with query param
+        window.location.href = url.toString();
+    });
+    
 </script>
 
 {% endblock %}

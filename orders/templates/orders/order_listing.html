@@ -237,7 +237,7 @@
 
 <!-- Right Content -->
 <div class="col-lg-9">
-    {% if orders %}
+    
     <div class="container my-5 orders-container">
         <!-- Breadcrumb Navigation -->
         <nav aria-label="breadcrumb" class="mb-4">
@@ -269,7 +269,7 @@
                 <!-- <a href="{% url 'add_product' %}" class="btn btn-dark">+ Add Product</a> -->
             </div>
         </div>
-        
+        {% if orders %}
         {% for order in orders %}
         <!-- Order 1: Delivered -->
         <div class="order-card">
@@ -312,6 +312,32 @@
             </div>
         </div>
         {% endfor %}
+        {% else %}
+        <!-- EMPTY ORDERS STATE -->
+        <div class="container my-5 text-center">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <!-- You can use an emoji or a Font Awesome icon -->
+                            <div class="empty-icon mb-4" style="font-size: 5rem; color: #6c757d;">
+                                &#128722; <!-- Shopping Cart Emoji -->
+                                <!-- Or use a Font Awesome icon: -->
+                                <!-- <i class="fas fa-shopping-bag"></i> -->
+                            </div>
+                            <h3 class="fw-bold mb-3">Your Order History is Empty</h3>
+                            <p class="text-muted mb-4">
+                                You haven't placed any orders yet. All your future orders will be saved here for you to view and track.
+                            </p>
+                            <a href="{% url 'shop_products' %}" class="btn btn-dark btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         <!-- Order 2: Processing -->
         <!-- <div class="order-card">
             <div class="order-header">
@@ -393,32 +419,7 @@
           </nav>
           
     </div>
-    {% else %}
-    <!-- EMPTY ORDERS STATE -->
-    <div class="container my-5 text-center">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <div class="card border-0">
-                    <div class="card-body">
-                        <!-- You can use an emoji or a Font Awesome icon -->
-                        <div class="empty-icon mb-4" style="font-size: 5rem; color: #6c757d;">
-                            &#128722; <!-- Shopping Cart Emoji -->
-                            <!-- Or use a Font Awesome icon: -->
-                            <!-- <i class="fas fa-shopping-bag"></i> -->
-                        </div>
-                        <h3 class="fw-bold mb-3">Your Order History is Empty</h3>
-                        <p class="text-muted mb-4">
-                            You haven't placed any orders yet. All your future orders will be saved here for you to view and track.
-                        </p>
-                        <a href="{% url 'shop_products' %}" class="btn btn-dark btn-lg">
-                            <i class="fas fa-arrow-left me-2"></i>Continue Shopping
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
+    
 </div>
 {% endblock %}
 
@@ -451,6 +452,7 @@
       input.value = "";
       clearBtn.classList.remove("visible");
       input.focus();
+      
     });
 
     // On page load, if field has prefilled text, show clear button

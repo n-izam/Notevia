@@ -4,6 +4,7 @@ from adminpanel.models import Product, Variant
 from django.db.models import UniqueConstraint
 import uuid
 from django.utils import timezone
+from decimal import Decimal
 
 # Create your models here.
 
@@ -17,6 +18,7 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # without discount just product price sum with quantity
     @property
     def total_price(self):
         items_total_price = sum(item.subtotal() for item in self.items.all())
@@ -26,15 +28,19 @@ class Cart(models.Model):
         items_total_quantity = sum(item.quantity for item in self.items.all())
         return float(items_total_quantity)
     
+    # after add discount 
     @property
     def main_total_price(self):
         items_total_price = sum(item.after_subtotal() for item in self.items.all())
         return items_total_price
     
+    # over all product discount
     @property
     def deduct_amount(self):
         items_total_price = sum(item.discount_subtotal_amount() for item in self.items.all())
         return items_total_price
+    
+    # over all amount need to implement coupen also
     @property
     def over_all_amount(self):
         final = self.main_total_price + self.tax_amount()
@@ -44,6 +50,18 @@ class Cart(models.Model):
         tax = 5
         total_tax_amount =self.main_total_price*tax/100
         return total_tax_amount
+    
+    def final_tax_with_coupon(self, coupon_discount):
+        tax = 5
+        final_coupon = self.main_total_price - coupon_discount
+        toatal_tax = final_coupon*tax/100
+        return round(toatal_tax, 2)
+    
+    def over_all_amount_coupon(self, coupon_discount):
+        tax = 5
+        final_coupon = self.main_total_price - coupon_discount
+        toatal_with_tax = final_coupon + (final_coupon*tax/100)
+        return round(toatal_with_tax, 2)
 
     def __str__(self):
         return f"Cart {{self.user}}"
@@ -67,14 +85,17 @@ class CartItem(models.Model):
             UniqueConstraint(fields=['cart', 'product', 'variant'], name='unique_product_per_cart_variant')
         ]
 
+    #   price with quantity
     def subtotal(self):
         price = self.variant.price
         return price * self.quantity
     
+    #  discount applied price with quantity
     def after_subtotal(self):
         price = self.variant.final_price
         return price * self.quantity
     
+    # discount amount with quantity
     def discount_subtotal_amount(self):
         price = self.variant.discount_price
         return price * self.quantity

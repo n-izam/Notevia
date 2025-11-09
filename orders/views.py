@@ -26,7 +26,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.lib.units import inch
 from io import BytesIO
-
+from offers.models import Coupon, CouponUsage
 import razorpay
 from django.conf import settings
 
@@ -101,7 +101,11 @@ class ConfirmationCartView(View):
             
             error_notify(request, 'Try again, payment gateway failed..!')
             return redirect('cart_page')
-            
+        
+        # if request.GET.get('applied_coupon'):
+        applied_coupon = request.GET.get('applied_coupon','').strip()
+        print("the coupon:",applied_coupon)
+
 
         address_id = request.GET.get('address')
         print("address id", address_id)
@@ -142,18 +146,52 @@ class ConfirmationCartView(View):
             })
 
         tax = 5
+        is_coupon_apply = 0
         
+        if Coupon.objects.filter(code=applied_coupon).exists():
+            user_coupon = get_object_or_404(Coupon, code=applied_coupon)
+            if cart.main_total_price < user_coupon.min_purchase_amount:
+                info_notify(request, f"minimum puchase amount is {user_coupon.min_purchase_amount}")
+                url = f'{reverse("order_confirmation")}?address={address_id}'
+                return redirect(url)
+            if not user_coupon.is_valid():
+                info_notify(request, f"the Coupon is not valid")
+                url = f'{reverse("order_confirmation")}?address={address_id}'
+                return redirect(url)
+            if CouponUsage.objects.filter(user=request.user, coupon=user_coupon).exists():
+                coupon_usage = get_object_or_404(CouponUsage, user=request.user, coupon=user_coupon)
+                if coupon_usage.usage_count >= user_coupon.usage_limit: 
+                    info_notify(request, f"{user_coupon} coupon maximum usage is exceded")
+                    url = f'{reverse("order_confirmation")}?address={address_id}'
+                    return redirect(url)
+            
+            is_coupon_apply = user_coupon.apply_discount(cart.main_total_price)
+            print("is applicable", is_coupon_apply)
         
+        final_over_all_amount = cart.over_all_amount_coupon(is_coupon_apply)
+        print("main total :", final_over_all_amount)
+
+        final_tax_with_coupon = cart.final_tax_with_coupon(is_coupon_apply)
+        print("main total tax:", final_tax_with_coupon)
+        
+        coupons = Coupon.objects.filter(is_active=True)
+        
+
         context = {
             "user_id": request.user.id,
             "cart": cart,
             "cartitem_with_image": cartitem_with_image,
             "select_address": select_address,
             "tax": tax,
-            
+            "coupons": coupons,
+            "applied_coupon": is_coupon_apply,
+            "final_over_all_amount": final_over_all_amount,
+            "final_tax_with_coupon": final_tax_with_coupon,
+            "valid_coupon": applied_coupon
         }
         
         return render(request, 'orders/final_confirmation.html', context)
+
     
     
 @method_decorator(login_required(login_url='signin'), name='dispatch')
@@ -163,6 +201,9 @@ class PlaceOrderView(View):
     def get(self, request):
         address_id = request.GET.get('address')
         payment_method = request.GET.get('payment')
+        applied_coupon = request.GET.get('apply_coupon','').strip()
+        print('coupon ', applied_coupon)
+
         # if not request.session.get('payment_confirm'):
         #     return redirect('order_listing')
 
@@ -209,6 +250,14 @@ class PlaceOrderView(View):
             payment_method=payment_method,
             status='Pending'
         )
+        if applied_coupon and Coupon.objects.filter(code=applied_coupon).exists():
+            
+            user_coupon = get_object_or_404(Coupon, code=applied_coupon)
+            coupon_amount = user_coupon.apply_discount(cart.main_total_price)
+            order.coupon_code=applied_coupon
+            order.coupon_amount=coupon_amount
+            order.save()
+            update_usage = user_coupon.increment_usage(request.user)
 
         order_address = OrderAddress.objects.create(
             order=order, full_name=address.full_name, email=address.email,
@@ -624,6 +673,7 @@ class CancelOrderItemView(View):
         if not order.items.filter(is_cancel=False).exists():
             order.status = 'Cancelled'
             order.is_paid=False
+            order.coupon_amount = 0.00
             order.save()
 
         success_notify(request, "item removes successfully")
@@ -761,14 +811,18 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
         # user_profile = get_object_or_404(UserProfile, user=request.user)
 
         query = request.GET.get('q', '').strip()
+        stat = request.GET.get('stat', '').strip()
         
 
         page = request.GET.get('page', 1)
 
-        orders = Order.objects.all().order_by('-status')
+        orders = Order.objects.all().order_by('-created_at')
 
         if query:
-            orders = orders.filter(Q(status__icontains=query))
+            orders = orders.filter(Q(status__icontains=query)|Q(user__full_name__icontains=query))
+
+        if stat:
+            orders = orders.filter(status=stat)
 
         paginator = Paginator(orders, 3)
         try:
@@ -790,6 +844,8 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
             "page_obj" : paginated_orders,
             "breadcrumb": breadcrumb,
             "query":query,
+            "stat": stat,
+            'status_choices': Order.STATUS_CHOICES,
         }
 
         return render(request, 'orders/admin_order_listing.html', context)
