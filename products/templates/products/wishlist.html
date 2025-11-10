@@ -1,0 +1,323 @@
+{% extends "base1.html" %}
+
+{% load static %}
+
+{% block title %} Cart Page {% endblock %}
+<!-- {% block head %} {% endblock %} -->
+
+{% block style %}
+<style>
+    /* === WISHLIST PAGE STYLES === */
+
+    body {
+        background-color: #f8f9fa; /* Light background for the whole page */
+    }
+
+    .wishlist-title {
+        font-weight: 300; /* Use a lighter font weight for the title */
+        font-size: 2.5rem;
+        color: #343a40;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 0.75rem;
+    }
+
+    /* Underline effect for the title */
+    .wishlist-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 2px;
+        background-color: #dee2e6;
+    }
+
+    .product-card {
+        background-color: #ffffff;
+        border: 1px solid #e9ecef;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .product-image-container {
+        position: relative;
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+    }
+
+    .product-image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1; /* Maintain a square aspect ratio */
+        object-fit: contain;
+    }
+
+    .wishlist-heart-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0;
+        color: #e44d64; /* Light red color for the filled heart */
+        transition: transform 0.2s ease;
+    }
+
+    .wishlist-heart-btn:hover {
+        transform: scale(1.15);
+    }
+
+    .product-card-body {
+        padding: 1rem 1.25rem;
+        text-align: center;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .product-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-price {
+        margin-bottom: 1rem;
+    }
+
+    .current-price {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #343a40;
+        margin-right: 0.5rem;
+    }
+
+    .marked-price {
+        font-size: 0.9rem;
+        color: #6c757d;
+        text-decoration: line-through;
+    }
+
+    .add-to-cart-btn {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        color: #343a40;
+        border-radius: 50px;
+        padding: 0.6rem 1rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .add-to-cart-btn:hover {
+        background-color: #212529;
+        color: #ffffff;
+        border-color: #212529;
+    }
+
+    /* === PAGINATION STYLES === */
+    .pagination .page-link {
+        color: #495057;
+        border: 1px solid #dee2e6;
+        margin: 0 4px;
+        border-radius: 0.25rem;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #212529;
+        border-color: #212529;
+        color: #fff;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #e9ecef;
+        color: #212529;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #adb5bd;
+    }
+
+  </style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="mx-2 my-2">
+
+    
+{% if wishlist_items %}
+    <main class="container my-5 py-5">
+        <!-- Page Title -->
+        <div class="text-center mb-5">
+            <h1 class="wishlist-title">Your wishlist</h1>
+        </div>
+    
+        <!-- Wishlist Product Grid -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 g-lg-5">
+            {% for item in wishlist_items %}
+            <!-- Wishlist Item 1 -->
+            <div class="col">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <a href="#">
+                            <img src="{{item.product.main_image.image.url}}" class="product-image" alt="Classmates - A4 NOTEBOOK">
+                        </a>
+                        <button class="wishlist-heart-btn active" title="Remove from Wishlist">
+                            <i class="bi bi-heart-fill"></i>
+                        </button>
+                    </div>
+                    <div class="product-card-body">
+                        <h6 class="product-name">Classmates - A4 NOTEBOOK</h6>
+                        <div class="product-price">
+                            <span class="current-price">Rs. 80</span>
+                            <span class="marked-price">Rs. 100</span>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <i class="bi bi-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    
+            <!-- Wishlist Item 2 -->
+            <div class="col">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <a href="#">
+                            <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="product-image" alt="Product Image">
+                        </a>
+                        <button class="wishlist-heart-btn active" title="Remove from Wishlist">
+                            <i class="bi bi-heart-fill"></i>
+                        </button>
+                    </div>
+                    <div class="product-card-body">
+                        <h6 class="product-name">Classmates - A4 NOTEBOOK</h6>
+                        <div class="product-price">
+                            <span class="current-price">Rs. 80</span>
+                            <span class="marked-price">Rs. 100</span>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <i class="bi bi-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Wishlist Item 3 -->
+            <div class="col">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <a href="#">
+                            <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760154643/products/azkm4byzkqlah8tz8rhi.png" class="product-image" alt="Product Image">
+                        </a>
+                        <button class="wishlist-heart-btn active" title="Remove from Wishlist">
+                            <i class="bi bi-heart-fill"></i>
+                        </button>
+                    </div>
+                    <div class="product-card-body">
+                        <h6 class="product-name">Classmates - A4 NOTEBOOK</h6>
+                        <div class="product-price">
+                            <span class="current-price">Rs. 80</span>
+                            <span class="marked-price">Rs. 100</span>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <i class="bi bi-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Wishlist Item 4 -->
+            <div class="col">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <a href="#">
+                            <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="product-image" alt="Product Image">
+                        </a>
+                        <button class="wishlist-heart-btn active" title="Remove from Wishlist">
+                            <i class="bi bi-heart-fill"></i>
+                        </button>
+                    </div>
+                    <div class="product-card-body">
+                        <h6 class="product-name">Classmates - A4 NOTEBOOK</h6>
+                        <div class="product-price">
+                            <span class="current-price">Rs. 80</span>
+                            <span class="marked-price">Rs. 100</span>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <i class="bi bi-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add more wishlist items following the same structure -->
+    
+        </div>
+    
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="d-flex justify-content-center mt-5 pt-4">
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&lsaquo;</span>
+                    </a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </main>
+    {% else %}
+
+    <main class="container my-2 py-2">
+        <!-- Page Title -->
+        <div class="text-center mb-5 py-5">
+            <h1 class="fw-light">Shopping Cart Is Empty</h1>
+        </div>
+        <div class="d-flex justify-content-center align-item-center h-100">
+            <div class="empty-cart">
+                <div style="font-size: 60px;">📦</div>
+                <h3>Your cart is empty</h3>
+                <p>Add some products to get started!</p>
+                <a href="{% url 'shop_products' %}" class="btn btn-custom">CONTINUE SHOPPING</a>
+            </div>
+        </div>
+        
+    </main>
+    {% endif %}
+
+    
+</div>
+
+{% endblock %}
+
+{% block script %}
+  
+
+{% endblock %}

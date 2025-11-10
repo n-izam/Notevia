@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from accounts.models import UserProfile
 from django.shortcuts import get_object_or_404
 
+
 # message notification
 
 def success_notify(request, msg="Action completed successfully!"):
@@ -25,3 +26,7 @@ def validationerror(msg="invalid cridentials"):
 def profile(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     return profile
+
+def referral_amount():
+    amount = 400
+    return amount

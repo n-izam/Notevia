@@ -75,6 +75,13 @@
             margin-right: 10%; /* Adjust margin to align with the search bar */
         }
     }
+    .wishlist-icons {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 1.2rem;
+        color: #d9534f;
+    }
   </style>
 
 {% endblock %}
@@ -271,7 +278,11 @@
                             <p class="card-text">Rs.{{item.product.base_price}}</p>
                         <!-- </a> -->
                         </div>
-                        <a href="#" class="wishlist-icon"><i class="far fa-heart"></i></a>
+                        {% if item.product.id in wishlist_products %}
+                        <a href="{% url 'add_to_wishlist' %}?product_id={{item.product.id}}" class="wishlist-icons"><i class="fas fa-heart"></i></a>
+                        {% else %}
+                        <a href="{% url 'add_to_wishlist' %}?product_id={{item.product.id}}" class="wishlist-icons"><i class="far fa-heart"></i></a>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
@@ -395,6 +406,16 @@
 {% block script %}
 
 <script>
+
+    // this is a reload script
+
+    window.addEventListener("pageshow", function(event) {
+        //If the page is loaded from the browser's back/forward cache
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
     const input = document.getElementById("searchField");
     const clearBtn = document.getElementById("btnClear");
 
