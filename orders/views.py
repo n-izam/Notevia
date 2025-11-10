@@ -246,7 +246,7 @@ class PlaceOrderView(View):
         #  creating order
         order = Order.objects.create(
             user=request.user,
-            order_id = f"ORD{uuid.uuid4().hex[:10].upper()}",
+            order_id = f"ORD{uuid.uuid4().hex[:5].upper()}",
             payment_method=payment_method,
             status='Pending'
         )
@@ -256,6 +256,7 @@ class PlaceOrderView(View):
             coupon_amount = user_coupon.apply_discount(cart.main_total_price)
             order.coupon_code=applied_coupon
             order.coupon_amount=coupon_amount
+            order.coupon_amount_static=coupon_amount
             order.save()
             update_usage = user_coupon.increment_usage(request.user)
 
@@ -428,6 +429,9 @@ class OrderCancelReturnCartView(View):
             request.session.pop('payment_confirm', None)
             del request.session['session_order']
         order = get_object_or_404(Order, id=order_id, user=request.user)
+        if order.coupon_code:
+            used_coupon = get_object_or_404(Coupon, code=order.coupon_code)
+            update_usage = used_coupon.decrement_usage(request.user)
         order.items.all().delete()
         order.orders_address.delete()
         order.delete()
@@ -906,17 +910,18 @@ class OrderStatusUpdateView(View):
     def get(self, request, order_id, new_status):
 
         order = get_object_or_404(Order, id=order_id)
-        order.status = new_status
-        order.save()
-
-        if order.status == 'Cancelled':
-            for item in order.items.filter(is_cancel=False):
-                item.variant.stock += item.quantity
-                item.is_cancel = True
-                item.save()
-        if order.status == 'Delivered':
-            order.is_paid=True
+        if not order.status == new_status:
+            order.status = new_status
             order.save()
+            
+            if order.status == 'Cancelled':
+                for item in order.items.filter(is_cancel=False):
+                    item.variant.stock += item.quantity
+                    item.is_cancel = True
+                    item.save()
+            if order.status == 'Delivered':
+                order.is_paid=True
+                order.save()
 
         return redirect('admin_order_detail', order_id=order.id)
 

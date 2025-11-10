@@ -4,6 +4,7 @@ from adminpanel.models import Product, Variant
 from accounts.models import Address
 from datetime import timedelta
 from django.utils import timezone
+from offers.models import Coupon
 
 # Create your models here.
 
@@ -41,6 +42,7 @@ class Order(models.Model):
 
     coupon_code = models.CharField(max_length=50, blank=True, null=True)
     coupon_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    coupon_amount_static = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
 
     def __str__(self):
@@ -78,6 +80,44 @@ class Order(models.Model):
     
     def total_discount(self):
         return sum(item.sub_discount() for item in self.items.filter(is_cancel=False))
+
+
+#  get order amount if it cancelld
+
+    @property
+    def over_all_amount_all(self):
+        tax = 5
+        total_main_amount = self.total_amount_all()
+        if self.coupon_amount:
+            total_main_amount = self.total_amount_all() - self.coupon_amount_static
+        total_main_amount = total_main_amount + self.tax_amount_all()
+        return round(total_main_amount, 2)
+
+    def tax_amount_all(self):
+
+        tax = 5
+        total_main_amount = self.total_amount_all()
+        if self.coupon_amount:
+            total_main_amount = self.total_amount_all() - self.coupon_amount_static
+        total_tax_amount = total_main_amount*tax/100
+        return round(total_tax_amount, 2)
+
+
+    #  without discount and tax
+    def total_items_amount_all(self):
+        return self.total_amount_all() + self.total_discount_all()
+    
+    #  not applied tax but with discount if coupon is applied
+    def total_amount_all(self):
+        total = sum(item.total_price() for item in self.items.all())
+        
+        return round(total, 2)
+    
+    def total_quantity_all(self):
+        return sum(item.quantity for item in self.items.all())
+    
+    def total_discount_all(self):
+        return sum(item.sub_discount() for item in self.items.all())
     
     
     @property
@@ -176,6 +216,7 @@ class OrderItem(models.Model):
             
             print("order coupon amount", coupon_price)
             total_return = self.total_price() - round(coupon_price, 2)
+
         if coupon_price:
             self.order.coupon_amount = self.order.coupon_amount - round(coupon_price, 2)
             self.order.save()

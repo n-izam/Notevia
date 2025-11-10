@@ -156,7 +156,10 @@
                                     Contact Number : {{order.orders_address.phone_no}}
                                 </p>
                                 <p class="text-muted small text-end">
-                                    {{order.payment_method}}
+                                    {{order.payment_method}} <br>
+                                    {% if order.is_paid %}
+                                    <span class="badge pillow bg-success rounded">Paid</span>
+                                    {% endif %}
                                 </p>
                             </div>
                             <hr>
@@ -195,7 +198,7 @@
                                   <ul class="dropdown-menu">
                                     {% for value, label in status_choices %}
                                       <li>
-                                        <a class="dropdown-item {% if value == order.status %}active{% endif %}" 
+                                        <a class="dropdown-item confirm-status {% if value == order.status %}active{% endif %}" 
                                            href="{% url 'update_order_status' order.id value %}">
                                           {{ label }}
                                         </a>
@@ -412,6 +415,31 @@
     });
     
 </script>
+<script>
+    document.querySelectorAll('.confirm-status').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // Stop immediate navigation
+            const url = this.getAttribute('href');
+    
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action cannot be undone after approval",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, go on!',
+                customClass: {
+                    confirmButton: 'btn btn-danger me-1',
+                    cancelButton: 'btn btn-dark ms-1'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url; // Navigate manually
+                }
+            });
+        });
+    });
+    </script>
 
 {% endblock %}
 

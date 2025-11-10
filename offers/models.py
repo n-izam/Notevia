@@ -35,6 +35,15 @@ class Coupon(models.Model):
         usage, created = CouponUsage.objects.get_or_create(coupon=self, user=user)
         usage.increment_usage()
 
+    def decrement_usage(self, user):
+        """Call this when coupon is used successfully."""
+        
+        self.usage_count -= 1
+        self.save()
+
+        usage, created = CouponUsage.objects.get_or_create(coupon=self, user=user)
+        usage.decrement_usage()
+
     # calculating discount amount
     def apply_discount(self, order_total):
         
@@ -42,6 +51,19 @@ class Coupon(models.Model):
             return 0  # Not eligible
         if not self.is_valid():
             return 0
+
+        discount = (order_total * self.discount_percentage) / 100
+        if self.max_redeemable_price > 0:
+            discount = min(discount, self.max_redeemable_price)
+        return discount
+    
+    #  this for normal use
+    def apply_discount_access(self, order_total):
+        
+        if order_total < self.min_purchase_amount:
+            return 0  # Not eligible
+        # if not self.is_valid():
+        #     return 0
 
         discount = (order_total * self.discount_percentage) / 100
         if self.max_redeemable_price > 0:
@@ -61,6 +83,11 @@ class CouponUsage(models.Model):
 
     def increment_usage(self):
         self.usage_count += 1
+        self.last_used = timezone.now()
+        self.save()
+
+    def decrement_usage(self):
+        self.usage_count -= 1
         self.last_used = timezone.now()
         self.save()
 

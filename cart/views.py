@@ -38,7 +38,8 @@ class CartPageView(View):
             .filter(
                 product__is_listed=True,
                 product__is_deleted=False,
-                is_active=True
+                product__category__is_listed=True
+                # is_active=True
             )
             .filter(
                 models.Q(variant__isnull=True) | models.Q(variant__is_listed=True)

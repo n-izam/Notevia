@@ -20,7 +20,7 @@ from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from cart.models import Cart, CartItem
 
 
 # Create your views here.
@@ -816,10 +816,17 @@ class ToggleVariatStatusView(View):
         # print("the variants are ", variants)
         variant.is_listed = not variant.is_listed
         variant.save()
+        # if (variant.is_listed and variant.product.is_listed and variant.product.category.is_listed):
+        #     print('nisam')
+
+        #     CartItem.objects.filter(product=variant.product, variant=variant, is_active=False).update(is_active=True)
+        # elif not (variant.is_listed and variant.product.is_listed and variant.product.category.is_listed):
+        #     print('variant', variant.is_listed)
+        #     cart_items = CartItem.objects.filter(product=variant.product, variant=variant, is_active=True).update(is_active=False)
 
         # Variant.objects.filter(product=product).update(is_listed=product.is_listed)
         # variants = get_object_or_404(Variant, product_id=product.id)
         # print("the variants are ", variants)
 
-        print("variant is listed :", variant.is_listed)
+        
         return JsonResponse({'success': True, 'is_listed': variant.is_listed})

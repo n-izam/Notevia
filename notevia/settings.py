@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'cores',
     'orders',
     'reviews',
-    'cart',
+    "cart.apps.CartConfig",
     'offers',
 
     'cloudinary',

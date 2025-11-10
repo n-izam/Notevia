@@ -21,23 +21,23 @@ class Cart(models.Model):
     # without discount just product price sum with quantity
     @property
     def total_price(self):
-        items_total_price = sum(item.subtotal() for item in self.items.all())
+        items_total_price = sum(item.subtotal() for item in self.items.filter(is_active=True, variant__is_listed=True)) # before here get all price from cart also calculating inactive products .all()
         return items_total_price
     @property
     def total_quantity(self):
-        items_total_quantity = sum(item.quantity for item in self.items.all())
+        items_total_quantity = sum(item.quantity for item in self.items.filter(is_active=True, variant__is_listed=True))
         return float(items_total_quantity)
     
     # after add discount 
     @property
     def main_total_price(self):
-        items_total_price = sum(item.after_subtotal() for item in self.items.all())
+        items_total_price = sum(item.after_subtotal() for item in self.items.filter(is_active=True, variant__is_listed=True))
         return items_total_price
     
     # over all product discount
     @property
     def deduct_amount(self):
-        items_total_price = sum(item.discount_subtotal_amount() for item in self.items.all())
+        items_total_price = sum(item.discount_subtotal_amount() for item in self.items.filter(is_active=True, variant__is_listed=True))
         return items_total_price
     
     # over all amount need to implement coupen also
