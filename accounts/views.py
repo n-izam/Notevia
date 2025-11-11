@@ -9,7 +9,7 @@ from .forms import SignupForm
 from django.utils import timezone
 from datetime import timedelta
 from  django.contrib.auth import authenticate, login, logout
-from .utils import success_notify, error_notify, warning_notify, info_notify, referral_amount
+from .utils import success_notify, error_notify, warning_notify, info_notify, referral_amount, profile
 from django.views.decorators.cache import never_cache, cache_control
 from django.utils.decorators import method_decorator
 from django.contrib.auth.password_validation import validate_password
@@ -1026,3 +1026,13 @@ class RemoveAddressView(View):
 
         return redirect('address')
     
+
+class ChangePassWordView(View):
+
+    def get(self, request):
+
+        context = {
+            "user_id": request.user.id,
+            "user_profile": profile(request)
+        }
+        return render(request, 'customer/change_user_pass.html', context)
