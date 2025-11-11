@@ -268,11 +268,11 @@ footer hr {
     top: 15px;
     right: 15px;
     font-size: 1.2rem;
-    color: #d9534f;
+    color: #333;
 }
 
 .wishlist-icon:hover {
-    
+    color: #d9534f;
 }
 
 /* Sorting Dropdown */

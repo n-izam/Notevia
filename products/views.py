@@ -271,7 +271,7 @@ class WishListView(View):
     def get(self, request):
         
         wishlist = request.user.wishlist
-        wishlist_items = WishlistItem.objects.all()
+        wishlist_items = WishlistItem.objects.filter(wishlist=wishlist)
 
 
         context = {
@@ -300,4 +300,17 @@ class AddToWishList(View):
         # variant = Variant.objects.get(id=variant_id)
 
         return redirect('wishlist_view')
+    
+class RemoveToWishlist(View):
+    
+    def get(self, request):
 
+        if not request.GET.get('product_id'):
+            return redirect('shop_products')
+        
+        product_id = request.GET.get('product_id')
+        wishlist = request.user.wishlist
+        product = Product.objects.get(id=product_id)
+        WishlistItem.objects.filter(wishlist=wishlist, product=product).delete()
+
+        return redirect('shop_products')

@@ -153,6 +153,43 @@
     .pagination .page-item.disabled .page-link {
         color: #adb5bd;
     }
+    /* empty cart style */
+
+    .empty-cart {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        padding: 50px 30px;
+        max-width: 450px;
+        width: 100%;
+      }
+  
+      .empty-cart h3 {
+        font-weight: 600;
+        color: #333;
+        margin-top: 15px;
+      }
+  
+      .empty-cart p {
+        color: #777;
+        margin: 10px 0 25px;
+      }
+  
+      .btn-custom {
+        border: 2px solid #000;
+        background-color: #000;
+        color: #fff;
+        font-weight: 600;
+        padding: 10px 30px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+  
+      .btn-custom:hover {
+        background-color: #fff;
+        color: #000;
+      }
 
   </style>
 {% endblock %}
@@ -180,15 +217,15 @@
                         <a href="#">
                             <img src="{{item.product.main_image.image.url}}" class="product-image" alt="Classmates - A4 NOTEBOOK">
                         </a>
-                        <button class="wishlist-heart-btn active" title="Remove from Wishlist">
+                        <a href="{% url 'remove_from_wishlist' %}?product_id={{item.product.id}}" class="wishlist-heart-btn active" title="Remove from Wishlist">
                             <i class="bi bi-heart-fill"></i>
-                        </button>
+                        </a>
                     </div>
                     <div class="product-card-body">
-                        <h6 class="product-name">Classmates - A4 NOTEBOOK</h6>
+                        <h6 class="product-name">{{item.product.name}} - {{ item.product.category.name }}</h6>
                         <div class="product-price">
-                            <span class="current-price">Rs. 80</span>
-                            <span class="marked-price">Rs. 100</span>
+                            <span class="current-price">Rs. {{item.product.max_stock_variant.final_price}}</span>
+                            <span class="marked-price">Rs. {{item.product.max_stock_variant.price}}</span>
                         </div>
                         <button class="add-to-cart-btn">
                             <i class="bi bi-cart-plus"></i> Add to Cart
@@ -199,7 +236,7 @@
             {% endfor %}
     
             <!-- Wishlist Item 2 -->
-            <div class="col">
+            <!-- <div class="col">
                 <div class="product-card">
                     <div class="product-image-container">
                         <a href="#">
@@ -220,10 +257,10 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> -->
     
             <!-- Wishlist Item 3 -->
-            <div class="col">
+            <!-- <div class="col">
                 <div class="product-card">
                     <div class="product-image-container">
                         <a href="#">
@@ -244,10 +281,10 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> -->
     
             <!-- Wishlist Item 4 -->
-            <div class="col">
+            <!-- <div class="col">
                 <div class="product-card">
                     <div class="product-image-container">
                         <a href="#">
@@ -268,14 +305,14 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> -->
             
             <!-- Add more wishlist items following the same structure -->
     
         </div>
     
         <!-- Pagination -->
-        <nav aria-label="Page navigation" class="d-flex justify-content-center mt-5 pt-4">
+        <!-- <nav aria-label="Page navigation" class="d-flex justify-content-center mt-5 pt-4">
             <ul class="pagination">
                 <li class="page-item disabled">
                     <a class="page-link" href="#" aria-label="Previous">
@@ -291,19 +328,19 @@
                     </a>
                 </li>
             </ul>
-        </nav>
+        </nav> -->
     </main>
     {% else %}
 
     <main class="container my-2 py-2">
         <!-- Page Title -->
         <div class="text-center mb-5 py-5">
-            <h1 class="fw-light">Shopping Cart Is Empty</h1>
+            <h1 class="fw-light">Shopping Wishlist Is Empty</h1>
         </div>
         <div class="d-flex justify-content-center align-item-center h-100">
             <div class="empty-cart">
                 <div style="font-size: 60px;">📦</div>
-                <h3>Your cart is empty</h3>
+                <h3>Your Wishlist is empty</h3>
                 <p>Add some products to get started!</p>
                 <a href="{% url 'shop_products' %}" class="btn btn-custom">CONTINUE SHOPPING</a>
             </div>

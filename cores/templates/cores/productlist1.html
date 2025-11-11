@@ -279,7 +279,7 @@
                         <!-- </a> -->
                         </div>
                         {% if item.product.id in wishlist_products %}
-                        <a href="{% url 'add_to_wishlist' %}?product_id={{item.product.id}}" class="wishlist-icons"><i class="fas fa-heart"></i></a>
+                        <a href="{% url 'remove_from_wishlist' %}?product_id={{item.product.id}}" class="wishlist-icons"><i class="fas fa-heart"></i></a>
                         {% else %}
                         <a href="{% url 'add_to_wishlist' %}?product_id={{item.product.id}}" class="wishlist-icons"><i class="far fa-heart"></i></a>
                         {% endif %}
