@@ -7,6 +7,7 @@ from django.views.decorators.cache import never_cache
 from django.db.models import Q, Min
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from adminpanel.models import Category, Offer, Product, ProductImage, Variant, Brand
+from products.models import Wishlist, WishlistItem
 
 # Create your views here.
 @method_decorator(never_cache, name='dispatch')
@@ -131,6 +132,8 @@ class ProductlistingView(View):
                 # "main_variant":main_variant,
             })
 
+        wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+        wishlist_products = list(wishlist.items.values_list('product_id', flat=True))
         # Pagination — 6 items per page
 
         paginator = Paginator(product_with_image, 6)
@@ -154,6 +157,7 @@ class ProductlistingView(View):
             "brand_option" : brand_option,
             "paginator" : paginator,
             "page_obj" : paginated_products,
+            "wishlist_products": wishlist_products,
         }
 
         return render(request, 'cores/productlist1.html', context)

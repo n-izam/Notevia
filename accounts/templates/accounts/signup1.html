@@ -107,7 +107,8 @@
           </div>
     
           <p class="small mt-2">Anyone has referred You? Claim the reward</p>
-          <button type="button" class="btn btn-outline-dark btn-sm mb-3">REFERRAL CODE</button>
+          <!-- <button type="button" class="btn btn-outline-dark btn-sm mb-3">REFERRAL CODE</button> -->
+          <input type="email" name="referrel" class="form-control" placeholder="referrel..">
     
           <p class="small">Already have an account? <a href="{% url 'signin' %}">Log in</a></p>
           
@@ -124,8 +125,15 @@
             Google
           </a>
         </form>
+        {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} mt-2"
+            {% if message.tags == 'error' %}style="color: red;"{% endif %}
+            >{{ message }}</div>
+        {% endfor %}
+        {% endif %}
       </div>
-
+      
   </div>
 
   {% endblock %}

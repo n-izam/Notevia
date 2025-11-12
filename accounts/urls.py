@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import SigninView, SignupView, VerifyOTPView, ResendOTPView, SignOutView, ForgotPassView, VerifyForgotOTPView, ResetPasswordView, ResendPasswordOTPView
-from .views import CustomerProfileView, ProfileEditView, AddressView, AddAddressView, SetDefaultView, RemoveAddressView, EditAddressView, VerifyProfileOTPView, ResendProfileOTPView, ChangeProfileView
+from .views import CustomerProfileView, ProfileEditView, AddressView, AddAddressView, SetDefaultView, RemoveAddressView, EditAddressView, VerifyProfileOTPView, ResendProfileOTPView, ChangeProfileView, ChangePassWordView
 
 urlpatterns = [
     path("signin/", SigninView.as_view(), name='signin'),
@@ -23,8 +23,8 @@ urlpatterns = [
     path('add_address/', AddAddressView.as_view(), name='add_address'),
     path('set_main/<int:address_id>/', SetDefaultView.as_view(), name='set_default'),
     path('remove_address/<int:address_id>/', RemoveAddressView.as_view(), name='remove_address'),
-    path('edit_address/<int:address_id>/', EditAddressView.as_view(), name='edit_address')
-    
+    path('edit_address/<int:address_id>/', EditAddressView.as_view(), name='edit_address'),
+    path('change_pass_user/', ChangePassWordView.as_view(), name='change_user_pass'),    
     # path('cores/',include('cores.url')),
     
 ]

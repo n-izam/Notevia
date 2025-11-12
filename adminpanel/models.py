@@ -90,6 +90,9 @@ class Product(models.Model):
     @property
     def main_image(self):
         return self.images.filter(is_main=True).first() or self.images.first()
+    @property
+    def max_stock_variant(self):
+        return self.variants.all().order_by('-stock').first()
 
     def __str__(self):
         return f"product name is : {self.name}"

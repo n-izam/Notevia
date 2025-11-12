@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from orders.models import Order, OrderItem, OrderAddress
 from django.core.paginator import Paginator
@@ -16,7 +16,9 @@ from django.template.loader import render_to_string
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.utils import get_column_letter
-
+from accounts.utils import profile
+from products.models import Referral, WishlistItem
+from adminpanel.models import Product
 # Create your views here.
 
 
@@ -246,3 +248,69 @@ class AdminSalesView(View):
         response = HttpResponse(buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = f'attachment; filename="NoteVia_Sales_Report_{data["period"]}.xlsx"'
         return response
+    
+
+class ReferralView(View):
+
+    def get(self, request):
+
+        if Referral.objects.filter(user=request.user).exists():
+            referral = get_object_or_404(Referral, user=request.user)
+
+
+        context = {
+            "user_id": request.user.id,
+            "user_profile": profile(request),
+            "referral": referral
+        }
+        return render(request, 'products/referral.html', context)
+    
+
+class WishListView(View):
+
+    def get(self, request):
+        
+        wishlist = request.user.wishlist
+        wishlist_items = WishlistItem.objects.filter(wishlist=wishlist)
+
+
+        context = {
+            "user_id": request.user.id,
+            "wishlist_items": wishlist_items
+        }
+
+        return render(request, 'products/wishlist.html', context)
+    
+class AddToWishList(View):
+
+    def get(self, request):
+
+        if not request.GET.get('product_id'):
+
+            return redirect('wishlist_view')
+
+        product_id = request.GET.get('product_id')
+        wishlist = request.user.wishlist
+        print('wish list id', wishlist.id)
+        product = Product.objects.get(id=product_id)
+        WishlistItem.objects.get_or_create(
+            wishlist=wishlist,
+            product=product,
+            )
+        # variant = Variant.objects.get(id=variant_id)
+
+        return redirect('wishlist_view')
+    
+class RemoveToWishlist(View):
+    
+    def get(self, request):
+
+        if not request.GET.get('product_id'):
+            return redirect('shop_products')
+        
+        product_id = request.GET.get('product_id')
+        wishlist = request.user.wishlist
+        product = Product.objects.get(id=product_id)
+        WishlistItem.objects.filter(wishlist=wishlist, product=product).delete()
+
+        return redirect('shop_products')

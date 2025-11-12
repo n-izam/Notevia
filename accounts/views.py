@@ -9,13 +9,16 @@ from .forms import SignupForm
 from django.utils import timezone
 from datetime import timedelta
 from  django.contrib.auth import authenticate, login, logout
-from .utils import success_notify, error_notify, warning_notify, info_notify
+from .utils import success_notify, error_notify, warning_notify, info_notify, referral_amount, profile
 from django.views.decorators.cache import never_cache, cache_control
 from django.utils.decorators import method_decorator
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from cloudinary.uploader import destroy
 import re
+from products.models import Referral, Wishlist
+from cart.models import Wallet
+from decimal import Decimal
 
 
 
@@ -31,6 +34,20 @@ class SignupView(View):
             else:
                 return redirect("cores-home", user_id=request.user.id)
             
+        if request.session.get('signup_user'):
+            signup_user_id = request.session.get('signup_user')
+            if CustomUser.objects.filter(id=signup_user_id).exists():
+
+                signup_user = get_object_or_404(CustomUser, id=signup_user_id)
+                wallet = Wallet.objects.filter(user=signup_user).delete()
+                referral = Referral.objects.filter(user=signup_user).delete()
+                wishlist = Wishlist.objects.create(user=signup_user).delete()
+                if UserOTP.objects.filter(user=signup_user).exists():
+                    UserOTP.objects.filter(user=signup_user).delete()
+                signup_user.delete()
+            del request.session['signup_user']
+            
+
         # if request.session.get("signup_done"):
         #     return redirect("verify-otp", user_id=request.user.id)
 
@@ -39,9 +56,19 @@ class SignupView(View):
             request.session.pop("forgot_otp_verified", None)
         
         form = SignupForm()
-        return render(request, 'accounts/signup1.html', {"form": form})
+        return render(request, 'accounts/signup.html', {"form": form})
     
     def post(self, request):
+        referel_code = request.POST.get('referrel')
+        if referel_code:
+            if not Referral.objects.filter(code=referel_code).exists():
+                error_notify(request, 'wrong referral, try again')
+                return redirect('signup')
+            else:
+                request.session['referral_code'] = referel_code
+                print(request.session.get('referral_code'))
+                
+            
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
@@ -101,7 +128,7 @@ class VerifyOTPView(View):
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         user = get_object_or_404(CustomUser, id=user_id)
         
-        
+        request.session['signup_user'] = user.id
         return render(request, "accounts/verify_otp.html", {"user_id": user_id, "user": user})
     
     def post(self, request, user_id):
@@ -126,6 +153,19 @@ class VerifyOTPView(View):
             request.session["otp_verified"] = True
 
             otp_obj.delete()
+            if request.session.get('referral_code'):
+                ref_code = request.session.get('referral_code')
+                try:
+                    referral = Referral.objects.get(code=ref_code)
+                    user.referral.referred_by = referral.user
+                    user.referral.save()
+                    referral_credit = referral_amount()
+                    wallet = get_object_or_404(Wallet, user=referral.user)
+                    transaction = wallet.credit(Decimal(referral_credit), message=f"Referral bonus from {user.full_name}" )
+
+                except Referral.DoesNotExist:
+                    pass
+            del request.session['referral_code']
             success_notify(request, "Your account has been verified. You can log in now.")
             return redirect("signin")
         else:
@@ -986,3 +1026,13 @@ class RemoveAddressView(View):
 
         return redirect('address')
     
+
+class ChangePassWordView(View):
+
+    def get(self, request):
+
+        context = {
+            "user_id": request.user.id,
+            "user_profile": profile(request)
+        }
+        return render(request, 'customer/change_user_pass.html', context)

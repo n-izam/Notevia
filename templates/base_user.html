@@ -137,13 +137,13 @@
                                     <a class="nav-link {% if request.resolver_match.url_name == 'order_listing' %} active {% endif %} 
                                     {% if request.resolver_match.url_name == 'order_details' %} active {% endif %}"
                                      href="{% url 'order_listing' %}"><i class="bi bi-box-seam"></i> My Order</a>
-                                    <a class="nav-link" href="#"><i class="bi bi-heart"></i> My Wishlist (4)</a>
+                                    <!-- <a class="nav-link" href="#"><i class="bi bi-heart"></i> My Wishlist (4)</a> -->
                                     <a class="nav-link {% if request.resolver_match.url_name == 'wallet' %} active {% endif %}" 
                                     href="{% url 'wallet' %}"><i class="bi bi-wallet2"></i> My Wallet</a>
-                                    <a class="nav-link" href="#"><i class="bi bi-ticket-perforated"></i> My Coupon</a>
-                                    <a class="nav-link" href="#"><i class="bi bi-lock"></i> Change password</a>
-                                    <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i> Log out</a>
-                                    <a class="nav-link" href="#"><i class="bi bi-people"></i> Refferal Code</a>
+                                    <!-- <a class="nav-link" href="#"><i class="bi bi-ticket-perforated"></i> My Coupon</a> -->
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'change_user_pass' %} active {% endif %}" href="{% url 'change_user_pass' %}"><i class="bi bi-lock"></i> Change password</a>
+                                    <a class="nav-link" href="{% url 'signout' user_id=user_id %"><i class="bi bi-box-arrow-right"></i> Log out</a>
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'referral_view' %} active {% endif %}" href="{% url 'referral_view' %}"><i class="bi bi-people"></i> Refferal Code</a>
                                 </nav>
                             </aside>
                         </div>
