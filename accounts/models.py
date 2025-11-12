@@ -44,6 +44,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+class SignUpUserOTP(models.Model):
+    email = models.EmailField(unique=True)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @staticmethod
+    def generate_otp():
+        return str(random.randint(100000, 999999))
+    
+    def __str__(self):
+        return f"{self.email} - {self.otp}"
+
 class UserOTP(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     otp = models.CharField(max_length=6)
