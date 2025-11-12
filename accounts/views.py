@@ -146,6 +146,8 @@ class VerifySignUpOTPView(View):
         user_email = request.session.get('user_email')
         user_phone_no = request.session.get('user_phone_no')
         user_password = request.session.get('user_password')
+        
+        
 
 
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
@@ -211,7 +213,12 @@ class VerifySignUpOTPView(View):
                     del request.session['referral_code']
                 except Referral.DoesNotExist:
                     pass
-                
+            
+            del request.session['user_email']
+            del request.session['user_full_name']
+            del request.session['user_phone_no']
+            del request.session['user_password']
+
             success_notify(request, "Your account has been verified. You can log in now.")
             return redirect("signin")
         else:
@@ -219,6 +226,32 @@ class VerifySignUpOTPView(View):
             # user.delete()
             error_notify('otp expiried try again')
             return redirect("signup")
+        
+@method_decorator(never_cache, name='dispatch')
+class ResendSignUpOTPView(View):
+    def get(self, request):
+        user_email = request.session.get('user_email')
+        full_name = request.session.get('user_full_name')
+        otp = SignUpUserOTP.generate_otp()
+        print("resend otp is ", otp)
+        # print("full_name", user.full_name)
+        SignUpUserOTP.objects.update_or_create(email=user_email, defaults={"otp": otp})
+        
+        
+        html_content = render_to_string("emails/otp_signup.html", {"full_name": full_name, "otp": otp})
+        email = EmailMultiAlternatives(
+            subject="Resend OTP - Verify Your Account",
+            body=f"Your new OTP is {otp}",
+            from_email=settings.EMAIL_HOST_USER,
+            to=[user_email],
+        )
+        email.attach_alternative(html_content, "text/html")
+        email.send()
+
+        
+        
+        success_notify(request, "A new OTP has been sent to your email.")
+        return redirect('verify_signup_otp')
     
 @method_decorator(never_cache, name='dispatch')
 class VerifyOTPView(View):

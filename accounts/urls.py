@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import SigninView, SignupView, VerifyOTPView, ResendOTPView, SignOutView, ForgotPassView, VerifyForgotOTPView, ResetPasswordView, ResendPasswordOTPView, VerifySignUpOTPView
+from .views import SigninView, SignupView, VerifyOTPView, ResendOTPView, SignOutView, ForgotPassView, VerifyForgotOTPView, ResetPasswordView, ResendPasswordOTPView, VerifySignUpOTPView, ResendSignUpOTPView
 from .views import CustomerProfileView, ProfileEditView, AddressView, AddAddressView, SetDefaultView, RemoveAddressView, EditAddressView, VerifyProfileOTPView, ResendProfileOTPView, ChangeProfileView, ChangePassWordView
 
 urlpatterns = [
@@ -28,5 +28,6 @@ urlpatterns = [
     # path('cores/',include('cores.url')),
 
     path('verify_signup_otp/', VerifySignUpOTPView.as_view(), name='verify_signup_otp'),
+    path('resend_otp/', ResendSignUpOTPView.as_view(), name='resend_signup_otp'),
     
 ]

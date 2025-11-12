@@ -77,7 +77,7 @@
     <p class="small mt-3">
       Didn’t get the OTP? 
       {% if request.resolver_match.url_name == 'verify_signup_otp' %}
-      <a href="#" class="fw-bold">Resend OTP</a>
+      <a href="{% url 'resend_signup_otp' %}" class="fw-bold">Resend OTP</a>
       {% elif request.resolver_match.url_name == 'verify_profile' %}
       <a href="{% url 'resend_profile' %}" class="fw-bold">Resend OTP</a>
       {% endif %}
