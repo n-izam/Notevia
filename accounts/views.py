@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
-from .models import CustomUser, UserOTP, UserProfile, Address
+from .models import CustomUser, UserOTP, UserProfile, Address, SignUpUserOTP
 from .forms import SignupForm
 from django.utils import timezone
 from datetime import timedelta
@@ -34,18 +34,18 @@ class SignupView(View):
             else:
                 return redirect("cores-home", user_id=request.user.id)
             
-        if request.session.get('signup_user'):
-            signup_user_id = request.session.get('signup_user')
-            if CustomUser.objects.filter(id=signup_user_id).exists():
+        # if request.session.get('signup_user'):
+        #     signup_user_id = request.session.get('signup_user')
+        #     if CustomUser.objects.filter(id=signup_user_id).exists():
 
-                signup_user = get_object_or_404(CustomUser, id=signup_user_id)
-                wallet = Wallet.objects.filter(user=signup_user).delete()
-                referral = Referral.objects.filter(user=signup_user).delete()
-                wishlist = Wishlist.objects.create(user=signup_user).delete()
-                if UserOTP.objects.filter(user=signup_user).exists():
-                    UserOTP.objects.filter(user=signup_user).delete()
-                signup_user.delete()
-            del request.session['signup_user']
+        #         signup_user = get_object_or_404(CustomUser, id=signup_user_id)
+        #         # wallet = Wallet.objects.filter(user=signup_user).delete()
+        #         # referral = Referral.objects.filter(user=signup_user).delete()
+        #         # wishlist = Wishlist.objects.create(user=signup_user).delete()
+        #         # if UserOTP.objects.filter(user=signup_user).exists():
+        #         #     UserOTP.objects.filter(user=signup_user).delete()
+        #         signup_user.delete()
+        #     del request.session['signup_user']
             
 
         # if request.session.get("signup_done"):
@@ -71,41 +71,154 @@ class SignupView(View):
             
         form = SignupForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password"])
-            user.save()
+            # user = form.save(commit=False)
+            # user.set_password(form.cleaned_data["password"])
+            # user.save()
 
-            otp = UserOTP.generate_otp()
+            user_email = form.cleaned_data.get('email')
+            full_name = form.cleaned_data.get('full_name')
+            if form.cleaned_data.get('password'):
+                phone_no = form.cleaned_data.get('password')
+
+            user_password = form.cleaned_data.get('password')
+
+            # otp = UserOTP.generate_otp()
+            # print("created otp is ", otp)
+            # UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
+
+            otp = SignUpUserOTP.generate_otp()
             print("created otp is ", otp)
-            UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
+            SignUpUserOTP.objects.update_or_create(email=user_email, defaults={"otp": otp})
             
             # otp sending session
-            html_content = render_to_string("emails/otp_signup.html", {"user": user, "otp": otp})
+            html_content = render_to_string("emails/otp_signup.html", {"full_name": full_name, "otp": otp})
             email = EmailMultiAlternatives(
                 subject="Verify Your Account",
                 body=f"Your OTP is {otp} ",
                 from_email=settings.EMAIL_HOST_USER,
-                to=[user.email],
+                to=[user_email],
             )
 
             email.attach_alternative(html_content, "text/html")
             email.send()
             
             #checking the user is active or not
-            emails = form.cleaned_data["email"]
+            # emails = form.cleaned_data["email"]
             # users = CustomUser.objects.get(email=emails)# add get_object_or_404
-            users = get_object_or_404(CustomUser, email=emails)
-            print("from signup user active", users.is_active)
+            # users = get_object_or_404(CustomUser, email=emails)
+            # print("from signup user active", users.is_active)
 
             # destroying previous session
             request.session.pop("otp_verified", None)
 
+            request.session['user_email'] = user_email
+            request.session['user_full_name'] = full_name
+            request.session['user_phone_no'] = phone_no
+            request.session['user_password'] = user_password
+
+
             success_notify(request, "We sent you an OTP. Please verify your email.")
             
-            return redirect("verify-otp", user_id=user.id)
+            return redirect("verify_signup_otp")
 
             
         return render(request, 'accounts/signup.html', {"form": form})
+    
+@method_decorator(never_cache, name='dispatch')
+class VerifySignUpOTPView(View):
+    def get(self, request):
+        
+        if request.user.is_authenticated:
+            if request.user.is_superuser:
+                return redirect('admin-dash', user_id= request.user.id)
+            else:
+                return redirect("cores-home", user_id=request.user.id)
+            
+        # if not request.session.get("signup_done"):
+
+        #     return redirect("signup") 
+
+        if request.session.get("otp_verified"):
+
+            return redirect("signin")
+        
+        full_name = request.session.get('user_full_name')
+        user_email = request.session.get('user_email')
+        user_phone_no = request.session.get('user_phone_no')
+        user_password = request.session.get('user_password')
+
+
+        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        # user = get_object_or_404(CustomUser, id=user_id)
+        
+        # request.session['signup_user'] = user.id
+        context = {
+            "full_name": full_name,
+              "user_email": user_email,
+              "user_phone_no": user_phone_no,
+              "user_password": user_password
+              }
+        return render(request, "accounts/verify_signup_otp.html", context)
+    
+    def post(self, request):
+        entered_otp = request.POST.get("otp")
+        full_name = request.POST.get("full_name")
+        email = request.POST.get("email")
+        phone_no = request.POST.get("phone_no")
+        password = request.POST.get("password")
+
+        if not (full_name and email and phone_no and password ):
+            return redirect('signup')
+        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        # user = get_object_or_404(CustomUser, id=user_id)
+        # otp_obj = UserOTP.objects.get(user=user)# add get_object_or_404
+        otp_obj = get_object_or_404(SignUpUserOTP, email=email)
+
+
+        if not entered_otp:
+            error_notify(request, "enter your otp")
+            return redirect('verify_signup_otp')
+
+        if otp_obj.otp == entered_otp and otp_obj.created_at >=  timezone.now() - timedelta(minutes=5):
+            # print('user is active:', user.is_active)
+            # user.is_active = True
+            # user.save()
+
+            # make session and clear previos session
+            # request.session.pop("signup_done", None)
+            request.session["otp_verified"] = True
+
+            user = CustomUser.objects.create_user(
+                email=email,
+                full_name=full_name,
+                password=password,
+                phone_no=phone_no
+            )
+            user.set_password(password)
+            user.is_active=True
+            user.save()
+
+            otp_obj.delete()
+            if request.session.get('referral_code'):
+                ref_code = request.session.get('referral_code')
+                try:
+                    referral = Referral.objects.get(code=ref_code)
+                    user.referral.referred_by = referral.user
+                    user.referral.save()
+                    referral_credit = referral_amount()
+                    wallet = get_object_or_404(Wallet, user=referral.user)
+                    transaction = wallet.credit(Decimal(referral_credit), message=f"Referral bonus from {user.full_name}" )
+                    del request.session['referral_code']
+                except Referral.DoesNotExist:
+                    pass
+                
+            success_notify(request, "Your account has been verified. You can log in now.")
+            return redirect("signin")
+        else:
+            otp_obj.delete()
+            # user.delete()
+            error_notify('otp expiried try again')
+            return redirect("signup")
     
 @method_decorator(never_cache, name='dispatch')
 class VerifyOTPView(View):
