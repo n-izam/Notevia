@@ -61,6 +61,8 @@ class HomeView(View):
         
         return render(request, 'cores/home1.html', context)
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ProductlistingView(View):
 
     def get(self, request):
@@ -162,6 +164,8 @@ class ProductlistingView(View):
 
         return render(request, 'cores/productlist1.html', context)
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ProductDetailsView(View):
 
     def get(self, request, product_id):

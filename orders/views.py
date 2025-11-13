@@ -42,7 +42,8 @@ client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_S
 
 # Create your views here.
 
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddressSelectionView(View):
 
     def get(self, request):
@@ -576,6 +577,8 @@ class OrderDetailView(View):
 
         return render(request, "orders/order_detail.html", context)
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class OrderTrackingView(View):
 
     def get(self, request, order_id):
@@ -682,8 +685,10 @@ class CancelOrderItemView(View):
 
         success_notify(request, "item removes successfully")
         return redirect('order_details', order_id=order.id )
+    
 
-        
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ReturnOrderView(View):
 
     def get(self, request, order_id):
@@ -704,6 +709,9 @@ class ReturnOrderView(View):
         ReturnRequest.objects.create(order=order, reason=reason)
         return redirect('order_details', order_id=order.id)
 
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class InvoiceDownloadView(View):
 
     def get(self, request, order_id):
@@ -807,6 +815,7 @@ class InvoiceDownloadView(View):
     # admin side order
 
 
+
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
@@ -853,6 +862,7 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
         }
 
         return render(request, 'orders/admin_order_listing.html', context)
+    
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')    
@@ -925,7 +935,8 @@ class OrderStatusUpdateView(View):
 
         return redirect('admin_order_detail', order_id=order.id)
 
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ReturnUpdateView(View):
 
     def post(self, request, order_id, user_id):

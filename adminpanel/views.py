@@ -39,6 +39,8 @@ class AdminDashView(View):
 
 # admin product list view
 
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AdminProductView(View):
     def get(self, request):
 
@@ -83,6 +85,9 @@ class AdminProductView(View):
 
         return render(request, 'adminpanel/product-main.html', contex)
 
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddProductView(LoginRequiredMixin, View):
     def get(self, request):
         brands = Brand.objects.all()
@@ -197,6 +202,8 @@ class AddProductView(LoginRequiredMixin, View):
         
 
 # edit product
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class EditProductView(View):
 
     def get(self, request, product_id):
@@ -275,6 +282,8 @@ class EditProductView(View):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddProductOfferView(View):
     def get(self, request, product_id): # add product id
         product = get_object_or_404(Product, id=product_id)
@@ -332,6 +341,9 @@ class AddProductOfferView(View):
 
         return redirect('admin-product')
 
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class EditProductOfferView(View):
     def get(sel, request, product_id): #add product is also
         product = get_object_or_404(Product, id=product_id)
@@ -394,6 +406,9 @@ class EditProductOfferView(View):
 
         return redirect('admin-product')
 
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class RemoveProductOfferView(View):
 
     def get(self, request, product_id):
@@ -403,7 +418,8 @@ class RemoveProductOfferView(View):
         product.save()
         return redirect('admin-product')
 
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ToggleProductStatusView(View):
 
     def post(self, request, pk):
@@ -421,7 +437,9 @@ class ToggleProductStatusView(View):
         return JsonResponse({'success': True, 'is_listed': product.is_listed})
 
         
-    
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddBrandView(LoginRequiredMixin, View):
     def post(self, request):
         try:
@@ -440,6 +458,8 @@ class AddBrandView(LoginRequiredMixin, View):
 
 # admin customers list view 
 
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AdminCustomersView(View):
     
     def get(self, request):
@@ -456,7 +476,9 @@ class AdminCustomersView(View):
 
         return render(request, 'adminpanel/customers.html', {"user_id": request.user.id, "customers": customers})
     
-@method_decorator(csrf_exempt, name='dispatch')
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ToggleCustomerStatusView(View):
 
     def post(self, request, pk):
@@ -476,7 +498,8 @@ class ToggleCustomerStatusView(View):
 
     
 # admin category list view
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AdminCategoryView(View):
 
     def get(self, request):
@@ -491,7 +514,8 @@ class AdminCategoryView(View):
         return render(request, 'adminpanel/category.html', {"category": category, "user_id":request.user.id})
 
 # for category listing/unlisting
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class TogglCategoryStatusView(View):
     def post(self, request, pk):
         category = get_object_or_404(Category, pk=pk)
@@ -502,7 +526,8 @@ class TogglCategoryStatusView(View):
     
 
 # category add view 
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddCategoryView(View):
 
     def get(self, request):
@@ -539,6 +564,8 @@ class AddCategoryView(View):
             return redirect('admin-category')
 
 # edit categkory
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class CategoryUpdateView(UpdateView):
     model = Category
     fields = ['name', 'description']
@@ -564,6 +591,9 @@ class CategoryUpdateView(UpdateView):
         context['user_id'] = self.request.user.id
         return context
     
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddCategoryOffer(View):
     def get(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
@@ -609,6 +639,8 @@ class AddCategoryOffer(View):
 
         return redirect('admin-category')
 
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class EditCategoryOffer(View):
 
     def get(self, request, category_id):
@@ -661,7 +693,8 @@ class EditCategoryOffer(View):
         print("offer updated")
         return redirect('admin-category')
 
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class RemoveCategoryOfferView(View):
 
     def get(self, request, category_id):
@@ -670,6 +703,8 @@ class RemoveCategoryOfferView(View):
         category.save()
         return redirect('admin-category')
 
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class CategoryDeleteView(DeleteView):
 
     model = Category
@@ -690,7 +725,8 @@ class CategoryDeleteView(DeleteView):
 
         
 # varient view of each products
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ViewVariantView(View):
 
     def get(self, request, product_id):# we see variants for specific product in product addinf time use (product id)
@@ -700,6 +736,8 @@ class ViewVariantView(View):
 
         return render(request, 'adminpanel/view-variant.html', {"user_id": request.user.id, "product": product, "variants": variants})
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddVariantView(View):
 
     def get(self, request, product_id):# we add variants for specific product in product addinf time use (product id)
@@ -749,6 +787,9 @@ class AddVariantView(View):
 
         return redirect('view-variant', product_id=product_id)
 
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class EditVariantView(View):
 
     def get(self, request, variant_id):
@@ -807,7 +848,9 @@ class EditVariantView(View):
 
         return redirect('view-variant', product_id=product.id)
 
-@method_decorator(csrf_exempt, name='dispatch')
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ToggleVariatStatusView(View):
 
     def post(self, request, pk):

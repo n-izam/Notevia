@@ -7,9 +7,12 @@ from .models import Coupon, CouponUsage
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
+from django.views.decorators.cache import never_cache
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AdminCouponListingView(View):
 
     def get(self, request):
@@ -36,6 +39,8 @@ class AdminCouponListingView(View):
 
         return render(request, 'offers/admin_coupon.html', context)
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddCouponView(View):
 
     def post(self, request):
@@ -90,6 +95,7 @@ class AddCouponView(View):
         success_notify(request, 'Coupon added successfully')
         return redirect('admin_coupon_list')
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
 class ToggleStatusCouponView(View):
 
@@ -102,6 +108,9 @@ class ToggleStatusCouponView(View):
 
         return redirect('admin_coupon_list')
 
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class EditCouponView(View):
 
     def post(self, request):

@@ -21,6 +21,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class CartPageView(View):
 
     def get(self, request):
@@ -86,6 +88,9 @@ class CartPageView(View):
 
         return render(request, 'cart/main_cart.html', context)
 
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddToCartFromDetailView(View):
 
     def post(self, request):
@@ -137,7 +142,8 @@ class AddToCartFromDetailView(View):
 
         return redirect('shop_productdetail', product_id=product.id)
     
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class CartQuantityUpdateView(View):
 
     def post(self, request):
@@ -167,6 +173,8 @@ class CartQuantityUpdateView(View):
         success_notify(request, "stock quantity updated")
         return redirect('cart_page')
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class RemoveFromCartView(View):
 
     def get(self, request):
@@ -185,6 +193,8 @@ class RemoveFromCartView(View):
 
 #  wallet integration
 
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class UserWalletView(View):
 
     def get(self, request):

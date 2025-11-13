@@ -19,9 +19,13 @@ from openpyxl.utils import get_column_letter
 from accounts.utils import profile
 from products.models import Referral, WishlistItem
 from adminpanel.models import Product
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 # Create your views here.
 
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AdminSalesView(View):
 
     def get(self, request):
@@ -249,7 +253,8 @@ class AdminSalesView(View):
         response['Content-Disposition'] = f'attachment; filename="NoteVia_Sales_Report_{data["period"]}.xlsx"'
         return response
     
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ReferralView(View):
 
     def get(self, request):
@@ -281,6 +286,8 @@ class WishListView(View):
 
         return render(request, 'products/wishlist.html', context)
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddToWishList(View):
 
     def get(self, request):
@@ -301,6 +308,8 @@ class AddToWishList(View):
 
         return redirect('wishlist_view')
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class RemoveToWishlist(View):
     
     def get(self, request):

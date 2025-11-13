@@ -133,6 +133,15 @@
 {% block script %}
 
 <script>
+    // this is a reload script
+
+    window.addEventListener("pageshow", function(event) {
+        //If the page is loaded from the browser's back/forward cache
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
     document.getElementById('profileImageUpload').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {

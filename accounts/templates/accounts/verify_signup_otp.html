@@ -35,18 +35,16 @@
 <body>
   <div class="otp-container text-center">
     <h3 class="mb-3 fw-bold">Verify OTP</h3>
+    {% if request.resolver_match.url_name == 'verify_signup_otp' %}
     <p class="text-muted">We’ve sent a 6-digit OTP to your email {{email}}.</p>
+    {% else %}
+    <p class="text-muted">We’ve sent a 6-digit OTP to your email {{user.email}}.</p>
+    {% endif %}
 
     <!-- OTP Form -->
-    {% if request.resolver_match.url_name == 'verify_signup_otp' %}
     <form method="post" action="{% url 'verify_signup_otp' %}" novalidate>
-      {% elif request.resolver_match.url_name == 'verify_profile' %}
-      <form method="post" action="{% url 'verify_profile' %}" novalidate>
-      {% endif %}
+      
       {% csrf_token %}
-      {% if request.resolver_match.url_name == 'verify_profile' %}
-      <input type="hidden" name="user_id" value="{{ user_id }}">
-      {% endif %}
       {% if request.resolver_match.url_name == 'verify_signup_otp' %}
       <input type="hidden" name="full_name" value="{{ full_name }}">
       <input type="hidden" name="email" value="{{ user_email }}">
@@ -76,11 +74,9 @@
     <!-- Resend OTP -->
     <p class="small mt-3">
       Didn’t get the OTP? 
-      {% if request.resolver_match.url_name == 'verify_signup_otp' %}
       <a href="{% url 'resend_signup_otp' %}" class="fw-bold">Resend OTP</a>
-      {% elif request.resolver_match.url_name == 'verify_profile' %}
-      <a href="{% url 'resend_profile' %}" class="fw-bold">Resend OTP</a>
-      {% endif %}
+      
+      
     </p>
   </div>
 

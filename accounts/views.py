@@ -19,7 +19,7 @@ import re
 from products.models import Referral, Wishlist
 from cart.models import Wallet
 from decimal import Decimal
-
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -34,29 +34,20 @@ class SignupView(View):
             else:
                 return redirect("cores-home", user_id=request.user.id)
             
-        # if request.session.get('signup_user'):
-        #     signup_user_id = request.session.get('signup_user')
-        #     if CustomUser.objects.filter(id=signup_user_id).exists():
-
-        #         signup_user = get_object_or_404(CustomUser, id=signup_user_id)
-        #         # wallet = Wallet.objects.filter(user=signup_user).delete()
-        #         # referral = Referral.objects.filter(user=signup_user).delete()
-        #         # wishlist = Wishlist.objects.create(user=signup_user).delete()
-        #         # if UserOTP.objects.filter(user=signup_user).exists():
-        #         #     UserOTP.objects.filter(user=signup_user).delete()
-        #         signup_user.delete()
-        #     del request.session['signup_user']
-            
-
-        # if request.session.get("signup_done"):
-        #     return redirect("verify-otp", user_id=request.user.id)
+        if request.session.get('user_email'):
+            del request.session['user_email']
+            del request.session['user_full_name']
+            del request.session['user_phone_no']
+            del request.session['user_password']
+            return redirect('signup')
+    
 
         # this is important because chaange password safety
         if request.session.get("forgot_otp_verified"):
             request.session.pop("forgot_otp_verified", None)
         
         form = SignupForm()
-        return render(request, 'accounts/signup.html', {"form": form})
+        return render(request, 'accounts/signup1.html', {"form": form})
     
     def post(self, request):
         referel_code = request.POST.get('referrel')
@@ -71,20 +62,14 @@ class SignupView(View):
             
         form = SignupForm(request.POST)
         if form.is_valid():
-            # user = form.save(commit=False)
-            # user.set_password(form.cleaned_data["password"])
-            # user.save()
 
             user_email = form.cleaned_data.get('email')
             full_name = form.cleaned_data.get('full_name')
             if form.cleaned_data.get('password'):
-                phone_no = form.cleaned_data.get('password')
+                user_phone_no = form.cleaned_data.get('password')
 
             user_password = form.cleaned_data.get('password')
 
-            # otp = UserOTP.generate_otp()
-            # print("created otp is ", otp)
-            # UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
 
             otp = SignUpUserOTP.generate_otp()
             print("created otp is ", otp)
@@ -102,18 +87,13 @@ class SignupView(View):
             email.attach_alternative(html_content, "text/html")
             email.send()
             
-            #checking the user is active or not
-            # emails = form.cleaned_data["email"]
-            # users = CustomUser.objects.get(email=emails)# add get_object_or_404
-            # users = get_object_or_404(CustomUser, email=emails)
-            # print("from signup user active", users.is_active)
 
             # destroying previous session
             request.session.pop("otp_verified", None)
 
             request.session['user_email'] = user_email
             request.session['user_full_name'] = full_name
-            request.session['user_phone_no'] = phone_no
+            request.session['user_phone_no'] = user_phone_no
             request.session['user_password'] = user_password
 
 
@@ -121,8 +101,8 @@ class SignupView(View):
             
             return redirect("verify_signup_otp")
 
-            
-        return render(request, 'accounts/signup.html', {"form": form})
+        
+        return render(request, 'accounts/signup1.html', {"form": form})
     
 @method_decorator(never_cache, name='dispatch')
 class VerifySignUpOTPView(View):
@@ -133,14 +113,12 @@ class VerifySignUpOTPView(View):
                 return redirect('admin-dash', user_id= request.user.id)
             else:
                 return redirect("cores-home", user_id=request.user.id)
-            
-        # if not request.session.get("signup_done"):
-
-        #     return redirect("signup") 
 
         if request.session.get("otp_verified"):
 
             return redirect("signin")
+        if not request.session.get('user_email'):
+            return redirect('signup')
         
         full_name = request.session.get('user_full_name')
         user_email = request.session.get('user_email')
@@ -150,10 +128,9 @@ class VerifySignUpOTPView(View):
         
 
 
-        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
-        # user = get_object_or_404(CustomUser, id=user_id)
         
-        # request.session['signup_user'] = user.id
+        
+        
         context = {
             "full_name": full_name,
               "user_email": user_email,
@@ -171,9 +148,7 @@ class VerifySignUpOTPView(View):
 
         if not (full_name and email and phone_no and password ):
             return redirect('signup')
-        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
-        # user = get_object_or_404(CustomUser, id=user_id)
-        # otp_obj = UserOTP.objects.get(user=user)# add get_object_or_404
+        
         otp_obj = get_object_or_404(SignUpUserOTP, email=email)
 
 
@@ -182,12 +157,8 @@ class VerifySignUpOTPView(View):
             return redirect('verify_signup_otp')
 
         if otp_obj.otp == entered_otp and otp_obj.created_at >=  timezone.now() - timedelta(minutes=5):
-            # print('user is active:', user.is_active)
-            # user.is_active = True
-            # user.save()
 
             # make session and clear previos session
-            # request.session.pop("signup_done", None)
             request.session["otp_verified"] = True
 
             user = CustomUser.objects.create_user(
@@ -223,7 +194,6 @@ class VerifySignUpOTPView(View):
             return redirect("signin")
         else:
             otp_obj.delete()
-            # user.delete()
             error_notify('otp expiried try again')
             return redirect("signup")
         
@@ -234,7 +204,6 @@ class ResendSignUpOTPView(View):
         full_name = request.session.get('user_full_name')
         otp = SignUpUserOTP.generate_otp()
         print("resend otp is ", otp)
-        # print("full_name", user.full_name)
         SignUpUserOTP.objects.update_or_create(email=user_email, defaults={"otp": otp})
         
         
@@ -252,98 +221,6 @@ class ResendSignUpOTPView(View):
         
         success_notify(request, "A new OTP has been sent to your email.")
         return redirect('verify_signup_otp')
-    
-@method_decorator(never_cache, name='dispatch')
-class VerifyOTPView(View):
-    def get(self, request, user_id):
-        
-        if request.user.is_authenticated:
-            if request.user.is_superuser:
-                return redirect('admin-dash', user_id= request.user.id)
-            else:
-                return redirect("cores-home", user_id=request.user.id)
-            
-        # if not request.session.get("signup_done"):
-
-        #     return redirect("signup") 
-
-        if request.session.get("otp_verified"):
-
-            return redirect("signin")
-        
-        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
-        user = get_object_or_404(CustomUser, id=user_id)
-        
-        request.session['signup_user'] = user.id
-        return render(request, "accounts/verify_otp.html", {"user_id": user_id, "user": user})
-    
-    def post(self, request, user_id):
-        entered_otp = request.POST.get("otp")
-        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
-        user = get_object_or_404(CustomUser, id=user_id)
-        # otp_obj = UserOTP.objects.get(user=user)# add get_object_or_404
-        otp_obj = get_object_or_404(UserOTP, user=user)
-
-
-        if not entered_otp:
-            error_notify(request, "enter your otp")
-            return redirect('verify-otp', user_id=user.id)
-
-        if otp_obj.otp == entered_otp and otp_obj.created_at >=  timezone.now() - timedelta(minutes=5):
-            print('user is active:', user.is_active)
-            user.is_active = True
-            user.save()
-
-            # make session and clear previos session
-            # request.session.pop("signup_done", None)
-            request.session["otp_verified"] = True
-
-            otp_obj.delete()
-            if request.session.get('referral_code'):
-                ref_code = request.session.get('referral_code')
-                try:
-                    referral = Referral.objects.get(code=ref_code)
-                    user.referral.referred_by = referral.user
-                    user.referral.save()
-                    referral_credit = referral_amount()
-                    wallet = get_object_or_404(Wallet, user=referral.user)
-                    transaction = wallet.credit(Decimal(referral_credit), message=f"Referral bonus from {user.full_name}" )
-
-                except Referral.DoesNotExist:
-                    pass
-            del request.session['referral_code']
-            success_notify(request, "Your account has been verified. You can log in now.")
-            return redirect("signin")
-        else:
-            otp_obj.delete()
-            user.delete()
-            return redirect("signup")
-        
-@method_decorator(never_cache, name='dispatch')
-class ResendOTPView(View):
-    def get(self, request, user_id):
-        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
-        user = get_object_or_404(CustomUser, id=user_id)
-        otp = UserOTP.generate_otp()
-        print("resend otp is ", otp)
-        print("full_name", user.full_name)
-        UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
-        
-        
-        html_content = render_to_string("emails/otp_signup.html", {"user": user, "otp": otp})
-        email = EmailMultiAlternatives(
-            subject="Resend OTP - Verify Your Account",
-            body=f"Your new OTP is {otp}",
-            from_email=settings.EMAIL_HOST_USER,
-            to=[user.email],
-        )
-        email.attach_alternative(html_content, "text/html")
-        email.send()
-
-        
-        
-        success_notify(request, "A new OTP has been sent to your email.")
-        return redirect("verify-otp", user_id=user.id)
         
 
 # Sign in side
@@ -417,7 +294,8 @@ class SigninView(View):
     
 
 # Sign out side 
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class SignOutView(View):
 
     def get(self, request, user_id):
@@ -441,12 +319,12 @@ class SignOutView(View):
         # if user.is_authenticated():
         return redirect('signin')
     
-@method_decorator(never_cache, name='dispatch')
-@method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True), name='dispatch')
+
 
 
 # Forgot pass word part 
-
+@method_decorator(never_cache, name='dispatch')
+@method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True), name='dispatch')
 class ForgotPassView(View):
 
     def get(self, request):
@@ -458,6 +336,10 @@ class ForgotPassView(View):
             
         if request.session.get("forgot_otp_verified"):
             request.session.pop("forgot_otp_verified", None)
+
+        
+        if request.session.get("forgot_otp_request"):
+            request.session.pop("forgot_otp_request", None)
             
         # if request.session.get("forgot_otp_verified"):
 
@@ -494,7 +376,7 @@ class ForgotPassView(View):
 
         success_notify(request, "We sent you an OTP. Please verify your email.")
         # return redirect('forgot_pass')
-            
+        request.session["forgot_otp_request"] = True
         return redirect("verify_forgot_otp", user_id=user.id)
     
 @method_decorator(never_cache, name='dispatch')
@@ -513,10 +395,15 @@ class VerifyForgotOTPView(View):
 
         # forgot otp session check
         
+        
         if request.session.get("forgot_otp_verified"):
 
             warning_notify(request, "Change password then move forward")
             return redirect('new_pass', user_id=user_id)
+        
+        if not request.session.get("forgot_otp_request"):
+            error_notify(request, 'try again something went wrong')
+            return redirect('forgot_pass')
         
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         user = get_object_or_404(CustomUser, id=user_id)
@@ -544,6 +431,8 @@ class VerifyForgotOTPView(View):
             # make session and clear previos session
             # request.session.pop("signup_done", None)
             request.session["forgot_otp_verified"] = True
+            if request.session.get("forgot_otp_request"):
+                request.session.pop("forgot_otp_request", None)
 
             otp_obj.delete()
             success_notify(request, "Your account has been verified. You can create new password now.")
@@ -633,7 +522,8 @@ class ResetPasswordView(View):
     
 
 # """start the user profile side """
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class CustomerProfileView(View):
 
     def get(self, request):
@@ -648,6 +538,9 @@ class CustomerProfileView(View):
             
         return render(request, 'customer/customer_profile.html', {"user_id": request.user.id, "user": user, "user_profile": user_profile})
     
+
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ChangeProfileView(View):
 
     def post(self, request):
@@ -692,6 +585,8 @@ class ChangeProfileView(View):
         return redirect("profile")
     
 
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ProfileEditView(View):
 
     def get(self, request):
@@ -804,7 +699,7 @@ class ProfileEditView(View):
         success_notify(request, "We sent you an OTP. Please verify your email.")
         return redirect("verify_profile")
     
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class VerifyProfileOTPView(View):
     def get(self, request):
@@ -814,19 +709,8 @@ class VerifyProfileOTPView(View):
         
         if not request.session.get('email'):
             return redirect("profile")
-            
-        # if not request.session.get("signup_done"):
-
-        #     return redirect("signup") 
-
-        # forgot otp session check
         
-        # if request.session.get("forgot_otp_verified"):
-
-        #     warning_notify(request, "Change password then move forward")
-        #     return redirect('new_pass', user_id=user_id)
         
-        # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         user = get_object_or_404(CustomUser, id=request.user.id)
         
         
@@ -841,6 +725,7 @@ class VerifyProfileOTPView(View):
         
         if not all([full_name, email, phone_no]):
             error_notify(request, "Session expired. Please try again.")
+
             return redirect('edit_profile')
 
 
@@ -886,6 +771,7 @@ class VerifyProfileOTPView(View):
             return redirect("profile_edit")
 
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class ResendProfileOTPView(View):
     def get(self, request):
@@ -913,7 +799,8 @@ class ResendProfileOTPView(View):
         success_notify(request, "A new OTP has been sent to your email.")
         return redirect("verify_profile")
     
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddressView(View):
 
     def get(self, request):
@@ -940,6 +827,8 @@ class AddressView(View):
 
         return render(request, 'customer/address.html', contex)
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AddAddressView(View):
 
     def get(self, request):
@@ -1033,6 +922,8 @@ class AddAddressView(View):
         success_notify(request, "new address created successfully ")
         return redirect('address')
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class EditAddressView(View):
     def get(self, request, address_id):
 
@@ -1133,6 +1024,8 @@ class EditAddressView(View):
         success_notify(request, "address updated successfully ")
         return redirect('address')
 
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class SetDefaultView(View):
 
     def get(self, request, address_id):
@@ -1159,6 +1052,8 @@ class SetDefaultView(View):
 
         return redirect('address')
     
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class RemoveAddressView(View):
 
     def get(self, request, address_id):
@@ -1172,7 +1067,8 @@ class RemoveAddressView(View):
 
         return redirect('address')
     
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ChangePassWordView(View):
 
     def get(self, request):

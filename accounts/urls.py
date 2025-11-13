@@ -1,12 +1,12 @@
 from django.urls import path, include
-from .views import SigninView, SignupView, VerifyOTPView, ResendOTPView, SignOutView, ForgotPassView, VerifyForgotOTPView, ResetPasswordView, ResendPasswordOTPView, VerifySignUpOTPView, ResendSignUpOTPView
+from .views import SigninView, SignupView, SignOutView, ForgotPassView, VerifyForgotOTPView, ResetPasswordView, ResendPasswordOTPView, VerifySignUpOTPView, ResendSignUpOTPView
 from .views import CustomerProfileView, ProfileEditView, AddressView, AddAddressView, SetDefaultView, RemoveAddressView, EditAddressView, VerifyProfileOTPView, ResendProfileOTPView, ChangeProfileView, ChangePassWordView
 
 urlpatterns = [
     path("signin/", SigninView.as_view(), name='signin'),
     path('signup/', SignupView.as_view(), name='signup'),
-    path('verify-otp/<int:user_id>/', VerifyOTPView.as_view(), name='verify-otp'),
-    path('resend-otp/<int:user_id>/', ResendOTPView.as_view(), name='resend-otp'),
+    path('verify_signup_otp/', VerifySignUpOTPView.as_view(), name='verify_signup_otp'),
+    path('resend_otp/', ResendSignUpOTPView.as_view(), name='resend_signup_otp'),
     path('signout/<int:user_id>/',SignOutView.as_view(), name='signout'),
     path('forgotpass/', ForgotPassView.as_view(), name='forgot_pass'),
     path('verify-pass-otp/<int:user_id>/', VerifyForgotOTPView.as_view(), name='verify_forgot_otp'),
