@@ -355,6 +355,9 @@ class ForgotPassView(View):
     def post(self, request):
 
         email = request.POST.get('email')
+        if not email:
+            warning_notify(request, 'enter proper email')
+            return redirect('forgot_pass')
 
 
         if not CustomUser.objects.filter(email=email).exists():

@@ -51,7 +51,7 @@
       <!-- Show Django messages -->
       {% if messages %}
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+          <div class="alert alert-{{ message.tags }} mt-2" {% if message.tags == 'error' %}style="color: red;"{% endif %}>{{ message }}</div>
         {% endfor %}
       {% endif %}
 
