@@ -4,7 +4,11 @@
 {% load socialaccount %}
 
 {% block title %} Home Page {% endblock %}
-<!-- {% block head %} {% endblock %} -->
+{% block head %}
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0"> 
+{% endblock %}
 
 {% block style %}
 
@@ -76,9 +80,9 @@
       opacity: 0.95;
     }
     
-    .toast.bg-success { color: rgb(65, 138, 105) !important; background-color: rgb(93, 194, 155) !important; }
-    .toast.bg-danger  { color: #f00 !important; }
-    .toast.bg-warning { color: #ff0 !important; }
+    .toast.bg-success { color: rgba(54, 141, 102, 0.844) !important; background-color: rgba(119, 229, 187, 0.736) !important; }
+    .toast.bg-danger  { color: #f00 !important; background-color: #0000006d !important; }
+    .toast.bg-warning { color: rgb(165, 129, 46) !important; background-color: #f2aa5dd1 !important; }
     .toast.bg-info    { color: #0ff !important; }
   </style>
 
@@ -94,19 +98,27 @@
           {% csrf_token %}
           <div class="mb-3 text-start">
             <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control" placeholder="Label (required)">
+            <input type="email" name="email" class="form-control" placeholder="Email" value="{% if form.email.errors %} {{ form.email.value }} {% endif %}">
+            {% if form.email.errors %}
+            <p class="text-danger small">{{ form.email.errors.0 }}</p>
+            {% endif %}
           </div>
           
           <div class="mb-3 text-start">
             <label class="form-label">Password</label>
             <div class="input-group">
-              <input type="password" class="form-control" name="password" placeholder="Label (required)">
-              <span class="input-group-text"><i class="bi bi-eye"></i></span>
+              <input type="password" class="form-control" name="password" placeholder="Password.">
+              <!-- <span class="input-group-text"><i class="bi bi-eye"></i></span> -->
             </div>
+            {% if form.password.errors %}
+            <p class="text-danger small">{{ form.password.errors.0 }}</p>
+            {% endif %}
           </div>
     
           
-          <p class="small text-end"><a class="text-decoration-none" href="{% url 'forgot_pass' %}">Forgot Password?</a></p>
+          <p class="small text-end">
+            <a class="text-decoration-none" href="{% url 'forgot_pass' %}">Forgot Password?</a>
+          </p>
         
           
           <button type="submit" class="btn btn-black w-100 mb-3">Log in</button>
@@ -121,7 +133,9 @@
             <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" class="me-2">
             Google
           </a>
-          <p class="small">Create an account <a href="{% url 'signup' %}">Sign up</a></p>
+          <p class="small">
+            Create an account <a href="{% url 'signup' %}">Sign up</a>
+          </p>
         </form>
           <!-- Toast container (fixed position) -->
           <div class="toast-container">

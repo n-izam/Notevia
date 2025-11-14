@@ -5,7 +5,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from .models import CustomUser, UserOTP, UserProfile, Address, SignUpUserOTP
-from .forms import SignupForm
+from .forms import SignupForm, SigninForm
 from django.utils import timezone
 from datetime import timedelta
 from  django.contrib.auth import authenticate, login, logout
@@ -241,43 +241,46 @@ class SigninView(View):
 
         # if request.session.get("otp_verified"):
         #     return redirect("sig")
-        
-        return render(request, 'accounts/signin1.html')
+        errors = request.session.pop("signin_errors", None)
+        data = request.session.pop("signin_data", None)
+
+        form = SigninForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+        return render(request, 'accounts/signin1.html', {"form": form})
     
     def post(self, request):
+        form = SigninForm(request.POST)
 
-        emails = request.POST.get("email")
-        passwords = request.POST.get("password")
-        # users = CustomUser.objects.get(email=emails)
+        if form.is_valid():
+            emails = request.POST.get("email")
+            passwords = request.POST.get("password")
 
-        if not emails:
-            
-            warning_notify(request, "enter the mail")
-            return redirect('signin')
-        if not passwords:
-            
-            warning_notify(request, "enter your password")
-            return redirect('signin')
-        
-        if CustomUser.objects.filter(email=emails).exists():
+            # Check if email exists
 
-            user = get_object_or_404(CustomUser, email=emails)
-            print("the customer active status:", user.is_active)
-            if not user.is_active:
-                error_notify(request, "this mail is blocked, use different mail")
+            if CustomUser.objects.filter(email=emails).exists():
+
+                user_obj = get_object_or_404(CustomUser, email=emails)
+                print("the customer active status:", user_obj.is_active)
+                if not user_obj.is_active:
+                    request.session["signin_errors"] = {"email": ["This email is blocked"]}
+                    request.session["signin_data"] = request.POST
+                    return redirect("signin")
+                
+                # Authenticate user
+            user = authenticate(request, email=emails, password=passwords)
+
+            if user is None:
+                request.session["signin_errors"] = {
+                    "email": ["Invalid credentials"],
+                    "password": ["Invalid credentials"]
+                    }
+                request.session["signin_data"] = request.POST
                 return redirect("signin")
-    
-        # user1 = CustomUser.objects.get(email=emails)
-        user = authenticate(request, email=emails, password=passwords)
-
-        # print("user status active: ", user.is_active)
-        
-        print("email is", emails)
-        print("password is ", passwords)
-        print(" usser is authenticated :",user)
-        if user is not None:
+            print('enter email:', emails )
+            print('enter email:', passwords )
             user.status = True
-            print("user status", user.status)
             if user.is_superuser:
                 request.session.pop("otp_verified", None)
 
@@ -289,8 +292,10 @@ class SigninView(View):
                 login(request, user)
 
                 return redirect("cores-home", user_id=user.id)
-        error_notify(request, "invalid credentials")
-        return redirect('signin')
+        else:
+            request.session["signin_errors"] = form.errors
+            request.session["signin_data"] = request.POST
+            return redirect("signin")
     
 
 # Sign out side 
