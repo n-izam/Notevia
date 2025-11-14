@@ -32,14 +32,15 @@ urlpatterns = [
     path('orders/', include('orders.urls')),
     path('offers/', include('offers.urls')),
     path('products/', include('products.urls')),
+
+
+    path('raise-404/', lambda request: None),
     
 ]
 
 # if settings.DEBUG:
 #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-def custom_page_not_found(request, exception):
-    return render(request, "404.html", status=404)
 
 handler404 = Custom404View.as_view()
 
