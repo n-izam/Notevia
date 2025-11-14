@@ -84,6 +84,47 @@
           .verify-button:hover {
               background-color: #333333;
           }
+
+        /* Default: Desktop — top right */
+        .toast-container {
+          position: fixed;
+          top: 1rem;
+          right: 1rem;
+          z-index: 5000;
+          max-width: 350px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 576px) {
+          .toast-container {
+              top: auto !important;
+              bottom: 1rem !important;
+              right: 50% !important;
+              transform: translateX(50%);
+              width: 90% !important;
+              max-width: none !important;
+          }
+          .toast {
+              width: 100% !important;
+              border-radius: 8px !important;
+          }
+          .toast-body {
+              font-size: 0.95rem;
+          }
+        }
+
+        /* toste message design */
+        .toast {
+          background-color: #111 !important;
+          color: #fff !important;
+          border: 1px solid #fff !important;
+          opacity: 0.95;
+        }
+        
+        .toast.bg-success { color: rgb(65, 138, 105) !important; background-color: rgb(93, 194, 155) !important; }
+        .toast.bg-danger  { color: #f00 !important; }
+        .toast.bg-warning { color: #ff0 !important; }
+        .toast.bg-info    { color: #0ff !important; }
       </style>
   </head>
   <body>
@@ -102,15 +143,54 @@
               
               <button type="submit" class="verify-button">Verify Email</button>
           </form>
-          {% if messages %}
+          <!-- {% if messages %}
             {% for message in messages %}
               <div class="alert alert-{{ message.tags }} mt-2 " style="color: orangered;">{{ message }}</div>
             {% endfor %}
-          {% endif %}
+          {% endif %} -->
+          <!-- Toast container (fixed position) -->
+          <div class="toast-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="toast align-items-center text-white border-0 mb-2
+                        {% if message.tags == 'error' %} bg-danger
+                        {% elif message.tags == 'success' %} bg-success
+                        {% elif message.tags == 'warning' %} bg-warning text-dark
+                        {% else %} bg-info text-dark
+                        {% endif %}
+                    ">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                {{ message }}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
       </main>
       <!-- END: Inner Part for Forgot Password Page -->
     </div>
-  
+    
+    <script>
+
+        //document.addEventListener('DOMContentLoaded', function () {
+          //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+          //toastElList.map(function (toastEl) {
+              //var t = new bootstrap.Toast(toastEl);
+              //t.show();
+          //});
+      //});
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.toast').forEach(el => {
+            new bootstrap.Toast(el).show();
+        });
+    });
+      
+        
+    </script>
   </body>
   </html>
 
