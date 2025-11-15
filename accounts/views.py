@@ -285,12 +285,12 @@ class SigninView(View):
                 request.session.pop("otp_verified", None)
 
                 login(request, user)
-
+                success_notify(request, "Login successful! You're now on the Notevia admin dashboard page.")
                 return redirect('admin-dash', user_id= user.id)
             else:
                 request.session.pop("otp_verified", None)
                 login(request, user)
-
+                success_notify(request, "Login successful! You're now on the Notevia home page.")
                 return redirect("cores-home", user_id=user.id)
         else:
             request.session["signin_errors"] = form.errors

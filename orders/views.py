@@ -37,6 +37,7 @@ import json
 from decimal import Decimal
 
 from django.core.mail import EmailMultiAlternatives
+from accounts.forms import AddressForm
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -997,6 +998,90 @@ class ReturnUpdateView(View):
 
             return redirect('admin_order_detail', order_id=order.id)
         return redirect('admin_order_detail', order_id=order.id)
+    
+
+class AddressAddFromSelectView(View):
+
+    def get(self, request):
+
+        user = get_object_or_404(CustomUser, id=request.user.id)
+
+        # user_profile = get_object_or_404(UserProfile, user=user)
+
+        # breadcrumb = [
+        #     {"name": "Profile", "url": "/accounts/profile/"},
+        #     {"name": "Address", "url": "/accounts/user_address/"},
+        #     {"name": "Add Address", "url": "/accounts/user_address/"}
+        # ]
+        cart = get_object_or_404(Cart, user=request.user)
+
+        cart_items = (
+            cart.items.select_related('product', 'variant')
+            .filter(
+                product__is_listed=True,
+                product__is_deleted=False,
+                is_active=True
+            )
+            .filter(
+                models.Q(variant__isnull=True) | models.Q(variant__is_listed=True)
+            )
+        )
+        if not cart_items:
+            return redirect('cart_page')
+        
+
+        cartitem_with_image = []
+        for cart_item in cart_items:
+            main_image = cart_item.product.images.filter(is_main=True).first()
+            cartitem_with_image.append({
+                "cart_item": cart_item,
+                "main_image": main_image
+            })
+        errors = request.session.pop("address_error", None)
+        data = request.session.pop("address_data", None)
+
+        form = AddressForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+        contex = {
+            "user_id": request.user.id,
+            "user": user,
+            "cart": cart,
+            # "cart_items": cart_items,
+            "cartitem_with_image": cartitem_with_image,
+            "form": form
+        }
+
+
+        return render(request, 'orders/address_add_from_select.html', contex)
+    
+    def post(self, request):
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            full_name = request.POST.get('full_name').strip()
+            email = request.POST.get('email').strip()
+            address = request.POST.get('address_field').strip()
+            district = request.POST.get('district').strip()
+            state = request.POST.get('state').strip()
+            city = request.POST.get('city').strip()
+            pincode = request.POST.get('pincode').strip()
+            phone_no = request.POST.get('phone_no').strip()
+            address_type = request.POST.get('addressType')
+
+            address = Address.objects.create(user=request.user, full_name=full_name, email=email, address=address, 
+                                         district=district, state=state, city=city, pin_code=pincode, phone_no=phone_no, address_type=address_type)
+
+            success_notify(request, "new address add successfully")
+            return redirect('address_selection')
+
+        else:
+            request.session["address_error"] = form.errors
+            request.session["address_data"] = request.POST
+            return redirect("address_add_from_select")
+        
+
+
 
         
 

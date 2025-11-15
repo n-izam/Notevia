@@ -77,3 +77,38 @@ class SignupForm(forms.ModelForm):
 class SigninForm(forms.Form):
     email = forms.EmailField(required=True)
     password = forms.CharField(widget=forms.PasswordInput(), required=True)
+
+
+class AddressForm(forms.Form):
+
+    full_name = forms.CharField(max_length=100, required=True)
+    email = forms.EmailField(required=True)
+    phone_no = forms.CharField(max_length=10, required=True)
+    district = forms.CharField(max_length=100, required=True)
+    state = forms.CharField(max_length=100, required=True)
+    city = forms.CharField(max_length=100, required=True)
+    address_field = forms.CharField(required=True)
+    pincode = forms.CharField(max_length=10, required=True)
+
+    def clean_phone_no(self):
+        phone = self.cleaned_data.get("phone_no")
+        if phone and (not phone.isdigit() or len(phone) != 10):
+            validationerror("Phone number must be exactly 10 digits")
+        else:
+            return phone
+        
+    def clean_full_name(self):
+        full_name = self.cleaned_data.get("full_name")
+        print("signup email:",full_name)
+        if not re.match(r'^[A-Za-z\s]+$', full_name):
+            validationerror("Name can contain only alphabets and spaces.")
+        else:
+            return full_name
+        
+    def clean_address_field(self):
+        address_field = self.cleaned_data.get("address_field")
+        if not address_field.replace(" ", "").isalpha():
+            validationerror("Address can contain only alphabets and spaces.")
+        else:
+            return address_field
+    

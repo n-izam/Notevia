@@ -65,7 +65,88 @@
         background-color: #fff;
         color: #000;
       }
+      .total-col {
+        display: flex;
+        flex-direction: column;   /* stack items vertically */
+        align-items: flex-end;    /* right-align all items */
+        line-height: 1.4;         /* adjust spacing if needed */
+    }
 
+      /* Toast container responsiveness */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 5000;
+        }
+
+        @media (max-width: 576px) {
+            .toast-container {
+                top: auto !important;
+                bottom: 1rem !important;
+                right: 50% !important;
+                transform: translateX(50%);
+                width: 90%;
+            }
+        }
+
+        /* Base Toast Style */
+        .toast {
+            backdrop-filter: blur(8px);
+            background: rgba(17, 17, 17, 0.85) !important; /* glassy black */
+            color: #fff !important;
+            border-radius: 12px !important;
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+            animation: slideFadeIn 0.5s ease-out;
+        }
+
+        /* Toast body text */
+        .toast-body {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* SUCCESS */
+        .toast.bg-success {
+            background: rgba(0, 255, 100, 0.15) !important;
+            border-left: 4px solid #00ff73 !important;
+            color: #409365 !important;
+        }
+
+        /* ERROR */
+        .toast.bg-danger {
+            background: rgba(255, 0, 0, 0.15) !important;
+            border-left: 4px solid #ff3b3b !important;
+            color: #bb4141 !important;
+        }
+
+        /* WARNING */
+        .toast.bg-warning {
+            background: rgba(255, 193, 7, 0.15) !important;
+            border-left: 4px solid #ffc107 !important;
+            color: #a1842f !important;
+        }
+
+        /* INFO */
+        .toast.bg-info {
+            background: rgba(0, 200, 255, 0.15) !important;
+            border-left: 4px solid #00cfff !important;
+            color: #3092a8 !important;
+        }
+
+        /* Beautiful animation */
+        @keyframes slideFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0px) scale(1);
+            }
+        }
   </style>
 {% endblock %}
 
@@ -124,7 +205,11 @@
                         </div>
                         {% endif %}
                     </div>
-                    <div class="col-md-2 text-end total-col"><strong>Rs. {{item.cart_item.main_subtotal}}</strong></div>
+                    <div class="col-md-2 text-end total-col">
+                        <del class="fw-light mb-0">Rs. {{item.cart_item.main_subtotal}}</del>
+                        <strong>Rs. {{item.cart_item.after_discount_subtotal}}</strong>
+                        <span class="text-success">-{{item.cart_item.discount_subtotal}}</span>
+                    </div>
                 </div>
                 <hr class="cart-divider">
                 {% endfor %}
@@ -176,15 +261,10 @@
                 <hr class="cart-divider"> -->
     
                 <!-- Add Order Note -->
-                <div class="mt-4">
+                <!-- <div class="mt-4">
                     <label for="orderNote" class="form-label">Add Order Note</label>
                     <textarea class="form-control" id="orderNote" rows="4" placeholder="How can we help you?"></textarea>
-                </div>
-                {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} mt-2" {% if message.tags == 'error' %}style="color: red;"{% endif %}>{{ message }}</div>
-                {% endfor %}
-                {% endif %}
+                </div> -->
             </div>
     
             <!-- Right Column: Order Summary -->
@@ -197,7 +277,7 @@
                     <hr>
                     <div class="d-flex justify-content-between align-items-center my-3">
                         <h5 class="mb-0">Subtotal</h5>
-                        <h5 class="mb-0">Rs. {{cart.total_price}}</h5>
+                        <h5 class="mb-0">Rs. {{cart.main_total_price}}</h5>
                     </div>
                     <p class="text-muted small">Taxes and <a href="#" class="text-dark">shipping</a> calculated at checkout.</p>
                     <div class="form-check my-3">
@@ -218,6 +298,30 @@
                         </div> -->
                     </div>
                 </div>
+            </div>
+            <!-- Toast container (fixed position) -->
+            <div class="toast-container">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="toast align-items-center border-0 mb-2
+                            {% if message.tags == 'error' %} bg-danger
+                            {% elif message.tags == 'success' %} bg-success 
+                            {% elif message.tags == 'warning' %} bg-warning 
+                            {% else %} bg-info
+                            {% endif %}
+                        ">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
+                                {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                                {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                    {{ message }}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </main>
@@ -246,60 +350,6 @@
 
 {% block script %}
 
-<!-- <script>
-    const btn = document.getElementById('addToCartBtn');
-    const stock = parseInt("{{ main_variant.stock|default:0 }}", 10);
-  
-    if (stock <= 0) {
-      btn.classList.add('disabled');
-      btn.setAttribute('aria-disabled', 'true');
-      btn.removeAttribute('href');
-      btn.innerText = 'Out of stock';
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const minusBtn = document.getElementById("minus-btn");
-        const plusBtn  = document.getElementById("plus-btn");
-        const input    = document.getElementById("quantity-input");
-        // Replace with actual stock value from server
-        //const stock    = 10;  
-        const stock = parseInt("{{ main_variant.stock|default:0 }}", 10);
-      
-        // Set the max attribute
-        input.max = stock;
-      
-        minusBtn.addEventListener("click", () => {
-          let current = parseInt(input.value, 10);
-          if (isNaN(current)) current = 0;
-          if (current > parseInt(input.min, 10)) {
-            input.value = current - 1;
-          }
-        });
-      
-        plusBtn.addEventListener("click", () => {
-          let current = parseInt(input.value, 10);
-          if (isNaN(current)) current = 0;
-          if (current < stock) {
-            input.value = current + 1;
-          } else {
-            // optionally show a message: “Max stock reached”
-            input.value = stock;
-          }
-        });
-      
-        // Also handle direct input editing
-        input.addEventListener("change", () => {
-          let val = parseInt(input.value, 10);
-          if (isNaN(val) || val < parseInt(input.min,10)) {
-            input.value = input.min;
-          } else if (val > stock) {
-            input.value = stock;
-          }
-        });
-      });
-
-</script> -->
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const selectors = document.querySelectorAll('.quantity-selector');
@@ -325,7 +375,25 @@
             });
         });
     });
-    </script>
+</script>
+<script>
+
+    //document.addEventListener('DOMContentLoaded', function () {
+    //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    //toastElList.map(function (toastEl) {
+        //var t = new bootstrap.Toast(toastEl);
+        //t.show();
+    //});
+//});
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.toast').forEach(el => {
+            new bootstrap.Toast(el).show();
+        });
+    });
+
+    
+</script>
   
 
 {% endblock %}

@@ -271,12 +271,11 @@
     
                         <!-- Add New Address Card -->
                         <div class="col-md-6">
+                            <a href="{% url 'address_add_from_select' %}" class="text-decoration-none text-muted">
                             <div class="add-new-address-card">
-                                <a href="{% url 'add_address' %}" class="text-decoration-none text-muted">
                                     <i class="fas fa-plus mb-2"></i>
                                     <span>Add new Address</span>
-                                </a>
-                            </div>
+                            </div></a>
                         </div>
                     </div>
                     {% if messages %}

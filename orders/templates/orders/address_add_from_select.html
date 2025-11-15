@@ -1,0 +1,426 @@
+{% extends "base1.html" %}
+
+{% load static %}
+
+{% block title %} Address selection {% endblock %}
+<!-- {% block head %} {% endblock %} -->
+
+{% block style %}
+<style>
+    /* --- Base Card Styles (from your code) --- */
+    .order-summary-card {
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+        /* 
+        Using flexbox to ensure the subtotal section stays at the bottom,
+        even when the product list is short.
+        */
+        display: flex;
+        flex-direction: column;
+        max-height: 80vh; /* Prevents card from being too tall on large screens */
+        height: 100%;
+    }
+
+    .summary-item-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    /* --- NEW: Scrollable Product List Container --- */
+    .product-list-scrollable {
+        /* 
+        This is the key property. It tells the browser to add a 
+        vertical scrollbar ONLY when the content inside exceeds its height.
+        */
+        overflow-y: auto;
+        
+        /* 
+        Adds padding to the right to prevent the scrollbar from
+        overlapping the price text.
+        */
+        padding-right: 15px;
+        
+        /* 
+        A negative margin trick to counteract the padding and keep the
+        right edge of the content perfectly aligned with the subtotal below it.
+        */
+        margin-right: -15px;
+    }
+
+    /* 
+    Flex-grow allows this container to expand and take up any available
+    vertical space, pushing the subtotal down to the bottom of the card.
+    */
+    .order-summary-card > .product-list-scrollable {
+        flex-grow: 1;
+    }
+
+    /* --- Optional: Clean Custom Scrollbar Styling (for modern browsers) --- */
+    .product-list-scrollable::-webkit-scrollbar {
+    width: 8px;
+    }
+
+    .product-list-scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+    }
+
+    .product-list-scrollable::-webkit-scrollbar-thumb {
+    background: #cccccc;
+    border-radius: 10px;
+    }
+
+    .product-list-scrollable::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+    }
+
+    /* Right Column: Address Selection Container */
+    /* === ADD THESE NEW STYLES for Add Address Form === */
+
+    .add-address-form-container {
+        background-color: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-section-title {
+        font-weight: 600;
+        color: #333;
+        font-size: 1.2rem;
+    }
+
+    .add-address-form-container .form-label {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.6rem;
+        font-size: 0.95rem;
+    }
+
+    .add-address-form-container .form-control {
+        background-color: #f8f9fa;
+        border: 1px solid #f8f9fa;
+        border-radius: 10px;
+        padding: 0.8rem 1.2rem;
+        height: 52px;
+        transition: all 0.3s ease;
+    }
+
+    .add-address-form-container .form-control:focus {
+        background-color: #fff;
+        border-color: #000;
+        box-shadow: none;
+    }
+
+    .add-address-form-container .form-control::placeholder {
+        color: #adb5bd;
+    }
+
+    .add-address-form-container textarea.form-control {
+        height: auto;
+    }
+
+    /* Radio Buttons Styling */
+    .form-check-input {
+        border-color: #ced4da;
+    }
+    .form-check-input:checked {
+        background-color: #000;
+        border-color: #000;
+    }
+    .form-check-input:focus {
+        box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
+    }
+
+    .form-check-label {
+        color: #333;
+    }
+
+    /* Buttons */
+    .btn-cancel {
+        background-color: #6c757d;
+        color: #fff;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: background-color 0.2s;
+    }
+    .btn-cancel:hover {
+        background-color: #5a6268;
+        color: #fff;
+    }
+
+    .btn-add-address {
+        background-color: #212529;
+        color: #fff;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: background-color 0.2s;
+    }
+    .btn-add-address:hover {
+        background-color: #343a40;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="mx-2 my-2">
+
+    <main class="container my-5 py-5">
+        <div class="row g-5">
+            <!-- Left Column: Order Summary -->
+            <div class="col-lg-5">
+                <div class="order-summary-card">
+                    <h4 class="mb-4">Order Summary</h4>
+                    <!-- 1. Add this new scrollable container -->
+                    <div class="product-list-scrollable">
+                        {% for item in cartitem_with_image %}
+                        <!-- Product 1 -->
+                        <div class="summary-item d-flex mb-3">
+                            <img src="{{item.main_image.image.url}}" alt="Product Image" class="summary-item-img me-3">
+                            <div class="flex-grow-1">
+                                <p class="mb-1">{{item.cart_item.product.brand.name}} - {{item.cart_item.product.name}} </p>
+                                <p class="mb-0"><span class="text-muted fst-italic fw-light" style="font-size: 14px;">variant type: </span>{{item.cart_item.variant.name}}</p>
+                                <p class="text-muted small">Quantity: {{ item.cart_item.quantity }}</p>
+                            </div>
+                            <p class="fw-bold">Rs. {{item.cart_item.main_subtotal}}</p>
+                        </div>
+                        {% endfor %}
+            
+                        <!-- Product 2 -->
+                        <!-- <div class="summary-item d-flex mb-3">
+                            <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Product Image" class="summary-item-img me-3">
+                            <div class="flex-grow-1">
+                                <p class="mb-1">Papergrid - SHORT NOTE</p>
+                                <p class="text-muted small">Quantity: 1</p>
+                            </div>
+                            <p class="fw-bold">Rs. 30</p>
+                        </div> -->
+                        
+                        <!-- Add more products here to test the scroll effect -->
+                        <!-- e.g., Product 3, 4, 5, 6... -->
+                        
+                    </div> <!-- 2. Close the scrollable container -->
+                    
+                    <hr class="my-4">
+            
+                    <div class="d-flex justify-content-between">
+                        <h5 class="fw-normal">Subtotal</h5>
+                        <h5 class="fw-bold">Rs. {{cart.total_price}}</h5>
+                    </div>
+                    <p class="text-muted small text-end mb-0">(Excluding taxes and shipping)</p>
+                </div>
+            </div>
+    
+            <!-- Right Column: Address Selection -->
+            <div class="col-lg-7">
+                <div class="address-selection-container">
+                    <section class="profile-content">
+                        <h2 class="text-center mb-4" style="letter-spacing: 1px;">{% if request.resolver_match.url_name == 'address_add_from_select' %}Add New Address {% else %} Edit your Address {% endif %}</h2>
+                
+                        <div class="add-address-form-container p-4 p-md-5">
+                            <h4 class="form-section-title mb-3">Personal Information</h4>
+                            <hr class="mb-4">
+                            {% if request.resolver_match.url_name == 'address_add_from_select' %}
+                            <form action="{% url 'address_add_from_select' %}" method="POST" novalidate>
+                            {% else %}
+                            <!-- <form action="#" method="POST" novalidate> -->
+                            {% endif %}
+                                {% csrf_token %}
+                                <div class="row">
+                                    <!-- Full Name -->
+                                    <div class="col-md-6 mb-4">
+                                        <label for="fullName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="fullName" name="full_name" placeholder="John" value="{{ form.full_name.value|default:'' }}">
+                                        {% if form.full_name.errors %}
+                                        <p class="text-danger small">{{ form.full_name.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <!-- Email -->
+                                    <div class="col-md-6 mb-4">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="example@gmail.com" value="{{ form.email.value|default:'' }}" >
+                                        {% if form.email.errors %}
+                                        <p class="text-danger small">{{ form.email.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                
+                                <!-- Address -->
+                                <div class="mb-4">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control" id="address" name="address_field" rows="3" placeholder="House Name, House Number, Locality">{{ form.address.value|default:'' }}</textarea>
+                                </div>
+                                {% if form.address_field.errors %}
+                                <p class="text-danger small">{{ form.address_field.errors.0 }}</p>
+                                {% endif %}
+                
+                                <div class="row">
+                                    <!-- District -->
+                                    <div class="col-md-6 mb-4">
+                                        <label for="district" class="form-label">District</label>
+                                        <input type="text" class="form-control" id="district" name="district" placeholder="eg: Ernakulam" value="{{ form.district.value|default:'' }}" >
+                                        {% if form.district.errors %}
+                                        <p class="text-danger small">{{ form.district.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <!-- State -->
+                                    <div class="col-md-6 mb-4">
+                                        <label for="state" class="form-label">State</label>
+                                        <input type="text" class="form-control" id="state" name="state" placeholder="eg: Kerala" value="{{ form.state.value|default:'' }}">
+                                        {% if form.state.errors %}
+                                        <p class="text-danger small">{{ form.state.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                
+                                <div class="row">
+                                    <!-- City -->
+                                    <div class="col-md-6 mb-4">
+                                        <label for="city" class="form-label">City</label>
+                                        <input type="text" class="form-control" id="city" name="city" placeholder="eg: Kochi" value="{{ form.city.value|default:'' }}" >
+                                        {% if form.city.errors %}
+                                        <p class="text-danger small">{{ form.city.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <!-- Pin Code -->
+                                    <div class="col-md-6 mb-4">
+                                        <label for="pinCode" class="form-label">Pin Code</label>
+                                        <input type="text" class="form-control" id="pinCode" name="pincode" placeholder="eg: 689230" value="{{ form.pincode.value|default:'' }}" >
+                                        {% if form.pincode.errors %}
+                                        <p class="text-danger small">{{ form.pincode.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                
+                                <div class="row align-items-center">
+                                    <!-- Address Type -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Address Type</label>
+                                        <div class="d-flex mt-2">
+                                            <div class="form-check me-4">
+                                                <input class="form-check-input" type="radio" name="addressType" value="Home" id="home" checked>
+                                                <label class="form-check-label" for="home">Home</label>
+                                            </div>
+                                            <div class="form-check me-4">
+                                                <input class="form-check-input" type="radio" name="addressType" value="Work" id="work">
+                                                <label class="form-check-label" for="work">Work</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="addressType" value="Other" id="other">
+                                                <label class="form-check-label" for="other">Other</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Phone Number -->
+                                    <div class="col-md-6 mb-4">
+                                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phoneNumber" name="phone_no" placeholder="eg: +91 6892303458" value="{{ form.phone_no.value|default:'' }}" >
+                                        {% if form.phone_no.errors %}
+                                        <p class="text-danger small">{{ form.phone_no.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                
+                                <!-- Action Buttons -->
+                                <div class="d-flex justify-content-end mt-4">
+                                    <a type="button" href="{% url 'address' %}" class="btn btn-cancel me-3">CANCEL</a>
+                                    <button type="submit" class="btn btn-add-address">ADD ADDRESS</button>
+                                </div>
+                            </form>
+                        </div>
+                        {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} mt-2"
+                            {% if message.tags == 'error' %}style="color: red;"{% endif %}
+                            >{{ message }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    // this is a reload script
+
+    window.addEventListener("pageshow", function(event) {
+        //If the page is loaded from the browser's back/forward cache
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+</script>
+<!-- <script>
+    const btn = document.getElementById('addToCartBtn');
+    const stock = parseInt("{{ main_variant.stock|default:0 }}", 10);
+  
+    if (stock <= 0) {
+      btn.classList.add('disabled');
+      btn.setAttribute('aria-disabled', 'true');
+      btn.removeAttribute('href');
+      btn.innerText = 'Out of stock';
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const minusBtn = document.getElementById("minus-btn");
+        const plusBtn  = document.getElementById("plus-btn");
+        const input    = document.getElementById("quantity-input");
+        // Replace with actual stock value from server
+        //const stock    = 10;  
+        const stock = parseInt("{{ main_variant.stock|default:0 }}", 10);
+      
+        // Set the max attribute
+        input.max = stock;
+      
+        minusBtn.addEventListener("click", () => {
+          let current = parseInt(input.value, 10);
+          if (isNaN(current)) current = 0;
+          if (current > parseInt(input.min, 10)) {
+            input.value = current - 1;
+          }
+        });
+      
+        plusBtn.addEventListener("click", () => {
+          let current = parseInt(input.value, 10);
+          if (isNaN(current)) current = 0;
+          if (current < stock) {
+            input.value = current + 1;
+          } else {
+            // optionally show a message: “Max stock reached”
+            input.value = stock;
+          }
+        });
+      
+        // Also handle direct input editing
+        input.addEventListener("change", () => {
+          let val = parseInt(input.value, 10);
+          if (isNaN(val) || val < parseInt(input.min,10)) {
+            input.value = input.min;
+          } else if (val > stock) {
+            input.value = stock;
+          }
+        });
+      });
+
+</script> -->
+
+
+  
+
+{% endblock %}

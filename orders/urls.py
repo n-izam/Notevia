@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AddressSelectionView, ConfirmationCartView, PlaceOrderView, OrderListingView, OrderDetailView, OrderTrackingView, AdminSideOrderListingView
+from .views import AddressSelectionView, ConfirmationCartView, PlaceOrderView, OrderListingView, OrderDetailView, OrderTrackingView, AdminSideOrderListingView, AddressAddFromSelectView
 from .views import AdminOrderDetailView, OrderStatusUpdateView, CancelOrderView, CancelOrderItemView, ReturnOrderView, ReturnUpdateView, InvoiceDownloadView, OrderSuccessView, PaymentFailedView
 from . import views
 
@@ -32,7 +32,8 @@ urlpatterns = [
 
     path('admin_order/', AdminSideOrderListingView.as_view(), name='admin_order_list'),
     path('admin_order_detail/<int:order_id>/', AdminOrderDetailView.as_view(), name='admin_order_detail'),
-    path('update_order_status/<int:order_id>/status/<str:new_status>/', OrderStatusUpdateView.as_view(), name='update_order_status')
+    path('update_order_status/<int:order_id>/status/<str:new_status>/', OrderStatusUpdateView.as_view(), name='update_order_status'),
+    path('addRess_add_from_select/', AddressAddFromSelectView.as_view(), name='address_add_from_select'),
 
 
 ]

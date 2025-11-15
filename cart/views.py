@@ -116,11 +116,11 @@ class AddToCartFromDetailView(View):
 
         if main_variant:
             if CartItem.objects.filter(cart=cart, product=product, variant=main_variant).exists():
-                info_notify(request, "this product with same variant is already in cart")
+                info_notify(request, f"this product {product.name} with same variant  is already in cart")
                 return redirect('shop_productdetail', product_id=product.id)
         else:
             if CartItem.objects.filter(cart=cart, product=product).exists():
-                info_notify(request, "this product is already in cart")
+                info_notify(request, f"this product {product.name} is already in cart")
                 return redirect('shop_productdetail', product_id=product.id)
 
 
@@ -138,7 +138,7 @@ class AddToCartFromDetailView(View):
         
             
         if cart_item:
-            success_notify(request, "successfully add to cart")
+            success_notify(request, f"product {product.name} {quantity} quantity is successfully add to cart")
 
         return redirect('shop_productdetail', product_id=product.id)
     
@@ -165,12 +165,13 @@ class CartQuantityUpdateView(View):
         
         if int(quantity) == cart_item.variant.stock:
             info_notify(request, f"maximum stock reached")
+            return redirect('cart_page')
             
         
         cart_item.quantity = quantity
         cart_item.save()
         
-        success_notify(request, "stock quantity updated")
+        success_notify(request, "Cart stock quantity updated")
         return redirect('cart_page')
     
 @method_decorator(login_required(login_url='signin'), name='dispatch')
