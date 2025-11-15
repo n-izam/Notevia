@@ -565,6 +565,82 @@
     .clearable-input .clear-btn.visible {
       display: block;
     }
+
+    /* Toast container responsiveness */
+    .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 5000;
+    }
+
+    @media (max-width: 576px) {
+        .toast-container {
+            top: auto !important;
+            bottom: 1rem !important;
+            right: 50% !important;
+            transform: translateX(50%);
+            width: 90%;
+        }
+    }
+
+    /* Base Toast Style */
+    .toast {
+        backdrop-filter: blur(8px);
+        background: rgba(17, 17, 17, 0.85) !important; /* glassy black */
+        color: #fff !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+        animation: slideFadeIn 0.5s ease-out;
+    }
+
+    /* Toast body text */
+    .toast-body {
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    /* SUCCESS */
+    .toast.bg-success {
+        background: rgba(0, 255, 100, 0.15) !important;
+        border-left: 4px solid #00ff73 !important;
+        color: #409365 !important;
+    }
+
+    /* ERROR */
+    .toast.bg-danger {
+        background: rgba(255, 0, 0, 0.15) !important;
+        border-left: 4px solid #ff3b3b !important;
+        color: #bb4141 !important;
+    }
+
+    /* WARNING */
+    .toast.bg-warning {
+        background: rgba(255, 193, 7, 0.15) !important;
+        border-left: 4px solid #ffc107 !important;
+        color: #a1842f !important;
+    }
+
+    /* INFO */
+    .toast.bg-info {
+        background: rgba(0, 200, 255, 0.15) !important;
+        border-left: 4px solid #00cfff !important;
+        color: #3092a8 !important;
+    }
+
+    /* Beautiful animation */
+    @keyframes slideFadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0px) scale(1);
+        }
+    }
 </style>
 
 {% endblock %}
@@ -661,7 +737,7 @@
                             
                         </div>
                         <button class="action-btn edit-btn" onclick="openEditCouponModal('{{ coupon.id }}')" title="Edit"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn delete-btn" title="Delete"><i class="fas fa-trash"></i></button>
+                        <!-- <button class="action-btn delete-btn" title="Delete"><i class="fas fa-trash"></i></button> -->
                     </div>
                 </div>
                 {% empty %}
@@ -795,6 +871,30 @@
                     {% endif %}
                 </div>
             </div>
+            <!-- Toast container (fixed position) -->
+            <div class="toast-container">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="toast align-items-center border-0 mb-2
+                            {% if message.tags == 'error' %} bg-danger
+                            {% elif message.tags == 'success' %} bg-success 
+                            {% elif message.tags == 'warning' %} bg-warning 
+                            {% else %} bg-info
+                            {% endif %}
+                        ">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
+                                {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                                {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                    {{ message }}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
     
         
@@ -820,18 +920,27 @@
             <!-- Coupon Name -->
             <div class="form-group">
                 <label for="couponName">Coupon Name *</label>
-                <input type="text" id="couponName" name="coupon_name" placeholder="e.g., FLAT20" required>
+                <input type="text" id="couponName" name="coupon_name" placeholder="e.g., FLAT20" value="{{ form.coupon_name.value|default:'' }}" required>
+                {% if form.coupon_name.errors %}
+                <p class="text-danger small">{{ form.coupon_name.errors.0 }}</p>
+                {% endif %}
             </div>
 
             <!-- Limit and Max Redeemable (2 columns) -->
             <div class="form-row">
                 <div class="form-group">
                     <label for="couponLimit">Limit (Usage count) *</label>
-                    <input type="number" id="couponLimit" name="limit" placeholder="e.g., 50" min="1" required>
+                    <input type="number" id="couponLimit" name="limit" placeholder="e.g., 50" min="1" value="{{ form.limit.value|default:'' }}" required>
+                    {% if form.limit.errors %}
+                    <p class="text-danger small">{{ form.limit.errors.0 }}</p>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="maxRedeemable">Max Redeemable Price (₹) *</label>
-                    <input type="number" id="maxRedeemable" name="max_price" placeholder="e.g., 500" min="0" step="0.01" required>
+                    <input type="number" id="maxRedeemable" name="max_price" placeholder="e.g., 500" min="0" step="0.01" value="{{ form.max_price.value|default:'' }}" required>
+                    {% if form.max_price.errors %}
+                    <p class="text-danger small">{{ form.max_price.errors.0 }}</p>
+                    {% endif %}
                 </div>
             </div>
 
@@ -839,23 +948,35 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="minPurchase">Min Purchase (₹) *</label>
-                    <input type="number" id="minPurchase" name="min_price" placeholder="e.g., 1000" min="0" step="0.01" required>
+                    <input type="number" id="minPurchase" name="minpurchase" placeholder="e.g., 500" min="0" step="0.01" value="{{ form.minpurchase.value|default:'' }}">
+                    {% if form.minpurchase.errors %}
+                    <p class="text-danger small">{{ form.minpurchase.errors.0 }}</p>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="discountPercentage">Discount Percentage (%) *</label>
-                    <input type="number" id="discountPercentage" name="discount" placeholder="e.g., 20" min="0" max="100" step="0.01" required>
+                    <input type="number" id="discountPercentage" name="discount" placeholder="e.g., 20" min="0" max="100" value="{{ form.discount.value|default:'' }}" step="0.01" required>
+                    {% if form.discount.errors %}
+                    <p class="text-danger small">{{ form.discount.errors.0 }}</p>
+                    {% endif %}
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="expiryDate">Start Date *</label>
-                <input type="date" id="expiryDate" name="start_date" required>
+                <input type="date" id="expiryDate" name="start_date" value="{{ form.start_date.value|default:'' }}" required>
+                {% if form.start_date.errors %}
+                <p class="text-danger small">{{ form.start_date.errors.0 }}</p>
+                {% endif %}
             </div>
 
             <!-- Expiry Date -->
             <div class="form-group">
                 <label for="expiryDate">Expiry Date *</label>
-                <input type="date" id="expiryDate" name="end_date">
+                <input type="date" id="expiryDate" name="end_date" value="{{ form.end_date.value|default:'' }}">
+                {% if form.end_date.errors %}
+                <p class="text-danger small">{{ form.end_date.errors.0 }}</p>
+                {% endif %}
             </div>
 
             <!-- Form Actions -->
@@ -864,13 +985,6 @@
                 <button type="button" class="btn-cancel" onclick="closeAddCouponModal()">Cancel</button>
             </div>
         </form>
-        {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} mt-2"
-            {% if message.tags == 'error' %}style="color: red;"{% endif %}
-            >{{ message }}</div>
-        {% endfor %}
-        {% endif %}
     </div>
 </div>
 
@@ -889,19 +1003,28 @@
             <input type="hidden" name="coupon_id" id="edit_coupon_id">
             <!-- Coupon Name -->
             <div class="form-group">
-                <label for="couponName">Coupon Name *</label>
-                <input type="text" id="couponName" name="coupon_name" placeholder="e.g., FLAT20" required>
+                <label for="couponName">Coupon Code *</label>
+                <input type="text" id="couponName" name="coupon_name" placeholder="e.g., FLAT20" value="{{ form.coupon_name.value|default:'' }}" required>
+                {% if form.coupon_name.errors %}
+                <p class="text-danger small">{{ form.coupon_name.errors.0 }}</p>
+                {% endif %}
             </div>
 
             <!-- Limit and Max Redeemable (2 columns) -->
             <div class="form-row">
                 <div class="form-group">
                     <label for="couponLimit">Limit (Usage count) *</label>
-                    <input type="number" id="couponLimit" name="limit" placeholder="e.g., 50" min="1" required>
+                    <input type="number" id="couponLimit" name="limit" placeholder="e.g., 50" min="1" value="{{ form.limit.value|default:'' }}" required>
+                    {% if form.limit.errors %}
+                    <p class="text-danger small">{{ form.limit.errors.0 }}</p>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="maxRedeemable">Max Redeemable Price (₹) *</label>
-                    <input type="number" id="maxRedeemable" name="max_price" placeholder="e.g., 500" min="0" step="0.01" required>
+                    <input type="number" id="maxRedeemable" name="max_price" placeholder="e.g., 500" min="0" step="0.01" value="{{ form.max_price.value|default:'' }}" required>
+                    {% if form.max_price.errors %}
+                    <p class="text-danger small">{{ form.max_price.errors.0 }}</p>
+                    {% endif %}
                 </div>
             </div>
 
@@ -909,40 +1032,43 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="minPurchase">Min Purchase (₹) *</label>
-                    <input type="number" id="minPurchase" name="min_price" placeholder="e.g., 1000" min="0" step="0.01" required>
+                    <input type="number" id="minPurchase" name="minpurchase" placeholder="e.g., 1000" min="0" step="0.01" value="{{ form.minpurchase.value|default:'' }}" required>
+                    {% if form.minpurchase.errors %}
+                    <p class="text-danger small">{{ form.minpurchase.errors.0 }}</p>
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="discountPercentage">Discount Percentage (%) *</label>
-                    <input type="number" id="discountPercentage" name="discount" placeholder="e.g., 20" min="0" max="100" step="0.01" required>
+                    <input type="number" id="discountPercentage" name="discount" placeholder="e.g., 20" min="0" max="100" value="{{ form.discount.value|default:'' }}" step="0.01" required>
+                    {% if form.discount.errors %}
+                    <p class="text-danger small">{{ form.discount.errors.0 }}</p>
+                    {% endif %}
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="expiryDate">Start Date *</label>
-                <input type="date" id="expiryDate" name="start_date" required>
+                <input type="date" id="expiryDate" name="start_date" value="{{ form.start_date.value|default:'' }}" >
+                {% if form.start_date.errors %}
+                <p class="text-danger small">{{ form.start_date.errors.0 }}</p>
+                {% endif %}
             </div>
 
             <!-- Expiry Date -->
             <div class="form-group">
                 <label for="expiryDate">Expiry Date *</label>
-                <input type="date" id="expiryDate" name="end_date">
+                <input type="date" id="expiryDate" name="end_date" value="{{ form.end_date.value|default:'' }}">
+                {% if form.end_date.errors %}
+                <p class="text-danger small">{{ form.end_date.errors.0 }}</p>
+                {% endif %}
             </div>
 
             <!-- Form Actions -->
             <div class="form-actions">
-                <button type="submit" class="btn-submit">Add Coupon</button>
+                <button type="submit" class="btn-submit">Edit Coupon</button>
                 <button type="button" class="btn-cancel" onclick="closeEditCouponModal()">Cancel</button>
             </div>
         </form>
-        {% if messages %}
-        {% for message in messages %}
-        {% if message.tags == 'error' %}
-            <div class="alert alert-{{ message.tags }} mt-2"
-            {% if message.tags == 'error' %}style="color: red;"{% endif %}
-            >{{ message }}</div>
-        {% endif %}
-        {% endfor %}
-        {% endif %}
     </div>
 </div>
 
@@ -969,10 +1095,20 @@ document.addEventListener("DOMContentLoaded", function() {
         modal.classList.add('active'); // Or use your own JS function to open
     }
 });
+
+window.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const openModal = urlParams.get("open_modal");
+    const couponId = urlParams.get("coupon_id");
+
+    if (openModal === "edit" && couponId) {
+        openEditCouponModal(couponId);
+    }
+});
 </script>
 {% endif %}
 
-{% if messages %}
+<!-- {% if messages %}
 {% for message in messages %}
 {%if message.tags == 'success' %}
 <script>
@@ -986,7 +1122,26 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 {% endif %}
 {% endfor %}
-{% endif %}
+{% endif %} -->
+
+<script>
+
+    //document.addEventListener('DOMContentLoaded', function () {
+    //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    //toastElList.map(function (toastEl) {
+        //var t = new bootstrap.Toast(toastEl);
+        //t.show();
+    //});
+//});
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.toast').forEach(el => {
+            new bootstrap.Toast(el).show();
+        });
+    });
+
+    
+</script>
 
 <script>
 
@@ -1037,6 +1192,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function closeAddCouponModal() {
         document.getElementById('addCouponModal').classList.remove('active');
         document.querySelector('form').reset();
+        window.location.href = window.location.pathname;
     }
 
     function handleAddCoupon(event) {
@@ -1054,6 +1210,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function closeEditCouponModal() {
         document.getElementById('editCouponModal').classList.remove('active');
         document.querySelector('#editCouponModal form').reset();
+        window.location.href = window.location.pathname;
     }
     function handleEditCoupon(event) {
         event.preventDefault();
@@ -1097,7 +1254,7 @@ document.addEventListener("DOMContentLoaded", function() {
           if (response.data.success) {
             const isActive = response.data.is_active;
             console.log(`Customer ${couponId} is now:`, isActive ? 'Listed ✅' : 'Unlisted ❌');
-            window.location.reload(true);
+            window.location.reload();
           }
         })
         .catch(error => {
