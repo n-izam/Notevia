@@ -5,7 +5,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from .models import CustomUser, UserOTP, UserProfile, Address, SignUpUserOTP
-from .forms import SignupForm, SigninForm
+from .forms import SignupForm, SigninForm, AddressForm
 from django.utils import timezone
 from datetime import timedelta
 from  django.contrib.auth import authenticate, login, logout
@@ -845,6 +845,14 @@ class AddAddressView(View):
 
         user_profile = get_object_or_404(UserProfile, user=user)
 
+        errors = request.session.pop("add_address_error", None)
+        data = request.session.pop("add_address_data", None)
+
+        form = AddressForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+
         breadcrumb = [
             {"name": "Profile", "url": "/accounts/profile/"},
             {"name": "Address", "url": "/accounts/user_address/"},
@@ -855,80 +863,42 @@ class AddAddressView(View):
             "user_id": request.user.id,
             "user": user,
             "user_profile": user_profile,
-            "breadcrumb": breadcrumb
+            "breadcrumb": breadcrumb,
+            "form": form,
         }
 
 
         return render(request, 'customer/add_address.html', contex)
     
     def post(self, request):
+        form = AddressForm(request.POST)
+        if form.is_valid():
 
-        full_name = request.POST.get('full_name').strip()
-        email = request.POST.get('email').strip()
-        address = request.POST.get('address').strip()
-        district = request.POST.get('district').strip()
-        state = request.POST.get('state').strip()
-        city = request.POST.get('city').strip()
-        pincode = request.POST.get('pincode').strip()
-        phone_no = request.POST.get('phone_no').strip()
-        address_type = request.POST.get('addressType')
-
-        if not full_name:
-
-            error_notify(request, "leave your name")
-            return redirect('add_address')
-        elif not re.match(r'^[A-Za-z\s]+$', full_name):
-            error_notify(request, "Name can contain only alphabets and spaces.")
-            return redirect('add_address')
-        
-
-        if not email:
-
-            error_notify(request, "leave your email")
-            return redirect('add_address')
-        if not address:
-
-            error_notify(request, "leave your proper address")
-            return redirect('add_address')
-        if not district:
-
-            error_notify(request, "leave your proper district")
-            return redirect('add_address')
-        
-        if not state:
-
-            error_notify(request, "leave your proper state")
-            return redirect('add_address')
-        if not state:
-
-            error_notify(request, "leave your proper state")
-            return redirect('add_address')
-        if not city:
-
-            error_notify(request, "leave your proper city")
-            return redirect('add_address')
-        if not pincode:
-
-            error_notify(request, "leave your proper pincode")
-            return redirect('add_address')
-        if not phone_no:
-
-            error_notify(request, "leave your proper contact number")
-            return redirect('add_address')
-        if len(phone_no) != 10  :
-
-            error_notify(request, "contact number must be exactly 10 digits")
-            return redirect('add_address')
-
-        user = get_object_or_404(CustomUser, id=request.user.id)
+            full_name = request.POST.get('full_name').strip()
+            email = request.POST.get('email').strip()
+            address = request.POST.get('address_field').strip()
+            district = request.POST.get('district').strip()
+            state = request.POST.get('state').strip()
+            city = request.POST.get('city').strip()
+            pincode = request.POST.get('pincode').strip()
+            phone_no = request.POST.get('phone_no').strip()
+            address_type = request.POST.get('addressType')
 
 
-        print('address type', address_type, "name", full_name,"address", address)
+            user = get_object_or_404(CustomUser, id=request.user.id)
 
-        address = Address.objects.create(user=user, full_name=full_name, email=email, address=address, 
-                                         district=district, state=state, city=city, pin_code=pincode, phone_no=phone_no, address_type=address_type)
-        success_notify(request, "new address created successfully ")
-        return redirect('address')
+
+            print('address type', address_type, "name", full_name,"address", address)
+
+            address = Address.objects.create(user=user, full_name=full_name, email=email, address=address, 
+                                            district=district, state=state, city=city, pin_code=pincode, phone_no=phone_no, address_type=address_type)
+            success_notify(request, "new address created successfully ")
+            return redirect('address')
+        else:
+            request.session["add_address_error"] = form.errors
+            request.session["add_address_data"] = request.POST
+            return redirect("add_address")
+
     
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
@@ -941,6 +911,14 @@ class EditAddressView(View):
 
         edit_address = get_object_or_404(Address, id=address_id)
 
+        errors = request.session.pop("edit_address_error", None)
+        data = request.session.pop("edit_address_data", None)
+
+        form = AddressForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+
         breadcrumb = [
             {"name": "Profile", "url": "/accounts/profile/"},
             {"name": "Address", "url": "/accounts/user_address/"},
@@ -952,85 +930,45 @@ class EditAddressView(View):
             "user": user, 
             "user_profile": user_profile, 
             "edit_address": edit_address,
-            "breadcrumb": breadcrumb
+            "breadcrumb": breadcrumb,
+            "form": form
             
         }
         return render(request, 'customer/add_address.html', contex)
     def post(self, request, address_id):
+        form = AddressForm(request.POST)
 
-        full_name = request.POST.get('full_name', '').strip()
-        email = request.POST.get('email').strip()
-        address = request.POST.get('address').strip()
-        district = request.POST.get('district').strip()
-        state = request.POST.get('state').strip()
-        city = request.POST.get('city').strip()
-        pincode = request.POST.get('pincode').strip()
-        phone_no = request.POST.get('phone_no').strip()
-        address_type = request.POST.get('addressType')
+        if form.is_valid():
+            full_name = request.POST.get('full_name', '').strip()
+            email = request.POST.get('email').strip()
+            address = request.POST.get('address_field').strip()
+            district = request.POST.get('district').strip()
+            state = request.POST.get('state').strip()
+            city = request.POST.get('city').strip()
+            pincode = request.POST.get('pincode').strip()
+            phone_no = request.POST.get('phone_no').strip()
+            address_type = request.POST.get('addressType')
 
-        print('address type', address_type, "name", full_name,"address", address)
+            print('address type', address_type, "name", full_name,"address", address)
+            
+            edit_address = get_object_or_404(Address, id=address_id)
+            edit_address.full_name = full_name
+            edit_address.email = email
+            edit_address.address = address
+            edit_address.district = district
+            edit_address.state = state
+            edit_address.city = city
+            edit_address.pin_code = pincode
+            edit_address.address_type = address_type
+            edit_address.phone_no = phone_no
+            edit_address.save()
 
-        if not full_name or len(full_name) < 3:
-
-            error_notify(request, "leave your name")
-            return redirect('edit_address', address_id=address_id)
-        elif not re.match(r'^[A-Za-z\s]+$', full_name):
-            error_notify(request, "Name can contain only alphabets and spaces.")
-            return redirect('edit_address', address_id=address_id)
-        
-
-        if not email:
-
-            error_notify(request, "leave your email")
-            return redirect('edit_address', address_id=address_id)
-        if not address:
-
-            error_notify(request, "leave your proper address")
-            return redirect('edit_address', address_id=address_id)
-        if not district:
-
-            error_notify(request, "leave your proper district")
-            return redirect('edit_address', address_id=address_id)
-        
-        if not state:
-
-            error_notify(request, "leave your proper state")
-            return redirect('edit_address', address_id=address_id)
-        if not state:
-
-            error_notify(request, "leave your proper state")
-            return redirect('edit_address', address_id=address_id)
-        if not city:
-
-            error_notify(request, "leave your proper city")
-            return redirect('edit_address', address_id=address_id)
-        if not pincode:
-
-            error_notify(request, "leave your proper pincode")
-            return redirect('edit_address', address_id=address_id)
-        if not phone_no:
-
-            error_notify(request, "leave your proper contact number")
-            return redirect('edit_address', address_id=address_id)
-        if len(phone_no) != 10  :
-
-            error_notify(request, "contact number must be exactly 10 digits")
-            return redirect('edit_address', address_id=address_id)
-        
-        edit_address = get_object_or_404(Address, id=address_id)
-        edit_address.full_name = full_name
-        edit_address.email = email
-        edit_address.address = address
-        edit_address.district = district
-        edit_address.state = state
-        edit_address.city = city
-        edit_address.pin_code = pincode
-        edit_address.address_type = address_type
-        edit_address.phone_no = phone_no
-        edit_address.save()
-
-        success_notify(request, "address updated successfully ")
-        return redirect('address')
+            success_notify(request, "address updated successfully ")
+            return redirect('address')
+        else:
+            request.session["edit_address_error"] = form.errors
+            request.session["edit_address_data"] = request.POST
+            return redirect("edit_address", address_id=address_id)
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')

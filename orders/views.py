@@ -1069,6 +1069,12 @@ class AddressAddFromSelectView(View):
             phone_no = request.POST.get('phone_no').strip()
             address_type = request.POST.get('addressType')
 
+            # if city.isalpha():
+            #     request.session["address_error"] = {"address_field": ["is alphabet"]}
+            #     request.session["address_data"] = request.POST
+            #     return redirect("address_add_from_select")
+                
+
             address = Address.objects.create(user=request.user, full_name=full_name, email=email, address=address, 
                                          district=district, state=state, city=city, pin_code=pincode, phone_no=phone_no, address_type=address_type)
 

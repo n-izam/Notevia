@@ -47,31 +47,46 @@
                     <!-- Full Name -->
                     <div class="col-md-6 mb-4">
                         <label for="fullName" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="fullName" name="full_name" placeholder="John" value="{{edit_address.full_name}}">
+                        <input type="text" class="form-control" id="fullName" name="full_name" placeholder="John" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.full_name.value|default:'' }}{% else %}{{edit_address.full_name}}{% endif %}">
+                        {% if form.full_name.errors %}
+                        <p class="text-danger small">{{ form.full_name.errors.0 }}</p>
+                        {% endif %}
                     </div>
                     <!-- Email -->
                     <div class="col-md-6 mb-4">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="example@gmail.com" value="{{edit_address.email}}" >
+                        <input type="email" class="form-control" id="email" name="email" placeholder="example@gmail.com" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.email.value|default:'' }}{% else %}{{edit_address.email}}{% endif %}" >
+                        {% if form.email.errors %}
+                        <p class="text-danger small">{{ form.email.errors.0 }}</p>
+                        {% endif %}
                     </div>
                 </div>
 
                 <!-- Address -->
                 <div class="mb-4">
                     <label for="address" class="form-label">Address</label>
-                    <textarea class="form-control" id="address" name="address" rows="3" placeholder="House Name, House Number, Locality">{{edit_address.address}}</textarea>
+                    <textarea class="form-control" id="address" name="address_field" rows="3" placeholder="House Name, House Number, Locality">{% if request.resolver_match.url_name == 'add_address' %}{{ form.address_field.value|default:'' }}{% else %}{{edit_address.address}}{% endif %}</textarea>
                 </div>
+                {% if form.address_field.errors %}
+                <p class="text-danger small">{{ form.address_field.errors.0 }}</p>
+                {% endif %}
 
                 <div class="row">
                     <!-- District -->
                     <div class="col-md-6 mb-4">
                         <label for="district" class="form-label">District</label>
-                        <input type="text" class="form-control" id="district" name="district" placeholder="eg: Ernakulam" value="{{edit_address.district}}" >
+                        <input type="text" class="form-control" id="district" name="district" placeholder="eg: Ernakulam" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.district.value|default:'' }}{% else %}{{edit_address.district}}{% endif %}" >
+                        {% if form.district.errors %}
+                        <p class="text-danger small">{{ form.district.errors.0 }}</p>
+                        {% endif %}
                     </div>
                     <!-- State -->
                     <div class="col-md-6 mb-4">
                         <label for="state" class="form-label">State</label>
-                        <input type="text" class="form-control" id="state" name="state" placeholder="eg: Kerala" value="{{edit_address.state}}">
+                        <input type="text" class="form-control" id="state" name="state" placeholder="eg: Kerala" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.state.value|default:'' }}{% else %}{{edit_address.state}}{% endif %}">
+                        {% if form.state.errors %}
+                        <p class="text-danger small">{{ form.state.errors.0 }}</p>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -79,12 +94,18 @@
                     <!-- City -->
                     <div class="col-md-6 mb-4">
                         <label for="city" class="form-label">City</label>
-                        <input type="text" class="form-control" id="city" name="city" placeholder="eg: Kochi" value="{{edit_address.city}}" >
+                        <input type="text" class="form-control" id="city" name="city" placeholder="eg: Kochi" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.city.value|default:'' }}{% else %}{{edit_address.city}}{% endif %}" >
+                        {% if form.city.errors %}
+                        <p class="text-danger small">{{ form.city.errors.0 }}</p>
+                        {% endif %}
                     </div>
                     <!-- Pin Code -->
                     <div class="col-md-6 mb-4">
                         <label for="pinCode" class="form-label">Pin Code</label>
-                        <input type="text" class="form-control" id="pinCode" name="pincode" placeholder="eg: 689230" value="{{edit_address.pin_code}}" >
+                        <input type="text" class="form-control" id="pinCode" name="pincode" placeholder="eg: 689230" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.pincode.value|default:'' }}{% else %}{{edit_address.pin_code}}{% endif %}" >
+                        {% if form.pincode.errors %}
+                        <p class="text-danger small">{{ form.pincode.errors.0 }}</p>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -110,7 +131,10 @@
                     <!-- Phone Number -->
                     <div class="col-md-6 mb-4">
                         <label for="phoneNumber" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="phoneNumber" name="phone_no" placeholder="eg: +91 6892303458" value="{{edit_address.phone_no}}" >
+                        <input type="tel" class="form-control" id="phoneNumber" name="phone_no" placeholder="eg: +91 6892303458" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.phone_no.value|default:'' }}{% else %}{{edit_address.phone_no}}{% endif %}" >
+                        {% if form.phone_no.errors %}
+                        <p class="text-danger small">{{ form.phone_no.errors.0 }}</p>
+                        {% endif %}
                     </div>
                 </div>
 

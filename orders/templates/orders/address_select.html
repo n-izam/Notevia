@@ -158,6 +158,82 @@
         background-color: #f9f9f9;
         border-color: #ccc;
     }
+
+    /* Toast container responsiveness */
+    .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 5000;
+    }
+
+    @media (max-width: 576px) {
+        .toast-container {
+            top: auto !important;
+            bottom: 1rem !important;
+            right: 50% !important;
+            transform: translateX(50%);
+            width: 90%;
+        }
+    }
+
+    /* Base Toast Style */
+    .toast {
+        backdrop-filter: blur(8px);
+        background: rgba(17, 17, 17, 0.85) !important; /* glassy black */
+        color: #fff !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+        animation: slideFadeIn 0.5s ease-out;
+    }
+
+    /* Toast body text */
+    .toast-body {
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    /* SUCCESS */
+    .toast.bg-success {
+        background: rgba(0, 255, 100, 0.15) !important;
+        border-left: 4px solid #00ff73 !important;
+        color: #409365 !important;
+    }
+
+    /* ERROR */
+    .toast.bg-danger {
+        background: rgba(255, 0, 0, 0.15) !important;
+        border-left: 4px solid #ff3b3b !important;
+        color: #bb4141 !important;
+    }
+
+    /* WARNING */
+    .toast.bg-warning {
+        background: rgba(255, 193, 7, 0.15) !important;
+        border-left: 4px solid #ffc107 !important;
+        color: #a1842f !important;
+    }
+
+    /* INFO */
+    .toast.bg-info {
+        background: rgba(0, 200, 255, 0.15) !important;
+        border-left: 4px solid #00cfff !important;
+        color: #3092a8 !important;
+    }
+
+    /* Beautiful animation */
+    @keyframes slideFadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0px) scale(1);
+        }
+    }
 </style>
 {% endblock %}
 
@@ -278,11 +354,30 @@
                             </div></a>
                         </div>
                     </div>
-                    {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} mt-2" {% if message.tags == 'error' %}style="color: red;"{% endif %}>{{ message }}</div>
-                    {% endfor %}
-                    {% endif %}
+                    <!-- Toast container (fixed position) -->
+                    <div class="toast-container">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="toast align-items-center border-0 mb-2
+                                    {% if message.tags == 'error' %} bg-danger
+                                    {% elif message.tags == 'success' %} bg-success 
+                                    {% elif message.tags == 'warning' %} bg-warning 
+                                    {% else %} bg-info
+                                    {% endif %}
+                                ">
+                                    <div class="d-flex">
+                                        <div class="toast-body">
+                                        {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
+                                        {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                                        {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                            {{ message }}
+                                        </div>
+                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -302,6 +397,25 @@
             window.location.reload();
         }
     });
+</script>
+<!-- toast -->
+<script>
+
+    //document.addEventListener('DOMContentLoaded', function () {
+    //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    //toastElList.map(function (toastEl) {
+        //var t = new bootstrap.Toast(toastEl);
+        //t.show();
+    //});
+//});
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.toast').forEach(el => {
+            new bootstrap.Toast(el).show();
+        });
+    });
+
+    
 </script>
 <!-- <script>
     const btn = document.getElementById('addToCartBtn');

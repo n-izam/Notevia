@@ -102,6 +102,8 @@ class AddressForm(forms.Form):
         print("signup email:",full_name)
         if not re.match(r'^[A-Za-z\s]+$', full_name):
             validationerror("Name can contain only alphabets and spaces.")
+        elif not full_name or len(full_name) < 3:
+            validationerror("Name must contain greater that 3 charecters.")
         else:
             return full_name
         

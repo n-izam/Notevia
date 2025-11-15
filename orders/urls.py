@@ -33,7 +33,7 @@ urlpatterns = [
     path('admin_order/', AdminSideOrderListingView.as_view(), name='admin_order_list'),
     path('admin_order_detail/<int:order_id>/', AdminOrderDetailView.as_view(), name='admin_order_detail'),
     path('update_order_status/<int:order_id>/status/<str:new_status>/', OrderStatusUpdateView.as_view(), name='update_order_status'),
-    path('addRess_add_from_select/', AddressAddFromSelectView.as_view(), name='address_add_from_select'),
+    path('address_add_from_select/', AddressAddFromSelectView.as_view(), name='address_add_from_select'),
 
 
 ]
