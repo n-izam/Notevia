@@ -993,6 +993,7 @@ class SetDefaultView(View):
         main_address = get_object_or_404(Address, id=address_id)
         main_address.is_default = set_main
         main_address.save()
+        success_notify(request, f"default address is changed to {main_address.full_name}")
         print("main_addresss set default:", main_address.is_default)
         
 
@@ -1008,7 +1009,11 @@ class RemoveAddressView(View):
 
         if is_delete:
             print('delete address', address_id, is_delete)
-            delete_address = get_object_or_404(Address, id=address_id).delete()
+            delete_address = get_object_or_404(Address, id=address_id)
+            info_notify(request, f"{delete_address.full_name} address deleted")
+            delete_address.delete()
+
+            
             
 
         return redirect('address')
