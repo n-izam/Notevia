@@ -20,25 +20,35 @@ class AdminCouponListingView(View):
 
         coupons = Coupon.objects.all().order_by('-valid_from')
 
-        paginator = Paginator(coupons, 6)
+        paginator = Paginator(coupons, 8)
         page_number = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
 
         start_index = (page_obj.number - 1) * paginator.per_page + 1
         end_index = start_index + len(page_obj.object_list) - 1
 
-        
-        errors = request.session.pop("add_coupon_error", None)
-        data = request.session.pop("add_coupon_data", None)
+        if request.session.get("add_coupon_error"):
+            errors = request.session.pop("add_coupon_error", None)
+            data = request.session.pop("add_coupon_data", None)
+
+            form = CouponForm(data if data else None)
+
+            if errors:
+                form._errors = errors
     
-        errors = request.session.pop("edit_coupon_error", None)
-        data = request.session.pop("edit_coupon_data", None)
+        elif request.session.get("edit_coupon_error"):
+            errors = request.session.pop("edit_coupon_error", None)
+            data = request.session.pop("edit_coupon_data", None)
+            form = CouponForm(data if data else None)
 
+            if errors:
+                form._errors = errors
+        else:
+            form = CouponForm()
 
-        form = CouponForm(data if data else None)
+        # form = CouponForm(data if data else None)
 
-        if errors:
-            form._errors = errors
+        
         
         context = {
             "user_id": request.user.id,
