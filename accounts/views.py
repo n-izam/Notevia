@@ -5,7 +5,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from .models import CustomUser, UserOTP, UserProfile, Address, SignUpUserOTP
-from .forms import SignupForm, SigninForm, AddressForm
+from .forms import SignupForm, SigninForm, AddressForm, ChangePasswordForm
 from django.utils import timezone
 from datetime import timedelta
 from  django.contrib.auth import authenticate, login, logout
@@ -1024,8 +1024,44 @@ class ChangePassWordView(View):
 
     def get(self, request):
 
+        errors = request.session.pop("change_password_error", None)
+        data = request.session.pop("change_password_data", None)
+
+        form = ChangePasswordForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+
         context = {
             "user_id": request.user.id,
-            "user_profile": profile(request)
+            "user_profile": profile(request),
+            "form": form
         }
         return render(request, 'customer/change_user_pass.html', context)
+    
+    def post(self, request):
+
+
+        form = ChangePasswordForm(request.POST)
+
+        if form.is_valid():
+
+            old_password = request.POST.get('current_password')
+            New_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+
+            if not request.user.check_password(old_password):
+                request.session["change_password_error"] = {"current_password": ["the entered password is incorrect "]}
+                request.session["change_password_data"] = request.POST
+                return redirect("change_user_pass")
+            
+            user = request.user
+            user.set_password(New_password)
+            user.save()
+
+            success_notify(request, "the password changed successfully")
+            return redirect('profile')
+        else:
+            request.session["change_password_error"] = form.errors
+            request.session["change_password_data"] = request.POST
+            return redirect("change_user_pass")

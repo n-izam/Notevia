@@ -21,6 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from cart.models import Cart, CartItem
+from .forms import OfferForm, VariantForm
 
 
 # Create your views here.
@@ -287,59 +288,80 @@ class EditProductView(View):
 class AddProductOfferView(View):
     def get(self, request, product_id): # add product id
         product = get_object_or_404(Product, id=product_id)
-        return render(request, 'adminpanel/product_offer.html', {"user_id": request.user.id, "product": product})
+
+        errors = request.session.pop("add_offer_error", None)
+        data = request.session.pop("add_offer_data", None)
+
+        form = OfferForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+        
+        context = {
+            "user_id": request.user.id,
+              "product": product,
+              "form": form
+              }
+        return render(request, 'adminpanel/product_offer.html', context)
     
     def post(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
 
-        title = request.POST.get('offer-title')
-        about = request.POST.get('about')
-        discount = request.POST.get('discount')
-        start_date = request.POST.get('start-date')
-        end_date = request.POST.get('end-date')
+        form = OfferForm(request.POST)
+        if form.is_valid():
 
-        if not title:
-            error_notify(self.request, 'Leave offer title ' )
+            title = request.POST.get('offer_title')
+            about = request.POST.get('about')
+            discount = request.POST.get('discount')
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+
+            # if not title:
+            #     error_notify(self.request, 'Leave offer title ' )
+            #     return redirect('addproduct_offer', product_id=product_id)
+            # if not about:
+            #     error_notify(self.request, 'Leave offer discription ' )
+            #     return redirect('addproduct_offer', product_id=product_id)
+            # if not discount:
+            #     error_notify(self.request, 'Leave product offer discount ' )
+            #     return redirect('addproduct_offer', product_id=product_id)
+            # if not start_date:
+            #     error_notify(self.request, 'Set product offer start date ' )
+            #     return redirect('addproduct_offer', product_id=product_id)
+            # if not end_date:
+            #     error_notify(self.request, 'Set product offer End date ' )
+            #     return redirect('addproduct_offer', product_id=product_id)
+
+
+            # print("title",title)
+
+            start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
+            end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
+
+            # today = timezone.now().date()
+
+            # print(start_date,"today",today)
+            # if not start_date >= today:
+            #     error_notify(self.request, 'Start date must be greater than equal to today ' )
+            #     return redirect('addproduct_offer', product_id=product_id)
+            # if not end_date > today:
+            #     error_notify(self.request, 'End date must be greater than today' )
+            #     return redirect('addproduct_offer', product_id=product_id)
+
+            offer = Offer.objects.create(
+                title=title, offer_percent=discount, about=about,
+                start_date=start_date, end_date=end_date,
+            )
+            print("offer created", offer)
+
+            product.offer = offer
+            product.save()
+            success_notify(request, f"successfully add offer is add for product")
+            return redirect('admin-product')
+        else:
+            request.session["add_offer_error"] = form.errors
+            request.session["add_offer_data"] = request.POST
             return redirect('addproduct_offer', product_id=product_id)
-        if not about:
-            error_notify(self.request, 'Leave offer discription ' )
-            return redirect('addproduct_offer', product_id=product_id)
-        if not discount:
-            error_notify(self.request, 'Leave product offer discount ' )
-            return redirect('addproduct_offer', product_id=product_id)
-        if not start_date:
-            error_notify(self.request, 'Set product offer start date ' )
-            return redirect('addproduct_offer', product_id=product_id)
-        if not end_date:
-            error_notify(self.request, 'Set product offer End date ' )
-            return redirect('addproduct_offer', product_id=product_id)
-
-
-        print("title",title)
-
-        start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
-        end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
-
-        today = timezone.now().date()
-
-        print(start_date,"today",today)
-        if not start_date >= today:
-            error_notify(self.request, 'Start date must be greater than equal to today ' )
-            return redirect('addproduct_offer', product_id=product_id)
-        if not end_date > today:
-            error_notify(self.request, 'End date must be greater than today' )
-            return redirect('addproduct_offer', product_id=product_id)
-
-        offer = Offer.objects.create(
-            title=title, offer_percent=discount, about=about,
-            start_date=start_date, end_date=end_date,
-        )
-        print("offer created", offer)
-
-        product.offer = offer
-        product.save()
-
-        return redirect('admin-product')
 
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
@@ -347,64 +369,60 @@ class AddProductOfferView(View):
 class EditProductOfferView(View):
     def get(sel, request, product_id): #add product is also
         product = get_object_or_404(Product, id=product_id)
-        return render(request, 'adminpanel/product_offer.html', {"user_id": request.user.id, "product": product})
+
+        errors = request.session.pop("edit_product_offer_error", None)
+        data = request.session.pop("edit_product_offer_data", None)
+
+        form = OfferForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+
+        context = {
+            "user_id": request.user.id,
+              "product": product,
+              "form": form
+              }
+        return render(request, 'adminpanel/product_offer.html', context)
     
     def post(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
 
-        title = request.POST.get('offer-title', '').strip()
+        form = OfferForm(request.POST)
+        if form.is_valid():
 
-        description = request.POST.get('about', '').strip()
 
-        offer_discount = request.POST.get('discount')
+            title = request.POST.get('offer_title', '').strip()
 
-        start_date = request.POST.get('start-date')
+            description = request.POST.get('about', '').strip()
 
-        end_date = request.POST.get('end-date')
+            offer_discount = request.POST.get('discount')
 
-       
+            start_date = request.POST.get('start_date')
 
-        if not title:
-            error_notify(self.request, 'Leave offer title ' )
+            end_date = request.POST.get('end_date')
+            print(title, description, offer_discount, start_date, end_date)
+
+            
+            start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
+
+            end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
+
+            offer = get_object_or_404(Offer, id=product.offer_id)
+
+            offer.title = title
+            offer.about = description
+            offer.offer_percent = offer_discount
+            offer.start_date = start_date
+            offer.end_date = end_date
+
+            offer.save()
+            success_notify(request, f"successfully updated offer{offer.title} is add for product{product.name}")
+            return redirect('admin-product')
+        else:
+            request.session["edit_product_offer_error"] = form.errors
+            request.session["edit_product_offer_data"] = request.POST
             return redirect('editproduct_offer', product_id=product_id)
-        if not description:
-            error_notify(self.request, 'Leave offer discription ' )
-            return redirect('editproduct_offer', product_id=product_id)
-        if not offer_discount:
-            error_notify(self.request, 'Leave product offer discount ' )
-            return redirect('editproduct_offer', product_id=product_id)
-        if not start_date:
-            error_notify(self.request, 'Set product offer start date ' )
-            return redirect('editproduct_offer', product_id=product_id)
-        if not end_date:
-            error_notify(self.request, 'Set product offer End date ' )
-            return redirect('editproduct_offer', product_id=product_id)
-        
-        start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
-
-        end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
-        
-        today = today = timezone.now().date()
-
-        print(start_date,"today",today)
-        if not start_date >= today:
-            error_notify(self.request, 'Start date must be greater than equal to today ' )
-            return redirect('editproduct_offer', product_id=product_id)
-        if not end_date > today:
-            error_notify(self.request, 'End date must be greater than today' )
-            return redirect('editproduct_offer', product_id=product_id)
-
-        offer = get_object_or_404(Offer, id=product.offer_id)
-
-        offer.title = title
-        offer.about = description
-        offer.offer_percent = offer_discount
-        offer.start_date = start_date
-        offer.end_date = end_date
-
-        offer.save()
-
-        return redirect('admin-product')
 
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
@@ -601,43 +619,65 @@ class AddCategoryOffer(View):
         print(today)
         
         print("category id", category.id)
-        return render(request, 'adminpanel/addcategory-offer.html', {"user_id":request.user.id, "category": category})
+        errors = request.session.pop("add_category_offer_error", None)
+        data = request.session.pop("add_category_offer_data", None)
+
+        form = OfferForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+
+        context = {
+            "user_id":request.user.id,
+              "category": category,
+              "form": form
+              }
+
+        return render(request, 'adminpanel/addcategory-offer.html', context)
 
     def post(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
         print(category)
         # offer = get_object_or_404(Offer, id=category.o)
 
-        title = request.POST.get('offer-title')
-        about = request.POST.get('about')
-        discount = request.POST.get('discount')
-        start_date = request.POST.get('start-date')
-        end_date = request.POST.get('end-date')
+        form = OfferForm(request.POST)
+        if form.is_valid():
 
-        print("title",title)
-        today = timezone.now().date()
+            title = request.POST.get('offer_title')
+            about = request.POST.get('about')
+            discount = request.POST.get('discount')
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
 
-        start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
-        end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
+            # print("title",title)
+            # today = timezone.now().date()
 
-        print(start_date,"today",today)
-        if not start_date >= today:
-            error_notify(self.request, 'Start date must be greater than equal to today ' )
+            start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
+            end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
+
+            # print(start_date,"today",today)
+            # if not start_date >= today:
+            #     error_notify(self.request, 'Start date must be greater than equal to today ' )
+            #     return redirect('addcategory_offer', category_id=category_id)
+            # if not end_date > today:
+            #     error_notify(self.request, 'End date must be greater than today' )
+            #     return redirect('addcategory_offer', category_id=category_id)
+
+            offer = Offer.objects.create(
+                title=title, offer_percent=discount, about=about,
+                start_date=start_date, end_date=end_date,
+            )
+            print("offer created", offer)
+
+            category.offer = offer
+            category.save()
+            success_notify(request, f"successfully add the offer for category")
+            return redirect('admin-category')
+        else:
+            request.session["add_category_offer_error"] = form.errors
+            request.session["add_category_offer_data"] = request.POST
             return redirect('addcategory_offer', category_id=category_id)
-        if not end_date > today:
-            error_notify(self.request, 'End date must be greater than today' )
-            return redirect('addcategory_offer', category_id=category_id)
 
-        offer = Offer.objects.create(
-            title=title, offer_percent=discount, about=about,
-            start_date=start_date, end_date=end_date,
-        )
-        print("offer created", offer)
-
-        category.offer = offer
-        category.save()
-
-        return redirect('admin-category')
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
@@ -646,9 +686,20 @@ class EditCategoryOffer(View):
     def get(self, request, category_id):
 
         category = get_object_or_404(Category, id=category_id)
-        
+        errors = request.session.pop("edit_category_offer_error", None)
+        data = request.session.pop("edit_category_offer_data", None)
 
-        return render(request, 'adminpanel/addcategory-offer.html', {"user_id":request.user.id, "category": category})
+        form = OfferForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+        context = {
+            "user_id":request.user.id,
+              "category": category,
+              "form": form
+              }
+
+        return render(request, 'adminpanel/addcategory-offer.html', context)
     
     def post(self, request, category_id):
 
@@ -658,40 +709,34 @@ class EditCategoryOffer(View):
         offer = get_object_or_404(Offer, id=category.offer_id)
         print("the offer title is :", offer.title)
 
+        form = OfferForm(request.POST)
+        if form.is_valid():
+            title = request.POST.get('offer_title')
+            about = request.POST.get('about')
+            discount = request.POST.get('discount')
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
 
-        start_date = datetime.strptime(request.POST.get('start-date'), '%m/%d/%Y').date()
 
-        end_date = datetime.strptime(request.POST.get('end-date'), '%m/%d/%Y').date()
+            start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
 
-        today = today = timezone.now().date()
+            end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
 
-        print(start_date,"today",today)
-        if not start_date >= today:
-            error_notify(self.request, 'Start date must be greater than equal to today ' )
+
+            offer.title = title
+            offer.about = about
+            offer.offer_percent = discount
+            offer.start_date = start_date
+            offer.end_date = end_date
+            offer.save()
+
+            
+            success_notify(request, f"successfully updated the offer for category")
+            return redirect('admin-category')
+        else:
+            request.session["edit_category_offer_error"] = form.errors
+            request.session["edit_category_offer_data"] = request.POST
             return redirect('editcategory_offer', category_id=category_id)
-        if not end_date > today:
-            error_notify(self.request, 'End date must be greater than today' )
-            return redirect('editcategory_offer', category_id=category_id)
-
-
-        offer.title = request.POST.get('offer-title')
-        offer.about = request.POST.get('about')
-        offer.offer_percent = request.POST.get('discount')
-        offer.start_date = datetime.strptime(request.POST.get('start-date'), '%m/%d/%Y').date()
-        offer.end_date = datetime.strptime(request.POST.get('end-date'), '%m/%d/%Y').date()
-        offer.save()
-
-        # title = request.POST.get('offer-title')
-        # about = request.POST.get('about')
-        # discount = request.POST.get('discount')
-        # start_date = request.POST.get('start-date')
-        # end_date = request.POST.get('end-date')
-
-        # start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
-        # end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
-        print("the offer title is :", offer.title)
-        print("offer updated")
-        return redirect('admin-category')
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
@@ -744,48 +789,68 @@ class AddVariantView(View):
 
         product = get_object_or_404(Product, id=product_id)
 
-        return render(request, 'adminpanel/add-variant.html', {"user_id": request.user.id, "product": product})
+        errors = request.session.pop("add_variant_error", None)
+        data = request.session.pop("add_variant_data", None)
+
+        form = VariantForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+
+        context = {
+            "user_id": request.user.id,
+              "product": product,
+              "form": form
+              }
+
+        return render(request, 'adminpanel/add-variant.html', context)
     
     def post(self, request, product_id):
 
-        
 
+        form = VariantForm(request.POST)
+        if form.is_valid():
+            variant_name = request.POST.get('name', '').strip()
+            variant_description = request.POST.get('description', '').strip()
+            variant_price = request.POST.get('price', '').strip()
+            variant_discount = request.POST.get('discount_percent', '0').strip()
+            variant_stock = request.POST.get('stock', '').strip()
+            variant_is_listed = request.POST.get('variant_is_listed') == 'on'
 
-        variant_name = request.POST.get('name', '').strip()
-        variant_description = request.POST.get('description', '').strip()
-        variant_price = request.POST.get('price', '').strip()
-        variant_discount = request.POST.get('discount_percent', '0').strip()
-        variant_stock = request.POST.get('stock', '').strip()
-        variant_is_listed = request.POST.get('variant_is_listed') == 'on'
+            print("variant name :", variant_name,"variant description :", variant_description, "variant_price :", variant_price, "variant_discount :", variant_discount, "variant stock :", variant_stock, "variant is listed :", variant_is_listed)
 
-        print("variant name :", variant_name,"variant description :", variant_description, "variant_price :", variant_price, "variant_discount :", variant_discount, "variant stock :", variant_stock, "variant is listed :", variant_is_listed)
+            # if not variant_name:
+                
+            #     error_notify(self.request, 'Variant name is required.')
+            #     return redirect('add-variant', product_id=product_id)
+            # elif not variant_price or not re.match(r'^\d+(\.\d{1,2})?$', variant_price):
 
-        if not variant_name:
+            #     # errors['variant_price'] = 'Variant price must be a valid number (e.g., 99.99).'
+            #     error_notify(self.request, 'Variant price must be a valid number (e.g., 99.99).')
+            #     return redirect('add-variant', product_id=product_id)
+            # elif not variant_stock.isdigit() or int(variant_stock) < 0:
+            #     # errors['variant_stock'] = 'Variant stock must be a non-negative integer.'
+            #     error_notify(self.request, 'Variant stock must be a non-negative integer.')
+            #     return redirect('add-variant', product_id=product_id)
+            # elif not re.match(r'^\d+(\.\d{1,2})?$|^0$', variant_discount):
+            #     # errors['variant_discount'] = 'Variant discount must be a valid number (e.g., 10.00) or 0.'
+            #     error_notify(self.request, 'Variant discount must be a valid number (e.g., 10.00) or 0.')
+            #     return redirect('add-variant', product_id=product_id)
+            if Variant.objects.filter(product_id=product_id, name__iexact=variant_name).exists():
+                # error_notify(self.request, 'Variant name already exists for this product.')
+                request.session["add_variant_error"] = {"name": ["Variant name already exists for this product."]}
+                request.session["add_variant_data"] = request.POST
+                return redirect('add-variant', product_id=product_id)
             
-            error_notify(self.request, 'Variant name is required.')
-            return redirect('add-variant', product_id=product_id)
-        elif not variant_price or not re.match(r'^\d+(\.\d{1,2})?$', variant_price):
+            product = get_object_or_404(Product, id=product_id)
 
-            # errors['variant_price'] = 'Variant price must be a valid number (e.g., 99.99).'
-            error_notify(self.request, 'Variant price must be a valid number (e.g., 99.99).')
+            variant = Variant.objects.create(product=product, name=variant_name, description=variant_description, price=variant_price, discount=variant_discount, stock=variant_stock, is_listed=variant_is_listed)
+            success_notify(request, "new variant added successfully")
+            return redirect('view-variant', product_id=product_id)
+        else:
+            request.session["add_variant_error"] = form.errors
+            request.session["add_variant_data"] = request.POST
             return redirect('add-variant', product_id=product_id)
-        elif not variant_stock.isdigit() or int(variant_stock) < 0:
-            # errors['variant_stock'] = 'Variant stock must be a non-negative integer.'
-            error_notify(self.request, 'Variant stock must be a non-negative integer.')
-            return redirect('add-variant', product_id=product_id)
-        elif not re.match(r'^\d+(\.\d{1,2})?$|^0$', variant_discount):
-            # errors['variant_discount'] = 'Variant discount must be a valid number (e.g., 10.00) or 0.'
-            error_notify(self.request, 'Variant discount must be a valid number (e.g., 10.00) or 0.')
-            return redirect('add-variant', product_id=product_id)
-        elif Variant.objects.filter(product_id=product_id, name__iexact=variant_name).exists():
-            error_notify(self.request, 'Variant name already exists for this product.')
-            return redirect('add-variant', product_id=product_id)
-        
-        product = get_object_or_404(Product, id=product_id)
-
-        variant = Variant.objects.create(product=product, name=variant_name, description=variant_description, price=variant_price, discount=variant_discount, stock=variant_stock, is_listed=variant_is_listed)
-
-        return redirect('view-variant', product_id=product_id)
 
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
@@ -796,57 +861,66 @@ class EditVariantView(View):
         
         variant = get_object_or_404(Variant, id=variant_id)
         product = get_object_or_404(Product, id=variant.product.id)
+
+        errors = request.session.pop("edit_variant_error", None)
+        data = request.session.pop("edit_variant_data", None)
+
+        form = VariantForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+
+        context = {
+            "variant":variant, 
+            "user_id": request.user.id,
+            "product": product,
+            "form":form
+            }
     
         # the offer final price test
         # print("main discount:", variant.final_price)
         # print("variant price:", variant.price, "variant discount", variant.discount)
         # print("product category offer", variant.product.category.offer.offer_percent)
 
-        return render(request, 'adminpanel/add-variant.html', {"variant":variant, "user_id": request.user.id, "product": product})
+        return render(request, 'adminpanel/add-variant.html', context)
 
     def post(self, request, variant_id):
 
         variant = get_object_or_404(Variant, id=variant_id)
         product = get_object_or_404(Product, id=variant.product.id)
 
-        variant_name = request.POST.get('name', '').strip()
-        variant_description = request.POST.get('description', '').strip()
-        variant_price = request.POST.get('price', '').strip()
-        variant_discount = request.POST.get('discount_percent', '0').strip()
-        variant_stock = request.POST.get('stock', '').strip()
+        form = VariantForm(request.POST)
+        if form.is_valid():
+
+            variant_name = request.POST.get('name', '').strip()
+            variant_description = request.POST.get('description', '').strip()
+            variant_price = request.POST.get('price', '').strip()
+            variant_discount = request.POST.get('discount_percent', '0').strip()
+            variant_stock = request.POST.get('stock', '').strip()
 
 
-        if not variant_name:
             
-            error_notify(self.request, 'Variant name is required.')
-            return redirect('edit_variant', variant_id=variant_id)
-        elif not variant_price or not re.match(r'^\d+(\.\d{1,2})?$', variant_price):
+            if Variant.objects.filter(product_id=product.id, name__iexact=variant_name).exclude(id=variant_id).exists():
+                
+                request.session["edit_variant_error"] = {"name": ["Variant name already exists for this product."]}
+                request.session["edit_variant_data"] = request.POST
+                return redirect('edit_variant', variant_id=variant_id)
 
-            # errors['variant_price'] = 'Variant price must be a valid number (e.g., 99.99).'
-            error_notify(self.request, 'Variant price must be a valid number (e.g., 99.99).')
-            return redirect('edit_variant', variant_id=variant_id)
-        elif not variant_stock.isdigit() or int(variant_stock) < 0:
-            # errors['variant_stock'] = 'Variant stock must be a non-negative integer.'
-            error_notify(self.request, 'Variant stock must be a non-negative integer.')
-            return redirect('edit_variant', variant_id=variant_id)
-        elif not re.match(r'^\d+(\.\d{1,2})?$|^0$', variant_discount):
-            # errors['variant_discount'] = 'Variant discount must be a valid number (e.g., 10.00) or 0.'
-            error_notify(self.request, 'Variant discount must be a valid number (e.g., 10.00) or 0.')
-            return redirect('edit_variant', variant_id=variant_id)
-        elif Variant.objects.filter(product_id=product.id, name__iexact=variant_name).exclude(id=variant_id).exists():
-            error_notify(self.request, 'Variant name already exists for this product.')
-            return redirect('edit_variant', variant_id=variant_id)
+            print("variant name :", variant_name,"variant description :", variant_description, "variant_price :", variant_price, "variant_discount :", variant_discount, "variant stock :", variant_stock)
 
-        print("variant name :", variant_name,"variant description :", variant_description, "variant_price :", variant_price, "variant_discount :", variant_discount, "variant stock :", variant_stock)
+            variant.name = variant_name
+            variant.description = variant_description
+            variant.price = variant_price
+            variant.discount = variant_discount
+            variant.stock = variant_stock
+            variant.save()
 
-        variant.name = variant_name
-        variant.description = variant_description
-        variant.price = variant_price
-        variant.discount = variant_discount
-        variant.stock = variant_stock
-        variant.save()
-
-        return redirect('view-variant', product_id=product.id)
+            success_notify(request, "new variant Updated successfully")
+            return redirect('view-variant', product_id=product.id)
+        else:
+            request.session["edit_variant_error"] = form.errors
+            request.session["edit_variant_data"] = request.POST
+            return redirect('edit_variant', variant_id=variant_id)
 
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')

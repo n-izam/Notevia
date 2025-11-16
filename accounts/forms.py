@@ -114,3 +114,35 @@ class AddressForm(forms.Form):
         else:
             return address_field
     
+class ChangePasswordForm(forms.Form):
+
+    current_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    new_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
+
+    def clean_current_password(self):
+        current_password = self.cleaned_data.get("current_password")
+        if not current_password:
+            validationerror("old password is required")
+        else:
+            return current_password
+        
+    def clean_new_password(self):
+        new_password = self.cleaned_data.get("new_password")
+        current_password = self.cleaned_data.get("current_password")
+        if not new_password and current_password:
+            validationerror("Enter your new password")
+        else:
+            return new_password
+        
+    
+    def clean_confirm_password(self):
+        confirm_password = self.cleaned_data.get("confirm_password")
+        new_password = self.cleaned_data.get("new_password")
+        if not confirm_password and new_password:
+            validationerror("Confirm your password ")
+        if new_password != confirm_password:
+            validationerror("New passwords do not match ")
+        else:
+            return confirm_password
+        

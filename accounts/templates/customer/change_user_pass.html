@@ -101,28 +101,38 @@
             <div class="card change-password-card">
                 <div class="card-body">
                     <h2 class="card-title text-center mb-4">Change Password</h2>
-                    <form>
+                    <form  method="post">
+                        {% csrf_token %}
                         <div class="mb-3">
                             <label for="currentPassword" class="form-label">Enter Current Password</label>
                             <div class="password-wrapper">
-                                <input type="password" class="form-control" id="currentPassword">
-                                <i class="bi bi-eye-slash toggle-password"></i>
+                                <input type="password" class="form-control" name="current_password" id="currentPassword">
+                                <!-- <i class="bi bi-eye-slash toggle-password"></i> -->
                             </div>
+                            {% if form.current_password.errors %}
+                            <p class="text-danger small">{{ form.current_password.errors.0 }}</p>
+                            {% endif %}
                             <a href="#" class="form-text forgot-password-link">Forgot current password?</a>
                         </div>
                         <div class="mb-3">
                             <label for="newPassword" class="form-label">Enter New Password</label>
                             <div class="password-wrapper">
-                                <input type="password" class="form-control" id="newPassword">
-                                <i class="bi bi-eye-slash toggle-password"></i>
+                                <input type="password" class="form-control" name="new_password" id="newPassword">
+                                <!-- <i class="bi bi-eye-slash toggle-password"></i> -->
                             </div>
+                            {% if form.new_password.errors %}
+                            <p class="text-danger small">{{ form.new_password.errors.0 }}</p>
+                            {% endif %}
                         </div>
                         <div class="mb-4">
                             <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
                             <div class="password-wrapper">
-                                <input type="password" class="form-control" id="confirmNewPassword">
-                                <i class="bi bi-eye-slash toggle-password"></i>
+                                <input type="password" class="form-control" name="confirm_password" id="confirmNewPassword">
+                                <!-- <i class="bi bi-eye-slash toggle-password"></i> -->
                             </div>
+                            {% if form.confirm_password.errors %}
+                            <p class="text-danger small">{{ form.confirm_password.errors.0 }}</p>
+                            {% endif %}
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                             <button type="submit" class="btn btn-dark update-btn">UPDATE PASSWORD</button>

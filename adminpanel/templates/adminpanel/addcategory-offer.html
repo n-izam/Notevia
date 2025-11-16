@@ -29,43 +29,66 @@
 
 <div class="container-fluid mt-4">
     <div class="add-offer-container">
-        <h4 class="mb-4">{% if request.resolver_match.url_name == 'addcategory_offer' %}Add Offer {{category.name}} {% else %} Edit Offer of {{category.name}} {% endif %}</h4>
+        <h4 class="mb-4">{% if request.resolver_match.url_name == 'addcategory_offer' %}Add Offer {{category.name}} {% else %} Edit Offer '{{category.offer.title}}' of {{category.name}} {% endif %}</h4>
         <form action="{% if request.resolver_match.url_name == 'addcategory_offer' %} {% url 'addcategory_offer' category_id=category.id  %} {% else %} {% url 'editcategory_offer' category_id=category.id  %} {% endif %}" method="POST">
             {% csrf_token %}
             <div class="form-group">
                 <label for="offerTitle">Title</label>
-                <input type="text" class="form-control" name="offer-title" id="offerTitle" placeholder="e.g., Summer Sale">
+                <input type="text" class="form-control" name="offer_title" id="offerTitle" placeholder="e.g., Summer Sale" value="{% if request.resolver_match.url_name == 'addcategory_offer' %}{{ form.offer_title.value|default:'' }}{% else %} {{category.offer.title|default:''}} {% endif %}">
+                {% if form.offer_title.errors %}
+                    <p class="text-danger small">{{ form.offer_title.errors.0 }}</p>
+                    {% endif %}
             </div>
             <div class="form-group">
                 <label for="discountPercentage">Discount in Percentage</label>
                 <div class="input-group">
-                    <input type="number" class="form-control" name="discount" id="discountPercentage" placeholder="e.g., 25">
+                    <input type="number" class="form-control" name="discount" id="discountPercentage" placeholder="e.g., 25" value="{% if request.resolver_match.url_name == 'addcategory_offer' %}{{ form.discount.value|default:'' }}{% else %} {{category.offer.offer_percent|default:''}} {% endif %}">
                     <div class="input-group-append">
                         <span class="input-group-text">%</span>
                     </div>
                 </div>
+                {% if form.discount.errors %}
+                    <p class="text-danger small">{{ form.discount.errors.0 }}</p>
+                    {% endif %}
             </div>
             <div class="form-group">
                 <label for="aboutOffer">About</label>
-                <textarea class="form-control" id="aboutOffer" name="about" rows="3" placeholder="Briefly describe the offer"></textarea>
+                <textarea class="form-control" id="aboutOffer" name="about" rows="3" placeholder="Briefly describe the offer">{% if request.resolver_match.url_name == 'addcategory_offer' %}{{ form.about.value|default:'' }}{% else %} {{category.offer.about|default:''}} {% endif %}</textarea>
             </div>
+            {% if form.about.errors %}
+                <p class="text-danger small">{{ form.about.errors.0 }}</p>
+                {% endif %}
             <div class="form-group">
                 <label for="startDate">Start Date</label>
                 <div class="input-group date" data-provide="datepicker">
-                    <input type="text" class="form-control" name="start-date" id="startDate" placeholder="mm/dd/yyyy">
+                    <input type="text"
+                    class="form-control" 
+                    name="start_date" id="startDate" 
+                    placeholder="mm/dd/yyyy"
+                    value="{% if request.resolver_match.url_name == 'addcategory_offer' %}{{ form.start_date.value|default:'' }}{% else %}{{ category.offer.start_date|date:'m/d/Y' }}{% endif %}">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                     </div>
                 </div>
+                {% if form.start_date.errors %}
+                <p class="text-danger small">{{ form.start_date.errors.0 }}</p>
+                {% endif %}
             </div>
             <div class="form-group">
                 <label for="endDate">End Date</label>
                <div class="input-group date" data-provide="datepicker">
-                    <input type="text" class="form-control" name="end-date" id="endDate" placeholder="mm/dd/yyyy">
+                    <input type="text" 
+                    class="form-control" 
+                    name="end_date" id="endDate" 
+                    placeholder="mm/dd/yyyy"
+                    value="{% if request.resolver_match.url_name == 'addcategory_offer' %}{{ form.end_date.value|default:'' }}{% else %}{{ category.offer.end_date|date:'m/d/Y' }}{% endif %}">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                     </div>
                 </div>
+                {% if form.end_date.errors %}
+                <p class="text-danger small">{{ form.end_date.errors.0 }}</p>
+                {% endif %}
             </div>
             <hr>
             <button type="submit" class="btn btn-primary">Add Offer</button>
