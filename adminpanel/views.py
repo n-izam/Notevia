@@ -16,12 +16,17 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from accounts.utils import warning_notify, info_notify,success_notify, error_notify
 from django.http import JsonResponse
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
+from django.db.models import Q, Sum, F
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from cart.models import Cart, CartItem
 from .forms import OfferForm, VariantForm
+from orders.models import Order, OrderItem
+from decimal import Decimal
+from django.db.models.functions import Coalesce
+from collections import defaultdict
+
 
 
 # Create your views here.
@@ -35,8 +40,110 @@ class AdminDashView(View):
     
     def get(self, request, user_id):
         # user = CustomUser.objects.filter(id = user_id)
+        total_customers = CustomUser.objects.count()
+        total_orders = Order.objects.count()
+        total_pending = Order.objects.filter(status='Pending').count()
+        orders = Order.objects.exclude(status__in=['Cancelled', 'Payment Failed']).order_by('-created_at')
+        delivered_orders = Order.objects.filter(status='Delivered')
 
-        return render(request, 'adminpanel/admindash.html', {"user_id": request.user.id})
+
+        total_sales = sum(order.over_all_amount_all for order in delivered_orders if order.over_all_amount_all)
+
+        now = timezone.now()
+
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        hourly_data = defaultdict(Decimal)
+        today_orders = OrderItem.objects.filter(
+            order__status='Delivered',
+            order__is_paid=True,
+            order__created_at__gte=today_start
+        )
+
+        for item in today_orders:
+            hour = item.order.created_at.hour
+            hourly_data[hour] += item.quantity * (item.discount_price or item.price)
+        
+        day_labels = [f"{h % 12 if h % 12 != 0 else 12} {'AM' if h < 12 else 'PM'}" for h in range(24)]
+        day_data = [float(hourly_data[h]) for h in range(24)]  # Convert to float for JSON
+
+        # Week: Daily sales for last 7 days
+        week_start = now - timedelta(days=6)
+        daily_data = defaultdict(Decimal)
+        week_orders = OrderItem.objects.filter(
+            order__status='Delivered',
+            order__is_paid=True,
+            order__created_at__gte=week_start
+        )
+        for item in week_orders:
+            day = item.order.created_at.date()
+            daily_data[day] += item.quantity * (item.discount_price or item.price)
+        
+        week_labels = [(week_start + timedelta(days=i)).strftime('%A') for i in range(7)]
+        week_data = [float(daily_data.get((week_start + timedelta(days=i)).date(), 0)) for i in range(7)]
+        
+        # Month: Monthly sales for last 12 months
+        month_start = now.replace(day=1) - timedelta(days=365)  # Approx last 12 months
+        monthly_data = defaultdict(Decimal)
+        month_orders = OrderItem.objects.filter(
+            order__status='Delivered',
+            order__is_paid=True,
+            order__created_at__gte=month_start
+        )
+        for item in month_orders:
+            month_key = item.order.created_at.strftime('%b %Y')
+            monthly_data[month_key] += item.quantity * (item.discount_price or item.price)
+        
+        # Generate labels for last 12 months
+        month_labels = []
+        month_data = []
+        current = now.replace(day=1)
+        for i in range(12):
+            label = current.strftime('%b')
+            month_labels.append(label)
+            # Use the month key without year for matching (assuming current year dominance)
+            full_key = f"{label} {current.year}"
+            month_data.append(float(monthly_data.get(full_key, 0)))
+            current -= timedelta(days=32)  # Rough month subtract
+            current = current.replace(day=1)
+        
+        # Year: Yearly sales for last 6 years (matching static example)
+        year_start = now.year - 5
+        yearly_data = defaultdict(Decimal)
+        year_orders = OrderItem.objects.filter(
+            order__status='Delivered',
+            order__is_paid=True,
+        )
+        for item in year_orders:
+            year = item.order.created_at.year
+            yearly_data[year] += item.quantity * (item.discount_price or item.price)
+        
+        year_labels = [str(y) for y in range(year_start, year_start + 6)]
+        year_data = [float(yearly_data.get(int(y), 0)) for y in year_labels]
+
+        chart_data_json = {
+            'day': {'labels': day_labels, 'data': day_data},
+            'week': {'labels': week_labels, 'data': week_data},
+            'month': {'labels': month_labels, 'data': month_data},
+            'year': {'labels': year_labels, 'data': year_data},
+        }
+
+        context = {
+            "user_id": request.user.id,
+            "total_customers": total_customers,
+            "total_orders": total_orders,
+            "total_sales": f"₹{total_sales:,.2f}",
+            "total_pending": total_pending,
+            "chart_data": json.dumps(chart_data_json),
+            # For change percentages (static for now; make dynamic if needed with prev period queries)
+            "customers_change": "↑ 16% this month",
+            "orders_change": "↑ 8% this month",
+            "sales_change": "↑ 12% this month",
+            "pending_change": "↓ 3% this month",
+        }
+
+        print(total_sales)
+
+        return render(request, 'adminpanel/admindash.html', context)
 
 # admin product list view
 

@@ -3,7 +3,335 @@
 {% load static %}
 
 {% block title %} Dashboard {% endblock %}
-<!-- {% block head %} {% endblock %} -->
+{% block head %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+{% endblock %}
+
+{% block style %}
+
+<style>
+  * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+  }
+
+  :root {
+      --primary-color: #10b981;
+      --primary-light: #d1fae5;
+      --secondary-color: #374151;
+      --text-dark: #1f2937;
+      --text-light: #6b7280;
+      --bg-light: #f9fafb;
+      --bg-white: #ffffff;
+      --border-color: #e5e7eb;
+  }
+
+  body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  .dashboard-container {
+      padding: 20px 15px;
+  }
+
+  /* Header Section */
+  .dashboard-header {
+      margin-bottom: 30px;
+  }
+
+  .dashboard-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+  }
+
+  .dashboard-header p {
+      font-size: 1rem;
+      color: var(--text-light);
+  }
+
+  /* Metric Cards Section */
+  .metrics-section {
+      margin-bottom: 40px;
+  }
+
+  .metric-card {
+      background: var(--bg-white);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+  }
+
+  .metric-card:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      border-color: var(--primary-color);
+  }
+
+  .metric-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 2rem;
+  }
+
+  .metric-icon.customers {
+      background-color: #dbeafe;
+  }
+
+  .metric-icon.orders {
+      background-color: #fce7f3;
+  }
+
+  .metric-icon.sales {
+      background-color: #d1fae5;
+  }
+
+  .metric-icon.pending {
+      background-color: #fef3c7;
+  }
+
+  .metric-content {
+      flex: 1;
+  }
+
+  .metric-label {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      margin-bottom: 8px;
+  }
+
+  .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+  }
+
+  .metric-change {
+      font-size: 0.875rem;
+      color: var(--primary-color);
+      font-weight: 600;
+  }
+
+  /* Sales Performance Chart Section */
+  .chart-section {
+      background: var(--bg-white);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 40px;
+  }
+
+  .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+  }
+
+  .chart-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+  }
+
+  .chart-filters {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+  }
+
+  .filter-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+  }
+
+  .filter-label {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      font-weight: 600;
+  }
+
+  .filter-select {
+      padding: 8px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      background-color: var(--bg-white);
+      color: var(--text-dark);
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+  }
+
+  .filter-select:hover,
+  .filter-select:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  }
+
+  .chart-container {
+      position: relative;
+      height: 350px;
+      margin-top: 20px;
+  }
+
+  .chart-legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+  }
+
+  .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--text-dark);
+  }
+
+  .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #1f2937;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 992px) {
+      .dashboard-header h1 {
+          font-size: 2rem;
+      }
+
+      .chart-header {
+          flex-direction: column;
+          align-items: flex-start;
+      }
+
+      .chart-filters {
+          width: 100%;
+      }
+  }
+
+  @media (max-width: 768px) {
+      .dashboard-container {
+          padding: 15px 10px;
+      }
+
+      .dashboard-header h1 {
+          font-size: 1.75rem;
+      }
+
+      .dashboard-header p {
+          font-size: 0.9rem;
+      }
+
+      .metric-card {
+          flex-direction: column;
+          text-align: center;
+          padding: 16px;
+      }
+
+      .metric-icon {
+          width: 64px;
+          height: 64px;
+          font-size: 1.5rem;
+          margin: 0 auto;
+      }
+
+      .metric-content {
+          text-align: center;
+      }
+
+      .chart-section {
+          padding: 16px;
+      }
+
+      .chart-title {
+          font-size: 1.25rem;
+      }
+
+      .chart-container {
+          height: 300px;
+      }
+
+      .filter-group {
+          width: 100%;
+          justify-content: space-between;
+      }
+
+      .filter-select {
+          flex: 1;
+          min-width: 100px;
+      }
+  }
+
+  @media (max-width: 576px) {
+      .dashboard-header h1 {
+          font-size: 1.5rem;
+      }
+
+      .metric-card {
+          margin-bottom: 16px;
+          padding: 12px;
+      }
+
+      .metric-icon {
+          width: 56px;
+          height: 56px;
+          font-size: 1.25rem;
+      }
+
+      .metric-value {
+          font-size: 1.5rem;
+      }
+
+      .metric-label {
+          font-size: 0.8rem;
+      }
+
+      .chart-filters {
+          gap: 8px;
+      }
+
+      .filter-select {
+          font-size: 0.8rem;
+          padding: 6px 10px;
+      }
+
+      .chart-container {
+          height: 250px;
+      }
+
+      .chart-legend {
+          gap: 16px;
+      }
+  }
+</style>
+
+{% endblock %}
 
 {% block content %}
 
@@ -11,31 +339,398 @@
     <div class="row">
        
 
-        <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
-            
-            <div class="otp-container text-center">
-                <h3 class="mb-3 fw-bold">Welcome to NoteVia</h3>
-                <p class="text-muted">how's your day going {{user.email}}.</p>
-            
-                <!-- OTP Form -->
-                 
-                 <form action="{% url 'signout' user_id=user_id %}" method="POST">
-                  {% csrf_token %}
-                  
-                  <input type="hidden" name="user_id" value="{{ user_id }}">
-            
-                  <!-- Show Django messages -->
-                  {% if messages %}
-                    {% for message in messages %}
-                      <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
-                    {% endfor %}
-                  {% endif %}
-            
-                  <button type="submit" class="btn btn-black w-100 mt-2">Log Out</button>
-                </form>
+        <div class="dashboard-container">
+          <!-- Dashboard Header -->
+          <div class="dashboard-header">
+              <h1>Admin Dashboard</h1>
+              <p>Overview of your store performance and analytics</p>
+          </div>
+
+          <!-- Metrics Section -->
+          <div class="metrics-section">
+              <div class="row">
+                  <div class="col-12 col-sm-6 col-lg-3">
+                      <div class="metric-card">
+                          <div class="metric-icon customers">👥</div>
+                          <div class="metric-content">
+                              <div class="metric-label">Total Customers</div>
+                              <div class="metric-value">{{ total_customers|default:"0" }}</div>
+                              <!-- <div class="metric-change">↑ 16% this month</div> -->
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-12 col-sm-6 col-lg-3">
+                      <div class="metric-card">
+                          <div class="metric-icon orders">🚚</div>
+                          <div class="metric-content">
+                              <div class="metric-label">Total Orders</div>
+                              <div class="metric-value">{{ total_orders|default:"0" }}</div>
+                              <!-- <div class="metric-change">↑ 8% this month</div> -->
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-12 col-sm-6 col-lg-3">
+                      <div class="metric-card">
+                          <div class="metric-icon sales">💲</div>
+                          <div class="metric-content">
+                              <div class="metric-label">Total Sales</div>
+                              <div class="metric-value">{{ total_sales|default:"₹0.00" }}</div>
+                              <!-- <div class="metric-change">↑ 12% this month</div> -->
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-12 col-sm-6 col-lg-3">
+                      <div class="metric-card">
+                          <div class="metric-icon pending">⏳</div>
+                          <div class="metric-content">
+                              <div class="metric-label">Total Pending</div>
+                              <div class="metric-value">{{ total_pending|default:"0" }}</div>
+                              <!-- <div class="metric-change">↓ 3% this month</div> -->
+                          </div>
+                      </div>
+                  </div>
               </div>
-        </main>
+          </div>
+
+          <!-- Sales Performance Chart -->
+          <div class="chart-section">
+              <div class="chart-header">
+                  <h2 class="chart-title">Sales Performance</h2>
+                  <div class="chart-filters">
+                      <div class="filter-group">
+                          <label class="filter-label">Time Period:</label>
+                          <select class="filter-select" id="timePeriod" onchange="updateChart()">
+                              <option value="day">Day (Hourly)</option>
+                              <option value="week">Week</option>
+                              <option value="month" selected>Month</option>
+                              <option value="year">Year</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="chart-container">
+                  <canvas id="salesChart"></canvas>
+              </div>
+
+              <div class="chart-legend">
+                  <div class="legend-item">
+                      <span class="legend-dot"></span>
+                      <span>Sales Revenue (₹)</span>
+                  </div>
+              </div>
+          </div>
+      </div>
     </div>
 </div>
+
+{% endblock %}
+{% block script %}
+ 
+<!-- <script>
+  let chart = null;
+
+  const chartData = {
+      day: {
+          labels: ['12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'],
+          data: [5000, 4500, 3800, 2900, 2100, 1800, 4200, 5600, 7200, 8900, 10200, 11500, 12800, 13200, 12900, 12100, 11300, 10500, 9800, 8900, 7600, 6200, 5100, 4800]
+      },
+      week: {
+          labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+          data: [45000, 52000, 48000, 61000, 55000, 67000, 58000]
+      },
+      month: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          data: [65000, 72000, 68000, 75000, 71000, 78000, 82000, 79000, 85000, 95000, 88000, 92000]
+      },
+      year: {
+          labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+          data: [450000, 520000, 580000, 650000, 720000, 785000]
+      }
+  };
+
+  function initChart() {
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      const data = chartData.month;
+
+      chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: data.labels,
+              datasets: [{
+                  label: 'Sales Revenue (₹)',
+                  data: data.data,
+                  borderColor: '#1f2937',
+                  backgroundColor: 'rgba(31, 41, 55, 0.05)',
+                  borderWidth: 2.5,
+                  fill: true,
+                  pointRadius: 5,
+                  pointBackgroundColor: '#1f2937',
+                  pointBorderColor: '#ffffff',
+                  pointBorderWidth: 2,
+                  pointHoverRadius: 7,
+                  tension: 0.4,
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  tooltip: {
+                      backgroundColor: 'rgba(31, 41, 55, 0.8)',
+                      padding: 12,
+                      titleFont: { size: 14, weight: 'bold' },
+                      bodyFont: { size: 13 },
+                      borderRadius: 8,
+                      displayColors: false,
+                      callbacks: {
+                          label: function(context) {
+                              return '₹' + context.parsed.y.toLocaleString('en-IN');
+                          }
+                      }
+                  }
+              },
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      grid: {
+                          color: '#e5e7eb',
+                          drawBorder: false
+                      },
+                      ticks: {
+                          color: '#6b7280',
+                          font: { size: 12 },
+                          callback: function(value) {
+                              return '₹' + (value / 1000) + 'K';
+                          }
+                      }
+                  },
+                  x: {
+                      grid: {
+                          display: false,
+                          drawBorder: false
+                      },
+                      ticks: {
+                          color: '#6b7280',
+                          font: { size: 12 }
+                      }
+                  }
+              }
+          }
+      });
+  }
+
+  function updateChart() {
+      const period = document.getElementById('timePeriod').value;
+      const data = chartData[period];
+
+      chart.data.labels = data.labels;
+      chart.data.datasets[0].data = data.data;
+      chart.update();
+  }
+
+  // Initialize chart on page load
+  document.addEventListener('DOMContentLoaded', function() {
+      initChart();
+  });
+</script> -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+  let chart = null;
+
+  // Dynamic chart data from backend (JSON)
+  //const chartData = {{ chart_data|safe }};
+  const chartData = JSON.parse('{{ chart_data|safe }}');
+  
+
+  function initChart() {
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      const data = chartData.month;  // Default to month
+
+      chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: data.labels,
+              datasets: [{
+                  label: 'Sales Revenue (₹)',
+                  data: data.data,
+                  borderColor: '#1f2937',
+                  backgroundColor: 'rgba(31, 41, 55, 0.05)',
+                  borderWidth: 2.5,
+                  fill: true,
+                  pointRadius: 5,
+                  pointBackgroundColor: '#1f2937',
+                  pointBorderColor: '#ffffff',
+                  pointBorderWidth: 2,
+                  pointHoverRadius: 7,
+                  tension: 0.4,
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  tooltip: {
+                      backgroundColor: 'rgba(31, 41, 55, 0.8)',
+                      padding: 12,
+                      titleFont: { size: 14, weight: 'bold' },
+                      bodyFont: { size: 13 },
+                      borderRadius: 8,
+                      displayColors: false,
+                      callbacks: {
+                          label: function(context) {
+                              return '₹' + context.parsed.y.toLocaleString('en-IN');
+                          }
+                      }
+                  }
+              },
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      grid: {
+                          color: '#e5e7eb',
+                          drawBorder: false
+                      },
+                      ticks: {
+                          color: '#6b7280',
+                          font: { size: 12 },
+                          callback: function(value) {
+                              return '₹' + (value / 1000).toFixed(1) + 'K';
+                          }
+                      }
+                  },
+                  x: {
+                      grid: {
+                          display: false,
+                          drawBorder: false
+                      },
+                      ticks: {
+                          color: '#6b7280',
+                          font: { size: 12 }
+                      }
+                  }
+              }
+          }
+      });
+  }
+
+  function updateChart() {
+      const period = document.getElementById('timePeriod').value;
+      const data = chartData[period];
+
+      chart.data.labels = data.labels;
+      chart.data.datasets[0].data = data.data;
+      chart.update();
+  }
+
+  // Initialize chart on page load
+  document.addEventListener('DOMContentLoaded', function() {
+      initChart();
+  });
+</script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+  let chart = null;
+
+  // Dynamic chart data from backend (JSON)
+  const chartData = JSON.parse('{{ chart_data|safe }}');
+  //const chartData = {{ chart_data|safe }};
+
+  function initChart() {
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      const data = chartData.month;  // Default to month
+
+      chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: data.labels,
+              datasets: [{
+                  label: 'Sales Revenue (₹)',
+                  data: data.data,
+                  borderColor: '#1f2937',
+                  backgroundColor: 'rgba(31, 41, 55, 0.05)',
+                  borderWidth: 2.5,
+                  fill: true,
+                  pointRadius: 5,
+                  pointBackgroundColor: '#1f2937',
+                  pointBorderColor: '#ffffff',
+                  pointBorderWidth: 2,
+                  pointHoverRadius: 7,
+                  tension: 0.4,
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                  legend: {
+                      display: false
+                  },
+                  tooltip: {
+                      backgroundColor: 'rgba(31, 41, 55, 0.8)',
+                      padding: 12,
+                      titleFont: { size: 14, weight: 'bold' },
+                      bodyFont: { size: 13 },
+                      borderRadius: 8,
+                      displayColors: false,
+                      callbacks: {
+                          label: function(context) {
+                              return '₹' + context.parsed.y.toLocaleString('en-IN');
+                          }
+                      }
+                  }
+              },
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      grid: {
+                          color: '#e5e7eb',
+                          drawBorder: false
+                      },
+                      ticks: {
+                          color: '#6b7280',
+                          font: { size: 12 },
+                          callback: function(value) {
+                              return '₹' + value.toLocaleString('en-IN');
+                          }
+                      }
+                  },
+                  x: {
+                      grid: {
+                          display: false,
+                          drawBorder: false
+                      },
+                      ticks: {
+                          color: '#6b7280',
+                          font: { size: 12 }
+                      }
+                  }
+              }
+          }
+      });
+  }
+
+  function updateChart() {
+      const period = document.getElementById('timePeriod').value;
+      const data = chartData[period];
+
+      chart.data.labels = data.labels;
+      chart.data.datasets[0].data = data.data;
+      chart.update();
+  }
+
+  // Initialize chart on page load
+  document.addEventListener('DOMContentLoaded', function() {
+      initChart();
+  });
+</script> -->
 
 {% endblock %}

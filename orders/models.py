@@ -207,6 +207,12 @@ class OrderItem(models.Model):
     def sub_real_price(self):
         return float(self.real_price*self.quantity)
     
+    # coupon discount for this product
+    def coupon_discount(self):
+        coupon_price = self.order.coupon_amount_static
+        discount_price = self.total_price() / self.order.total_amount_all() * coupon_price
+        return round(discount_price, 2)
+    
     #  return price with tax
     def return_with_tax_price(self):
         tax_price = (self.total_price()/self.order.total_amount()) * self.order.tax_amount()
