@@ -248,6 +248,9 @@ class SigninView(View):
 
         if errors:
             form._errors = errors
+
+        if 'next' in request.GET:
+            info_notify(request, "User is not logged in, please log in to continue.")
         return render(request, 'accounts/signin1.html', {"form": form})
     
     def post(self, request):

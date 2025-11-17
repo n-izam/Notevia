@@ -38,6 +38,212 @@ class StaticHomeView(View):
         
         return render(request, 'cores/static_home.html', context)
 
+@method_decorator(never_cache, name='dispatch')
+class StaticProductListView(View):
+
+    def get(self, request):
+
+        search_q = request.GET.get('q', '').strip()
+        sort_option = request.GET.get('sort', '').strip()
+        cat_option = request.GET.get('cat', '').strip()
+        brand_option = request.GET.getlist('brand')
+        page = request.GET.get('page', 1)
+
+        print("search for ",search_q, "| sort by:", sort_option, "| category by :", cat_option, "| brand:", brand_option, "| page:", page)
+
+        category = Category.objects.filter(is_listed=True)
+        brand = Brand.objects.all()
+        
+        products = Product.objects.filter(is_deleted=False, is_listed=True)
+
+        if search_q:
+            products = products.filter(Q(brand__name__icontains=search_q)| 
+                                       Q(category__name__icontains=search_q) | 
+                                       Q(variants__name__icontains=search_q)).distinct()
+            
+        if brand_option:
+            products = products.filter(brand__name__in=brand_option)
+
+        # apply category selection
+            
+        if cat_option and cat_option.lower() != 'clear':
+            products = products.filter(category__name__iexact=cat_option)
+            
+
+            
+        # apply sorting
+        if sort_option == "price_asc":
+
+            # products = products.order_by('base_price')
+            products = products.order_by('base_price')
+
+            # print("products", products)
+        
+        elif sort_option == "price_desc":
+            # products = products.order_by('-base_price')
+            products = products.order_by('-base_price')
+
+        elif sort_option == "name_asc":
+            products = products.order_by('name')
+        elif sort_option == "name_desc":
+            products = products.order_by('-name')
+        elif sort_option == "newest":
+            products = products.order_by('-created_at')
+
+            
+        elif sort_option == "clear":
+            products = products.order_by('-created_at')
+            sort_option = ''
+        else:
+            products = products.order_by('-created_at')
+
+        
+        # prepare for display data
+        product_with_image = []
+        for product in products:
+            main_image = product.images.filter(is_main=True).first()
+            # main_variant = product.variants.filter(is_listed=True).order_by('-stock').first()
+            # print(main_variant.price)
+            product_with_image.append({
+                "product": product,
+                "main_image": main_image,
+                # "main_variant":main_variant,
+            })
+
+        # wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+        # wishlist_products = list(wishlist.items.values_list('product_id', flat=True))
+        # Pagination — 6 items per page
+
+        paginator = Paginator(product_with_image, 6)
+        try:
+            paginated_products = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_products = paginator.page(1)
+        except EmptyPage:
+            paginated_products = paginator.page(paginator.num_pages)
+
+
+        # print(product_with_image)
+        context = {
+            "product_with_image": paginated_products,
+            # "user_id": request.user.id,
+            "categories": category,
+            "brands": brand,
+            "query": search_q,
+            "sort_option": sort_option,
+            "cat_option" : cat_option,
+            "brand_option" : brand_option,
+            "paginator" : paginator,
+            "page_obj" : paginated_products,
+            # "wishlist_products": wishlist_products,
+        }
+
+        return render(request, 'cores/static_product_list.html', context)
+    
+
+@method_decorator(never_cache, name='dispatch')
+class StaticProductDetailsView(View):
+
+    def get(self, request, product_id):
+
+        main_get = request.GET.get('main','').strip()
+        print("main new ", main_get)
+
+
+        main_product = get_object_or_404(Product, id=product_id)
+
+        if not main_product.is_listed:
+            return redirect('shop_products')
+
+        
+
+        images = main_product.images.all()
+        print("images are", images)
+
+        variants = main_product.variants.filter(is_listed=True)
+        print(" variants", variants)
+        variants = variants.order_by('-stock')
+        print('variants based on stock', variants)
+
+        if not main_get:
+            main_variant = variants.first()
+        else:
+            main_variant = variants.get(name=main_get)
+        print("main variant discount", main_variant.discount_percent)
+        print("main variant main_offer", main_variant.main_offer)
+
+        # for related products
+
+        related_products = Product.objects.filter(is_deleted=False, is_listed=True).order_by('-created_at')[:4]
+
+        product_with_image = []
+        for product in related_products:
+            main_image = product.images.filter(is_main=True).first()
+            product_with_image.append({
+                "product": product,
+                "main_image": main_image,
+            })
+
+        # breadcrumb
+        breadcrumb = [
+            {"name": "Home", "url": "/"},
+            {"name": main_product.category.name.capitalize(), "url": f"/static_product_list/?cat={main_product.category.name}"},
+            {"name": main_product.name.capitalize(), "url": ""},
+        ]
+
+        context = {
+            "main_product": main_product,
+            "images": images,
+            # "user_id":request.user.id,
+            "variants" : variants,
+            "main_variant": main_variant,
+            "product_with_image":product_with_image,
+            "breadcrumb": breadcrumb,
+        }
+
+        return render(request, 'cores/static_product_detail.html', context)
+    
+class StaticAboutView(View):
+
+    def get(self, request):
+
+        context = {
+
+        }
+
+        return render(request, 'cores/static_about.html', context)
+    
+class StaticContactUsView(View):
+
+    def get(self, request):
+
+        context = {
+
+        }
+        return render(request, 'cores/static_contactus.html')
+    
+class StaticTermsAndConditionsView(View):
+
+    def get(self, request):
+
+        context = {
+
+        }
+
+        return render(request, 'cores/static_terms_and_conditions.html', context)
+
+class StaticPrivacyPolicyView(View):
+
+    def get(self, request):
+
+        context = {
+
+        }
+
+        return render(request, 'cores/static_privacy_policy.html', context)
+
+
+
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class HomeView(View):

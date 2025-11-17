@@ -118,7 +118,7 @@
              {% for item in product_with_image %}
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card h-100 border-0 product-card gram-image-wrapper">
-                    <a href="{% url 'shop_productdetail' item.product.id %}">
+                    <a href="{% url 'static_product_detail' item.product.id %}">
                     <img src="{{item.main_image.image.url}}" class="card-img-top" alt="Papergrid - SHORT NOTE">
                 </a>
                     <div class="card-body text-center">
@@ -172,7 +172,7 @@
             </div>
         </div> -->
         <div class="text-center mt-4">
-            <a href="{% url 'shop_products' %}" class="btn btn-outline-dark">Show more</a>
+            <a href="{% url 'static_product_list' %}" class="btn btn-outline-dark">Show more</a>
         </div>
     </div>
 
@@ -215,6 +215,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 
