@@ -5,6 +5,7 @@ from django.db.models import UniqueConstraint
 import uuid
 from django.utils import timezone
 from decimal import Decimal
+from orders.models import Order
 
 # Create your models here.
 
@@ -183,6 +184,7 @@ class WalletTransaction(models.Model):
     transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
     message = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True, related_name='transaction_order')
 
     razorpay_order_id = models.CharField(max_length=255, blank=True, null=True)
     razorpay_payment_id = models.CharField(max_length=255, blank=True, null=True)

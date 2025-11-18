@@ -327,6 +327,8 @@ class PlaceOrderView(View):
             cart.items.filter(is_active=True).delete()
 
             transaction = wallet.debit(Decimal(order.over_all_amount), message=f"Order #{order.order_id} payment")
+            transaction.order=order
+            transaction.save()
 
             context = {
             "user_id": request.user.id,
