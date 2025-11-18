@@ -517,7 +517,7 @@
                         <div class="info-card">
                             <div class="info-card-header">
                                 <span class="icon">🛍️</span>
-                                <h3>Top 10 Products</h3>
+                                <h3>Top {{best_selling_products.count}} Products</h3>
                             </div>
                             <div class="info-list-header">
                                 <span>RANK</span>
@@ -525,17 +525,14 @@
                                 <span>SOLD</span>
                             </div>
                             <ul class="info-list">
+                                {% for item in best_selling_products %}
                                 <li class="info-list-item">
-                                    <div class="rank rank-top">1</div>
-                                    <div class="name">Fastrack Stunners</div>
-                                    <div class="value-badge">15</div>
+                                    <div class="rank rank-top">{{forloop.counter}}</div>
+                                    <div class="name">{{item.product__name}} - {{item.product__category__name}}</div>
+                                    <div class="value-badge">{{item.total_sold}}</div>
                                 </li>
-                                <li class="info-list-item">
-                                    <div class="rank rank-top">2</div>
-                                    <div class="name">Fastrack Marvellous FX2</div>
-                                    <div class="value-badge">13</div>
-                                </li>
-                                <li class="info-list-item">
+                                {% endfor %}
+                                <!-- <li class="info-list-item">
                                     <div class="rank rank-top">3</div>
                                     <div class="name">G-Shock - LAND MUDMASTER</div>
                                     <div class="value-badge">12</div>
@@ -544,37 +541,8 @@
                                     <div class="rank rank-other">4</div>
                                     <div class="name">G-Shock Mudmaster</div>
                                     <div class="value-badge">9</div>
-                                </li>
-                                <li class="info-list-item">
-                                    <div class="rank rank-other">5</div>
-                                    <div class="name">Fastrack Opulence Sun Moon C...</div>
-                                    <div class="value-badge">8</div>
-                                </li>
-                                 <li class="info-list-item">
-                                    <div class="rank rank-other">6</div>
-                                    <div class="name">Titan Quartz Multifunction</div>
-                                    <div class="value-badge">4</div>
-                                </li>
-                                 <li class="info-list-item">
-                                    <div class="rank rank-other">7</div>
-                                    <div class="name">Fastrack Automatics Blue Dial</div>
-                                    <div class="value-badge">4</div>
-                                </li>
-                                <li class="info-list-item">
-                                    <div class="rank rank-other">8</div>
-                                    <div class="name">Fastrack Astor FR2 Pro</div>
-                                    <div class="value-badge">3</div>
-                                </li>
-                                <li class="info-list-item">
-                                    <div class="rank rank-other">9</div>
-                                    <div class="name">Boat Lunar Pro LTE</div>
-                                    <div class="value-badge">2</div>
-                                </li>
-                                <li class="info-list-item">
-                                    <div class="rank rank-other">10</div>
-                                    <div class="name">Titan Nebula Vintage</div>
-                                    <div class="value-badge">1</div>
-                                </li>
+                                </li> -->
+                                
                             </ul>
                         </div>
                     </div>
@@ -584,25 +552,23 @@
                         <div class="info-card">
                             <div class="info-card-header">
                                 <span class="icon">📁</span>
-                                <h3>Top 5 Categories</h3>
+                                <h3>Top {{best_selling_categories.count}} Categories</h3>
                             </div>
                             <div class="info-list-header">
                                 <span>RANK</span>
                                 <span class="product-name">CATEGORY NAME</span>
-                                <span>REVENUE</span>
+                                <span>SOLD</span>
                             </div>
                             <ul class="info-list">
+                                {% for item in best_selling_categories %}
                                 <li class="info-list-item">
-                                    <div class="rank rank-top">1</div>
-                                    <div class="name">quartz</div>
-                                    <div class="value-badge">₹4,93,935</div>
+                                    <div class="rank rank-top">{{forloop.counter}}</div>
+                                    <div class="name">{{item.product__category__name}}</div>
+                                    <div class="value-badge">{{item.total_sold}}</div>
                                 </li>
-                                <li class="info-list-item">
-                                    <div class="rank rank-top">2</div>
-                                    <div class="name">automatic</div>
-                                    <div class="value-badge">₹3,73,563</div>
-                                </li>
-                                <li class="info-list-item">
+                                {% endfor %}
+                                
+                                <!-- <li class="info-list-item">
                                     <div class="rank rank-top">3</div>
                                     <div class="name">smartwatches</div>
                                     <div class="value-badge">₹1,50,084</div>
@@ -611,12 +577,7 @@
                                     <div class="rank rank-other">4</div>
                                     <div class="name">mechanical</div>
                                     <div class="value-badge">₹20,709</div>
-                                </li>
-                                <li class="info-list-item">
-                                    <div class="rank rank-other">5</div>
-                                    <div class="name">newcategory</div>
-                                    <div class="value-badge">₹10,620</div>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>
@@ -626,34 +587,27 @@
                         <div class="info-card">
                             <div class="info-card-header">
                                 <span class="icon">🏷️</span>
-                                <h3>Top 4 Brands</h3>
+                                <h3>Top {{best_selling_brands.count}} Brands</h3>
                             </div>
                              <div class="info-list-header">
                                 <span>RANK</span>
                                 <span class="product-name">BRAND NAME</span>
-                                <span>REVENUE</span>
+                                <span>SOLD</span>
                             </div>
                             <ul class="info-list">
+                                {% for brand in best_selling_brands %}
                                 <li class="info-list-item">
-                                    <div class="rank rank-top">1</div>
-                                    <div class="name">Titan</div>
-                                    <div class="value-badge">₹4,28,517</div>
+                                    <div class="rank rank-top">{{forloop.counter}}</div>
+                                    <div class="name">{{brand.product__brand__name}}</div>
+                                    <div class="value-badge">{{brand.total_sold}}</div>
                                 </li>
-                                <li class="info-list-item">
+                                {% endfor %}
+                                <!-- <li class="info-list-item">
                                     <div class="rank rank-top">2</div>
                                     <div class="name">Boat</div>
                                     <div class="value-badge">₹2,97,655</div>
-                                </li>
-                                <li class="info-list-item">
-                                    <div class="rank rank-top">3</div>
-                                    <div class="name">fastrack</div>
-                                    <div class="value-badge">₹2,79,092</div>
-                                </li>
-                                <li class="info-list-item">
-                                    <div class="rank rank-other">4</div>
-                                    <div class="name">G shock</div>
-                                    <div class="value-badge">₹43,647</div>
-                                </li>
+                                </li> -->
+                                
                             </ul>
                         </div>
                     </div>

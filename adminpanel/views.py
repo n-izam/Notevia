@@ -41,13 +41,34 @@ class AdminDashView(View):
     def get(self, request, user_id):
         # user = CustomUser.objects.filter(id = user_id)
         total_customers = CustomUser.objects.count()
-        total_orders = Order.objects.count()
+        
         total_pending = Order.objects.filter(status='Pending').count()
-        orders = Order.objects.exclude(status__in=['Cancelled', 'Payment Failed']).order_by('-created_at')
+        orders = Order.objects.exclude(status__in=['Cancelled', 'Payment Failed', 'Returned']).order_by('-created_at')
         delivered_orders = Order.objects.filter(status='Delivered')
+        total_orders = orders.count()
 
 
         total_sales = sum(order.over_all_amount_all for order in delivered_orders if order.over_all_amount_all)
+        best_selling_products = (OrderItem.objects.filter(order__status__in=['Pending', 'Processing', 'Shipped', 'Delivered'],  # allowed statuses
+                                                         is_cancel=False  # exclude cancelled order items
+                                                         ).values('product__id', 'product__name', 'product__category__name').annotate(total_sold=Sum('quantity')).order_by('-total_sold')[:10])
+                
+        
+        best_selling_categories = ( OrderItem.objects.filter( ~Q(order__status__in=['Cancelled', 'Returned', 'Payment Failed']),  # exclude cancelled + returned orders
+                                                             is_cancel=False  # exclude cancelled items
+                                                             )
+                                                             .values('product__category__id', 'product__category__name')
+                                                             .annotate(total_sold=Sum('quantity'))
+                                                             .order_by('-total_sold')[:10]
+                                                             )
+        best_selling_brands = ( OrderItem.objects.filter( ~Q(order__status__in=['Cancelled', 'Returned', 'Payment Failed']),  # exclude cancelled + returned orders
+                                                             is_cancel=False  # exclude cancelled items
+                                                             )
+                                                             .values('product__brand__id', 'product__brand__name')
+                                                             .annotate(total_sold=Sum('quantity'))
+                                                             .order_by('-total_sold')[:10]
+                                                             )
+
 
         now = timezone.now()
 
@@ -134,6 +155,9 @@ class AdminDashView(View):
             "total_sales": f"₹{total_sales:,.2f}",
             "total_pending": total_pending,
             "chart_data": json.dumps(chart_data_json),
+            "best_selling_products": best_selling_products,
+            "best_selling_categories": best_selling_categories,
+            "best_selling_brands": best_selling_brands,
             # For change percentages (static for now; make dynamic if needed with prev period queries)
             "customers_change": "↑ 16% this month",
             "orders_change": "↑ 8% this month",
