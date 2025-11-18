@@ -204,6 +204,7 @@ class PlaceOrderView(View):
         address_id = request.GET.get('address')
         payment_method = request.GET.get('payment')
         applied_coupon = request.GET.get('apply_coupon','').strip()
+        final_over_all_amount = request.GET.get('final_amount')
         print('coupon ', applied_coupon)
 
         # if not request.session.get('payment_confirm'):
@@ -220,6 +221,12 @@ class PlaceOrderView(View):
             # here is how pass query params in redirection
             url = f'{reverse("order_confirmation")}?address={address.id}'
             return redirect(url)
+        
+        if payment_method == 'COD':
+            if Decimal(final_over_all_amount) > 1000:
+                info_notify(request, "The order amount is geater than 1000, try an another payment method")
+                url = f'{reverse("order_confirmation")}?address={address.id}'
+                return redirect(url)
         
         address = get_object_or_404(Address, id=address_id)
         
