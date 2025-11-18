@@ -329,6 +329,91 @@
           gap: 16px;
       }
   }
+
+        /* Styles for the new sections */
+        .top-items-section {
+            margin-top: 2rem;
+        }
+        .info-card {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.207);
+            height: 100%;
+        }
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .info-card-header .icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+        .info-card-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .info-list-header {
+            display: flex;
+            justify-content: space-between;
+            color: #6c757d;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 0 1rem 0.5rem 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .info-list-header .product-name {
+            flex-grow: 1;
+            margin-left: 3rem;
+        }
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .info-list-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .info-list-item:last-child {
+            border-bottom: none;
+        }
+        .info-list-item .rank {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #fff;
+            margin-right: 1rem;
+        }
+        .info-list-item .rank.rank-top {
+            background-color: #e0f2f1;
+            color: #00796b;
+        }
+        .info-list-item .rank.rank-other {
+            background-color: #495057;
+        }
+        .info-list-item .name {
+            flex-grow: 1;
+            font-weight: 500;
+            color: #343a40;
+        }
+        .info-list-item .value-badge {
+            background-color: #e7f5ff;
+            color: #1971c2;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
 </style>
 
 {% endblock %}
@@ -420,6 +505,162 @@
                   </div>
               </div>
           </div>
+
+          <!-- =================================================================
+            NEW SECTION: TOP PRODUCTS, CATEGORIES, AND BRANDS
+            ================================================================== -->
+            <div class="top-items-section">
+                <div class="row">
+
+                    <!-- Top 10 Products -->
+                    <div class="col-xl-5 col-lg-12 mb-4">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="icon">🛍️</span>
+                                <h3>Top 10 Products</h3>
+                            </div>
+                            <div class="info-list-header">
+                                <span>RANK</span>
+                                <span class="product-name">PRODUCT NAME</span>
+                                <span>SOLD</span>
+                            </div>
+                            <ul class="info-list">
+                                <li class="info-list-item">
+                                    <div class="rank rank-top">1</div>
+                                    <div class="name">Fastrack Stunners</div>
+                                    <div class="value-badge">15</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-top">2</div>
+                                    <div class="name">Fastrack Marvellous FX2</div>
+                                    <div class="value-badge">13</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-top">3</div>
+                                    <div class="name">G-Shock - LAND MUDMASTER</div>
+                                    <div class="value-badge">12</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-other">4</div>
+                                    <div class="name">G-Shock Mudmaster</div>
+                                    <div class="value-badge">9</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-other">5</div>
+                                    <div class="name">Fastrack Opulence Sun Moon C...</div>
+                                    <div class="value-badge">8</div>
+                                </li>
+                                 <li class="info-list-item">
+                                    <div class="rank rank-other">6</div>
+                                    <div class="name">Titan Quartz Multifunction</div>
+                                    <div class="value-badge">4</div>
+                                </li>
+                                 <li class="info-list-item">
+                                    <div class="rank rank-other">7</div>
+                                    <div class="name">Fastrack Automatics Blue Dial</div>
+                                    <div class="value-badge">4</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-other">8</div>
+                                    <div class="name">Fastrack Astor FR2 Pro</div>
+                                    <div class="value-badge">3</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-other">9</div>
+                                    <div class="name">Boat Lunar Pro LTE</div>
+                                    <div class="value-badge">2</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-other">10</div>
+                                    <div class="name">Titan Nebula Vintage</div>
+                                    <div class="value-badge">1</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Top 5 Categories -->
+                    <div class="col-xl-4 col-lg-6 mb-4">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="icon">📁</span>
+                                <h3>Top 5 Categories</h3>
+                            </div>
+                            <div class="info-list-header">
+                                <span>RANK</span>
+                                <span class="product-name">CATEGORY NAME</span>
+                                <span>REVENUE</span>
+                            </div>
+                            <ul class="info-list">
+                                <li class="info-list-item">
+                                    <div class="rank rank-top">1</div>
+                                    <div class="name">quartz</div>
+                                    <div class="value-badge">₹4,93,935</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-top">2</div>
+                                    <div class="name">automatic</div>
+                                    <div class="value-badge">₹3,73,563</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-top">3</div>
+                                    <div class="name">smartwatches</div>
+                                    <div class="value-badge">₹1,50,084</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-other">4</div>
+                                    <div class="name">mechanical</div>
+                                    <div class="value-badge">₹20,709</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-other">5</div>
+                                    <div class="name">newcategory</div>
+                                    <div class="value-badge">₹10,620</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Top 4 Brands -->
+                    <div class="col-xl-3 col-lg-6 mb-4">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="icon">🏷️</span>
+                                <h3>Top 4 Brands</h3>
+                            </div>
+                             <div class="info-list-header">
+                                <span>RANK</span>
+                                <span class="product-name">BRAND NAME</span>
+                                <span>REVENUE</span>
+                            </div>
+                            <ul class="info-list">
+                                <li class="info-list-item">
+                                    <div class="rank rank-top">1</div>
+                                    <div class="name">Titan</div>
+                                    <div class="value-badge">₹4,28,517</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-top">2</div>
+                                    <div class="name">Boat</div>
+                                    <div class="value-badge">₹2,97,655</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-top">3</div>
+                                    <div class="name">fastrack</div>
+                                    <div class="value-badge">₹2,79,092</div>
+                                </li>
+                                <li class="info-list-item">
+                                    <div class="rank rank-other">4</div>
+                                    <div class="name">G shock</div>
+                                    <div class="value-badge">₹43,647</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- End of new section -->
       </div>
     </div>
 </div>

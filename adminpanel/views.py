@@ -590,16 +590,30 @@ class AdminCustomersView(View):
     def get(self, request):
 
         search_q = request.GET.get('q', '').strip()
+        page = request.GET.get('page', 1)
 
         customers = CustomUser.objects.all().exclude(is_superuser=True).order_by('-id')
 
         if search_q:
             customers = customers.filter(Q(full_name__icontains=search_q)| 
                                        Q(email__icontains=search_q))
+            
+        paginator = Paginator(customers, 6)
+        try:
+            paginated_orders = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_orders = paginator.page(1)
+        except EmptyPage:
+            paginated_orders = paginator.page(paginator.num_pages)
 
+        context = {
+            "user_id": request.user.id,
+            "customers": paginated_orders,
+            "paginator" : paginator,
+            "page_obj" : paginated_orders,
+            }
 
-
-        return render(request, 'adminpanel/customers.html', {"user_id": request.user.id, "customers": customers})
+        return render(request, 'adminpanel/customers.html', context)
     
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')

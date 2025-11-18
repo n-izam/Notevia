@@ -73,7 +73,7 @@
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item"><a href="{% url 'cores-home' user_id=user_id %}" class="nav-link px-3 text-dark">Home</a></li>
                         <li class="nav-item"><a href="{% url 'shop_products' %}" class="nav-link px-3 text-dark">Products</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link px-3 text-dark">About us</a></li>
+                        <li class="nav-item"><a href="{% url 'abouts' %}" class="nav-link px-3 text-dark">About us</a></li>
                     </ul>
 
                     <!-- 3. Action Icons (Right on Desktop / Bottom of Mobile Menu) -->
@@ -146,11 +146,11 @@
                 <div class="col-lg-2 col-md-6">
                     <h5 class="text-uppercase fw-bold mb-4">Help</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Privacy Policy</a></li>
-                        <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Returns + Exchanges</a></li>
-                        <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Shipping</a></li>
-                        <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Terms & Conditions</a></li>
-                        <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">FAQ's</a></li>
+                        <li class="mb-2"><a href="{% url 'privacy_policy' %}" class="text-dark text-decoration-none">Privacy Policy</a></li>
+                        <!-- <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Returns + Exchanges</a></li> -->
+                        <!-- <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Shipping</a></li> -->
+                        <li class="mb-2"><a href="{% url 'terms_and_conditions' %}" class="text-dark text-decoration-none">Terms & Conditions</a></li>
+                        <!-- <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">FAQ's</a></li> -->
                     </ul>
                 </div>
     
@@ -158,15 +158,15 @@
                 <div class="col-lg-2 col-md-6">
                     <h5 class="text-uppercase fw-bold mb-4">About us</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Our Story</a></li>
-                        <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Visit Our Store</a></li>
-                        <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Contact Us</a></li>
-                        <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Account</a></li>
+                        <li class="mb-2"><a href="{% url 'abouts' %}" class="text-dark text-decoration-none">Our Story</a></li>
+                        <!-- <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Visit Our Store</a></li> -->
+                        <li class="mb-2"><a href="{% url 'contact_us' %}" class="text-dark text-decoration-none">Contact Us</a></li>
+                        <!-- <li class="mb-2"><a href="#!" class="text-dark text-decoration-none">Account</a></li> -->
                     </ul>
                 </div>
     
                 <!-- Column 4: Email Signup -->
-                <div class="col-lg-4 col-md-6">
+                <!-- <div class="col-lg-4 col-md-6">
                     <h5 class="text-uppercase fw-bold mb-4">Sign Up for Email</h5>
                     <p>Sign up to get first dibs on new arrivals, sales, exclusive content, events and more!</p>
                     <form action="#">
@@ -175,7 +175,7 @@
                             <button class="btn btn-dark" type="button">Subscribe</button>
                         </div>
                     </form>
-                </div>
+                </div> -->
             </div>
         </div>
         <hr class="my-4">

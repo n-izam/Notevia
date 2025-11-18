@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import HomeView, ProductlistingView, ProductDetailsView, StaticHomeView, StaticProductListView, StaticProductDetailsView, StaticAboutView, StaticContactUsView
-from .views import StaticTermsAndConditionsView, StaticPrivacyPolicyView
+from .views import StaticTermsAndConditionsView, StaticPrivacyPolicyView, AboutView, ContactUsView, PrivacyPolicyView, TermsAndConditionsView
 
 
 urlpatterns = [
@@ -14,5 +14,9 @@ urlpatterns = [
     path('static_contact_us/', StaticContactUsView.as_view(), name='static_contact_us'),
     path('static_terms_and_conditions/', StaticTermsAndConditionsView.as_view(), name='static_terms_and_conditions'),
     path('static_privacy_policy/', StaticPrivacyPolicyView.as_view(), name='static_privacy_policy'),
+    path('about/', AboutView.as_view(), name='abouts'),
+    path('contact_us/', ContactUsView.as_view(), name='contact_us'),
+    path('terms_and_conditions/', TermsAndConditionsView.as_view(), name='terms_and_conditions'),
+    path('privacy_policy/', PrivacyPolicyView.as_view(), name='privacy_policy'),
 
 ]

@@ -220,7 +220,7 @@ class StaticContactUsView(View):
         context = {
 
         }
-        return render(request, 'cores/static_contactus.html')
+        return render(request, 'cores/static_contactus.html', context)
     
 class StaticTermsAndConditionsView(View):
 
@@ -432,3 +432,47 @@ class ProductDetailsView(View):
         }
 
         return render(request, 'cores/productdetail1.html', context)
+    
+class AboutView(View):
+
+    def get(self, request):
+
+
+        context = {
+            "user_id": request.user.id,
+
+        }
+
+        return render(request, 'cores/notevia_about.html', context)
+    
+class ContactUsView(View):
+
+    def get(self, request):
+
+        context = {
+            "user_id": request.user.id,
+
+        }
+        return render(request, 'cores/notevia_contactus.html', context)
+    
+class TermsAndConditionsView(View):
+
+    def get(self, request):
+
+        context = {
+            "user_id": request.user.id,
+
+        }
+
+        return render(request, 'cores/notevia_terms_and_conditions.html', context)
+
+class PrivacyPolicyView(View):
+
+    def get(self, request):
+
+        context = {
+            "user_id": request.user.id,
+
+        }
+
+        return render(request, 'cores/notevia_privacy_policy.html', context)

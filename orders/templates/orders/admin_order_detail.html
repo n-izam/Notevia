@@ -96,6 +96,35 @@
     .totals-section {
         border-top: 1px solid #dee2e6;
     }
+
+    /* return item tyle */
+    /* Add this to your existing styles */
+    .request-management-card {
+        background-color: rgb(255, 255, 254); /* A light grey to stand out */
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .request-management-card .card-title-secondary {
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .request-management-card .reason-quote {
+        border-left: 3px solid #6c757d;
+        padding-left: 1rem;
+        margin: 0.5rem 0 0 0;
+        font-style: italic;
+    }
+
+    .return-update-form .badge {
+        font-size: 0.9em;
+    }
 </style>
 
 {% endblock %}
@@ -208,44 +237,65 @@
                                 </div>
                             </div>                      
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mt-4 ">
-                            <!-- Message from Database (Aligns to the left) -->
-                            <div class="me-3">
-                                {% if order.cancel_reason %}
-                                    <p class="mb-0 text-muted">
-                                        <strong>Reason:</strong> <em>{{ order.cancel_reason }}</em>
-                                    </p>
-                                {% elif order.return_requests.reason %}
-                                    <p class="mb-0 text-muted">
-                                        <strong>Reason:</strong> <em>{{ order.return_requests.reason }}</em>
-                                    </p>
-                                {% endif %}
-                            </div>
-                        
 
-                            {% if order.return_requests.reason %}
-                            <!-- onsubmit="return confirm('Are you sure you want to confirm?');" -->
-                            <form method="POST" action="{% url 'return_update' order.id order.user.id %}" class="delete-form">
-                                {% csrf_token %}
-                                
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Return Status: {{order.return_requests.status}}</label>
-                                    {% if not order.return_requests.status == 'Approved' and not order.return_requests.status == 'Rejected' %}
-                                    <select name="status" id="status" class="form-select mb-3" required>
-                                        {% for value, label in return_status_choices %}
-                                            <option value="{{ value }}" {% if value == return_request.status %} selected {% endif %}>
-                                                {{ label }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                    <button type="submit" class="btn btn-success">Confirm</button>
-                                    {% endif %}
-                                </div>
+                        <!-- =================================================================== -->
+                        <!-- START: New Cancellation & Return Management Card -->
+                        <!-- =================================================================== -->
+
+                        <!-- This entire card will only appear if a reason exists -->
+                        {% if order.cancel_reason or order.return_requests.reason %}
+                        <div class="request-management-card mt-4">
                             
+                            <!-- Card Title -->
+                            <h5 class="card-title-secondary">
+                                {% if order.return_requests.reason %}
+                                    Return Request
+                                {% else %}
+                                    Cancellation Reason
+                                {% endif %}
+                            </h5>
+
+                            <!-- Reason Display -->
+                            <p class="text-muted mb-1"><strong>Reason Given:</strong></p>
+                            <blockquote class="reason-quote">
+                                {{ order.cancel_reason|default:order.return_requests.reason }}
+                            </blockquote>
+
+                            <!-- Return Management Form (only shows for returns) -->
+                            {% if order.return_requests.reason %}
+                                <hr class="my-4">
                                 
-                            </form>
+                                <form method="POST" action="{% url 'return_update' order.id order.user.id %}" class="return-update-form delete-form">
+                                    {% csrf_token %}
+
+                                    <p class="mb-2">
+                                        <strong>Current Status:</strong> 
+                                        <span class="badge bg-secondary">{{ order.return_requests.status }}</span>
+                                    </p>
+
+                                    <!-- This section only appears if the return is still pending a decision -->
+                                    {% if order.return_requests.status != 'Approved' and order.return_requests.status != 'Rejected' %}
+                                        <label for="status" class="form-label small fw-bold">Update Status:</label>
+                                        <div class="d-flex gap-2">
+                                            <select name="status" id="status" class="form-select" required>
+                                                {% for value, label in return_status_choices %}
+                                                    <option value="{{ value }}" {% if value == order.return_requests.status %}selected{% endif %}>
+                                                        {{ label }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="submit" class="btn btn-success flex-shrink-0">Confirm</button>
+                                        </div>
+                                    {% endif %}
+                                </form>
                             {% endif %}
+
                         </div>
+                        {% endif %}
+
+                        <!-- =================================================================== -->
+                        <!-- END: New Cancellation & Return Management Card -->
+                        <!-- =================================================================== -->
                     </div>
             
                     <!-- Right Column: Order List & Totals -->
