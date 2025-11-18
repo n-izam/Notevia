@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CartPageView, AddToCartFromDetailView, CartQuantityUpdateView, RemoveFromCartView, UserWalletView
+from .views import CartPageView, AddToCartFromDetailView, CartQuantityUpdateView, RemoveFromCartView, UserWalletView, AdminOverAllWalletView
 from . import views
 
 
@@ -16,5 +16,7 @@ urlpatterns = [
     path('wallet/success/<int:trxct_id>/', views.WalletPaymentSuccessView.as_view(), name='wallet_payment_success'),
     path('wallet/cancel/<int:trxct_id>/', views.PaymentCancelReturnWalletView.as_view(), name='cancel_return_wallet'),
     path('wallet/payment/failed/<int:trxct_id>/', views.WalletPaymentFailedView.as_view(), name='wallet_payment_failed'),
+
+    path('admin_wallet/', AdminOverAllWalletView.as_view(), name='admin_View_transactions'),
 
 ]

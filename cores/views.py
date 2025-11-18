@@ -259,10 +259,13 @@ class HomeView(View):
                 "main_image": main_image 
             })
         # user = CustomUser.objects.get(id=user_id)
+        wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+        wishlist_products = list(wishlist.items.values_list('product_id', flat=True))
 
         context = {
             "product_with_image":product_with_image,
             "user_id": user_id,
+            "wishlist_products": wishlist_products,
         }
         
         return render(request, 'cores/home1.html', context)
@@ -414,6 +417,9 @@ class ProductDetailsView(View):
                 "main_image": main_image,
             })
 
+        wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+        wishlist_products = list(wishlist.items.values_list('product_id', flat=True))
+
         # breadcrumb
         breadcrumb = [
             {"name": "Home", "url": "/"},
@@ -429,6 +435,7 @@ class ProductDetailsView(View):
             "main_variant": main_variant,
             "product_with_image":product_with_image,
             "breadcrumb": breadcrumb,
+            "wishlist_products": wishlist_products,
         }
 
         return render(request, 'cores/productdetail1.html', context)
