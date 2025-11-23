@@ -369,7 +369,7 @@
     
             increaseBtn.addEventListener('click', () => {
                 let currentValue = parseInt(input.value) || 1;
-                if (currentValue < maxStock) {
+                if (currentValue <= maxStock) {
                     input.value = currentValue + 1;
                 }
             });

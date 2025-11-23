@@ -638,14 +638,14 @@ class CancelOrderView(View):
             error_notify(request, "Order can't able to cancel after processing")
             return redirect('order_details', order_id-order.id )
         
-        order.cancel_reason = request.POST.get('reason', '')
-        order.status = 'Cancelled'
-        order.is_paid=False
-        order.save()
+        
         
 
         if order.items.filter(is_cancel=False).exists():
             if order.payment_method not in ['COD', 'Cash on Delivery']:
+                refund_amount = order.over_all_amount
+                print(f"total refund for order {order.order_id}", refund_amount)
+
                 wallet = get_object_or_404(Wallet, user=request.user)
                 transaction = wallet.credit(Decimal(order.over_all_amount), message=f"Order {order.order_id} cancellation amount" )
             for item in order.items.filter(is_cancel=False):
@@ -654,6 +654,12 @@ class CancelOrderView(View):
                     item.is_cancel = True
                     item.variant.save()
                     item.save()
+            
+        order.cancel_reason = request.POST.get('reason', '')
+        order.status = 'Cancelled'
+        order.is_paid=False
+        order.coupon_amount = 0.00
+        order.save()
 
         
         success_notify(request, "order cancelled successfully")
@@ -679,8 +685,10 @@ class CancelOrderItemView(View):
         
         if item.variant:
             if order.payment_method not in ['COD', 'Cash on Delivery']:
+                refund_amount = item.return_with_tax_price()
+                print(f"refund amount {item.product.name}-{item.price}-{item.variant.name}", refund_amount)
                 wallet = get_object_or_404(Wallet, user=request.user)
-                transaction = wallet.credit(Decimal(item.return_with_tax_price()), message=f"Order #{order.order_id} refund for item:{item.product.name} ")
+                transaction = wallet.credit(Decimal(refund_amount), message=f"Order #{order.order_id} refund for item:{item.product.name} ")
             item.variant.stock += item.quantity
             item.is_cancel = True
             item.variant.save()

@@ -7,6 +7,15 @@
 <!-- {% block head %} {% endblock %} -->
  {% block style %}
  <style>
+
+    .wishlist-icons {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 1.2rem;
+        color: #d9534f;
+    }
+
     /* Toast container responsiveness */
     .toast-container {
         position: fixed;
@@ -203,7 +212,12 @@
                     <div class="card-body text-center">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">{{item.product.name}} - {{ item.product.category.name }}</h5>
-                            <a href="#" class="text-dark"><i class="far fa-heart"></i></a>
+                            {% if item.product.id in wishlist_products %}
+                            <a href="{% url 'remove_from_wishlist' %}?product_id={{item.product.id}}" class="wishlist-icons"><i class="fas fa-heart"></i></a>
+                            {% else %}
+                            <a href="{% url 'add_to_wishlist' %}?product_id={{item.product.id}}" class="wishlist-icons"><i class="far fa-heart"></i></a>
+                            {% endif %}
+                            <!-- <a href="#" class="text-dark"><i class="far fa-heart"></i></a> -->
                         </div>
                         <p class="card-text">Rs. {{item.product.base_price}}</p>
                     </div>

@@ -1,0 +1,722 @@
+{% extends "adminbase.html" %}
+
+{% load static %}
+
+{% block title %} productlist {% endblock %}
+
+{% block head %} <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> {% endblock %}
+
+{% block style %}
+
+<style>
+   /* --- General Layout --- */
+   body {
+    background-color: #f8f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .main-content {
+        padding: 1.5rem;
+    }
+
+    /* --- Page Header --- */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap; /* Responsive wrapping */
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .page-header h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    /* --- Filters Section --- */
+    .filters-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .search-bar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 350px; /* Limit width on larger screens */
+    }
+    .search-bar .fa-search {
+        position: absolute;
+        left: 1rem;
+        color: #6c757d;
+    }
+    .search-bar input {
+        width: 100%;
+        padding: 0.6rem 1rem 0.6rem 2.5rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.5rem;
+        background-color: #fff;
+    }
+    .filter-buttons .filter-btn {
+        background: #fff;
+        border: 1px solid #dee2e6;
+        color: #495057;
+        padding: 0.6rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+    }
+    .filter-buttons .filter-btn:hover, .filter-buttons .filter-btn.active {
+        background-color: #212529;
+        color: #fff;
+        border-color: #212529;
+    }
+
+    /* --- Div Table Structure --- */
+    .transaction-table {
+        background: #fff;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        overflow: hidden; /* Ensures child elements respect the border radius */
+    }
+    .table-header, .table-row {
+        display: grid;
+        grid-template-columns: 2fr 2fr 1.5fr 1fr 1fr 1fr; /* Responsive column layout */
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .table-header {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+    }
+    .table-row:last-child {
+        border-bottom: none;
+    }
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .user-info .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .user-info .user-name { font-weight: 500; }
+    .user-info .user-email { font-size: 0.85rem; color: #6c757d; }
+
+    .transaction-id { font-family: monospace; }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.25em 0.6em;
+        font-size: 0.85em;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.375rem;
+    }
+    .status-badge.credit { background-color: #d1e7dd; color: #0f5132; }
+    .status-badge.debit { background-color: #f8d7da; color: #842029; }
+
+    .view-btn {
+        background-color: #e9ecef;
+        color: #495057;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+    }
+
+    /* --- Mobile Responsiveness for Table --- */
+    @media (max-width: 991.98px) {
+        .table-header { display: none; }
+        .table-row {
+            grid-template-columns: 1fr; /* Stack columns vertically */
+            gap: 0.75rem;
+            padding: 1.5rem;
+        }
+        .table-cell::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #6c757d;
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+    }
+
+    /* --- Pagination --- */
+    .pagination-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    /* (Pagination button styles can be reused from previous examples) */
+
+    /* --- Modal Styles --- */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 5000 !important;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.6);
+    }
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 0;
+        border: none;
+        width: 90%;
+        max-width: 600px;
+        border-radius: 0.75rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        animation: slideDown 0.4s ease-out;
+    }
+    .modal-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .modal-header h2 { font-size: 1.25rem; margin: 0; }
+    .modal-body { padding: 1.5rem; }
+    .close-btn { font-size: 1.5rem; background: none; border: none; cursor: pointer; color: #6c757d; }
+
+    .detail-list { list-style: none; padding: 0; }
+    .detail-list li { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #f1f1f1; }
+    .detail-list li:last-child { border-bottom: none; }
+    .detail-list .label { font-weight: 500; color: #6c757d; }
+    .detail-list .value { font-weight: 500; color: #212529; }
+    .source-info {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-top: 1.5rem;
+        border: 1px solid #dee2e6;
+    }
+
+    @keyframes slideDown { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+    /* Toast container responsiveness */
+    .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 5000;
+    }
+
+    @media (max-width: 576px) {
+        .toast-container {
+            top: auto !important;
+            bottom: 1rem !important;
+            right: 50% !important;
+            transform: translateX(50%);
+            width: 90%;
+        }
+    }
+
+    /* Base Toast Style */
+    .toast {
+        backdrop-filter: blur(8px);
+        background: rgba(17, 17, 17, 0.85) !important; /* glassy black */
+        color: #fff !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+        animation: slideFadeIn 0.5s ease-out;
+    }
+
+    /* Toast body text */
+    .toast-body {
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    /* SUCCESS */
+    .toast.bg-success {
+        background: rgba(0, 255, 100, 0.15) !important;
+        border-left: 4px solid #00ff73 !important;
+        color: #409365 !important;
+    }
+
+    /* ERROR */
+    .toast.bg-danger {
+        background: rgba(255, 0, 0, 0.15) !important;
+        border-left: 4px solid #ff3b3b !important;
+        color: #bb4141 !important;
+    }
+
+    /* WARNING */
+    .toast.bg-warning {
+        background: rgba(255, 193, 7, 0.15) !important;
+        border-left: 4px solid #ffc107 !important;
+        color: #a1842f !important;
+    }
+
+    /* INFO */
+    .toast.bg-info {
+        background: rgba(0, 200, 255, 0.15) !important;
+        border-left: 4px solid #00cfff !important;
+        color: #3092a8 !important;
+    }
+
+    /* Beautiful animation */
+    @keyframes slideFadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0px) scale(1);
+        }
+    }
+
+    /* Pagination Styles */
+    .pagination .page-item .page-link {
+        border-radius: 50%;
+        margin: 0 5px;
+        color: #333;
+        border: none;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.2s;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #212529; /* Dark color for active page */
+        color: #fff;
+    }
+    .pagination .page-item.disabled .page-link {
+        color: #ccc;
+    }
+    .pagination .page-item .page-link:hover {
+        background-color: #e9ecef;
+    }
+
+    /* --- Search Input --- */
+    .search-and-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* --- Search Input --- */
+    .clearable-input {
+        position: relative;
+        width: 250px;
+    }
+    .clearable-input input {
+        padding-right: 2.2rem;
+    }
+    .clearable-input .clear-btn {
+        position: absolute;
+        top: 50%;
+        right: 0.6rem;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: #888;
+        display: none;
+    }
+    .clearable-input .clear-btn.visible { display: block; }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<!-- start from  -->
+<div class="container-fluid">
+    <div class="row">
+        <!-- Assuming your sidebar is on the left -->
+        <!-- <nav class="col-md-2 d-none d-md-block bg-light sidebar"> -->
+            <!-- Sidebar content here -->
+        <!-- </nav> -->
+
+        
+        <main class="main-content col-md-9 col-lg-10 px-md-4">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Transactions</li>
+                </ol>
+            </nav>
+        
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>Transactions</h1>
+            </div>
+        
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="search-and-actions">
+                    <form method="GET" action="" class="d-flex align-items-center">
+                        <div class="clearable-input me-2">
+                            <input type="text" name="q" class="form-control form-control-sm" placeholder="Search transaction id or user..." value="{{ query|default:'' }}" id="searchField" autocomplete="off" />
+                            <button type="button" class="clear-btn" id="btnClear" aria-label="Clear">&times;</button>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-dark">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="filter-buttons">
+                    <a href="{% url 'admin_View_transactions' %}" class="filter-btn active text-decoration-none">ALL</a>
+                    {% for value, label in transaction_type %}
+                    <a href="?type={{value}}&{% if query %}q={{query}}{% endif %}" class="filter-btn text-decoration-none">{{label}}</a>
+                    {% endfor %}
+                    <!-- <button class="filter-btn">DEBIT</button> -->
+                </div>
+            </div>
+        
+            <!-- Transaction Div Table -->
+            <div class="transaction-table">
+                <!-- Table Header -->
+                <div class="table-header">
+                    <div class="table-cell">User</div>
+                    <div class="table-cell">Transaction ID</div>
+                    <div class="table-cell">Date</div>
+                    <div class="table-cell">Type</div>
+                    <div class="table-cell">Amount</div>
+                    <div class="table-cell">Action</div>
+                </div>
+        
+                <!-- Table Row 1 (Credit Example from Return) -->
+                 {% for transaction in transactions %}
+                <div class="table-row">
+                    <div class="table-cell" data-label="User">
+                        <div class="user-info">
+                            <img src="{{transaction.wallet.user.profile.image.url}}" alt="User Avatar" class="user-avatar">
+                            <div>
+                                <div class="user-name">{{transaction.wallet.user.full_name}}</div>
+                                <div class="user-email">{{transaction.wallet.user.email}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-cell transaction-id" data-label="Transaction ID">{{transaction.transaction_id}}</div>
+                    <div class="table-cell" data-label="Date">{{ transaction.created_at|date:"j M Y" }}</div>
+                    {% if transaction.transaction_type == 'Credit' %}
+                    <div class="table-cell" data-label="Type"><span class="status-badge credit">Credit</span></div>
+                    <div class="table-cell" data-label="Amount">+ ₹{{transaction.amount}}</div>
+                    {% else %}
+                    <div class="table-cell" data-label="Type"><span class="status-badge debit">Debit</span></div>
+                    <div class="table-cell" data-label="Amount">- ₹{{transaction.amount}}</div>
+                    {% endif %}
+                    
+                    
+                    <div class="table-cell" data-label="Action">
+                        <button class="view-btn"
+                            onclick="openTransactionModal(this)"
+                            data-name="{{ transaction.wallet.user.full_name }}"
+                            data-email="{{ transaction.wallet.user.email }}"
+                            data-trx="{{ transaction.transaction_id }}"
+                            data-date="{{ transaction.created_at|date:'j M Y, h:i A' }}"
+                            data-type="{{ transaction.transaction_type }}"
+                            data-amount="{{ transaction.amount }}"
+                            data-source="{{ transaction.message|default:'No additional information available.' }}"
+                            data-order="{{ transaction.order.id|default:'' }}"
+                            data-order-number="{{ transaction.order.order_id|default:'' }}">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+        
+        
+            </div>
+        
+            
+            <!-- Pagination -->
+            {% if page_obj.paginator.num_pages > 1 %}
+            <nav aria-label="Page navigation" class="pagination-container mt-4">
+                <ul class="pagination">
+
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if types %}&type={{types}}{% endif %}">&lsaquo;</a>
+                    </li>
+                    {% endif %}
+
+                    {# --- Show first page --- #}
+                    {% if page_obj.number > 3 %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if query %}&q={{ query }}{% endif %}{% if types %}&type={{types}}{% endif %}">1</a>
+                    </li>
+                    {% if page_obj.number > 4 %}
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% endif %}
+                    {% endif %}
+
+                    {# --- Page window around current page --- #}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                            {% if page_obj.number == num %}
+                            <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if types %}&type={{types}}{% endif %}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {# --- Show last page --- #}
+                    {% if page_obj.number < page_obj.paginator.num_pages|add:"-2" %}
+                        {% if page_obj.number < page_obj.paginator.num_pages|add:"-3" %}
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}{% if types %}&type={{types}}{% endif %}">
+                                {{ page_obj.paginator.num_pages }}
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if types %}&type={{types}}{% endif %}">&rsaquo;</a>
+                    </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+            {% endif %}
+            <!-- Toast container (fixed position) -->
+            <div class="toast-container">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="toast align-items-center border-0 mb-2
+                            {% if message.tags == 'error' %} bg-danger
+                            {% elif message.tags == 'success' %} bg-success 
+                            {% elif message.tags == 'warning' %} bg-warning 
+                            {% else %} bg-info
+                            {% endif %}
+                        ">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
+                                {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                                {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                    {{ message }}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        
+        </main>
+    
+        
+    </div>
+</div>
+<!-- end here -->
+{% endblock %}
+
+{% block modal %}
+
+<!-- Transaction Detail Modal -->
+<div id="transactionModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Transaction Details</h2>
+            <button class="close-btn" onclick="closeTransactionModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <ul class="detail-list">
+                <li>
+                    <span class="label">User Details:</span>
+                    <span class="value text-end">
+                        <span id="modalUserName"></span><br>
+                        <small class="text-muted" id="modalUserEmail"></small>
+                    </span>                
+                    <!-- <span class="value text-end">John Doe<br><small class="text-muted">john.doe@example.com</small></span> -->
+                </li>
+                <li><span class="label">Transaction ID:</span><span class="value" id="modalTransactionId"></span></li>
+                <li><span class="label">Date:</span><span class="value" id="modalDate"></span></li>
+                <li><span class="label">Type:</span><span class="value" id="modalType"></span></li>
+                <li><span class="label">Amount:</span><span class="value" id="modalAmount"></span></li>
+            </ul>
+            <p class="text-muted small mb-3" id="modalSource"></p>
+
+            <!-- Conditional Section for Source -->
+            <div class="source-info" id="modalOrderSection" style="display:none;">
+                <h6 class="mb-2">Source of Transaction</h6>
+                <p class="text-muted small mb-3" id="modalSource"></p>
+                <p class="text-muted small mb-3">This transaction originated from a product return for Order <strong id="modalOrderNumber"></strong></p>
+                <!-- <a href="#" class="btn btn-dark w-100">View Order Details</a> -->
+                <a href="#" id="modalOrderLink" class="btn btn-dark w-100">View Order Details</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+            
+                const modal = document.getElementById('transactionModal');
+            
+                window.openTransactionModal = function (btn) {
+            
+                    // Basic fields
+                    document.getElementById("modalUserName").innerText = btn.dataset.name;
+                    document.getElementById("modalUserEmail").innerText = btn.dataset.email;
+                    document.getElementById("modalTransactionId").innerText = btn.dataset.trx;
+                    document.getElementById("modalDate").innerText = btn.dataset.date;
+            
+                    // Type badge
+                    const type = btn.dataset.type;
+                    const typeElement = document.getElementById("modalType");
+                    typeElement.innerHTML =
+                        type === "Credit" ? '<span class="status-badge credit">Credit</span>'
+                                          : '<span class="status-badge debit">Debit</span>';
+            
+                    // Amount
+                    document.getElementById("modalAmount").innerText =
+                        (type === "Credit" ? "+ ₹" : "- ₹") + btn.dataset.amount;
+            
+                    // Source text
+                    document.getElementById("modalSource").innerText = btn.dataset.source;
+            
+                    // ORDER HANDLING
+                    const orderId = btn.dataset.order;
+                    const orderNumber = btn.dataset.orderNumber;
+                    const orderSection = document.getElementById("modalOrderSection");
+            
+                    if (orderId) {
+                        orderSection.style.display = "block";
+                        document.getElementById("modalOrderNumber").innerText = orderNumber;
+                        document.getElementById("modalOrderLink").href = `/orders/admin_order_detail/${orderId}/`;
+                    } else {
+                        orderSection.style.display = "none";
+                    }
+            
+                    modal.style.display = "block";
+                };
+            
+                window.closeTransactionModal = function () {
+                    modal.style.display = "none";
+                };
+            
+                window.onclick = function(event) {
+                    if (event.target == modal) closeTransactionModal();
+                };
+            
+            });
+            </script>
+
+
+
+
+<!-- {% if messages %}
+{% for message in messages %}
+{%if message.tags == 'success' %}
+<script>
+    Swal.fire({
+      icon: "{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}",
+      title: "{{ message }}",
+      showConfirmButton: false,
+      timer: 2000
+    });
+  
+</script>
+{% endif %}
+{% endfor %}
+{% endif %} -->
+
+<script>
+
+    //document.addEventListener('DOMContentLoaded', function () {
+    //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    //toastElList.map(function (toastEl) {
+        //var t = new bootstrap.Toast(toastEl);
+        //t.show();
+    //});
+//});
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.toast').forEach(el => {
+            new bootstrap.Toast(el).show();
+        });
+    });
+
+    
+</script>
+
+<script>
+
+    // this is a reload script
+
+    window.addEventListener("pageshow", function(event) {
+        //If the page is loaded from the browser's back/forward cache
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
+
+    const input = document.getElementById("searchField");
+    const clearBtn = document.getElementById("btnClear");
+
+    // Show or hide clear button depending on input value
+    input.addEventListener("input", () => {
+      if (input.value.length > 0) {
+        clearBtn.classList.add("visible");
+      } else {
+        clearBtn.classList.remove("visible");
+      }
+    });
+
+    // Clear input when × clicked
+    clearBtn.addEventListener("click", () => {
+      input.value = "";
+      clearBtn.classList.remove("visible");
+      input.focus();
+    });
+
+    // On page load, if field has prefilled text, show clear button
+    window.addEventListener("load", () => {
+      if (input.value.length > 0) {
+        clearBtn.classList.add("visible");
+      }
+    });
+
+</script>
+
+
+{% endblock %}

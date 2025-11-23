@@ -189,7 +189,11 @@
                     
                     <div class="d-flex align-items-center mb-4">
                         <button id="addToCartBtn" class="btn btn-dark btn-lg w-100 me-3" role="button" >Add to cart</button>
-                        <button class="btn btn-outline-dark wishlist-btn" type="button"><i class="far fa-heart"></i></button>
+                        {% if main_variant.product.id in wishlist_products %}
+                        <a href="{% url 'remove_from_wishlist' %}?product_id={{main_variant.product.id}}" class="btn btn-outline-danger wishlist-btn" type="button"><i class="fas fa-heart"></i></a>
+                        {% else %}
+                        <a href="{% url 'add_to_wishlist' %}?product_id={{main_variant.product.id}}" class="btn btn-outline-danger wishlist-btn" type="button"><i class="far fa-heart"></i></a>
+                        {% endif %}
                     </div>
                 </form>
     

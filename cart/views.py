@@ -15,8 +15,10 @@ import razorpay
 from django.conf import settings
 
 import hmac, hashlib
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+
 # Create your views here.
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
@@ -159,11 +161,11 @@ class CartQuantityUpdateView(View):
         
         cart_item = get_object_or_404(CartItem, id=cart_item_id)
 
-        if not int(quantity) <= cart_item.variant.stock:
-            error_notify(request, f"stock is only for {{quantity-1}}")
-            return redirect('cart_page')
+        # if not int(quantity) <= cart_item.variant.stock:
+        #     error_notify(request, f"stock is only for {{quantity-1}}")
+        #     return redirect('cart_page')
         
-        if int(quantity) == cart_item.variant.stock:
+        if int(quantity) > cart_item.variant.stock:
             info_notify(request, f"maximum stock reached")
             return redirect('cart_page')
             
@@ -208,15 +210,27 @@ class UserWalletView(View):
             error_notify(request, 'Try again, payment gateway failed..!')
             return redirect('wallet')
 
+        page = request.GET.get('page', 1)
         wallet, create = Wallet.objects.get_or_create(user=request.user)
         transactions = wallet.transactions.all().order_by('-created_at')
+
+        paginator = Paginator(transactions, 6)
+        try:
+            paginated_orders = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_orders = paginator.page(1)
+        except EmptyPage:
+            paginated_orders = paginator.page(paginator.num_pages)
 
         user_profile = profile(request)
         context = {
             "user_id": request.user.id,
             "user_profile": user_profile,
             "wallet": wallet,
-            "transactions": transactions
+            "transactions": paginated_orders,
+            "paginator" : paginator,
+            "page_obj" : paginated_orders,
+
 
 
         }
@@ -355,3 +369,39 @@ class WalletPaymentFailedView(View):
         transaction.delete()
         error_notify(request, "payment failed, try again")
         return redirect('wallet')
+
+
+class AdminOverAllWalletView(View):
+
+    def get(self, request):
+        page = request.GET.get('page', 1)
+        query = request.GET.get('q')
+        types = request.GET.get('type')
+        transactions = WalletTransaction.objects.all().order_by('-created_at')
+        if query:
+            transactions = transactions.filter(Q(transaction_id__icontains=query)|Q(wallet__user__full_name__icontains=query))
+        if request.GET.get('type'):
+            types = request.GET.get('type')
+            transactions = transactions.filter(transaction_type=types)
+
+        paginator = Paginator(transactions, 6)
+        try:
+            paginated_orders = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_orders = paginator.page(1)
+        except EmptyPage:
+            paginated_orders = paginator.page(paginator.num_pages)
+
+        context = {
+            "user_id": request.user.id,
+            "transaction_type": WalletTransaction.TRANSACTION_TYPES,
+            "transactions": paginated_orders,
+            "paginator" : paginator,
+            "page_obj" : paginated_orders,
+            "query": query,
+            "types": types,
+
+
+        }
+
+        return render(request, 'cart/admin_wallet.html', context)

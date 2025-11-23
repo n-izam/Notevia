@@ -22,6 +22,8 @@ from adminpanel.models import Product
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
+from accounts.utils import info_notify, error_notify, success_notify
+from cart.models import Cart, CartItem
 # Create your views here.
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
@@ -321,5 +323,38 @@ class RemoveToWishlist(View):
         wishlist = request.user.wishlist
         product = Product.objects.get(id=product_id)
         WishlistItem.objects.filter(wishlist=wishlist, product=product).delete()
+
+        return redirect('shop_products')
+    
+class WishListToCartView(View):
+
+    def get(self, request):
+        product_id = request.GET.get('product_id')
+        if not product_id:
+            info_notify(request, "try again..")
+            return redirect('wishlist_view')
+        product = get_object_or_404(Product, id=product_id )
+        main_variant = product.variants.filter(is_listed=True).order_by('-stock').first()
+        quantity = 1
+        print(main_variant)
+        cart, created = Cart.objects.get_or_create(user=request.user)
+
+        if main_variant:
+            if CartItem.objects.filter(cart=cart, product=product, variant=main_variant).exists():
+                info_notify(request, f"this product {product.name} with same variant  is already in cart")
+                return redirect('wishlist_view')
+        else:
+            info_notify(request, f"this product {product.name} cannot able to add cart, try again")
+            return redirect('wishlist_view')
+        
+        if not created:
+            if main_variant:
+                cart_item = CartItem.objects.create(cart=cart, product=product, variant=main_variant, quantity=quantity)
+        else:
+            if main_variant:
+                cart_item = CartItem.objects.create(cart=cart, product=product, variant=main_variant, quantity=quantity)
+
+        if cart_item:
+            success_notify(request, f"product {product.name} {quantity} quantity is successfully add to cart")
 
         return redirect('shop_products')

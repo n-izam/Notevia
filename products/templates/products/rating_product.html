@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Write a Review</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f8f9fa;
+    }
+    .card {
+      max-width: 600px; /* Made wider for review form */
+      width: 100%;
+      padding: 40px;
+      border-radius: 12px;
+      border: none; /* Removed border for cleaner look */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      background: #fff;
+    }
+
+    /* Star Rating CSS */
+    .rating-group {
+      display: inline-flex;
+      flex-direction: row-reverse;
+      gap: 0.2rem;
+    }
+    .rating-group input {
+      display: none; /* Hide radio buttons */
+    }
+    .rating-group label {
+      font-size: 2rem;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    /* Hover and Checked states */
+    .rating-group label:hover,
+    .rating-group label:hover ~ label,
+    .rating-group input:checked ~ label {
+      color: #ffc107; /* Bootstrap warning yellow */
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="card">
+    <!-- Header -->
+    <h2 class="fw-bold mb-2">Write a Review</h2>
+    
+    <!-- Dynamic Product Name -->
+    <h5 class="fw-bold mb-4">What is it like to {{ product.name|default:"Product" }}?</h5>
+
+    <form method="POST" action="">
+      {% csrf_token %}
+
+      <!-- Star Rating Section -->
+      <div class="mb-4">
+        <div class="rating-group">
+          <!-- Stars are in reverse order due to flex-direction: row-reverse for CSS hover effects -->
+          <input type="radio" id="star5" name="rating" value="5" required />
+          <label for="star5" title="5 stars">★</label>
+          
+          <input type="radio" id="star4" name="rating" value="4" />
+          <label for="star4" title="4 stars">★</label>
+          
+          <input type="radio" id="star3" name="rating" value="3" />
+          <label for="star3" title="3 stars">★</label>
+          
+          <input type="radio" id="star2" name="rating" value="2" />
+          <label for="star2" title="2 stars">★</label>
+          
+          <input type="radio" id="star1" name="rating" value="1" />
+          <label for="star1" title="1 star">★</label>
+        </div>
+      </div>
+
+      <!-- Review Content -->
+      <div class="mb-4">
+        <label for="reviewContent" class="form-label fw-bold">Review Content</label>
+        <textarea 
+          class="form-control" 
+          id="reviewContent" 
+          name="content" 
+          rows="5" 
+          placeholder="This watch combines modern elegance with everyday practicality..." 
+          required></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-dark btn-lg rounded-pill px-4">Submit Review</button>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
