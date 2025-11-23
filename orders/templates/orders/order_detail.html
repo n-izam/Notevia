@@ -102,6 +102,28 @@
     .totals-section {
         border-top: 1px solid #dee2e6;
     }
+
+    /* rating button */
+    .rating-btn {
+        display: inline-block;
+        background-color: #ff9138e0;   /* fresh green */
+        color: #fff;
+        padding: 5px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: background-color 0.25s ease, transform 0.15s ease;
+    }
+
+    .rating-btn:hover {
+        background-color: #f0be8f;  /* darker green on hover */
+        transform: translateY(-2px); /* slight lift effect */
+    }
+    
+    .rating-btn:active {
+        transform: translateY(0); /* return on click */
+    }
 </style>
 
 {% endblock %}
@@ -220,6 +242,7 @@
                                     {% endif %}
                                 </div>
                                 {% endif %}
+                                
                             </div>
                         </div>
                         <div class="col-2 col-md-2"><a href="#" class="sku-link">{{item.order_item.product.brand.name}}</a></div>
@@ -230,6 +253,9 @@
                             <p class="m-0">₹{{item.order_item.total_price}}</p>
                             <span class="fw-light text-success">-₹{{item.order_item.sub_discount}}</span>
                         </div> 
+                        <div class="d-flex align-item-center justify-content-end">
+                            <a class="rating-btn">Give Rating</a>
+                        </div>
                     </div>
                     {% endfor %}
 
@@ -251,7 +277,7 @@
                     <!-- Totals Section -->
                     <div class="totals-section mt-4">
                         <div class="d-flex justify-content-between py-2">
-                            <span class="text-muted">Subtotal :</span>
+                            <span class="text-muted">Total MRP :</span>
                             <span>₹{{order.total_items_amount}}</span>
                         </div>
                         <div class="d-flex justify-content-between py-2">
@@ -259,8 +285,13 @@
                             <span class="text-success">-₹{{order.total_discount}}</span>
                         </div>
                         <div class="d-flex justify-content-between py-2">
-                            <span class="text-success">Discount_total :</span>
-                            <span class="text-success">-₹{{order.total_amount}}</span>
+                            <span class="text-muted">Subtotal :</span>
+                            <span class="">₹{{order.total_amount}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Coupon : <span class="fw-bold text-dark"></span></span>
+                            <span>-₹{{order.coupon_amount}}</span>
+
                         </div>
                         <div class="d-flex justify-content-between py-2">
                             <span class="text-muted">Tax :</span>
@@ -273,10 +304,7 @@
                             <span class="text-muted">delivery charg :</span>
                             <span>Free</span>
                         </div>
-                        <div class="d-flex justify-content-between py-2">
-                            <span class="text-muted">Coupon : <span class="fw-bold text-dark"></span></span>
-                            <span>-₹{{order.coupon_amount}}</span>
-                        </div>
+                        
                         <hr>
                         <div class="d-flex justify-content-between py-2 fw-bold h5">
                             <span>Grand Total</span>
