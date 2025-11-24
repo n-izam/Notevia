@@ -370,7 +370,8 @@ class WalletPaymentFailedView(View):
         error_notify(request, "payment failed, try again")
         return redirect('wallet')
 
-
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class AdminOverAllWalletView(View):
 
     def get(self, request):

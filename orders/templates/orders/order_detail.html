@@ -124,6 +124,35 @@
     .rating-btn:active {
         transform: translateY(0); /* return on click */
     }
+
+    /* return item tyle */
+    /* Add this to your existing styles */
+    .request-management-card {
+        background-color: rgb(255, 255, 254); /* A light grey to stand out */
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .request-management-card .card-title-secondary {
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .request-management-card .reason-quote {
+        border-left: 3px solid #6c757d;
+        padding-left: 1rem;
+        margin: 0.5rem 0 0 0;
+        font-style: italic;
+    }
+
+    .return-update-form .badge {
+        font-size: 0.9em;
+    }
 </style>
 
 {% endblock %}
@@ -201,6 +230,45 @@
                         <a href="{% url 'order_tracking' order.id %}" class="btn btn-dark btn-lg">Track Order</a>
                     </div>
                 </div>
+
+                <!-- =================================================================== -->
+                        <!-- START: New Cancellation & Return Management Card -->
+                        <!-- =================================================================== -->
+
+                        <!-- This entire card will only appear if a reason exists -->
+                        {% if order.cancel_reason or order.return_requests.reason %}
+                        <div class="request-management-card mt-4">
+                            
+                            <!-- Card Title -->
+                            <h5 class="card-title-secondary">
+                                {% if order.return_requests.reason %}
+                                    Return Request
+                                {% else %}
+                                    Cancellation Reason
+                                {% endif %}
+                            </h5>
+
+                            <!-- Reason Display -->
+                            <p class="text-muted mb-1"><strong>Reason Given:</strong></p>
+                            <blockquote class="reason-quote">
+                                {{ order.cancel_reason|default:order.return_requests.reason }}
+                            </blockquote>
+
+                            <!-- Return Management Form (only shows for returns) -->
+                            {% if order.return_requests.reason %}
+                                <hr class="my-4">
+                                    <p class="mb-2">
+                                        <strong>Current Status:</strong> 
+                                        <span class="badge bg-secondary">{{ order.return_requests.status }}</span>
+                                    </p>
+                            {% endif %}
+
+                        </div>
+                        {% endif %}
+
+                        <!-- =================================================================== -->
+                        <!-- END: New Cancellation & Return Management Card -->
+                        <!-- =================================================================== -->
             </div>
     
             <!-- Right Column: Order List & Totals -->
@@ -230,18 +298,20 @@
                             <div class="ms-1">
                                 <p class="mb-0 fw-bold">{{item.order_item.product.name}}</p>
                                 <span class="fw-light text-muted" >variant type: {{item.order_item.variant.name}} </span>
-                                {% if order.status != 'Delivered' and order.status != 'Shipped' and order.status != 'Payment Failed' %}
+                                
                                 <div>
                                     {% if not item.order_item.is_cancel %}
+                                    {% if order.status != 'Delivered' and order.status != 'Shipped' and order.status != 'Payment Failed' %}
                                     <form action="{% url 'cancel_order_item' item.order_item.order.id item.order_item.id %}" method="POST" class="delete-form">
                                         {% csrf_token %}
                                         <button type="submit" class=" text-decoration-none text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#000000;">Cancel item</button>
                                     </form>
+                                    {% endif %}
                                     {% else %}
                                     <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#953535;">item cancelled</span>
                                     {% endif %}
                                 </div>
-                                {% endif %}
+                                
                                 
                             </div>
                         </div>
@@ -254,9 +324,11 @@
                             <span class="fw-light text-success">-₹{{item.order_item.sub_discount}}</span>
                         </div> 
                         {% if  order.status == 'Delivered' %}
+                        {% if not item.order_item.is_cancel %}
                         <div class="d-flex align-item-center justify-content-end">
                             <a href="{% url 'product_rating' %}?variant_id={{item.order_item.variant.id}}&order_id={{item.order_item.order.id}}" class="rating-btn">Give Rating</a>
                         </div>
+                        {% endif %}
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -310,7 +382,7 @@
                         <hr>
                         <div class="d-flex justify-content-between py-2 fw-bold h5">
                             <span>Grand Total</span>
-                            <span>₹{{order.over_all_amount}}</span>
+                            <span>₹{{order.over_all_amount_all}}</span>
                         </div>
                     </div>
                 </div>

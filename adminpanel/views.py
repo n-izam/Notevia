@@ -26,6 +26,8 @@ from orders.models import Order, OrderItem
 from decimal import Decimal
 from django.db.models.functions import Coalesce
 from collections import defaultdict
+from accounts.forms import SigninForm
+from  django.contrib.auth import authenticate, login, logout
 
 
 
@@ -1092,3 +1094,74 @@ class ToggleVariatStatusView(View):
 
         
         return JsonResponse({'success': True, 'is_listed': variant.is_listed})
+
+@method_decorator(never_cache, name='dispatch')
+class AdminLoginView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            if request.user.is_superuser:
+                return redirect('admin-dash', user_id= request.user.id)
+            else:
+                return redirect("cores-home", user_id=request.user.id)
+
+        errors = request.session.pop("admin_signin_errors", None)
+        data = request.session.pop("admin_signin_data", None)
+
+        form = SigninForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+
+        context = {
+            "form": form,
+
+        }
+
+        return render(request, 'adminlogin/admin_login.html', context)
+    
+    def post(self, request):
+
+        form = SigninForm(request.POST)
+
+        if form.is_valid():
+            emails = request.POST.get("email")
+            passwords = request.POST.get("password")
+
+            if CustomUser.objects.filter(email=emails).exists():
+
+                user_obj = get_object_or_404(CustomUser, email=emails)
+                print("the customer active status:", user_obj.is_active)
+                if not user_obj.is_active:
+                    request.session["admin_signin_errors"] = {"email": ["This email is blocked"]}
+                    request.session["admin_signin_data"] = request.POST
+                    return redirect("admin_login")
+                
+            user = authenticate(request, email=emails, password=passwords)
+
+            if user is None:
+                request.session["admin_signin_errors"] = {
+                    "email": ["Invalid credentials"],
+                    "password": ["Invalid credentials"]
+                    }
+                request.session["admin_signin_data"] = request.POST
+                return redirect("admin_login")
+            
+            print('enter email:', emails )
+            print('enter email:', passwords )
+            user.status = True
+            user.save()
+            if user.is_superuser:
+                
+
+                login(request, user)
+                success_notify(request, "Login successful! You're now on the Notevia admin dashboard page.")
+                return redirect('admin-dash', user_id= user.id)
+            else:
+
+                info_notify(request, "you can't login through admin side")
+                return redirect('signin')
+            
+        else:
+            request.session["admin_signin_errors"] = form.errors
+            request.session["admin_signin_data"] = request.POST
+            return redirect("admin_login")

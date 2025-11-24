@@ -648,6 +648,8 @@ class CancelOrderView(View):
 
                 wallet = get_object_or_404(Wallet, user=request.user)
                 transaction = wallet.credit(Decimal(order.over_all_amount), message=f"Order {order.order_id} cancellation amount" )
+                transaction.order=order
+                transaction.save()
             for item in order.items.filter(is_cancel=False):
                 if item.variant:
                     item.variant.stock += item.quantity
@@ -689,6 +691,8 @@ class CancelOrderItemView(View):
                 print(f"refund amount {item.product.name}-{item.price}-{item.variant.name}", refund_amount)
                 wallet = get_object_or_404(Wallet, user=request.user)
                 transaction = wallet.credit(Decimal(refund_amount), message=f"Order #{order.order_id} refund for item:{item.product.name} ")
+                transaction.order=order
+                transaction.save()
             item.variant.stock += item.quantity
             item.is_cancel = True
             item.variant.save()
@@ -971,6 +975,8 @@ class ReturnUpdateView(View):
         if return_status in ['Approved']:
             wallet = get_object_or_404(Wallet, user=user)
             transaction = wallet.credit(Decimal(order.over_all_amount), message=f"Order {order.order_id} Return Amount" )
+            transaction.order=order
+            transaction.save()
             for item in order.items.filter(is_cancel=False):
                 
                 item.variant.stock += item.quantity

@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import AdminDashView, AdminProductView, AdminCustomersView, AdminCategoryView, AddCategoryView, ViewVariantView, AddVariantView, TogglCategoryStatusView, AddCategoryOffer, EditCategoryOffer
 from .views import RemoveCategoryOfferView, CategoryDeleteView, CategoryUpdateView, AddBrandView, AddProductView, AddProductOfferView, EditProductOfferView,  RemoveProductOfferView, ToggleProductStatusView
-from .views import EditProductView, ToggleVariatStatusView, EditVariantView, ToggleCustomerStatusView
+from .views import EditProductView, ToggleVariatStatusView, EditVariantView, ToggleCustomerStatusView, AdminLoginView
 from . import views
 
 
@@ -29,6 +29,7 @@ urlpatterns = [
     path('adminproduct/<int:product_id>/edit', EditProductView.as_view(), name='edit_product'),
     path('toggles-status-variant/<int:pk>/', ToggleVariatStatusView.as_view(), name='toggles_status_variant'),
     path('edit_variant/<int:variant_id>/', EditVariantView.as_view(), name='edit_variant'),
+    path('', AdminLoginView.as_view(), name='admin_login'),
 
 
 

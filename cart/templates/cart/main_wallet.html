@@ -611,9 +611,9 @@
                             <td class="transaction-id">{{history.transaction_id}}</td>
                             <td>{{ history.created_at|date:"j M Y" }}</td>
                             {% if history.transaction_type == 'Credit' %}
-                            <td class="transaction-amount amount-credit">+₹{{ history.amount }}</td>
+                            <td class="transaction-amount amount-credit">₹{{ history.amount }}</td>
                             {% else %}
-                            <td class="transaction-amount amount-debit">-₹{{ history.amount }}</td>
+                            <td class="transaction-amount amount-debit">₹{{ history.amount }}</td>
                             {% endif %}
 
                             <td>{{history.message}}</td>

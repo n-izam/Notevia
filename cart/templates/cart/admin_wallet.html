@@ -427,10 +427,10 @@
                     <div class="table-cell" data-label="Date">{{ transaction.created_at|date:"j M Y" }}</div>
                     {% if transaction.transaction_type == 'Credit' %}
                     <div class="table-cell" data-label="Type"><span class="status-badge credit">Credit</span></div>
-                    <div class="table-cell" data-label="Amount">+ ₹{{transaction.amount}}</div>
+                    <div class="table-cell" data-label="Amount">₹{{transaction.amount}}</div>
                     {% else %}
                     <div class="table-cell" data-label="Type"><span class="status-badge debit">Debit</span></div>
-                    <div class="table-cell" data-label="Amount">- ₹{{transaction.amount}}</div>
+                    <div class="table-cell" data-label="Amount">₹{{transaction.amount}}</div>
                     {% endif %}
                     
                     
