@@ -253,9 +253,11 @@
                             <p class="m-0">₹{{item.order_item.total_price}}</p>
                             <span class="fw-light text-success">-₹{{item.order_item.sub_discount}}</span>
                         </div> 
+                        {% if  order.status == 'Delivered' %}
                         <div class="d-flex align-item-center justify-content-end">
                             <a href="{% url 'product_rating' %}?variant_id={{item.order_item.variant.id}}&order_id={{item.order_item.order.id}}" class="rating-btn">Give Rating</a>
                         </div>
+                        {% endif %}
                     </div>
                     {% endfor %}
 
