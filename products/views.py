@@ -17,13 +17,14 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.utils import get_column_letter
 from accounts.utils import profile
-from products.models import Referral, WishlistItem
-from adminpanel.models import Product
+from products.models import Referral, WishlistItem, Review
+from adminpanel.models import Product, Variant
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from accounts.utils import info_notify, error_notify, success_notify
 from cart.models import Cart, CartItem
+from django.urls import reverse
 # Create your views here.
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
@@ -358,3 +359,60 @@ class WishListToCartView(View):
             success_notify(request, f"product {product.name} {quantity} quantity is successfully add to cart")
 
         return redirect('shop_products')
+
+class ProductReviewView(View):
+
+    def get(self, request):
+        variant_id = request.GET.get('variant_id')
+        order_id = request.GET.get('order_id')
+
+        variant = get_object_or_404(Variant, id=variant_id)
+        product  = variant.product
+        review = ''
+        if Review.objects.filter(user=request.user, product=product).exists():
+            info_notify(request, f"already shared one review for same product {product.name} ")
+            review = get_object_or_404(Review, user=request.user, product=product)
+            print(review.id)
+
+        context = {
+            "variant_id": variant_id,
+            "order_id": order_id,
+            "review": review,
+
+        }
+        
+        return render(request, 'products/rating_product.html', context)
+    
+    def post(self, request):
+
+        variant_id = request.POST.get('variant_id')
+        order_id = request.POST.get('order_id')
+
+        if not request.POST.get('content'):
+            info_notify(request, "leave your comment in the content field")
+            url = f'{reverse("product_rating")}?variant_id={variant_id}&order_id={order_id}'
+            return redirect(url)
+
+
+        comment = request.POST.get('content').strip()
+        rating = request.POST.get('rating', 1)
+        print('rating', variant_id, order_id)
+
+        order = get_object_or_404(Order, id=order_id)
+        variant = get_object_or_404(Variant, id=variant_id)
+
+        if Review.objects.filter(user=request.user, product=variant.product).exists():
+            review = get_object_or_404(Review, user=request.user, product=variant.product)
+            review.rating = rating
+            review.comment = comment
+            review.save()
+
+            # reviews = Review.objects.update(user=request.user, product=variant.product, variant=variant, rating=rating, comment=comment)
+        else:
+            reviews = Review.objects.update_or_create(user=request.user, product=variant.product, variant=variant, rating=rating, comment=comment)
+        # reviews = Review.objects.update_or_create(user=request.user, product=variant.product, variant=variant, defaults={"rating": rating, "comment": comment},)
+
+
+
+        success_notify(request, "review added successfully")
+        return redirect('order_details', order_id=order_id)

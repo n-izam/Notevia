@@ -736,7 +736,22 @@
                             {% if coupon.is_active %} checked {% endif %} onchange="toggleStatus('{{coupon.id}}')">
                             
                         </div>
-                        <button class="action-btn edit-btn" onclick="openEditCouponModal('{{ coupon.id }}')" title="Edit"><i class="fas fa-edit"></i></button>
+                        <!-- <button class="action-btn edit-btn" onclick="openEditCouponModal('{{ coupon.id }}')" title="Edit"><i class="fas fa-edit"></i></button> -->
+                        <button class="action-btn edit-btn" onclick="openEditCouponModal(this)"
+                        data-id="{{ coupon.id }}"
+                        data-name="{{ coupon.code }}"
+                        data-limit="{{ coupon.usage_limit }}"
+                        data-max="{{ coupon.max_redeemable_price }}"
+                        data-minpurchase="{{ coupon.min_purchase_amount }}"
+                        data-discount="{{ coupon.discount_percentage }}"
+                        data-start="{{ coupon.valid_from|date:'Y-m-d' }}"
+                        data-end="{{ coupon.valid_to|date:'Y-m-d' }}"
+                        title="Edit">
+
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    
+
                         <!-- <button class="action-btn delete-btn" title="Delete"><i class="fas fa-trash"></i></button> -->
                     </div>
                 </div>
@@ -919,8 +934,8 @@
             {% csrf_token %}
             <!-- Coupon Name -->
             <div class="form-group">
-                <label for="couponName">Coupon Name *</label>
-                <input type="text" id="couponName" name="coupon_name" placeholder="e.g., FLAT20" value="{{ form.coupon_name.value|default:'' }}" required>
+                <label for="couponNames">Coupon Name *</label>
+                <input type="text" id="couponNames" name="coupon_name" placeholder="e.g., FLAT20" value="{{ form.coupon_name.value|default:'' }}" required>
                 {% if form.coupon_name.errors %}
                 <p class="text-danger small">{{ form.coupon_name.errors.0 }}</p>
                 {% endif %}
@@ -929,15 +944,15 @@
             <!-- Limit and Max Redeemable (2 columns) -->
             <div class="form-row">
                 <div class="form-group">
-                    <label for="couponLimit">Limit (Usage count) *</label>
-                    <input type="number" id="couponLimit" name="limit" placeholder="e.g., 50" min="1" value="{{ form.limit.value|default:'' }}" required>
+                    <label for="couponLimits">Limit (Usage count) *</label>
+                    <input type="number" id="couponLimits" name="limit" placeholder="e.g., 50" min="1" value="{{ form.limit.value|default:'' }}" required>
                     {% if form.limit.errors %}
                     <p class="text-danger small">{{ form.limit.errors.0 }}</p>
                     {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="maxRedeemable">Max Redeemable Price (₹) *</label>
-                    <input type="number" id="maxRedeemable" name="max_price" placeholder="e.g., 500" min="0" step="0.01" value="{{ form.max_price.value|default:'' }}" required>
+                    <label for="maxRedeemables">Max Redeemable Price (₹) *</label>
+                    <input type="number" id="maxRedeemables" name="max_price" placeholder="e.g., 500" min="0" step="0.01" value="{{ form.max_price.value|default:'' }}" required>
                     {% if form.max_price.errors %}
                     <p class="text-danger small">{{ form.max_price.errors.0 }}</p>
                     {% endif %}
@@ -947,15 +962,15 @@
             <!-- Min Purchase and Discount % (2 columns) -->
             <div class="form-row">
                 <div class="form-group">
-                    <label for="minPurchase">Min Purchase (₹) *</label>
-                    <input type="number" id="minPurchase" name="minpurchase" placeholder="e.g., 500" min="0" step="0.01" value="{{ form.minpurchase.value|default:'' }}">
+                    <label for="minPurchases">Min Purchase (₹) *</label>
+                    <input type="number" id="minPurchases" name="minpurchases" placeholder="e.g., 500" min="0" step="0.01" value="{{ form.minpurchase.value|default:'' }}">
                     {% if form.minpurchase.errors %}
                     <p class="text-danger small">{{ form.minpurchase.errors.0 }}</p>
                     {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="discountPercentage">Discount Percentage (%) *</label>
-                    <input type="number" id="discountPercentage" name="discount" placeholder="e.g., 20" min="0" max="100" value="{{ form.discount.value|default:'' }}" step="0.01" required>
+                    <label for="discountPercentages">Discount Percentage (%) *</label>
+                    <input type="number" id="discountPercentages" name="discount" placeholder="e.g., 20" min="0" max="100" value="{{ form.discount.value|default:'' }}" step="0.01" required>
                     {% if form.discount.errors %}
                     <p class="text-danger small">{{ form.discount.errors.0 }}</p>
                     {% endif %}
@@ -1048,7 +1063,7 @@
 
             <div class="form-group">
                 <label for="expiryDate">Start Date *</label>
-                <input type="date" id="expiryDate" name="start_date" value="{{ form.start_date.value|default:'' }}" >
+                <input type="date" id="startDate" name="start_date" value="{{ form.start_date.value|default:'' }}" >
                 {% if form.start_date.errors %}
                 <p class="text-danger small">{{ form.start_date.errors.0 }}</p>
                 {% endif %}
@@ -1057,7 +1072,7 @@
             <!-- Expiry Date -->
             <div class="form-group">
                 <label for="expiryDate">Expiry Date *</label>
-                <input type="date" id="expiryDate" name="end_date" value="{{ form.end_date.value|default:'' }}">
+                <input type="date" id="endDate" name="end_date" value="{{ form.end_date.value|default:'' }}">
                 {% if form.end_date.errors %}
                 <p class="text-danger small">{{ form.end_date.errors.0 }}</p>
                 {% endif %}
@@ -1102,7 +1117,10 @@ window.addEventListener("DOMContentLoaded", () => {
     const couponId = urlParams.get("coupon_id");
 
     if (openModal === "edit" && couponId) {
-        openEditCouponModal(couponId);
+        const btn = document.querySelector(`[data-id="${couponId}"]`);
+        if (btn) {
+            openEditCouponModal(btn);
+        }
     }
 });
 </script>
@@ -1203,9 +1221,22 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     // edit modal
-    function openEditCouponModal(couponId) {
+    //function openEditCouponModal(couponId) {
+    //    document.getElementById('editCouponModal').classList.add('active');
+    //    document.getElementById('edit_coupon_id').value = couponId;
+    //}
+    function openEditCouponModal(button) {
         document.getElementById('editCouponModal').classList.add('active');
-        document.getElementById('edit_coupon_id').value = couponId;
+    
+        document.getElementById("edit_coupon_id").value = button.dataset.id;
+        document.getElementById("couponName").value = button.dataset.name;
+        document.getElementById("couponLimit").value = button.dataset.limit;
+        document.getElementById("maxRedeemable").value = button.dataset.max;
+        document.getElementById("minPurchase").value = button.dataset.minpurchase;
+        document.getElementById("discountPercentage").value = button.dataset.discount;
+    
+        document.getElementById("startDate").value = button.dataset.start;
+        document.getElementById("endDate").value = button.dataset.end;
     }
     function closeEditCouponModal() {
         document.getElementById('editCouponModal').classList.remove('active');

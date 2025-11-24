@@ -612,6 +612,15 @@
                                 <h6 class="checkout-card-title">PAYMENT METHOD</h6>
                                 <div class="card-content">
                                     <!-- Payment options here -->
+                                    {% if final_over_all_amount > 1000 %}
+                                    <div class="payment-option">
+                                        <input type="radio" id="cod" name="payment" value="COD" disabled>
+                                        <label for="cod">
+                                            <span class="fw-bold">CASH ON DELIVERY</span>
+                                            <small class="d-block text-muted">COD not available for orders above Rs 1000</small>
+                                        </label>
+                                    </div>
+                                    {% else %}
                                     <div class="payment-option">
                                         <input type="radio" id="cod" name="payment" value="COD" >
                                         <label for="cod">
@@ -619,6 +628,7 @@
                                             <small class="d-block text-muted">COD not available for orders above Rs 1000</small>
                                         </label>
                                     </div>
+                                    {% endif %}
                                     <div class="payment-option">
                                         <input type="radio" id="online" name="payment" value="ONLINE">
                                         <label for="online">

@@ -7,7 +7,7 @@ from django.views.decorators.cache import never_cache
 from django.db.models import Q, Min
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from adminpanel.models import Category, Offer, Product, ProductImage, Variant, Brand
-from products.models import Wishlist, WishlistItem
+from products.models import Wishlist, WishlistItem, Review
 
 # Create your views here.
 @method_decorator(never_cache, name='dispatch')
@@ -420,6 +420,8 @@ class ProductDetailsView(View):
         wishlist, created = Wishlist.objects.get_or_create(user=request.user)
         wishlist_products = list(wishlist.items.values_list('product_id', flat=True))
 
+        reviews = Review.objects.filter(product=main_product)
+
         # breadcrumb
         breadcrumb = [
             {"name": "Home", "url": "/"},
@@ -436,6 +438,7 @@ class ProductDetailsView(View):
             "product_with_image":product_with_image,
             "breadcrumb": breadcrumb,
             "wishlist_products": wishlist_products,
+            "reviews": reviews,
         }
 
         return render(request, 'cores/productdetail1.html', context)

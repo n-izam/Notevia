@@ -66,7 +66,7 @@ class SignupView(View):
             user_email = form.cleaned_data.get('email')
             full_name = form.cleaned_data.get('full_name')
             if form.cleaned_data.get('password'):
-                user_phone_no = form.cleaned_data.get('password')
+                user_phone_no = form.cleaned_data.get('phone_no')
 
             user_password = form.cleaned_data.get('password')
 

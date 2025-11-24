@@ -76,3 +76,23 @@ class WishlistItem(models.Model):
 
     def __str__(self):
         return f"{self.product.name} ({self.variant.name if self.variant else 'No variant'})"
+    
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="reviews")
+    variant = models.ForeignKey(Variant, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    rating = models.PositiveSmallIntegerField(default=1)
+    comment = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['product', 'user'],
+                name='unique_review_per_user_per_product'
+            )
+        ]
