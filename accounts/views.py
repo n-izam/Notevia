@@ -180,7 +180,7 @@ class VerifySignUpOTPView(View):
                     user.referral.save()
                     referral_credit = referral_amount()
                     wallet = get_object_or_404(Wallet, user=referral.user)
-                    transaction = wallet.credit(Decimal(referral_credit), message=f"Referral bonus from {user.full_name}" )
+                    transaction = wallet.credit(Decimal(referral_credit), message=f"Congrats {referral.user.full_name}! Your friend {full_name} used your referral code and the bonus is now added" )
                     del request.session['referral_code']
                 except Referral.DoesNotExist:
                     pass
@@ -542,10 +542,12 @@ class CustomerProfileView(View):
         user = get_object_or_404(CustomUser, id=request.user.id)
 
 
-        user_profile, created = UserProfile.objects.get_or_create(user=user)
+        # user_profile, created = UserProfile.objects.get_or_create(user=user)
 
-        if created:
-            print("✅ A new profile was created for this user.")
+        # if created:
+        #     print("✅ A new profile was created for this user.")
+        user_profile = profile(request)
+        print(user_profile)
             
         return render(request, 'customer/customer_profile.html', {"user_id": request.user.id, "user": user, "user_profile": user_profile})
     
@@ -618,7 +620,8 @@ class ProfileEditView(View):
             del request.session['phone_no']
             return redirect("profile")
 
-        user_profile = get_object_or_404(UserProfile, user=user)
+        # user_profile = get_object_or_404(UserProfile, user=user)
+        user_profile = profile(request)
 
         # breadcrumb
         breadcrumb = [
@@ -939,7 +942,8 @@ class AddressView(View):
 
         user = get_object_or_404(CustomUser, id=request.user.id)
 
-        user_profile = get_object_or_404(UserProfile, user=user)
+        # user_profile = get_object_or_404(UserProfile, user=user)
+        user_profile = profile(request)
 
         addresses = Address.objects.filter(user=user)
         print('addresses', addresses)
@@ -967,7 +971,7 @@ class AddAddressView(View):
 
         user = get_object_or_404(CustomUser, id=request.user.id)
 
-        user_profile = get_object_or_404(UserProfile, user=user)
+        user_profile = profile(request)
 
         errors = request.session.pop("add_address_error", None)
         data = request.session.pop("add_address_data", None)
@@ -1031,7 +1035,7 @@ class EditAddressView(View):
 
         user = get_object_or_404(CustomUser, id=request.user.id)
 
-        user_profile = get_object_or_404(UserProfile, user=user)
+        user_profile = profile(request)
 
         edit_address = get_object_or_404(Address, id=address_id)
 

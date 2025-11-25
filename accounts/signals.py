@@ -1,6 +1,6 @@
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
-from accounts.models import CustomUser
+from accounts.models import CustomUser, UserProfile
 from cart.models import Wallet
 from django.db.models.signals import post_save
 from products.models import Referral, Wishlist
@@ -23,6 +23,8 @@ def populate_profile(sociallogin, user, **kwargs):
 def create_user_wallet(sender, instance, created, **kwargs):
     if created:
         Wallet.objects.create(user=instance)
+        UserProfile.objects.create(user=instance)
+
 
 @receiver(post_save, sender=User)
 def create_user_referral(sender, instance, created, **kwargs):

@@ -78,6 +78,12 @@ class UserProfile(models.Model):
     image = CloudinaryField('image', folder='user_profiles/', blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
 
+    @property
+    def image_url(self):
+        if self.image:
+            return self.image.url
+        return "https://res.cloudinary.com/dbufuuut7/image/upload/v1764074718/generated-image_6_i7qd7r.jpg"
+
     def __str__(self):
         return f"profile of {self.user.full_name}"
     

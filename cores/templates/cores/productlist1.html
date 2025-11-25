@@ -158,6 +158,107 @@
             transform: translateY(0px) scale(1);
         }
       }
+
+      /* price range Container Setup */
+      /* Wrapper for the input to handle absolute positioning */
+        .price-input-group {
+            position: relative;
+        }
+
+        /* The Input Field styling */
+        .price-field {
+            padding-left: 25px; /* Space for the ₹ symbol */
+            padding-top: 8px;
+            padding-bottom: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        /* Focus effect */
+        .price-field:focus {
+            background-color: #ffffff;
+            border-color: #000000; /* Or your brand color */
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        /* The Rupee Symbol Styling */
+        .currency-symbol {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: 500;
+            pointer-events: none; /* Allows clicking through to input */
+        }
+
+        /* Tiny label below the input (optional, looks pro) */
+        .price-label {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: #adb5bd;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        /* Hide spin buttons (arrows) in number inputs for cleaner look */
+        /* Hide arrows in Chrome, Safari, Edge, Opera */
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+
+        /* Hide arrows in Firefox */
+        input[type=number] {
+        appearance: textfield;      /* Standard property to silence the warning */
+        -moz-appearance: textfield; /* Firefox specific rule */
+        }
+
+        /* clear button */
+        .btn-clear-custom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            
+            /* Unique Design: Dashed border signifies 'utility/reset' */
+            border: 1px dashed #adb5bd; 
+            border-radius: 4px;
+            
+            background-color: transparent;
+            color: #6c757d; /* Muted text */
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        /* Hover Effect */
+        .btn-clear-custom:hover {
+            border-color: #dc3545; /* Bootstrap Danger Red */
+            color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.05); /* Very faint red tint */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        /* Icon Animation on Hover */
+        .btn-clear-custom:hover i {
+            transform: rotate(90deg); /* Little spin effect */
+            transition: transform 0.3s ease;
+        }
+        
+
   </style>
 
 {% endblock %}
@@ -230,13 +331,13 @@
                     {% endif %}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="?sort=price_asc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Price, low to high</a></li>
-                    <li><a class="dropdown-item" href="?sort=price_desc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Price, high to low</a></li>
-                    <li><a class="dropdown-item" href="?sort=newest{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Newest</a></li>
-                    <li><a class="dropdown-item" href="?sort=name_asc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Name, A - Z</a></li>
-                    <li><a class="dropdown-item" href="?sort=name_desc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Name, Z - A</a></li>
+                    <li><a class="dropdown-item" href="?sort=price_asc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}{% if brand_option %}{% for brand in brand_option %}&brand={{brand}}{% endfor %}{% endif %}{% if min_price and max_price %}&min_price={{min_price}}&max_price={{max_price}}{% endif %}">Price, low to high</a></li>
+                    <li><a class="dropdown-item" href="?sort=price_desc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}{% if brand_option %}{% for brand in brand_option %}&brand={{brand}}{% endfor %}{% endif %}{% if min_price and max_price %}&min_price={{min_price}}&max_price={{max_price}}{% endif %}">Price, high to low</a></li>
+                    <li><a class="dropdown-item" href="?sort=newest{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}{% if brand_option %}{% for brand in brand_option %}&brand={{brand}}{% endfor %}{% endif %}{% if min_price and max_price %}&min_price={{min_price}}&max_price={{max_price}}{% endif %}">Newest</a></li>
+                    <li><a class="dropdown-item" href="?sort=name_asc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}{% if brand_option %}{% for brand in brand_option %}&brand={{brand}}{% endfor %}{% endif %}{% if min_price and max_price %}&min_price={{min_price}}&max_price={{max_price}}{% endif %}">Name, A - Z</a></li>
+                    <li><a class="dropdown-item" href="?sort=name_desc{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}{% if brand_option %}{% for brand in brand_option %}&brand={{brand}}{% endfor %}{% endif %}{% if min_price and max_price %}&min_price={{min_price}}&max_price={{max_price}}{% endif %}">Name, Z - A</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" href="?sort=clear{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}">Clear Sort</a></li>
+                    <li><a class="dropdown-item text-danger" href="?sort=clear{% if query %}&q={{ query }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}{% if brand_option %}{% for brand in brand_option %}&brand={{brand}}{% endfor %}{% endif %}{% if min_price and max_price %}&min_price={{min_price}}&max_price={{max_price}}{% endif %}">Clear Sort</a></li>
                 </ul>
             </div>
         </div>
@@ -259,9 +360,9 @@
                 <!-- Collapsible Content (data-bs-parent removed) -->
                 <div class="collapse show" id="categoryCollapse">
                     <ul class="list-unstyled filter-list mt-2 ps-2">
-                        <li><a href="?cat=clear{% if query %}&q={{ query }}{% endif %}" class="text-decoration-none {% if not cat_option or cat_option == 'clear' %}active{% endif %} ">ALL</a></li>
+                        <li><a href="?cat=clear{% if query %}&q={{ query }}{% endif %}{% if brand_option %}{% for brand in brand_option %}&brand={{brand}}{% endfor %}{% endif %}{% if min_price and max_price %}&min_price={{min_price}}&max_price={{max_price}}{% endif %}" class="text-decoration-none {% if not cat_option or cat_option == 'clear' %}active{% endif %} ">ALL</a></li>
                         {% for category in categories %}
-                        <li><a href="?cat={{category.name}}{% if query %}&q={{ query }}{% endif %}" class="text-decoration-none {% if cat_option == category.name %}active{% endif %}">{{category.name}}</a></li>
+                        <li><a href="?cat={{category.name}}{% if query %}&q={{ query }}{% endif %}{% if brand_option %}{% for brand in brand_option %}&brand={{brand}}{% endfor %}{% endif %}{% if min_price and max_price %}&min_price={{min_price}}&max_price={{max_price}}{% endif %}" class="text-decoration-none {% if cat_option == category.name %}active{% endif %}">{{category.name}}</a></li>
                         
                         {% endfor %}
                     </ul>
@@ -269,29 +370,59 @@
             </div>
         
             <!-- <hr> -->
+            <hr>
         
-            <!-- 2. Availability Section -->
-            <!-- <div class="filter-section mb-2">
+            <!-- 2. Price range Section -->
+            <div class="filter-section mb-2 border-bottom pb-3">
                 <h5 class="filter-title">
-                        <a class="text-dark text-decoration-none d-block p-2" data-bs-toggle="collapse" href="#availabilityCollapse" role="button" aria-expanded="false" aria-controls="availabilityCollapse">
-                        Availability
-                        <i class="fas fa-chevron-down float-end"></i>
+                    <a class="text-dark text-decoration-none d-block p-2" data-bs-toggle="collapse" href="#priceCollapse" role="button" aria-expanded="false" aria-controls="priceCollapse">
+                        Price Range
+                        <i class="fas fa-chevron-down float-end transition-icon"></i>
                     </a>
-                </h5> -->
-                <!-- Collapsible Content (data-bs-parent removed) -->
-                <!-- <div class="collapse" id="availabilityCollapse">
-                    <ul class="list-unstyled filter-list mt-2 ps-2">
-                        <li>
-                            <input type="checkbox" id="inStock" name="availability" value="inStock">
-                            <label for="inStock"> In stock (14)</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="outOfStock" name="availability" value="outOfStock">
-                            <label for="outOfStock"> Out of stock (2)</label>
-                        </li>
-                    </ul>
+                </h5>
+                
+                <div class="collapse " id="priceCollapse">
+                    <div class="px-2 pt-1 pb-2">
+                        <form action="" method="get">
+
+                            {% if query %}
+                            <input type="hidden" name="q" value="{{ query }}">
+                            {% endif %}
+                            {% if cat_option %}
+                            <input type="hidden" name="cat" value="{{ cat_option }}">
+                            {% endif %}
+                            {% for brand in brand_option %}
+                            <input type="hidden" name="brand" value="{{ brand }}">
+                            {% endfor %}
+                            <!-- Price Inputs Wrapper -->
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                
+                                <!-- Min Price -->
+                                <div class="price-input-group position-relative w-100">
+                                    <span class="currency-symbol">₹</span>
+                                    <input type="number" class="form-control shadow-none price-field" name="min_price" value="{{min_price}}" placeholder="0" min="0">
+                                    <label class="price-label">Min</label>
+                                </div>
+                
+                                <!-- Separator Line -->
+                                <div class="mx-2 text-muted border-top" style="width: 15px; height: 1px;"></div>
+                
+                                <!-- Max Price -->
+                                <div class="price-input-group position-relative w-100">
+                                    <span class="currency-symbol">₹</span>
+                                    <input type="number" class="form-control shadow-none price-field" name="max_price" value="{{max_price}}" placeholder="2000" min="0">
+                                    <label class="price-label">Max</label>
+                                </div>
+                            </div>
+                
+                            <!-- Apply Button -->
+                            <button type="submit" class="btn btn-dark w-100 btn-sm rounded-1 text-uppercase fw-bold" style="letter-spacing: 1px;">
+                                Apply
+                            </button>
+                        </form>
+                    </div>
                 </div>
-            </div> -->
+            </div>
         
             <hr>
         
@@ -313,6 +444,10 @@
                         {% if cat_option %}
                         <input type="hidden" name="cat" value="{{ cat_option }}">
                         {% endif %}
+                        {% if min_price and max_price %}
+                        <input type="hidden" name="min_price" value="{{ min_price }}">
+                        <input type="hidden" name="max_price" value="{{ max_price }}">
+                        {% endif %}
 
                         <ul class="list-unstyled filter-list mt-2 ps-2">
                             {% for brand in brands %}
@@ -332,6 +467,17 @@
                     </form>
                 </div>
             </div>
+            {% if query or brand_option or cat_option and cat_option != 'clear' or sort_option or min_price and max_price %}
+            <!-- Clear All Button -->
+            <div class="filter-section pb-4">
+                
+                <a href="{% url 'shop_products' %}" class="btn-clear-custom">
+                    <span>Clear All Filters</span>
+                    <i class="fas fa-times-circle ms-2"></i>
+                </a>
+            </div>
+            
+            {% endif %}
         
         </aside>
         
@@ -351,13 +497,14 @@
                         <div class="card-body text-center my-2">
                             <!-- <a href="{% url 'shop_productdetail' item.product.id %}" class="text-dark text-decoration-none"> -->
                             <h6 class="card-title">{{item.product.name}} - {{ item.product.category.name }}</h6>
+                            <span class="text-muted">{{item.product.brand.name}}</span>
                             <p class="card-text">Rs.{{item.product.base_price}}</p>
                         <!-- </a> -->
                         </div>
                         {% if item.product.id in wishlist_products %}
-                        <a href="{% url 'remove_from_wishlist' %}?product_id={{item.product.id}}" class="wishlist-icons"><i class="fas fa-heart"></i></a>
+                        <a href="{% url 'remove_from_wishlist' %}?product_id={{item.product.id}}&next={{ request.get_full_path }}" class="wishlist-icons"><i class="fas fa-heart"></i></a>
                         {% else %}
-                        <a href="{% url 'add_to_wishlist' %}?product_id={{item.product.id}}" class="wishlist-icons"><i class="far fa-heart"></i></a>
+                        <a href="{% url 'add_to_wishlist' %}?product_id={{item.product.id}}&next={{ request.get_full_path }}" class="wishlist-icons"><i class="far fa-heart"></i></a>
                         {% endif %}
                     </div>
                 </div>

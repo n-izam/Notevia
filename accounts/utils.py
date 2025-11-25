@@ -24,7 +24,13 @@ def validationerror(msg="invalid cridentials"):
     raise ValidationError(msg)
 
 def profile(request):
-    profile = get_object_or_404(UserProfile, user=request.user)
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    
+    if not user_profile.image:
+        profile = "https://res.cloudinary.com/dbufuuut7/image/upload/v1764074718/generated-image_6_i7qd7r.jpg"
+    else:
+        profile = user_profile.image.url
+        
     return profile
 
 def referral_amount():

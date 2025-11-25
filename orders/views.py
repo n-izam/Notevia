@@ -6,7 +6,7 @@ from adminpanel.models import Product, Variant
 from cart.models import Cart, CartItem, Wallet, WalletTransaction
 from orders.models import Order, OrderItem, OrderAddress, ReturnRequest
 from django.urls import reverse
-from accounts.utils import error_notify, info_notify, success_notify, warning_notify
+from accounts.utils import error_notify, info_notify, success_notify, warning_notify, profile
 from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Q
@@ -500,7 +500,7 @@ class OrderListingView(OrderStatusUpdateByDateMixin, View):
 
     def get(self, request):
 
-        user_profile = get_object_or_404(UserProfile, user=request.user)
+        user_profile = profile(request)
         page = request.GET.get('page', 1)
         query = request.GET.get('q', '').strip()
 
@@ -547,7 +547,7 @@ class OrderDetailView(View):
     
     def get(self, request, order_id):
 
-        user_profile = get_object_or_404(UserProfile, user=request.user)
+        user_profile = profile(request)
 
         if not Order.objects.filter(user=request.user, id=order_id):
             return redirect('order_listing')
@@ -593,7 +593,7 @@ class OrderTrackingView(View):
 
     def get(self, request, order_id):
 
-        user_profile = get_object_or_404(UserProfile, user=request.user)
+        user_profile = profile(request)
 
         if not Order.objects.filter(user=request.user, id=order_id):
             return redirect('order_listing')

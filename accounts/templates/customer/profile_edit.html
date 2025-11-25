@@ -127,7 +127,7 @@
             {% csrf_token %}
             <div class="profile-picture-edit text-center mb-5">
                 <div class="position-relative d-inline-block">
-                    <img src="{{ user_profile.image.url }}" 
+                    <img src="{{ user_profile }}" 
                             alt="{{ user.full_name }}'s Profile Picture" 
                             class="profile-img-preview rounded-circle" 
                             id="profileImagePreview">

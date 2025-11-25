@@ -25,6 +25,7 @@ from django.views.decorators.cache import never_cache
 from accounts.utils import info_notify, error_notify, success_notify
 from cart.models import Cart, CartItem
 from django.urls import reverse
+from django.db import models
 # Create your views here.
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
@@ -279,7 +280,7 @@ class WishListView(View):
     def get(self, request):
         
         wishlist = request.user.wishlist
-        wishlist_items = WishlistItem.objects.filter(wishlist=wishlist)
+        wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, product__is_listed=True, product__category__is_listed=True)
 
 
         context = {
@@ -300,6 +301,8 @@ class AddToWishList(View):
             return redirect('wishlist_view')
 
         product_id = request.GET.get('product_id')
+        next_url = request.GET.get('next', 'shop_products')
+        print("next urls is ", next_url)
         wishlist = request.user.wishlist
         print('wish list id', wishlist.id)
         product = Product.objects.get(id=product_id)
@@ -309,7 +312,8 @@ class AddToWishList(View):
             )
         # variant = Variant.objects.get(id=variant_id)
 
-        return redirect('wishlist_view')
+        info_notify(request, f"the product {product.name} added to wishlist")
+        return redirect(next_url)
     
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
@@ -321,11 +325,14 @@ class RemoveToWishlist(View):
             return redirect('shop_products')
         
         product_id = request.GET.get('product_id')
+        next_url = request.GET.get('next', 'shop_products')
+        print("next urls is ", next_url)
         wishlist = request.user.wishlist
         product = Product.objects.get(id=product_id)
         WishlistItem.objects.filter(wishlist=wishlist, product=product).delete()
 
-        return redirect('shop_products')
+        info_notify(request, f"the product {product.name} removed from wishlist")
+        return redirect(next_url)
     
 class WishListToCartView(View):
 
@@ -336,7 +343,7 @@ class WishListToCartView(View):
             return redirect('wishlist_view')
         product = get_object_or_404(Product, id=product_id )
         main_variant = product.variants.filter(is_listed=True).order_by('-stock').first()
-        quantity = 1
+        quantity = 1 # add to .env
         print(main_variant)
         cart, created = Cart.objects.get_or_create(user=request.user)
 
@@ -356,9 +363,11 @@ class WishListToCartView(View):
                 cart_item = CartItem.objects.create(cart=cart, product=product, variant=main_variant, quantity=quantity)
 
         if cart_item:
+            wishlist = request.user.wishlist
+            WishlistItem.objects.filter(wishlist=wishlist, product=product).delete()
             success_notify(request, f"product {product.name} {quantity} quantity is successfully add to cart")
 
-        return redirect('shop_products')
+        return redirect('wishlist_view')
 
 class ProductReviewView(View):
 
