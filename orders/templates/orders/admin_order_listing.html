@@ -339,7 +339,7 @@
                     <div class="order-body">
                         <img src="{{order.get_first_product_image}}" alt="Product Image" class="product-image">
                         <div class="order-details">
-                            <p class="mb-1"><strong>Rs. {{order.over_all_amount}}</strong> <span class="fw-light">(incl. taxes)</span></p>
+                            <p class="mb-1"><strong>Rs. {{order.over_all_amount_all}}</strong> <span class="fw-light">(incl. taxes)</span></p>
                             <p class="mb-1">total items : {{order.total_quantity}}</p>
                             <p class="text-muted">Ordered on {{ order.created_at|date:"j F Y" }}</p>
                         </div>
