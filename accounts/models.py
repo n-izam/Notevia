@@ -48,6 +48,7 @@ class SignUpUserOTP(models.Model):
     email = models.EmailField(unique=True)
     otp = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     @staticmethod
     def generate_otp():
@@ -60,6 +61,7 @@ class UserOTP(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     otp = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     @staticmethod
     def generate_otp():

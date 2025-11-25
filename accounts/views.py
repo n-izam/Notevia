@@ -608,8 +608,11 @@ class ProfileEditView(View):
         user = get_object_or_404(CustomUser, id=request.user.id)
 
         if request.session.get('email'):
+            if SignUpUserOTP.objects.filter(email=request.session.get('email')).exists():
+                SignUpUserOTP.objects.filter(email=request.session.get('email')).delete()
             if UserOTP.objects.filter(user=user).exists():
                 UserOTP.objects.filter(user=user).delete()
+            request.session.pop("new_mail_otp_verified", None)
             del request.session['full_name']
             del request.session['email']
             del request.session['phone_no']
@@ -648,7 +651,7 @@ class ProfileEditView(View):
             error_notify(request, "leave your contact number")
             return redirect('profile_edit')
         if enter_email=='':
-            error_notify(request, "leave your contact number")
+            error_notify(request, "leave your email")
             return redirect('profile_edit')
         
         
@@ -685,17 +688,17 @@ class ProfileEditView(View):
 
         
 
-        otp = UserOTP.generate_otp()
+        otp = SignUpUserOTP.generate_otp()
         print("created otp is ", otp)
-        UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
+        SignUpUserOTP.objects.update_or_create(email=enter_email, defaults={"otp": otp})
         
         # otp sending session
-        html_content = render_to_string("emails/otp_signup.html", {"user": user, "otp": otp})
+        html_content = render_to_string("emails/otp_profile.html", {"full_name": full_name, "otp": otp})
         email = EmailMultiAlternatives(
             subject="Verify Your Account",
             body=f"Your OTP is {otp} ",
             from_email=settings.EMAIL_HOST_USER,
-            to=[user.email],
+            to=[enter_email],
         )
 
         email.attach_alternative(html_content, "text/html")
@@ -708,7 +711,116 @@ class ProfileEditView(View):
 
 
         success_notify(request, "We sent you an OTP. Please verify your email.")
-        return redirect("verify_profile")
+        return redirect("verify_new_mail")
+    
+class VerifyNewMailView(View):
+    def get(self, request):
+
+        if not request.user.is_authenticated:
+            return redirect("sigin")
+        
+        if request.session.get("new_mail_otp_verified"):
+            info_notify(request, "verify your old mail, then only the mail can update")
+            return redirect('verify_profile')
+        
+        if not request.session.get('email'):
+            # info_notify(request, "try again")
+            return redirect("profile")
+
+        context = {
+            "email" : request.session.get('email'),
+        }
+        return render(request, "accounts/verify_otp.html", context)
+    
+    def post(self, request):
+
+        full_name = request.session.get('full_name')
+        phone_no = request.session.get('phone_no')
+        new_email = request.session.get('email')
+        if not all([full_name, new_email, phone_no]):
+            error_notify(request, "Session expired. Please try again.")
+
+            return redirect('profile_edit')
+
+        if not request.POST.get("otp"):
+            error_notify(request, "check your email and enter your otp")
+            return redirect('verify_new_mail')
+        entered_otp = request.POST.get("otp")
+
+        if not SignUpUserOTP.objects.filter(email=new_email):
+            error_notify(request, "Otp is expired, try again ")
+            return redirect('profile_edit')
+        
+        otp_obj = get_object_or_404(SignUpUserOTP, email=new_email)
+
+        if otp_obj.otp == entered_otp and otp_obj.updated_at >=  timezone.now() - timedelta(minutes=3):
+
+           
+
+            user = request.user
+            print('user is active:', user.is_active)
+            otp = UserOTP.generate_otp()
+            print("created otp is ", otp)
+            UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
+            
+            # otp sending session
+            html_content = render_to_string("emails/otp_profile.html", {"user": user, "otp": otp})
+            email = EmailMultiAlternatives(
+                subject="Verify Your Account",
+                body=f"Your OTP is {otp} ",
+                from_email=settings.EMAIL_HOST_USER,
+                to=[user.email],
+            )
+
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+
+            request.session["new_mail_otp_verified"] = True
+
+            otp_obj.delete()
+            success_notify(request, "new user mail is verified, We sent you an OTP. Please verify your email.")
+            return redirect("verify_profile")
+        else:
+            otp_obj.delete()
+            del request.session['full_name']
+            del request.session['email']
+            del request.session['phone_no']
+            warning_notify(request, "your otp validity is over enter your mail again")
+            return redirect("profile_edit")
+            
+
+class ResendNewMailOtpView(View):
+
+    def get(self, request):
+
+        full_name = request.session.get('full_name')
+        phone_no = request.session.get('phone_no')
+        new_email = request.session.get('email')
+        if not all([full_name, new_email, phone_no]):
+            error_notify(request, "Session expired. Please try again.")
+
+            return redirect('profile_edit')
+
+        email = request.session.get('email')
+        otp = SignUpUserOTP.generate_otp()
+        print("created otp is ", otp)
+        new_mail_otp = SignUpUserOTP.objects.update_or_create(email=new_email, defaults={"otp": otp})
+        
+        # otp sending session
+        html_content = render_to_string("emails/otp_profile.html", {"full_name": full_name, "otp": otp})
+        email = EmailMultiAlternatives(
+            subject="Verify Your Account",
+            body=f"Your OTP is {otp} ",
+            from_email=settings.EMAIL_HOST_USER,
+            to=[new_email],
+        )
+
+        email.attach_alternative(html_content, "text/html")
+        email.send()
+
+        success_notify(request, "A new OTP has been sent to your email.")
+        return redirect("verify_new_mail")
+
     
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
@@ -718,14 +830,22 @@ class VerifyProfileOTPView(View):
         if not request.user.is_authenticated:
             return redirect("sigin")
         
+        if not request.session.get("new_mail_otp_verified"):
+            
+            return redirect('profile_edit')
+        
         if not request.session.get('email'):
+            info_notify(request, "try again")
             return redirect("profile")
         
         
         user = get_object_or_404(CustomUser, id=request.user.id)
+        context = {
+            "user_id": request.user.id,
+            "user": user,
+        }
         
-        
-        return render(request, "accounts/verify_otp.html", {"user_id": request.user.id, "user": user})
+        return render(request, "accounts/verify_otp.html", context)
     
     def post(self, request):
 
@@ -737,7 +857,7 @@ class VerifyProfileOTPView(View):
         if not all([full_name, email, phone_no]):
             error_notify(request, "Session expired. Please try again.")
 
-            return redirect('edit_profile')
+            return redirect('profile_edit')
 
 
         print("full name", full_name, "phone", phone_no, "email", email)
@@ -753,20 +873,21 @@ class VerifyProfileOTPView(View):
 
 
 
-        if otp_obj.otp == entered_otp and otp_obj.created_at >=  timezone.now() - timedelta(minutes=5):
+        if otp_obj.otp == entered_otp and otp_obj.updated_at >=  timezone.now() - timedelta(minutes=3):
             print('user is active:', user.is_active)
             
             
 
             # make session and clear previos session
             
-            request.session["chabge_otp_verified"] = True
+            # request.session["chabge_otp_verified"] = True
 
             user.full_name = full_name
             user.phone_no = phone_no
             user.email = email
             user.save()
-
+            
+            request.session.pop("new_mail_otp_verified", None)
             otp_obj.delete()
             del request.session['full_name']
             del request.session['email']
@@ -794,7 +915,7 @@ class ResendProfileOTPView(View):
         UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
         
         
-        html_content = render_to_string("emails/otp_forgot.html", {"user": user, "otp": otp})
+        html_content = render_to_string("emails/otp_profile.html", {"user": user, "otp": otp})
         
         email = EmailMultiAlternatives(
             subject="Resend OTP - Verify Your Account",
