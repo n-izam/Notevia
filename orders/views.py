@@ -984,6 +984,7 @@ class ReturnUpdateView(View):
             for item in order.items.filter(is_cancel=False):
                 
                 item.variant.stock += item.quantity
+                item.variant.save()
                 item.is_cancel = True
                 item.save()
 

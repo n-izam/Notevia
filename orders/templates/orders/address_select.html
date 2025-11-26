@@ -158,6 +158,13 @@
         background-color: #f9f9f9;
         border-color: #ccc;
     }
+    .total-col {
+        display: flex;
+        flex-direction: column;   /* stack items vertically */
+        align-items: flex-end;    /* right-align all items */
+        line-height: 1.4;         /* adjust spacing if needed */
+    }
+
 
     /* Toast container responsiveness */
     .toast-container {
@@ -259,7 +266,12 @@
                                 <p class="mb-0"><span class="text-muted fst-italic fw-light" style="font-size: 14px;">variant type: </span>{{item.cart_item.variant.name}}</p>
                                 <p class="text-muted small">Quantity: {{ item.cart_item.quantity }}</p>
                             </div>
-                            <p class="fw-bold">Rs. {{item.cart_item.main_subtotal}}</p>
+                            <!-- <p class="fw-bold">Rs. {{item.cart_item.main_subtotal}}</p> -->
+                            <div class="col-md-2 text-end total-col">
+                                <del class="fw-light mb-0">{{item.cart_item.main_subtotal}}</del>
+                                <strong>{{item.cart_item.after_discount_subtotal}}</strong>
+                                <span class="text-success">-{{item.cart_item.discount_subtotal}}</span>
+                            </div>
                         </div>
                         {% endfor %}
             
@@ -282,7 +294,7 @@
             
                     <div class="d-flex justify-content-between">
                         <h5 class="fw-normal">Subtotal</h5>
-                        <h5 class="fw-bold">Rs. {{cart.total_price}}</h5>
+                        <h5 class="fw-bold">Rs. {{cart.main_total_price}}</h5>
                     </div>
                     <p class="text-muted small text-end mb-0">(Excluding taxes and shipping)</p>
                 </div>
