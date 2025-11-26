@@ -708,11 +708,11 @@
                         <div class="date-range-group">
                             <div class="date-input-group">
                                 <label>From Date</label>
-                                <input type="date" name="start_date" value="{% if start_date %} {{start_date}} {% endif %}">
+                                <input type="date" name="start_date" value="{% if custom_start %}{{ custom_start|date:'Y-m-d' }}{% endif %}">
                             </div>
                             <div class="date-input-group">
                                 <label>To Date</label>
-                                <input type="date" name="end_date" value="2025-11-10">
+                                <input type="date" name="end_date" value="{% if custom_end %}{{ custom_end|date:'Y-m-d' }}{% endif %}">
                             </div>
                         </div>
             
@@ -720,7 +720,7 @@
                     </form>
         
                     <div class="selected-period">
-                        <strong>Selected Period:</strong> 11/10/2025 to 10/11/2025
+                        <strong>Selected Period:</strong>  {{ start_date|date:'d/m/Y' }} to  {{ end_date|date:'d/m/Y' }}
                     </div>
                 </div>
 

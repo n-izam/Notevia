@@ -748,7 +748,7 @@ class InvoiceDownloadView(View):
 
         # --- Header Section ---
         header_data = [
-            ['Your Company Name\n123 Your Street, Your City\nsupport@yourcompany.com', 
+            ['NOTEVIA\nkakkenchery, Calicut\nsupport@notevia.com', 
              f"INVOICE\nOrder ID: {order.order_id}\nDate: {order.created_at.strftime('%d %b %Y')}"]
         ]
         header_table = Table(header_data, colWidths=[4*inch, 2.5*inch])
@@ -756,7 +756,7 @@ class InvoiceDownloadView(View):
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
             ('FONTSIZE', (0,0), (-1,-1), 10),
-            ('FONTSIZE', (1,0), (1,0), 16), # Larger 'INVOICE' text
+            ('FONTSIZE', (1,0), (1,0), 10), # Larger 'INVOICE' text
             ('BOTTOMPADDING', (0,0), (-1,-1), 12),
         ]))
         story.append(header_table)
@@ -776,16 +776,17 @@ class InvoiceDownloadView(View):
 
         # --- Items Table Section ---
         items_data = [
-            ['Product', 'Variant', 'Qty', 'Price', 'Discount', 'Subtotal']
+            ['Product', 'Variant', 'Qty', 'Price', 'Discount\n per Qty', "Coupon\n Split", 'Subtotal']
         ]
         
-        for item in order.items.all():
+        for item in order.items.filter(is_cancel=False):
             row = [
                 Paragraph(item.product.name, styles['Normal']),
                 item.variant.name if item.variant else "—",
                 item.quantity,
                 f"Rs. {item.real_price:.2f}",
                 f"Rs. {item.discount_price:.2f}" if item.discount_price else "Rs. 0.00",
+                f"Rs. {item.coupon_discount():.2f}" if item.coupon_discount() else "Rs. 0.00",
                 f"Rs. {item.sub_real_price:.2f}"
             ]
             items_data.append(row)
@@ -804,15 +805,18 @@ class InvoiceDownloadView(View):
 
         # --- Totals Section ---
         totals_data = [
-            ['Subtotal:', f'Rs. {order.total_items_amount():.2f}'],
+            ['Total MRP:', f'Rs. {order.total_items_amount():.2f}'],
+            ['Discount:', f'-Rs. {order.total_discount():.2f}'],
+            ['Subtotal:', f'Rs. {order.total_amount():.2f}'],
+            ['Coupon:', f'-Rs. {order.coupon_amount:.2f}'],
             ['Tax (5%):', f'Rs. {order.tax_amount():.2f}'],
             ['Grand Total:', f'Rs. {order.over_all_amount:.2f}']
         ]
 
         totals_table = Table(totals_data, colWidths=[1.5*inch, 1*inch])
         totals_table.setStyle(TableStyle([
-            ('ALIGN', (0, 0), (-1, -1), 'RIGHT'),
-            ('FONTNAME', (0, 2), (-1, 2), 'Helvetica-Bold'), # Bold Grand Total
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 5), (-1, 5), 'Helvetica-Bold'), # Bold Grand Total
             ('GRID', (0, 0), (-1, -1), 1, colors.lightgrey)
         ]))
         

@@ -123,7 +123,7 @@ class AdminSalesView(View):
         paginator = Paginator(orders, 6)
         page_obj = paginator.get_page(page_number)
 
-        print('custom_start',custom_start)
+        print('custom_start',start_date.date(), end_date.date())
 
         context = {
             **report_data,
@@ -139,6 +139,8 @@ class AdminSalesView(View):
             "total_sales": total_sales,
             "custom_start" : custom_start,
             "custom_end": custom_end,
+            "start_date": start_date,
+            "end_date": end_date,
 
 
         }
@@ -156,17 +158,18 @@ class AdminSalesView(View):
         elements.append(Spacer(1, 12))
 
         # Table data
-        table_data = [['Order ID', 'Date', 'Customer', 'Items', 'Payment', 'Total', 'Coupon', 'Status']]
+        table_data = [['Order ID', 'Date', 'Customer', 'Items', 'Payment', 'Total', 'Coupon', 'Return\n Split', 'Status']]
         for order in data['orders']:
             table_data.append([
                 order.order_id,
                 order.created_at.strftime('%d/%m/%Y'),
                 order.user.full_name or order.user.email,
-                str(order.total_quantity_all()),
+                str(order.total_quantity()),
                 order.get_payment_method_display(),
                 f"Rs. {order.over_all_amount_all}",
                 # f"₹{order.over_all_amount_all * 0.1:.2f}",
                 order.coupon_code or '-',
+                f"Rs. {order.returned_amount}",
                 order.get_status_display()
             ])
 

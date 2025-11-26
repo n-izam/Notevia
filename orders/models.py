@@ -5,6 +5,7 @@ from accounts.models import Address
 from datetime import timedelta
 from django.utils import timezone
 from offers.models import Coupon
+from decimal import Decimal
 
 # Create your models here.
 
@@ -91,6 +92,10 @@ class Order(models.Model):
 
 
 #  get order amount if it cancelld
+    @property
+    def returned_amount(self):
+        returned = Decimal(self.over_all_amount_all) - Decimal(self.over_all_amount)
+        return returned
 
     @property
     def over_all_amount_all(self):
