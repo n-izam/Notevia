@@ -963,7 +963,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="minPurchases">Min Purchase (₹) *</label>
-                    <input type="number" id="minPurchases" name="minpurchases" placeholder="e.g., 500" min="0" step="0.01" value="{{ form.minpurchase.value|default:'' }}">
+                    <input type="number" id="minPurchases" name="minpurchase" placeholder="e.g., 500" min="0" step="0.01" value="{{ form.minpurchase.value|default:'' }}">
                     {% if form.minpurchase.errors %}
                     <p class="text-danger small">{{ form.minpurchase.errors.0 }}</p>
                     {% endif %}
