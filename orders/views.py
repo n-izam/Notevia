@@ -4,7 +4,7 @@ from django.db import models
 from accounts.models import Address, UserProfile, CustomUser
 from adminpanel.models import Product, Variant
 from cart.models import Cart, CartItem, Wallet, WalletTransaction
-from orders.models import Order, OrderItem, OrderAddress, ReturnRequest
+from orders.models import Order, OrderItem, OrderAddress, ReturnRequest, ReturnItemRequest
 from django.urls import reverse
 from accounts.utils import error_notify, info_notify, success_notify, warning_notify, profile
 from datetime import timedelta
@@ -561,6 +561,15 @@ class OrderDetailView(View):
 
         if not order_items:
             return redirect('order_listing')
+        
+        return_item_requests = ReturnItemRequest.objects.filter(order=order)
+        return_items = []
+        for item_request in return_item_requests:
+            if item_request.order_item in order_items:
+                # print("item:",item_request.order_item)
+                return_items.append(item_request.order_item)
+        print("return request ;", return_items)
+
 
         orderitem_with_image = []
         for order_item in order_items:
@@ -583,6 +592,9 @@ class OrderDetailView(View):
             "order": order,
             "orderitem_with_image": orderitem_with_image,
             "breadcrumb": breadcrumb,
+            "return_item_requests": return_item_requests,
+            "return_items": return_items
+
         }
 
         return render(request, "orders/order_detail.html", context)
@@ -730,7 +742,57 @@ class ReturnOrderView(View):
             return redirect('return_order', order_id=order.id)
         ReturnRequest.objects.create(order=order, reason=reason)
         return redirect('order_details', order_id=order.id)
+    
 
+
+class ReturnItemView(View):
+    def get(self, request, order_id, item_id):
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+        if order.status != 'Delivered':
+            error_notify(request, "Order can only able to return after delivery")
+            return redirect('order_details', order_id=order.id)
+        
+        if not OrderItem.objects.filter(id=item_id, order=order).exists():
+            info_notify(request, "Order item can't able to return ")
+            return redirect('order_details', order_id-order.id )
+        
+        item = get_object_or_404(OrderItem, id=item_id, order=order)
+        if ReturnItemRequest.objects.filter(order=order, order_item=item).exists():
+            info_notify(request, "Order item already in return request  list")
+            return redirect('order_details', order_id=order.id )
+
+        if item.is_cancel:
+            info_notify(request, "Order item can't able to return ")
+            return redirect('order_details', order_id-order.id )
+
+        return render(request, 'order_confirm/return_confirmation.html', {"order": order, "item": item})
+    def post(self, request, order_id, item_id):
+
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+
+        if order.status not in ['Delivered']:
+            error_notify(request, "Order item can only able to return after delivery")
+            return redirect('order_details', order_id-order.id )
+
+        if not OrderItem.objects.filter(id=item_id, order=order).exists():
+            info_notify(request, "Order item can't able to return ")
+            return redirect('order_details', order_id-order.id )
+        
+        item = get_object_or_404(OrderItem, id=item_id, order=order)
+        if ReturnItemRequest.objects.filter(order=order, order_item=item).exists():
+            info_notify(request, "Order item already in return request  list")
+            return redirect('order_details', order_id=order.id )
+
+        if item.is_cancel:
+            info_notify(request, "Order item can't able to return ")
+            return redirect('order_details', order_id-order.id )
+        reason = request.POST.get('reason')
+        if not reason:
+            error_notify(request, "reason required")
+            return redirect('return_order_item', order_id=order.id, item_id=item.id)
+        
+        ReturnItemRequest.objects.create(order=order, order_item=item, reason=reason)
+        return redirect('order_details', order_id=order.id)
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
@@ -858,7 +920,7 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
         orders = Order.objects.all().order_by('-created_at')
 
         if query:
-            orders = orders.filter(Q(status__icontains=query)|Q(user__full_name__icontains=query))
+            orders = orders.filter(Q(status__icontains=query)|Q(user__full_name__icontains=query)|Q(order_id__icontains=query))
 
         if stat:
             orders = orders.filter(status=stat)
@@ -911,6 +973,8 @@ class AdminOrderDetailView(View):
 
         if not order_items:
             return redirect('order_listing')
+        
+        return_item_requests = ReturnItemRequest.objects.filter(order=order).order_by('-status')
 
         orderitem_with_image = []
         for order_item in order_items:
@@ -934,6 +998,8 @@ class AdminOrderDetailView(View):
             'status_choices': Order.STATUS_CHOICES,
             "breadcrumb": breadcrumb,
             'return_status_choices': ReturnRequest.STATUS_CHOICES,
+            "return_item_requests": return_item_requests,
+            "return_item_status_choices": ReturnItemRequest.STATUS_CHOICES
         }
 
         return render(request, "orders/admin_order_detail.html", context)
@@ -981,11 +1047,12 @@ class ReturnUpdateView(View):
             transaction = wallet.credit(Decimal(order.over_all_amount), message=f"Order {order.order_id} Return Amount" )
             transaction.order=order
             transaction.save()
-            for item in order.items.filter(is_cancel=False):
+            for item in order.items.filter(is_cancel=False, is_return=False):
                 
                 item.variant.stock += item.quantity
                 item.variant.save()
-                item.is_cancel = True
+                item.is_cancel = True # remove if not needed
+                item.is_return = True
                 item.save()
 
             order.return_requests.status = 'Approved'
@@ -1023,6 +1090,84 @@ class ReturnUpdateView(View):
 
             order.return_requests.status = 'Rejected'
             order.return_requests.save()
+
+            return redirect('admin_order_detail', order_id=order.id)
+        return redirect('admin_order_detail', order_id=order.id)
+    
+@method_decorator(login_required(login_url='signin'), name='dispatch')
+@method_decorator(never_cache, name='dispatch')
+class ItemReturnUpdateView(View):
+
+    def post(self, request, order_id, user_id, item_id):
+        if not CustomUser.objects.filter(id=user_id).exists():
+            return redirect('admin_order_detail', order_id=order_id)
+        return_status = request.POST.get('status')
+        if not return_status:
+            return redirect('admin_order_detail', order_id=order_id)
+
+
+        user = get_object_or_404(CustomUser, id=user_id)
+
+        order = get_object_or_404(Order, id=order_id, user=user)
+        if not OrderItem.objects.filter(order=order, id=item_id).exists():
+            info_notify(request, "the item is not exists in this order")
+            return redirect('admin_order_detail', order_id=order_id)
+        item = get_object_or_404(OrderItem, order=order, id=item_id)
+        if not ReturnItemRequest.objects.filter(order=order, order_item=item).exists():
+            info_notify(request, "the item is not exists in the item request list")
+            return redirect('admin_order_detail', order_id=order_id)
+        return_item_request = get_object_or_404(ReturnItemRequest, order=order, order_item=item)
+
+        if return_status in ['Approved']:
+            refund_amount = item.return_with_tax_price()
+            wallet = get_object_or_404(Wallet, user=user)
+            transaction = wallet.credit(Decimal(refund_amount), message=f"Order {order.order_id} Return Amount for item {item.product.name}" )
+            transaction.order=order
+            transaction.save()
+            
+            item.variant.stock += item.quantity
+            item.is_cancel = True # remove if not needed
+            item.is_return = True
+            item.variant.save()
+            item.save()
+            
+            
+            return_item_request.status = 'Approved'
+            return_item_request.save()
+            if not order.items.filter(is_return=False, is_cancel=False).exists():
+                order.status='Returned'
+                order.is_paid=False
+                order.save()
+            # email for approval
+            html_content = render_to_string("emails/approve_return.html", {"order": order, "item": item})
+            email = EmailMultiAlternatives(
+                subject="Verify Your Account",
+                body=f"Your OTP is ",
+                from_email=settings.EMAIL_HOST_USER,
+                to=[user.email],
+            )
+
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+
+            return redirect('admin_order_detail', order_id=order.id)
+        
+        elif return_status in ['Rejected']:
+
+            # email for rejection
+            html_content = render_to_string("emails/return_reject.html", {"order": order, "item": item})
+            email = EmailMultiAlternatives(
+                subject="Verify Your Account",
+                body=f"Your OTP is ",
+                from_email=settings.EMAIL_HOST_USER,
+                to=[user.email],
+            )
+
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+
+            return_item_request.status = 'Rejected'
+            return_item_request.save()
 
             return redirect('admin_order_detail', order_id=order.id)
         return redirect('admin_order_detail', order_id=order.id)

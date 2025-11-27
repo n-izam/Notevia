@@ -6,6 +6,7 @@ from datetime import timedelta
 from django.utils import timezone
 from offers.models import Coupon
 from decimal import Decimal
+from django.db.models import UniqueConstraint
 
 # Create your models here.
 
@@ -207,6 +208,7 @@ class OrderItem(models.Model):
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     discount_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     is_cancel = models.BooleanField(default=False)
+    is_return = models.BooleanField(default=False)
 
     # price with discount and quantity
     def total_price(self):
@@ -283,3 +285,23 @@ class ReturnRequest(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class ReturnItemRequest(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    ]
+
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='return_item_requests')
+    order_item = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
+    
+    reason = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['order', 'order_item'], name='unique_order_per_order_item')
+        ]

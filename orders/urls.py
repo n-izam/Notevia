@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import AddressSelectionView, ConfirmationCartView, PlaceOrderView, OrderListingView, OrderDetailView, OrderTrackingView, AdminSideOrderListingView, AddressAddFromSelectView
-from .views import AdminOrderDetailView, OrderStatusUpdateView, CancelOrderView, CancelOrderItemView, ReturnOrderView, ReturnUpdateView, InvoiceDownloadView, OrderSuccessView, PaymentFailedView
+from .views import AddressSelectionView, ConfirmationCartView, PlaceOrderView, OrderListingView, OrderDetailView, OrderTrackingView, AdminSideOrderListingView, AddressAddFromSelectView, ReturnItemView
+from .views import AdminOrderDetailView, OrderStatusUpdateView, CancelOrderView, CancelOrderItemView, ReturnOrderView, ReturnUpdateView, InvoiceDownloadView, OrderSuccessView, PaymentFailedView, ItemReturnUpdateView
 from . import views
 
 
@@ -25,6 +25,8 @@ urlpatterns = [
     path('order/<int:order_id>/return', ReturnOrderView.as_view(), name='return_order'),
 
     path('order/<int:order_id>/user/<int:user_id>/return_update/', ReturnUpdateView.as_view(), name='return_update'),
+    path('order/<int:order_id>/item//<int:item_id>/return/', ReturnItemView.as_view(), name='return_order_item'),
+    path('order/<int:order_id>/item/<int:item_id>/user/<int:user_id>/return-item-update/', ItemReturnUpdateView.as_view(), name='return_item_update'),
 
     path('order/<int:order_id>/invoice/', InvoiceDownloadView.as_view(), name='download_invoice'),
 

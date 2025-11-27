@@ -99,8 +99,9 @@
 
     /* return item tyle */
     /* Add this to your existing styles */
+    /*
     .request-management-card {
-        background-color: rgb(255, 255, 254); /* A light grey to stand out */
+        background-color: rgb(255, 255, 254);   
         border: 1px solid #dee2e6;
         border-radius: 0.5rem;
         padding: 1.5rem;
@@ -124,6 +125,114 @@
 
     .return-update-form .badge {
         font-size: 0.9em;
+    }
+    */
+
+    /* --- 1. The Scrollable Wrapper --- */
+    .return-requests-scroll-container {
+        /* 
+        Estimate: One card with form is approx 300px. 
+        Setting max-height to 650px ensures 2 cards fit nicely.
+        The 3rd card will trigger the scrollbar.
+        */
+        max-height: 450px; 
+        overflow-y: auto; /* Scroll only when necessary */
+        overflow-x: hidden;
+        padding-right: 8px; /* Space for scrollbar */
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Custom Scrollbar for better visuals */
+    .return-requests-scroll-container::-webkit-scrollbar {
+        width: 6px;
+    }
+    .return-requests-scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    .return-requests-scroll-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+    .return-requests-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #bbb;
+    }
+
+    /* --- 2. Card Styles (Your Existing + Tweaks) --- */
+    .request-management-card {
+        background-color: rgb(255, 255, 254);
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .request-management-card .card-title-secondary {
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .request-management-card .reason-quote {
+        border-left: 3px solid #6c757d;
+        padding-left: 1rem;
+        margin: 0.5rem 0 1rem 0;
+        font-style: italic;
+        background-color: #f9f9f9; /* Added light bg for readability */
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .return-update-form .badge {
+        font-size: 0.9em;
+        padding: 0.5em 0.8em;
+    }
+
+    /* Ensure the Select dropdown takes available space */
+    .return-update-form select.form-select {
+        flex: 1; /* Grows to fill space next to the button */
+        min-width: 140px; /* Prevents it from getting unreadably small */
+    }
+
+    /* --- 3. Responsive Design (Mobile) --- */
+    @media (max-width: 768px) {
+        
+        /* Adjust Scroll Container Height for Mobile */
+        .return-requests-scroll-container {
+            max-height: 60vh; /* Use 60% of screen height instead of fixed pixels */
+        }
+
+        /* Compress Card Padding */
+        .request-management-card {
+            padding: 1rem;
+            margin-top: 1rem !important; /* Overwrite bootstrap mt-4 */
+        }
+
+        .request-management-card .card-title-secondary {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Form Adjustments for Small Screens */
+        .return-update-form .d-flex {
+            /* On very small screens, stack the select and button */
+            flex-wrap: wrap; 
+        }
+        
+        .return-update-form .btn {
+            width: 100%; /* Make button full width on mobile for easier tapping */
+            margin-top: 5px;
+        }
+        
+        .return-update-form select.form-select {
+            width: 100%;
+        }
     }
 </style>
 
@@ -291,6 +400,59 @@
                             {% endif %}
 
                         </div>
+                        {% elif return_item_requests %}
+                            <!-- Wrapper for scroll functionality -->
+                            <div class="return-requests-scroll-container">
+
+                                {% for item_request in return_item_requests %}
+                                    <div class="request-management-card mt-4">
+                                        
+                                        <!-- Card Title -->
+                                        <h5 class="card-title-secondary">
+                                                Return Item Request
+                                        </h5>
+
+                                        <!-- Reason Display -->
+                                        <p class="text-muted mb-1"><strong>Reason Given:</strong></p>
+                                        <blockquote class="reason-quote">
+                                            {{ item_request.reason }}
+                                        </blockquote>
+
+                                        <!-- Return Management Form -->
+                                        {% if item_request.reason %}
+                                            <hr class="my-4">
+                                            
+                                            <form method="POST" action="{% url 'return_item_update' order.id item_request.order_item.id order.user.id %}" class="return-update-form delete-form">
+                                                {% csrf_token %}
+
+                                                <p class="mb-3">
+                                                    <strong>Current Status:</strong> 
+                                                    <span class="badge bg-secondary">{{ item_request.status }}</span>
+                                                </p>
+
+                                                <!-- Status Update Section -->
+                                                {% if item_request.status != 'Approved' and item_request.status != 'Rejected' %}
+                                                    <label for="status" class="form-label small fw-bold">Update Status:</label>
+                                                    
+                                                    <!-- Added 'flex-wrap' to handle very small mobile screens -->
+                                                    <div class="d-flex gap-2 flex-wrap align-items-center">
+                                                        <select name="status" id="status" class="form-select" required>
+                                                            {% for value, label in return_item_status_choices %}
+                                                                <option value="{{ value }}" {% if value == item_request.status %}selected{% endif %}>
+                                                                    {{ label }}
+                                                                </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <button type="submit" class="btn btn-success flex-shrink-0">Confirm</button>
+                                                    </div>
+                                                {% endif %}
+                                            </form>
+                                        {% endif %}
+
+                                    </div>
+                                {% endfor %}
+                                
+                            </div>
                         {% endif %}
 
                         <!-- =================================================================== -->

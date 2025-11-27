@@ -26,9 +26,16 @@
 <body>
   <div class="card">
     <h4 class="mb-3 text-danger">Return Order: {{ order.order_id }}</h4>
+    {% if item %}
+    <p class="text-muted mb-4">
+      <strong>Order Item: {{item.product.name}} quantity: {{item.quantity}}</strong><br>
+      Are you sure you want to Return this order item? This action cannot be undone.
+    </p>
+    {% else %}
     <p class="text-muted mb-4">
       Are you sure you want to Return this order? This action cannot be undone.
     </p>
+    {% endif %}
 
     <form method="POST">
       {% csrf_token %}
@@ -55,5 +62,13 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    window.addEventListener("pageshow", function(event) {
+      // If the page is loaded from the browser's back/forward cache
+      if (event.persisted) {
+          window.location.reload();
+      }
+  });
+  </script>
 </body>
 </html>
