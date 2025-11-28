@@ -37,28 +37,36 @@ def referral_amount():
     amount = 400
     return amount
 
-def custom_page_range(page, total_pages):
+def custom_page_range(current_page, total_pages):
     pages = []
 
-    # Always show first 3 pages: 1,2,3
+    # Always show first 3 pages
     for p in range(1, min(4, total_pages + 1)):
         pages.append(p)
 
-    # Add ... if current page > 5
-    if page > 5:
-        pages.append("...")
+    # Add ellipsis if current_page is far from first 3
+    if current_page > 4:
+        if pages[-1] != "...":
+            pages.append("...")
 
-    # Middle page (current page only, optional)
-    if 4 < page < total_pages - 2:
-        pages.append(page)
+    # Pages around current page (current -1, current, current +1)
+    for p in range(current_page - 1, current_page + 2):
+        if p > 3 and p < total_pages - 1:  # avoid duplicating first 3 or last 2
+            pages.append(p)
 
-    # Add ... if current page < total_pages - 3
-    if page < total_pages - 3:
-        pages.append("...")
+    # Add ellipsis if current_page is far from last 2
+    if current_page < total_pages - 3:
+        if pages[-1] != "...":
+            pages.append("...")
 
     # Always show last 2 pages
     if total_pages > 3:
         pages.extend([total_pages - 1, total_pages])
 
-    # Remove duplicates
-    return list(dict.fromkeys(pages))
+    # Remove duplicates and sort
+    final_pages = []
+    for p in pages:
+        if p not in final_pages:
+            final_pages.append(p)
+
+    return final_pages

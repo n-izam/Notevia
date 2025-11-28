@@ -4,7 +4,7 @@ from django.urls import reverse
 from adminpanel.models import Product, Variant
 from .models import Cart, CartItem, Wallet, WalletTransaction
 from django.db import models
-from accounts.utils import success_notify, info_notify, error_notify, profile
+from accounts.utils import success_notify, info_notify, error_notify, profile, custom_page_range
 from decimal import Decimal
 
 from django.utils.decorators import method_decorator
@@ -221,6 +221,8 @@ class UserWalletView(View):
             paginated_orders = paginator.page(1)
         except EmptyPage:
             paginated_orders = paginator.page(paginator.num_pages)
+        
+        custom_range = custom_page_range(paginated_orders.number, paginator.num_pages)
 
         user_profile = profile(request)
         context = {
@@ -230,6 +232,7 @@ class UserWalletView(View):
             "transactions": paginated_orders,
             "paginator" : paginator,
             "page_obj" : paginated_orders,
+            "custom_range": custom_range
 
 
 

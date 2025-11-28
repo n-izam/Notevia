@@ -528,6 +528,8 @@ class OrderListingView(OrderStatusUpdateByDateMixin, View):
         except EmptyPage:
             paginated_orders = paginator.page(paginator.num_pages)
 
+        custom_range = custom_page_range(paginated_orders.number, paginator.num_pages)
+
         context = {
             "user_id": request.user.id,
             "user_profile": user_profile,
@@ -536,6 +538,7 @@ class OrderListingView(OrderStatusUpdateByDateMixin, View):
             "paginator" : paginator,
             "page_obj" : paginated_orders,
             "query": query,
+            "custom_range": custom_range
         }
 
         return render(request, "orders/order_listing.html", context)

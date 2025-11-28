@@ -382,41 +382,47 @@
         </div> -->
         
         <!-- Pagination -->
-        <!-- Pagination -->
-        <nav aria-label="Page navigation" class="d-flex justify-content-center mt-5">
+          <!-- Pagination -->
+          <nav aria-label="Page navigation" class="d-flex justify-content-center mt-5">
             <ul class="pagination">
-              {% if page_obj.has_previous %}
+            {% if page_obj.has_previous %}
                 <li class="page-item">
-                  <a class="page-link"
-                     href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if sort_option %}&sort={{ sort_option }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}{% for b in brand_option %}&brand={{ b }}{% endfor %}">
+                <a class="page-link"
+                    href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if stat %}&stat={{ stat }}{% endif %}">
                     &lsaquo;
-                  </a>
+                </a>
                 </li>
-              {% endif %}
-          
-              {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                  <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+            {% endif %}
+        
+            {% for num in custom_range %}
+                {% if num == '...' %}
+                    <li class="page-item disabled">
+                        <a class="page-link">...</a>
+                    </li>
+                {% elif num == page_obj.number %}
+                    <li class="page-item active">
+                        <a class="page-link" href="#">{{ num }}</a>
+                    </li>
                 {% else %}
-                  <li class="page-item">
-                    <a class="page-link"
-                       href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if sort_option %}&sort={{ sort_option }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}{% for b in brand_option %}&brand={{ b }}{% endfor %}">
-                      {{ num }}
-                    </a>
-                  </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                        href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if stat %}&stat={{ stat }}{% endif %}">
+                            {{ num }}
+                        </a>
+                    </li>
                 {% endif %}
-              {% endfor %}
-          
-              {% if page_obj.has_next %}
+            {% endfor %}
+        
+            {% if page_obj.has_next %}
                 <li class="page-item">
-                  <a class="page-link"
-                     href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if sort_option %}&sort={{ sort_option }}{% endif %}{% if cat_option %}&cat={{ cat_option }}{% endif %}{% for b in brand_option %}&brand={{ b }}{% endfor %}">
+                <a class="page-link"
+                    href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if stat %}&stat={{ stat }}{% endif %}">
                     &rsaquo;
-                  </a>
+                </a>
                 </li>
-              {% endif %}
+            {% endif %}
             </ul>
-          </nav>
+        </nav>
           
     </div>
     
