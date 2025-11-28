@@ -17,7 +17,10 @@ def generate_referral_code(name):
     """
     symbols = "@#$%&"
     random_part = ''.join(random.choices(string.ascii_uppercase + string.digits + symbols, k=5))
-    base = name.upper()[:5]  # first 5 letters of username
+    if name:
+        base = name.upper()[:5]  # first 5 letters of username
+    else:
+        base = ''.join(random.choices(string.ascii_uppercase + string.digits + symbols, k=5))
     return f"{base}-{random_part}"
 
 class Referral(models.Model):

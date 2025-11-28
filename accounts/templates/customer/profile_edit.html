@@ -168,7 +168,7 @@
                     <div class="col-md-6 mb-4">
                         <label for="phoneNumber" class="form-label">Phone number</label>
                         <input type="text" class="form-control" name="phone_no" id="phoneNumber" 
-                                value="{% if user.phone_no %}{{ user.phone_no }}{% else %}12345 67890{% endif %}">
+                                value="{% if user.phone_no %}{{ user.phone_no }}{% else %}{% endif %}">
                     </div>
                 </div>
                 <div class="text-center mt-4">

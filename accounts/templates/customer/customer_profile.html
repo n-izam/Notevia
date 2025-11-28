@@ -119,7 +119,7 @@
             </div>
             <div class=" mb-5">
                 <label for="phone" class="form-label">Phone</label>
-                <input type="text" class="form-control" id="phone" value="{% if user.phone_no %} +91 {{user.phone_no}} {% else %} +91 12345 67890 {% endif %}" disabled readonly>
+                <input type="text" class="form-control" id="phone" value="{% if user.phone_no %} +91 {{user.phone_no}} {% else %} None {% endif %}" disabled readonly>
             </div>
             <div class="text-start">
                 <a type="submit" href="{% url 'profile_edit' %}"  class="btn edit-btn">EDIT</a>
