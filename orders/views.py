@@ -6,7 +6,7 @@ from adminpanel.models import Product, Variant
 from cart.models import Cart, CartItem, Wallet, WalletTransaction
 from orders.models import Order, OrderItem, OrderAddress, ReturnRequest, ReturnItemRequest
 from django.urls import reverse
-from accounts.utils import error_notify, info_notify, success_notify, warning_notify, profile
+from accounts.utils import error_notify, info_notify, success_notify, warning_notify, profile, custom_page_range
 from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Q
@@ -309,8 +309,8 @@ class PlaceOrderView(View):
             success_notify(request, "Order placed successfully!")
             return render(request, 'orders/success_order.html', context)
         elif payment_method == 'Wallet':
-
-            wallet = get_object_or_404(Wallet, user=request.user)
+            wallet, create = Wallet.objects.get_or_create(user=request.user)
+            # wallet = get_object_or_404(Wallet, user=request.user)
             if wallet.balance < order.over_all_amount:
                 order.items.all().delete()
                 order.orders_address.delete()
@@ -666,6 +666,7 @@ class CancelOrderView(View):
                 if item.variant:
                     item.variant.stock += item.quantity
                     item.is_cancel = True
+                    item.item_status = 'Cancelled'
                     item.variant.save()
                     item.save()
             
@@ -707,6 +708,7 @@ class CancelOrderItemView(View):
                 transaction.save()
             item.variant.stock += item.quantity
             item.is_cancel = True
+            item.item_status = 'Cancelled'
             item.variant.save()
             item.save()
             
@@ -841,7 +843,7 @@ class InvoiceDownloadView(View):
             ['Product', 'Variant', 'Qty', 'Price', 'Discount\n per Qty', "Coupon\n Split", 'Subtotal']
         ]
         
-        for item in order.items.filter(is_cancel=False):
+        for item in order.items.filter(is_cancel=False).exclude(is_return=True):
             row = [
                 Paragraph(item.product.name, styles['Normal']),
                 item.variant.name if item.variant else "—",
@@ -915,7 +917,7 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
         stat = request.GET.get('stat', '').strip()
         
 
-        page = request.GET.get('page', 1)
+        page = int(request.GET.get('page', 1))
 
         orders = Order.objects.all().order_by('-created_at')
 
@@ -933,6 +935,8 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
         except EmptyPage:
             paginated_orders = paginator.page(paginator.num_pages)
 
+        custom_range = custom_page_range(paginated_orders.number, paginator.num_pages)
+
         breadcrumb = [
             {"name": "Dashboard", "url": f"/adminpanel/admindash/{request.user.id}/"},
             {"name": "Orders", "url": ""},
@@ -947,6 +951,7 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
             "query":query,
             "stat": stat,
             'status_choices': Order.STATUS_CHOICES,
+            "custom_range": custom_range
         }
 
         return render(request, 'orders/admin_order_listing.html', context)
@@ -1017,11 +1022,22 @@ class OrderStatusUpdateView(View):
             order.save()
             
             if order.status == 'Cancelled':
-                for item in order.items.filter(is_cancel=False):
+                if order.payment_method != 'COD':
+                    for item in order.items.filter(is_cancel=False).exclude(is_return=True):
+                        item.variant.stock += item.quantity
+                        item.is_cancel = True
+                        item.item_status = 'Cancelled'
+                        item.save()
+            if order.status == 'Returned':
+                for item in order.items.filter(is_return=False).exclude(is_cancel=True):
                     item.variant.stock += item.quantity
-                    item.is_cancel = True
+                    item.is_return = True
+                    item.item_status = 'Returned'
                     item.save()
             if order.status == 'Delivered':
+                for item in order.items.filter(is_cancel=False).exclude(is_return=True):
+                    item.item_status = 'Delivered'
+                    item.save()
                 order.is_paid=True
                 order.save()
 
@@ -1047,12 +1063,13 @@ class ReturnUpdateView(View):
             transaction = wallet.credit(Decimal(order.over_all_amount), message=f"Order {order.order_id} Return Amount" )
             transaction.order=order
             transaction.save()
-            for item in order.items.filter(is_cancel=False, is_return=False):
+            for item in order.items.filter(is_cancel=False).exclude(is_return=True):
                 
                 item.variant.stock += item.quantity
                 item.variant.save()
-                item.is_cancel = True # remove if not needed
+                # item.is_cancel = True # remove if not needed
                 item.is_return = True
+                item.item_status = 'Returned'
                 item.save()
 
             order.return_requests.status = 'Approved'
@@ -1126,15 +1143,16 @@ class ItemReturnUpdateView(View):
             transaction.save()
             
             item.variant.stock += item.quantity
-            item.is_cancel = True # remove if not needed
+            # item.is_cancel = True # remove if not needed
             item.is_return = True
+            item.item_status = 'Returned'
             item.variant.save()
             item.save()
             
             
             return_item_request.status = 'Approved'
             return_item_request.save()
-            if not order.items.filter(is_return=False, is_cancel=False).exists():
+            if not order.items.filter(is_return=False).exclude(is_cancel=True).exists():
                 order.status='Returned'
                 order.is_paid=False
                 order.save()

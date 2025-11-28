@@ -324,6 +324,11 @@
                         
                     </div>
                     <hr>
+                    <div class="d-flex justify-content-between py-2 fw-bold h5">
+                        <span>Grand Total</span>
+                        <span>₹{{order.over_all_amount_all}}</span>
+                    </div>
+                    <hr>
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="mb-0">Status :</h6>
                         {% if order.status == 'Delivered' %}
@@ -436,58 +441,65 @@
                     </div>
 
                     {% for item in orderitem_with_image %}
-                    <!-- Product Item 1 -->
-                    <div class="row align-items-center product-item py-3">
-                        <div class="col-5 col-md-5 d-flex align-items-center">
-                            <a href=" {% url 'shop_productdetail' item.order_item.product.id %}"><img src="{{item.main_image.image.url}}" alt="Product Image" class="product-image"></a>
+                        <!-- Product Item 1 -->
+                        <div class="row align-items-center product-item py-3">
+                            <div class="col-5 col-md-5 d-flex align-items-center">
+                                <a href=" {% url 'shop_productdetail' item.order_item.product.id %}"><img src="{{item.main_image.image.url}}" alt="Product Image" class="product-image"></a>
 
-                            <div class="ms-1">
-                                <p class="mb-0 fw-bold">{{item.order_item.product.name}}</p>
-                                <span class="fw-light text-muted" >variant type: {{item.order_item.variant.name}} </span>
-                                
-                                <div>
-                                    {% if not item.order_item.is_cancel %}
-                                    {% if order.status != 'Delivered' and order.status != 'Shipped' and order.status != 'Payment Failed' %}
-                                    <form action="{% url 'cancel_order_item' item.order_item.order.id item.order_item.id %}" method="POST" class="delete-form">
-                                        {% csrf_token %}
-                                        <button type="submit" class=" text-decoration-none text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#000000;">Cancel item</button>
-                                    </form>
-                                    {% endif %}
-                                    {% else %}
-                                    <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#953535;">item cancelled</span>
-                                    {% endif %}
+                                <div class="ms-1">
+                                    <p class="mb-0 fw-bold">{{item.order_item.product.name}}</p>
+                                    <span class="fw-light text-muted" >variant type: {{item.order_item.variant.name}} </span>
+                                    
+                                    <div>
+                                        {% if not item.order_item.is_cancel %}
+                                            {% if order.status != 'Delivered' and order.status != 'Shipped' and order.status != 'Payment Failed' %}
+                                                {% if not item.order_item.is_return  %}
+                                                    <form action="{% url 'cancel_order_item' item.order_item.order.id item.order_item.id %}" method="POST" class="delete-form">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class=" text-decoration-none text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#000000;">Cancel item</button>
+                                                    </form>
+                                                {% endif %}    
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#953535;">item cancelled</span>
+                                        {% endif %}
+                                        {% if item.order_item.is_return %}
+                                            <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#953535;">Item Returned</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    
                                 </div>
-                                
-                                
                             </div>
+                            <div class="col-2 col-md-2"><a href="#" class="sku-link">{{item.order_item.product.brand.name}}</a></div>
+                            <div class="col-2 col-md-2 text-md-center">₹{{item.order_item.real_price}}</div>
+                            <div class="col-3 col-md-1 text-end">{{item.order_item.quantity}}pcs</div>
+                            <div class="col-12 col-md-2 text-end fw-bold mt-2 mt-md-0" >
+                                <del class="fw-light text-muted">₹{{item.order_item.sub_real_price}}</del>
+                                <p class="m-0">₹{{item.order_item.total_price}}</p>
+                                <span class="fw-light text-success">-₹{{item.order_item.sub_discount}}</span>
+                            </div> 
+                            {% if  order.status == 'Delivered' %}
+                                {% if not item.order_item.is_cancel %}
+                                    <div class="d-flex align-item-center justify-content-end">
+                                        {% if not item.order_item in return_items %}
+                                            <a href="{% url 'product_rating' %}?variant_id={{item.order_item.variant.id}}&order_id={{item.order_item.order.id}}" class="rating-btn me-1">Give Rating</a>
+                                        {% endif %}
+                                        {% if return_item_requests %}
+                                            {% if not order.return_requests.reason%}
+                                                {% if not item.order_item in return_items %}
+                                                    <a href="{% url 'return_order_item' order.id item.order_item.id %}" class="return-item-btn ms-1">Ruturn Item</a>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            {% if not order.return_requests.reason%}
+                                                <a href="{% url 'return_order_item' order.id item.order_item.id %}" class="return-item-btn ms-1">Ruturn Item</a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
                         </div>
-                        <div class="col-2 col-md-2"><a href="#" class="sku-link">{{item.order_item.product.brand.name}}</a></div>
-                        <div class="col-2 col-md-2 text-md-center">₹{{item.order_item.real_price}}</div>
-                        <div class="col-3 col-md-1 text-end">{{item.order_item.quantity}}pcs</div>
-                        <div class="col-12 col-md-2 text-end fw-bold mt-2 mt-md-0" >
-                            <del class="fw-light text-muted">₹{{item.order_item.sub_real_price}}</del>
-                            <p class="m-0">₹{{item.order_item.total_price}}</p>
-                            <span class="fw-light text-success">-₹{{item.order_item.sub_discount}}</span>
-                        </div> 
-                        {% if  order.status == 'Delivered' %}
-                        {% if not item.order_item.is_cancel %}
-                        <div class="d-flex align-item-center justify-content-end">
-                            <a href="{% url 'product_rating' %}?variant_id={{item.order_item.variant.id}}&order_id={{item.order_item.order.id}}" class="rating-btn me-1">Give Rating</a>
-                            {% if return_item_requests %}
-                            {% if not order.return_requests.reason%}
-                            {% if not item.order_item in return_items %}
-                            <a href="{% url 'return_order_item' order.id item.order_item.id %}" class="return-item-btn ms-1">Ruturn Item</a>
-                            {% endif %}
-                            {% endif %}
-                            {% else %}
-                            {% if not order.return_requests.reason%}
-                            <a href="{% url 'return_order_item' order.id item.order_item.id %}" class="return-item-btn ms-1">Ruturn Item</a>
-                            {% endif %}
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                        {% endif %}
-                    </div>
                     {% endfor %}
 
                     <!-- Product Item 2 -->
@@ -539,7 +551,7 @@
                         <hr>
                         <div class="d-flex justify-content-between py-2 fw-bold h5">
                             <span>Grand Total</span>
-                            <span>₹{{order.over_all_amount_all}}</span>
+                            <span>₹{{order.over_all_amount}}</span>
                         </div>
                     </div>
                 </div>

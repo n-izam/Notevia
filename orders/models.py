@@ -81,15 +81,15 @@ class Order(models.Model):
 
     #  not applied tax but with discount if coupon is applied
     def total_amount(self):
-        total = sum(item.total_price() for item in self.items.filter(is_cancel=False))
+        total = sum(item.total_price() for item in self.items.filter(is_cancel=False).exclude(is_return=True))
         
         return round(total, 2)
     
     def total_quantity(self):
-        return sum(item.quantity for item in self.items.filter(is_cancel=False))
+        return sum(item.quantity for item in self.items.filter(is_cancel=False).exclude(is_return=True))
     
     def total_discount(self):
-        return sum(item.sub_discount() for item in self.items.filter(is_cancel=False))
+        return sum(item.sub_discount() for item in self.items.filter(is_cancel=False).exclude(is_return=True))
 
 
 #  get order amount if it cancelld
@@ -209,6 +209,15 @@ class OrderItem(models.Model):
     discount_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     is_cancel = models.BooleanField(default=False)
     is_return = models.BooleanField(default=False)
+
+    # ✅ New field (STATUS for EACH ITEM)
+    ITEM_STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Cancelled', 'Cancelled'),
+        ('Returned', 'Returned'),
+        ('Delivered', 'Delivered'),
+    ]
+    item_status = models.CharField(max_length=20, choices=ITEM_STATUS_CHOICES, default='Pending')
 
     # price with discount and quantity
     def total_price(self):
