@@ -1327,3 +1327,7 @@ WARNING 2025-11-29 22:18:24,811 log 63042 6133854208 Bad Request: /adminpanel/to
 WARNING 2025-11-29 22:19:50,359 log 63042 6133854208 Bad Request: /adminpanel/toggles-status/7/
 WARNING 2025-11-29 22:23:13,168 log 63042 6133854208 Bad Request: /adminpanel/toggles-status/7/
 WARNING 2025-11-29 22:23:28,943 log 63042 6133854208 Bad Request: /adminpanel/toggles-status/7/
+INFO 2025-11-29 22:36:35,031 autoreload 65582 8568817728 Watching for file changes with StatReloader
+WARNING 2025-11-29 22:39:39,816 log 65582 6190018560 Bad Request: /adminpanel/toggles-status/7/
+WARNING 2025-11-29 22:44:35,580 log 65582 6190018560 Bad Request: /adminpanel/toggles-status/7/
+WARNING 2025-11-29 22:46:18,419 log 65582 6190018560 Bad Request: /adminpanel/toggles-status/7/
