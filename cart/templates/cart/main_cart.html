@@ -183,7 +183,9 @@
                             <div class="mb-2">
                                 <p class="mb-0">{{item.cart_item.product.brand.name}} – {{item.cart_item.product.category.name}} {{item.cart_item.product.name}}</p>
                                 <p class="mb-0"><span class="text-muted fst-italic fw-light" style="font-size: 14px;">variant type: </span>{{item.cart_item.variant.name}}</p>
-                                <a href="{% url 'remove_from_cart' %}?remove_product={{item.cart_item.id}}" class="remove-link"> <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#000000;" >Remove</span></a>
+                                <a href="{% url 'remove_from_cart' %}?remove_product={{item.cart_item.id}}" class="remove-link remove-action" data-wishlist="{% url 'add_to_wishlist' %}?product_id={{item.cart_item.product.id}}&next={{ request.path }}&cart_item={{item.cart_item.id}}">
+                                     <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#000000;" >Remove</span>
+                                    </a>
                             </div>
                         </div>
                     </div>
@@ -317,7 +319,7 @@
                                 {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
                                     {{ message }}
                                 </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                <button type="button" class="btn-close btn-close-muted me-2 m-auto" data-bs-dismiss="toast"></button>
                             </div>
                         </div>
                     {% endfor %}
@@ -392,6 +394,34 @@
         });
     });
 
+    document.querySelectorAll('.remove-action').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            
+            const removeUrl = this.getAttribute('href');
+            const wishlistUrl = this.dataset.wishlist;  // get wishlist url
+    
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to remove from cart or add to wishlist?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, remove!',
+                cancelButtonText: 'Add to wishlist',
+                customClass: {
+                    confirmButton: 'btn btn-danger me-1',
+                    cancelButton: 'btn btn-dark ms-1',
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = removeUrl; 
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    window.location.href = wishlistUrl;
+                }
+            });
+        });
+    });
     
 </script>
   

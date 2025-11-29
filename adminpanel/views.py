@@ -575,17 +575,24 @@ class ToggleProductStatusView(View):
 
     def post(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
-        
+        if not Variant.objects.filter(product=product, is_listed=True).exists():
+
+            info_notify(request, f"The product '{product.name}' has no listed variants.")
+            return JsonResponse(
+                {'success': False, 'message': 'No variants are listed for this product.'},
+                status=400
+            )
         # print("the variants are ", variants)
         product.is_listed = not product.is_listed
         product.save()
 
-        Variant.objects.filter(product=product).update(is_listed=product.is_listed)
-        # variants = get_object_or_404(Variant, product_id=product.id)
-        # print("the variants are ", variants)
+        
 
         print("product is listed :", product.is_listed)
-        return JsonResponse({'success': True, 'is_listed': product.is_listed})
+        return JsonResponse(
+            {'success': True, 'is_listed': product.is_listed},
+            status=200
+        )
 
         
 
@@ -1080,6 +1087,11 @@ class ToggleVariatStatusView(View):
         # print("the variants are ", variants)
         variant.is_listed = not variant.is_listed
         variant.save()
+        product = variant.product
+        if not Variant.objects.filter(product=product, is_listed=True).exists():
+            product.is_listed = False
+            product.save()
+
         # if (variant.is_listed and variant.product.is_listed and variant.product.category.is_listed):
         #     print('nisam')
 

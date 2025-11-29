@@ -19,6 +19,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
+import logging
+
+logger = logging.getLogger(__name__)
 # Create your views here.
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
@@ -53,9 +56,7 @@ class CartPageView(View):
         total_price = sum(item.subtotal() for item in cart_items)
         total_quantity = sum(item.quantity for item in cart_items)
 
-        # print("cart items", cart_items)
-        # print("total price", total_price)
-        # print('total quantity', total_quantity)
+        
 
         cartitem_with_image = []
         for cart_item in cart_items:
@@ -64,14 +65,6 @@ class CartPageView(View):
                 "cart_item": cart_item,
                 "main_image": main_image
             })
-        
-        # for item in cart_items:
-        #     print("sub total", type(item.main_subtotal))
-        #     print("variant final price", type(item.variant.final_price))
-        
-        print("cart total price", cart.total_price)
-
-        
         
             
 
@@ -101,8 +94,22 @@ class AddToCartFromDetailView(View):
         quantity = request.POST.get('quantity')
         product_id = request.POST.get('product')
 
+        if int(quantity) > 10:
+
+            info_notify(request, "Please note: A maximum of 10 units per item can be added to your cart.")
+            return redirect('shop_productdetail', product_id=product_id)
+        
+        cart, created = Cart.objects.get_or_create(user=request.user)
+
         product = get_object_or_404(Product, id=product_id )
         variants = product.variants.filter(is_listed=True)
+
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        cart_count = cart_items.count()
+        logger.info(f"the item count is :{cart_count}")
+        if cart_count >= 5:
+            info_notify(request, "Please note: In cart item limit is reached")
+            return redirect('shop_productdetail', product_id=product_id)
 
         if main_get:
             if Variant.objects.filter(product=product, name=main_get, is_listed=True).exists():
@@ -114,7 +121,7 @@ class AddToCartFromDetailView(View):
 
         print("main product is:", product.name,"-", product.category, "product-", product, "main variant-", main_variant)
 
-        cart, created = Cart.objects.get_or_create(user=request.user)
+        
 
         if main_variant:
             if CartItem.objects.filter(cart=cart, product=product, variant=main_variant).exists():
@@ -152,6 +159,9 @@ class CartQuantityUpdateView(View):
 
         cart_item_id = request.POST.get('cart_product')
         quantity = request.POST.get('quantity')
+        if int(quantity) > 10:
+            info_notify(request, "Please note: A maximum of 10 units per item can be added to your cart.")
+            return redirect('cart_page')
 
         print('cart item id is :', cart_item_id, 'quantity is:', quantity)
 

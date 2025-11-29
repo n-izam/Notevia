@@ -303,7 +303,7 @@
                             <span class="current-price">Rs. {{item.product.max_stock_variant.final_price}}</span>
                             <span class="marked-price">Rs. {{item.product.max_stock_variant.price}}</span>
                         </div>
-                        <a href="{% url 'wishlist_to_cart' %}?product_id={{item.product.id}}" class="add-to-cart-btn text-decoration-none">
+                        <a href="{% url 'wishlist_to_cart' %}?product_id={{item.product.id}}&quantity=1" class="add-to-cart-btn text-decoration-none">
                             <i class="bi bi-cart-plus"></i> Add to Cart
                         </a>
                     </div>
@@ -407,7 +407,7 @@
                             {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
                                 {{ message }}
                             </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            <button type="button" class="btn-close btn-close-muted me-2 m-auto" data-bs-dismiss="toast"></button>
                         </div>
                     </div>
                 {% endfor %}

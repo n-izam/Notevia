@@ -355,25 +355,13 @@
 
 {% block script %}
 <script>
-    // Toggle Product Status
-    function toggleStatus(productId) {
-        const csrfToken = '{{ csrf_token }}';
-        axios.post(`/adminpanel/toggles-status/${productId}/`, {}, {
-            headers: { 'X-CSRFToken': csrfToken }
-        })
-        .then(response => {
-            if (response.data.success) {
-                console.log(`Product ${productId} status updated.`);
-                // For a better UX, you might want to show a toast notification here
-                // instead of a full page reload, but for simplicity, reload works.
-                window.location.reload();
-            }
-        })
-        .catch(error => {
-            console.error("Error updating status:", error);
-            // Show an error toast here
-        });
-    }
+    window.addEventListener("pageshow", function(event) {
+        // If the page is loaded from the browser's back/forward cache
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+    
 
     // Universal script loader
     document.addEventListener('DOMContentLoaded', () => {
@@ -411,4 +399,58 @@
         }
     });
 </script>
+<script>
+    function toggleStatus(productId) {
+        const csrfToken = '{{ csrf_token }}';
+    
+        axios.post(`/adminpanel/toggles-status/${productId}/`, {}, {
+            headers: { 'X-CSRFToken': csrfToken }
+        })
+        .then(response => {
+    
+            // If backend sends success: false
+            if (response.data.success === false) {
+                console.error(response.data.message);
+                alert(response.data.message);  // Or show toast
+                return;
+            }
+    
+            // Success case
+            console.log(`Product ${productId} status updated.`);
+            window.location.reload();
+        })
+        .catch(error => {
+            // Catches HTTP errors (400, 500, network, etc.)
+            console.error("Error updating status:", error);
+    
+            if (error.response?.data?.message) {
+                //alert(error.response.data.message);
+                window.location.reload();
+            } else {
+                alert("An unexpected error occurred.");
+            }
+        });
+    }
+</script>
+<!-- <script>
+    // Toggle Product Status
+    function toggleStatus(productId) {
+        const csrfToken = '{{ csrf_token }}';
+        axios.post(`/adminpanel/toggles-status/${productId}/`, {}, {
+            headers: { 'X-CSRFToken': csrfToken }
+        })
+        .then(response => {
+            if (response.data.success) {
+                console.log(`Product ${productId} status updated.`);
+                // For a better UX, you might want to show a toast notification here
+                // instead of a full page reload, but for simplicity, reload works.
+                window.location.reload();
+            }
+        })
+        .catch(error => {
+            console.error("Error updating status:", error);
+            // Show an error toast here
+        });
+    }
+</script> -->
 {% endblock %}```

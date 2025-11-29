@@ -242,6 +242,7 @@
         if (response.data.success) {
           const isListed = response.data.is_listed;
           console.log(`Variant ${variantId} is now:`, isListed ? 'Listed ✅' : 'Unlisted ❌');
+          window.location.reload();
         }
       })
       .catch(error => {

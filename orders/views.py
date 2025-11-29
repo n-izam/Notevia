@@ -66,6 +66,9 @@ class AddressSelectionView(View):
         if not cart_items:
             return redirect('cart_page')
         
+        if cart_items.count() > 5:
+            info_notify(request, f" A maximum of 5 item can be added to your one order. kindly remove item from cart or add to wishlist")
+            return redirect('cart_page')
 
         cartitem_with_image = []
         for cart_item in cart_items:

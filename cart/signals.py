@@ -44,14 +44,14 @@ def update_cart_items_on_product_list_change(sender, instance, **kwargs):
 #     """
 #     Automatically remove cart items for unlisted variants.
 #     """
-
+#     print("the product name",instance.product)
 #     if instance.is_listed:
-#         CartItem.objects.filter(product=instance.product, variant=instance).update(is_active=True)
+#         CartItem.objects.filter(product=instance.product, variant=instance, is_active=False).update(is_active=instance.is_listed)
 
 
-#     if not instance.is_listed:
-#         # CartItem.objects.filter(variant=instance).delete()
-#         CartItem.objects.filter(product=instance.product, variant=instance).update(is_active=False)
+#     else:
+        
+#         CartItem.objects.filter(product=instance.product, variant=instance, is_active=True).update(is_active=instance.is_listed)
 
 
 # @receiver(pre_save, sender=Variant)

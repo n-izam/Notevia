@@ -26,6 +26,10 @@ from accounts.utils import info_notify, error_notify, success_notify
 from cart.models import Cart, CartItem
 from django.urls import reverse
 from django.db import models
+
+import logging
+
+logger = logging.getLogger(__name__)
 # Create your views here.
 
 @method_decorator(login_required(login_url='signin'), name='dispatch')
@@ -93,7 +97,6 @@ class AdminSalesView(View):
         }
         
         if 'download_pdf' in request.GET:
-            print('nisam hi ')
             
             return self.generate_pdf_reportlab(report_data)
         if 'download_excel' in request.GET:
@@ -104,7 +107,7 @@ class AdminSalesView(View):
         processing_orders = Order.objects.filter(status='Processing')
 
         
-        # print('shipped count',shippped_count)
+        
         delivered_count = delivered_orders.count()
         shipped_count = shippped_orders.count()
         processing_count  = processing_orders.count()
@@ -115,15 +118,13 @@ class AdminSalesView(View):
         
 
         total_sales = sum(order.over_all_amount_all for order in delivered_orders)
-        print('deliverd total price,', total_sales)
-
-        print('total quantity', total_quantity_sold)
+        
 
         page_number = request.GET.get('page', 1)
         paginator = Paginator(orders, 6)
         page_obj = paginator.get_page(page_number)
 
-        print('custom_start',start_date.date(), end_date.date())
+        
 
         context = {
             **report_data,
@@ -269,6 +270,8 @@ class ReferralView(View):
         if Referral.objects.filter(user=request.user).exists():
             referral = get_object_or_404(Referral, user=request.user)
 
+        logger.info(f"refferal for : {referral.user.full_name}")
+
 
         context = {
             "user_id": request.user.id,
@@ -302,13 +305,23 @@ class AddToWishList(View):
         if not request.GET.get('product_id'):
 
             return redirect('wishlist_view')
+        if request.GET.get('cart_item'):
+            cart_item_id = request.GET.get('cart_item')
+            cart = get_object_or_404(Cart, user=request.user)
+            if CartItem.objects.filter(cart=cart, id=cart_item_id).exists():
+                cart_item = get_object_or_404(CartItem, cart=cart, id=cart_item_id)
+                cart_item.delete()
+
 
         product_id = request.GET.get('product_id')
         next_url = request.GET.get('next', 'shop_products')
-        print("next urls is ", next_url)
+        
         wishlist = request.user.wishlist
-        print('wish list id', wishlist.id)
+        
         product = Product.objects.get(id=product_id)
+        if WishlistItem.objects.filter(wishlist=wishlist, product=product).exists():
+            info_notify(request, "this item already exists in the wishlist")
+            return redirect(next_url)
         WishlistItem.objects.get_or_create(
             wishlist=wishlist,
             product=product,
@@ -329,7 +342,7 @@ class RemoveToWishlist(View):
         
         product_id = request.GET.get('product_id')
         next_url = request.GET.get('next', 'shop_products')
-        print("next urls is ", next_url)
+        
         wishlist = request.user.wishlist
         product = Product.objects.get(id=product_id)
         WishlistItem.objects.filter(wishlist=wishlist, product=product).delete()
@@ -346,16 +359,23 @@ class WishListToCartView(View):
             return redirect('wishlist_view')
         product = get_object_or_404(Product, id=product_id )
         main_variant = product.variants.filter(is_listed=True).order_by('-stock').first()
-        quantity = 1 # add to .env
-        print(main_variant)
+        
+        
         cart, created = Cart.objects.get_or_create(user=request.user)
-
+        
+        quantity = request.GET.get('quantity')
         if main_variant:
             if CartItem.objects.filter(cart=cart, product=product, variant=main_variant).exists():
                 info_notify(request, f"this product {product.name} with same variant  is already in cart")
                 return redirect('wishlist_view')
         else:
             info_notify(request, f"this product {product.name} cannot able to add cart, try again")
+            return redirect('wishlist_view')
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        cart_count = cart_items.count()
+        logger.info(f"the item count is :{cart_count}")
+        if cart_count >= 5:
+            info_notify(request, "Please note: In cart item limit is reached")
             return redirect('wishlist_view')
         
         if not created:
@@ -384,7 +404,7 @@ class ProductReviewView(View):
         if Review.objects.filter(user=request.user, product=product).exists():
             info_notify(request, f"already shared one review for same product {product.name} ")
             review = get_object_or_404(Review, user=request.user, product=product)
-            print(review.id)
+            
 
         context = {
             "variant_id": variant_id,
@@ -408,7 +428,7 @@ class ProductReviewView(View):
 
         comment = request.POST.get('content').strip()
         rating = request.POST.get('rating', 1)
-        print('rating', variant_id, order_id)
+        
 
         order = get_object_or_404(Order, id=order_id)
         variant = get_object_or_404(Variant, id=variant_id)
@@ -428,3 +448,4 @@ class ProductReviewView(View):
 
         success_notify(request, "review added successfully")
         return redirect('order_details', order_id=order_id)
+    
