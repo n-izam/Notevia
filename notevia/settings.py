@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from decouple import config, Csv
 import certifi
+from dotenv import load_dotenv
 
 
 
@@ -24,6 +25,7 @@ import cloudinary.uploader
 import cloudinary.api
 import cloudinary_storage
 
+load_dotenv()  # ← THIS LOADS YOUR .env FILE (Neon, Cloudinary, etc.)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -164,6 +166,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Best for production + caching
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

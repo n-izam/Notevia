@@ -164,3 +164,27 @@ This project helped me understand:
 ## 📄 License
 
 This project is for **educational and learning purposes only**.
+
+## 🚀 Deployment (Production)
+
+```bash
+# 1. Clone the project
+git clone <https://github.com/n-izam/Notevia.git>
+cd notevia
+
+# 2. Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+pip install gunicorn psycopg2-binary python-dotenv
+
+# 4. Create .env file (see .env.example below)
+
+# 5. Run migrations and collect static files
+python manage.py migrate
+python manage.py collectstatic --noinput
+
+# 6. Run with gunicorn (testing)
+gunicorn notevia.wsgi:application --bind 0.0.0.0:8000

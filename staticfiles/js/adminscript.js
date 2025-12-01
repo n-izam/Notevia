@@ -1,0 +1,147 @@
+// // Get the modal
+// var modal = document.getElementById("myModal");
+
+// // Get the button that opens the modal
+// var btn = document.getElementById("addCategoryOffer","editCategoryOffer");
+
+// // Get the <span> element that closes the modal
+// var span = document.getElementsByClassName("close")[0];
+
+// // When the user clicks on the button, open the modal
+// btn.onclick = function() {
+//   modal.style.display = "block";
+// }
+
+// // When the user clicks on <span> (x), close the modal
+// span.onclick = function() {
+//   modal.style.display = "none";
+// }
+
+// // When the user clicks anywhere outside of the modal, close it
+// window.onclick = function(event) {
+//   if (event.target == modal) {
+//     modal.style.display = "none";
+//   }
+// }
+
+// var modal = document.getElementById("myModal");
+//     var addBtn = document.getElementsByClassName("addCategoryOffer");
+//     var editBtn = document.getElementsByClassName("editCategoryOffer");
+//     var closeBtn = document.getElementsByClassName("close")[0];
+//     var cancelBtn = document.getElementById("cancelBtn");
+
+//     var modalTitle = document.getElementById("modalTitle");
+//     var modalSubmitBtn = document.getElementById("modalSubmitBtn");
+
+//     // Open modal for Add
+//     addBtn.onclick = function () {
+//         modal.style.display = "block";
+//         modalTitle.innerText = "Add the product Offer";
+//         modalSubmitBtn.innerText = "Add";
+//     }
+
+//     // Open modal for Edit
+//     editBtn.onclick = function () {
+//         modal.style.display = "block";
+//         modalTitle.innerText = "Edit the product Offer";
+//         modalSubmitBtn.innerText = "Update";
+//     }
+
+//     // Close modal
+//     closeBtn.onclick = function () {
+//         modal.style.display = "none";
+//     }
+
+//     cancelBtn.onclick = function () {
+//         modal.style.display = "none";
+//     }
+
+//     // Close when clicking outside
+//     window.onclick = function (event) {
+//         if (event.target == modal) {
+//             modal.style.display = "none";
+//         }
+//     }
+
+// for add and edit offers
+
+// Get modal
+var modal = document.getElementById("myModal");
+
+// Get title & submit button text
+var modalTitle = document.getElementById("modalTitle");
+var modalSubmitBtn = document.getElementById("modalSubmitBtn");
+
+// Get all buttons that open modal
+var openBtns = document.querySelectorAll(".openOfferModal");
+
+// Get close span and cancel button
+var closeBtn = document.getElementsByClassName("close")[0];
+var cancelBtn = document.querySelector(".closeModal");
+
+// When clicking Add/Edit buttons
+openBtns.forEach(function(btn) {
+  btn.onclick = function() {
+    var action = btn.getAttribute("data-action");
+
+    if (action === "add") {
+      modalTitle.textContent = "Add the product Offer";
+      modalSubmitBtn.textContent = "Add";
+    } else if (action === "edit") {
+      modalTitle.textContent = "Edit the product Offer";
+      modalSubmitBtn.textContent = "Update";
+    }
+
+    modal.style.display = "block";
+  };
+});
+
+// Close modal on X or Cancel
+closeBtn.onclick = cancelBtn.onclick = function() {
+  modal.style.display = "none";
+};
+
+// Close modal on outside click
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+};
+
+
+// for menu toggle
+var el = document.getElementById("wrapper");
+        var toggleButton = document.getElementById("menu-toggle");
+
+        toggleButton.onclick = function () {
+            el.classList.toggle("toggled");
+        };
+
+// search script (it only workd on template level)
+
+// const input = document.getElementById("searchField");
+// const clearBtn = document.getElementById("btnClear");
+
+// // Show or hide clear button depending on input value
+// input.addEventListener("input", () => {
+//   if (input.value.length > 0) {
+//     clearBtn.classList.add("visible");
+//   } else {
+//     clearBtn.classList.remove("visible");
+//   }
+// });
+
+// // Clear input when × clicked
+// clearBtn.addEventListener("click", () => {
+//   input.value = "";
+//   clearBtn.classList.remove("visible");
+//   input.focus();
+// });
+
+// // On page load, if field has prefilled text, show clear button
+// window.addEventListener("load", () => {
+//   if (input.value.length > 0) {
+//     clearBtn.classList.add("visible");
+//   }
+// });
+

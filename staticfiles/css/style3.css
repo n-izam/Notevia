@@ -1,0 +1,957 @@
+
+
+/* this css for main pages */
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: #ffffff50;
+}
+
+header {
+    background-color: #fff;
+    border-bottom: 1px solid #eaeaea;
+}
+
+header .nav-link {
+    margin: 0 1rem;
+}
+
+.carousel-caption {
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: initial;
+    /* padding-left: 10%; */
+}
+
+.carousel-caption h1 {
+    font-size: 4rem;
+}
+
+.carousel-caption p {
+    font-size: 1.2rem;
+}
+
+.category-card {
+    position: relative;
+    text-align: center;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.category-card img {
+    border-radius: 4px;
+}
+
+.category-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* Style for carousel controls */
+#categoryCarousel .carousel-control-prev-icon,
+#categoryCarousel .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    border-radius: 50%; /* Make it circular */
+    padding: 1.5rem; /* Add some padding to increase size */
+    background-size: 50% 50%; /* Make the arrow icon smaller inside the circle */
+}
+
+/* Position the controls */
+#categoryCarousel .carousel-control-prev {
+    left: -50px; /* Position outside the carousel content */
+}
+
+#categoryCarousel .carousel-control-next {
+    right: -50px; /* Position outside the carousel content */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    #categoryCarousel .carousel-control-prev,
+    #categoryCarousel .carousel-control-next {
+        left: 0; /* Bring controls inside on smaller screens */
+        right: 0;
+    }
+}
+
+/* home best seller */
+
+.card-title {
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 0.25rem;
+}
+
+.fa-heart {
+    font-size: 1.2rem;
+}
+
+/* === Custom Styles === */
+
+/* Sticky header that hides on scroll down and appears on scroll up */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    transition: transform 0.3s ease-in-out;
+    background-color: white; /* Ensures content doesn't show through */
+}
+
+.header-scrolled {
+    transform: translateY(-100%);
+}
+
+/* Adjust carousel image height */
+.carousel-item img {
+    max-height: 80vh;
+    object-fit: cover;
+    width: 100%;
+}
+
+/* Styles for the responsive header */
+.navbar-brand img {
+    height: 60px; /* Adjust mobile logo height */
+}
+
+@media (min-width: 992px) {
+    .navbar-brand img {
+        height: 60px; /* Adjust desktop logo height */
+    }
+}
+
+/* Perfectly center the logo on mobile */
+@media (max-width: 991.98px) {
+    /* .navbar-brand-mobile {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    } */
+    .navbar-collapse {
+        /* Adds a top border to separate the dropdown menu from the header on mobile */
+        border-top: 1px solid #dee2e6;
+        margin-top: 0.75rem;
+    }
+}
+
+/* Category card styling from original image */
+.category-card {
+    position: relative;
+    text-align: center;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.category-card .category-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 150px;
+}
+
+.gram-image-wrapper {
+    overflow: hidden; /* This is crucial for the zoom effect to work correctly */
+    border-radius: 15px; /* Adjust for more or less rounded corners */
+}
+
+.gram-image-wrapper img {
+    transition: transform 0.4s ease; /* Smooth transition for the zoom effect */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gram-image-wrapper:hover img {
+    transform: scale(1.1); /* Zoom in by 10% on hover */
+}
+
+footer {
+    border-top: 1px solid #e7e7e7;
+    background-color: #ffffff !important; /* Overriding Bootstrap's bg-light for pure white */
+}
+
+.social-icons .social-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    margin-right: 10px;
+    color: #000;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.social-icons .social-icon:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+footer .form-control {
+    border-radius: 0;
+}
+
+footer .btn {
+    border-radius: 0;
+}
+
+footer hr {
+    border-color: #e7e7e7;
+}
+
+/* Sidebar Filters Styling */
+.filter-section .filter-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.filter-list li {
+    margin-bottom: 0.75rem;
+}
+
+.filter-list a {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.filter-list a:hover,
+.filter-list a.active {
+    color: #d9534f; /* Red color for active/hover */
+    font-weight: 600;
+}
+
+.filter-section label {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+/* Product Card Styling */
+.product-card {
+    position: relative;
+    border: 1px solid #f0f0f0 !important;
+    transition: box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-card .card-title {
+    font-size: 0.9rem;
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+}
+
+.product-card .card-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #000;
+}
+
+.wishlist-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.wishlist-icon:hover {
+    color: #d9534f;
+}
+
+/* Sorting Dropdown */
+.form-select {
+    width: auto;
+    min-width: 150px;
+}
+
+/* Pagination Styling */
+.pagination .page-item .page-link {
+    color: #000;
+    border-radius: 0 !important;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #f4f4f4;
+}
+
+.pagination .page-link:focus {
+    box-shadow: none;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    font-size: 1rem;
+    display: block;
+    z-index: 1000;
+}
+
+/* .container{
+    margin-left:10% ;
+    margin-right:10% ;
+} */
+
+/* product listing collapse */
+/* This CSS remains the same and will still work perfectly */
+.filter-title a .fa-chevron-down {
+    transition: transform 0.3s ease-in-out;
+}
+
+.filter-title a[aria-expanded="true"] .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* product detail page */
+
+/* Product Details Page Styling */
+.breadcrumb a {
+    text-decoration: none;
+    color: #6c757d;
+}
+
+/* Image Gallery */
+.product-thumbnails {
+    max-width: 80px;
+}
+.thumbnail {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+.thumbnail.active, .thumbnail:hover {
+    border-color: #000;
+}
+.main-image-container {
+    flex-grow: 1;
+}
+.image-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.main-image-container:hover .image-nav {
+    opacity: 1;
+}
+.image-nav .btn {
+    border-radius: 50%;
+}
+
+/* Product Info */
+.product-title {
+    font-size: 2rem;
+    font-weight: 600;
+}
+.price-section .final-price {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #4fc28fee;
+}
+.price-section .base-price {
+    color: #6c757d;
+}
+.price-section .discount-badge {
+    background-color: #dff0d8;
+    color: #3c763d;
+    padding: 0.25em 0.6em;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border-radius: 4px;
+}
+.btn-ruling {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #ddd;
+    border-radius: 0 !important;
+}
+.btn-ruling.active {
+    background-color: #000000c0;
+    color: #fff;
+}
+.quantity-selector {
+    max-width: 120px;
+}
+.quantity-selector .form-control {
+    border-left: 0;
+    border-right: 0;
+    text-align: center;
+}
+.quantity-selector .btn {
+    border-radius: 0;
+}
+.wishlist-btn {
+    padding: 0.5rem 0.8rem;
+}
+.shipping-info i {
+    color: #28a745;
+}
+
+/* image zoom effect */
+
+/* === Existing Styles for Thumbnails and Navigation === */
+        .product-thumbnails .thumbnail {
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+            max-width: 80px; /* Control thumbnail size */
+        }
+        .product-thumbnails .thumbnail.active,
+        .product-thumbnails .thumbnail:hover {
+            border-color: #007bff;
+        }
+        .main-image-container .image-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 10px;
+            pointer-events: none; /* Allows hover on the image itself */
+        }
+        .main-image-container .image-nav button {
+            pointer-events: all; /* Make buttons clickable */
+            opacity: 0.7;
+        }
+
+        /* === NEW STYLES for Image Zoom Functionality === */
+        
+        /* 1. Main container needs to be relative for positioning the lens and result pane */
+        .product-zoom-container {
+            position: relative;
+        }
+
+        /* 2. The result pane where the zoomed image will appear */
+        #zoom-result {
+            border: 1px solid #d4d4d4;
+            /* Position it to the right of the main image */
+            position: absolute;
+            top: 0;
+            left: 105%; /* A little space from the main image */
+            width: 500px; /* Adjust size as needed */
+            height: 500px;
+            background-repeat: no-repeat;
+            z-index: 100;
+            display: none; /* Hidden by default */
+            pointer-events: none; /* So it doesn't interfere with other elements */
+        }
+
+        /* 3. The lens that moves over the main image */
+        #image-lens {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            background-color: rgba(255, 255, 255, 0.4);
+            /* Set the size of the lens */
+            width: 100px;
+            height: 100px;
+            display: none; /* Hidden by default */
+            pointer-events: none;
+        }
+
+        /* style for description and review */
+
+        /* Tab Styling */
+.nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: #000;
+    background-color: transparent;
+    border-color: #000;
+}
+
+.tab-content {
+    border: 1px solid #dee2e6;
+    border-top: none;
+    padding: 1.5rem;
+}
+
+/* Review Card Styling */
+.review-card {
+    background-color: #f8f7ff; /* A very light lavender/gray */
+    border: 1px solid #e0dff2;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.review-header .stars, .write-review-stars {
+    color: #ffc107; /* Gold color for stars */
+}
+
+.reviewer-info {
+    flex-grow: 1;
+    margin-left: 1rem;
+}
+
+.verified-icon {
+    color: #28a745; /* Green color for verified check */
+    margin-left: 5px;
+}
+
+.options-icon {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+.review-text {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.review-date {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+/* Write a Review Form Styling */
+.write-review-section {
+    padding-top: 2rem;
+}
+.write-review-section .form-label {
+    font-weight: 600;
+}
+.write-review-stars {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.write-review-section .form-control {
+    border-radius: 8px;
+}
+.write-review-section .btn-dark {
+    border-radius: 25px;
+    padding: 10px 25px;
+    font-weight: 600;
+}
+
+/* wishlist  */
+
+/* Wishlist Page Styling */
+.wishlist-item-details p {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.remove-link {
+    font-size: 0.9rem;
+    color: #6c757d; /* A muted gray color */
+    text-decoration: underline;
+    white-space: nowrap; /* Prevents the link from wrapping */
+    margin-left: 1rem;
+
+}
+
+.remove-link:hover {
+    color: #dc3545; /* Red color on hover for delete action */
+}
+
+.wishlist-item img {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.wishlist-item img:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Shopping Cart Page Styling */
+.cart-item-img {
+    width: 80px;
+    height: auto;
+}
+
+.remove-link {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-decoration: underline;
+}
+
+.remove-link:hover {
+    color: #dc3545;
+}
+
+.quantity-selector {
+    max-width: 120px;
+}
+
+.quantity-selector .form-control {
+    border-left: 0;
+    border-right: 0;
+    text-align: center;
+    background-color: #f8f9fa; /* Light gray background */
+}
+
+.quantity-selector .btn {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.cart-divider {
+    border-style: dotted;
+    color: #e0e0e0;
+}
+
+/* Summary Card */
+.summary-card {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 4px;
+}
+
+.payment-icons i {
+    font-size: 1.8rem;
+    margin: 0 5px;
+    color: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .cart-item {
+        text-align: center;
+    }
+    .cart-item > div {
+        margin-bottom: 1rem;
+    }
+    .total-col, .price-col {
+        font-size: 1.1rem;
+    }
+    .cart-item .d-flex {
+        justify-content: center;
+    }
+    .total-col {
+        text-align: center !important;
+    }
+}
+
+.bg-light-gray {
+    background-color: #f8f8f8;
+}
+
+/* Left Column: Order Summary Card */
+.order-summary-card {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+    height: 100%;
+}
+
+.summary-item-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Right Column: Address Selection */
+.address-selection-container {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+.address-card, .add-new-address-card {
+    background-color: #fdfdfd;
+    border: 1px solid #f0f0f0;
+    padding: 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    height: 100%;
+    position: relative;
+}
+
+.default-badge {
+    font-size: 0.7rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    display: block;
+    text-transform: uppercase;
+}
+
+.edit-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #333;
+    font-size: 0.9rem;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+.edit-icon:hover {
+    background-color: #e0e0e0;
+}
+
+.address-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.address-card .btn-dark {
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+.add-new-address-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px dashed #e0e0e0;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+    color: #555;
+}
+
+.add-new-address-card:hover {
+    background-color: #f9f9f9;
+    border-color: #ccc;
+}
+
+.bg-light-gray {
+    background-color: #f8f8f8;
+}
+
+/* Left Column: Order Summary */
+.order-summary-card {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+}
+.summary-item-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Right Column: Checkout Cards */
+.checkout-card {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.checkout-card-title {
+    background-color: #f8f9fa;
+    padding: 0.75rem 1.5rem;
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.checkout-card .card-content {
+    padding: 1.5rem;
+}
+
+.address-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Payment Options Styling */
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+.payment-option:last-child {
+    margin-bottom: 0;
+}
+.payment-option input[type="radio"] {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    margin-right: 1rem;
+    width: 1.25em;
+    height: 1.25em;
+    border: 1px solid #ced4da;
+    border-radius: 50%;
+    display: grid;
+    place-content: center;
+}
+.payment-option input[type="radio"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em #000;
+}
+.payment-option input[type="radio"]:checked::before {
+    transform: scale(1);
+}
+.payment-option input[type="radio"]:checked {
+    border-color: #000;
+}
+.payment-option label {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+/* Price Details Card Styling */
+.price-details span {
+    font-size: 0.9rem;
+}
+.input-group .form-control {
+    border-right: 0;
+}
+.input-group .btn {
+    border-radius: 0;
+}
+.input-group .btn:last-child {
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
+
+/* update image zoom  */
+
+/* Container for the zoomable image */
+.main-image-container {
+    overflow: hidden; /* This is crucial to contain the zoomed image */
+    position: relative;
+}
+
+/* The main product image */
+#mainProductImage {
+    transition: transform 0.3s ease; /* Smooth transition for the zoom effect */
+    width: 100%;
+}
+
+/* Apply zoom effect on hover, but NOT when hovering over the nav buttons */
+.main-image-container:hover #mainProductImage:not(:hover ~ .image-nav button:hover) {
+    transform: scale(1.5); /* Adjust the scale value for more or less zoom */
+}
+
+/* Navigation buttons styling */
+.image-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.main-image-container:hover .image-nav {
+    opacity: 1;
+}
+
+.image-nav .btn {
+    border-radius: 50%;
+}
+
+/* next zoom update */
+
+/* Container for the main product image */
+.main-image-container {
+    position: relative;
+    overflow: hidden; /* Crucial: This hides the parts of the zoomed image that go outside the container's bounds. */
+    cursor: zoom-in;
+}
+
+/* The main product image itself */
+#mainProductImage {
+    width: 100%;
+    height: auto;
+    transition: transform 0.2s ease-out; /* Adds a smooth transition for the zoom effect. */
+}
+
+/* Navigation buttons styling */
+.main-image-container .image-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 10px;
+    pointer-events: none; /* Allows the mouse events to pass through to the image below. */
+}
+
+.main-image-container .image-nav button {
+    pointer-events: all; /* Makes the buttons clickable again. */
+    opacity: 0.7;
+    cursor: pointer; /* Ensures the cursor changes to a pointer on the buttons. */
+}
+
+
