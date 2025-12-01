@@ -57,7 +57,7 @@ class SignupView(View):
                 return redirect('signup')
             else:
                 request.session['referral_code'] = referel_code
-                print(request.session.get('referral_code'))
+                
                 
             
         form = SignupForm(request.POST)
@@ -72,7 +72,7 @@ class SignupView(View):
 
 
             otp = SignUpUserOTP.generate_otp()
-            print("created otp is ", otp)
+            
             SignUpUserOTP.objects.update_or_create(email=user_email, defaults={"otp": otp})
             
             # otp sending session
@@ -203,7 +203,7 @@ class ResendSignUpOTPView(View):
         user_email = request.session.get('user_email')
         full_name = request.session.get('user_full_name')
         otp = SignUpUserOTP.generate_otp()
-        print("resend otp is ", otp)
+        
         SignUpUserOTP.objects.update_or_create(email=user_email, defaults={"otp": otp})
         
         
@@ -265,7 +265,7 @@ class SigninView(View):
             if CustomUser.objects.filter(email=emails).exists():
 
                 user_obj = get_object_or_404(CustomUser, email=emails)
-                print("the customer active status:", user_obj.is_active)
+                
                 if not user_obj.is_active:
                     request.session["signin_errors"] = {"email": ["This email is blocked"]}
                     request.session["signin_data"] = request.POST
@@ -281,8 +281,7 @@ class SigninView(View):
                     }
                 request.session["signin_data"] = request.POST
                 return redirect("signin")
-            print('enter email:', emails )
-            print('enter email:', passwords )
+            
             user.status = True
             if user.is_superuser:
                 request.session.pop("otp_verified", None)
@@ -312,7 +311,7 @@ class SignOutView(View):
         user = get_object_or_404(CustomUser, id=user_id)
         logout(request)
         user.status = False
-        print("user status:",user.status)
+        
         
 
         return redirect('signin')
@@ -322,7 +321,7 @@ class SignOutView(View):
         
         logout(request)
         user.status = False
-        print("user status:",user.status)
+        
 
         # if user.is_authenticated():
         return redirect('signin')
@@ -370,7 +369,7 @@ class ForgotPassView(View):
         user = get_object_or_404(CustomUser, email=email)
         
         otp = UserOTP.generate_otp()
-        print("created otp is ", otp)
+        
         UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
             
         # otp sending session
@@ -435,7 +434,7 @@ class VerifyForgotOTPView(View):
             return redirect('verify_forgot_otp', user_id=user.id)
 
         if otp_obj.otp == entered_otp and otp_obj.created_at >=  timezone.now() - timedelta(minutes=5):
-            print('user is active:', user.is_active)
+            
             
             
 
@@ -459,8 +458,7 @@ class ResendPasswordOTPView(View):
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         user = get_object_or_404(CustomUser, id=user_id)
         otp = UserOTP.generate_otp()
-        print("resend otp is ", otp)
-        print("full_name", user.full_name)
+        
         UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
         
         
@@ -544,10 +542,9 @@ class CustomerProfileView(View):
 
         # user_profile, created = UserProfile.objects.get_or_create(user=user)
 
-        # if created:
-        #     print("✅ A new profile was created for this user.")
+        
         user_profile = profile(request)
-        print(user_profile)
+        
             
         return render(request, 'customer/customer_profile.html', {"user_id": request.user.id, "user": user, "user_profile": user_profile})
     
@@ -560,7 +557,7 @@ class ChangeProfileView(View):
 
         profile = request.FILES.get('profile')
 
-        print("profile", profile)
+        
 
         user = request.user
 
@@ -572,20 +569,18 @@ class ChangeProfileView(View):
             if user_profile.image and user_profile.image.public_id:
                 try:
                     destroy(user_profile.image.public_id)
-                    print(f"Deleted old image: {user_profile.image.public_id}")
+                    
                 except Exception as e:
-                    print(f"Error deleting old image: {e}")
+                    error_notify(request, f"Error deleting old image: {e}")
 
             file_size = profile.size / (1024 * 1024)  # Convert bytes → MB
 
-            print("profile size", profile.size)
+            
 
             upload_size = profile.size / (1024 * 1024)
             
 
-            print("real uploaded size", upload_size)
-
-            print("file size", file_size)
+            
             if file_size > MAX_FILE_SIZE_MB:
                 error_notify(request, f"Image too large! Max allowed size is {MAX_FILE_SIZE_MB} MB.")
                 return redirect("profile_edit")
@@ -645,7 +640,7 @@ class ProfileEditView(View):
         
         enter_email = request.POST.get('email')
 
-        print("full name", full_name, "phone", phone_no, "email", enter_email)
+        
 
         if full_name=='':
             error_notify(request, "leave your name")
@@ -660,8 +655,7 @@ class ProfileEditView(View):
         
 
         user = request.user
-        print("user email", user.email)
-
+        
         if enter_email==user.email:
 
             user.full_name = full_name
@@ -692,7 +686,7 @@ class ProfileEditView(View):
         
 
         otp = SignUpUserOTP.generate_otp()
-        print("created otp is ", otp)
+        
         SignUpUserOTP.objects.update_or_create(email=enter_email, defaults={"otp": otp})
         
         # otp sending session
@@ -761,9 +755,9 @@ class VerifyNewMailView(View):
            
 
             user = request.user
-            print('user is active:', user.is_active)
+            
             otp = UserOTP.generate_otp()
-            print("created otp is ", otp)
+            
             UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
             
             # otp sending session
@@ -806,7 +800,7 @@ class ResendNewMailOtpView(View):
 
         email = request.session.get('email')
         otp = SignUpUserOTP.generate_otp()
-        print("created otp is ", otp)
+        
         new_mail_otp = SignUpUserOTP.objects.update_or_create(email=new_email, defaults={"otp": otp})
         
         # otp sending session
@@ -863,7 +857,7 @@ class VerifyProfileOTPView(View):
             return redirect('profile_edit')
 
 
-        print("full name", full_name, "phone", phone_no, "email", email)
+        
 
         user = get_object_or_404(CustomUser, id=request.user.id)
         
@@ -877,7 +871,7 @@ class VerifyProfileOTPView(View):
 
 
         if otp_obj.otp == entered_otp and otp_obj.updated_at >=  timezone.now() - timedelta(minutes=3):
-            print('user is active:', user.is_active)
+            
             
             
 
@@ -913,8 +907,7 @@ class ResendProfileOTPView(View):
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         user = get_object_or_404(CustomUser, id=request.user.id)
         otp = UserOTP.generate_otp()
-        print("resend otp is ", otp)
-        print("full_name", user.full_name)
+        
         UserOTP.objects.update_or_create(user=user, defaults={"otp": otp})
         
         
@@ -946,7 +939,7 @@ class AddressView(View):
         user_profile = profile(request)
 
         addresses = Address.objects.filter(user=user)
-        print('addresses', addresses)
+        
 
         breadcrumb = [
             {"name": "Profile", "url": "/accounts/profile/"},
@@ -1016,7 +1009,7 @@ class AddAddressView(View):
             user = get_object_or_404(CustomUser, id=request.user.id)
 
 
-            print('address type', address_type, "name", full_name,"address", address)
+            
 
             address = Address.objects.create(user=user, full_name=full_name, email=email, address=address, 
                                             district=district, state=state, city=city, pin_code=pincode, phone_no=phone_no, address_type=address_type)
@@ -1077,7 +1070,7 @@ class EditAddressView(View):
             phone_no = request.POST.get('phone_no').strip()
             address_type = request.POST.get('addressType')
 
-            print('address type', address_type, "name", full_name,"address", address)
+            
             
             edit_address = get_object_or_404(Address, id=address_id)
             edit_address.full_name = full_name
@@ -1104,25 +1097,25 @@ class SetDefaultView(View):
 
     def get(self, request, address_id):
         set_main = request.GET.get('set_main')
-        print('set_main: ', set_main, address_id)
+        
 
         addresses = Address.objects.all().exclude(id=address_id)
 
         if addresses:
-            print('inside if')
+            
 
             for address in addresses:
                 address.is_default = False
-                print(f"address",address.full_name,"-", address.is_default)
+                
                 address.save()
 
-        print("all address:", addresses)
+        
 
         main_address = get_object_or_404(Address, id=address_id)
         main_address.is_default = set_main
         main_address.save()
         success_notify(request, f"default address is changed to {main_address.full_name}")
-        print("main_addresss set default:", main_address.is_default)
+        
         
 
         return redirect('address')
@@ -1136,7 +1129,7 @@ class RemoveAddressView(View):
         is_delete = request.GET.get('delete')
 
         if is_delete:
-            print('delete address', address_id, is_delete)
+            
             delete_address = get_object_or_404(Address, id=address_id)
             info_notify(request, f"{delete_address.full_name} address deleted")
             delete_address.delete()

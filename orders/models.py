@@ -258,19 +258,15 @@ class OrderItem(models.Model):
             # coupon_price = round((self.total_price()/self.order.total_amount()) * self.order.coupon_amount, 2)
             tax_price = round(((self.total_price()-self.coupon_discount())/self.order.total_amount_with_coupon_all()) * self.order.tax_amount_all(), 2)
             
-            print(f"order item {self.product.name} - {self.variant.name} coupon amount", self.coupon_discount())
+            
             
             total_return = self.total_price() - self.coupon_discount()
             self.order.coupon_amount -= self.coupon_discount()
             self.order.save()
-            print(f"order item {self.product.name} - {self.variant.name} total amount after coupon", total_return)
-            print(f"tax amount of item {self.product.name} - {self.variant.name} after coupon", tax_price)
+            
 
         
-        print("order coupon amount", self.order.coupon_amount)
-        print(f"order item {self.product.name} - {self.variant.name} total amount", total_return)
-
-        print(f"tax amount of item {self.product.name} - {self.variant.name}", tax_price)
+        
 
         return round(total_return + tax_price, 2)
         

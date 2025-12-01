@@ -167,7 +167,7 @@ class AdminDashView(View):
             "pending_change": "↓ 3% this month",
         }
 
-        print(total_sales)
+        
 
         return render(request, 'adminpanel/admindash.html', context)
 
@@ -180,7 +180,7 @@ class AdminProductView(View):
 
         search_q = request.GET.get('q', '').strip()
         cat_option = request.GET.get('cat', '').strip()
-        print("search query: ", search_q, "category query", cat_option)
+        
 
         products = Product.objects.all().order_by('-updated_at')
         categories = Category.objects.filter(is_listed=True)
@@ -241,7 +241,7 @@ class AddProductView(LoginRequiredMixin, View):
             category_id = request.POST.get('category')
             brand_id = request.POST.get('brand')
 
-            print("brand is ",brand_id, "product name is ", product_name, "product description:", product_description, "category_id", category_id)
+            
 
             if not product_name:
                 errors['product_name'] = 'Product name is required.'
@@ -253,8 +253,7 @@ class AddProductView(LoginRequiredMixin, View):
                 errors['brand'] = 'Valid brand is required.'
 
             # --- Images ---
-            for i in range(1, 4):
-                print(f"image {i} are:",request.FILES.get(f'cropped_image_{i}'))
+            
             
             images = [request.FILES.get(f'cropped_image_{i}') for i in range(1, 4)]
             images = [img for img in images if img]
@@ -262,7 +261,7 @@ class AddProductView(LoginRequiredMixin, View):
             if len(images) < 3:
                 errors['images'] = 'At least 3 images are required.'
 
-            print("the viariant is listed :",request.POST.get('variant_is_listed') )
+            
             # --- Variant ---
             variant_name = request.POST.get('variant_name', '').strip()
             variant_description = request.POST.get('variant_description', '').strip()
@@ -271,7 +270,7 @@ class AddProductView(LoginRequiredMixin, View):
             variant_stock = request.POST.get('variant_stock', '').strip()
             variant_is_listed = request.POST.get('variant_is_listed') == 'on'
 
-            print("variant name :", variant_name,"variant description :", variant_description, "variant_price :", variant_price, "variant_discount :", variant_discount, "variant stock :", variant_stock, "variant is listed :", variant_is_listed)
+            
 
             if not variant_name:
                 errors['variant_name'] = 'Variant name is required.'
@@ -303,18 +302,18 @@ class AddProductView(LoginRequiredMixin, View):
             if errors:
                 return JsonResponse({'success': False, 'errors': errors}, status=400)
 
-            print("category:",category, "brand:",brand)
+            
             product = Product.objects.create(name=product_name, description=product_description, category=category, brand=brand)
-            print("product is added", product)
+            
 
             variant = Variant.objects.create(product=product, name=variant_name, description=variant_description, price=variant_price, discount=variant_discount, stock=variant_stock, is_listed=variant_is_listed)
-            print("variant is added", variant)
+            
 
             # --- Save Images ---
             for index, image in enumerate(images):
                 productimage = ProductImage.objects.create( product=product, image=image, is_main=(index == 0) )
                 
-                print("product image is added", productimage)
+                
 
             
 
@@ -358,7 +357,7 @@ class EditProductView(View):
             category_id = request.POST.get('category')
             brand_id = request.POST.get('brand')
 
-            print("brand is ",brand_id, "product name is ", product_name, "product description:", product_description, "category_id", category_id)
+            
 
             if not product_name:
                 errors['product_name'] = 'Product name is required.'
@@ -370,8 +369,7 @@ class EditProductView(View):
                 errors['brand'] = 'Valid brand is required.'
 
             # --- Images ---
-            for i in range(1, 4):
-                print(f"image {i} are:",request.FILES.get(f'cropped_image_{i}'))
+            
             
             images = [request.FILES.get(f'cropped_image_{i}') for i in range(1, 4)]
             images = [img for img in images if img]
@@ -410,7 +408,7 @@ class EditProductView(View):
                         )
 
             
-            print("product update successfully")
+            
 
             return JsonResponse({'success': True, 'message': 'Product added successfully!'})
         except Exception as e:
@@ -466,14 +464,14 @@ class AddProductOfferView(View):
             #     return redirect('addproduct_offer', product_id=product_id)
 
 
-            # print("title",title)
+            
 
             start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
             end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
 
             # today = timezone.now().date()
 
-            # print(start_date,"today",today)
+            
             # if not start_date >= today:
             #     error_notify(self.request, 'Start date must be greater than equal to today ' )
             #     return redirect('addproduct_offer', product_id=product_id)
@@ -485,7 +483,7 @@ class AddProductOfferView(View):
                 title=title, offer_percent=discount, about=about,
                 start_date=start_date, end_date=end_date,
             )
-            print("offer created", offer)
+            
 
             product.offer = offer
             product.save()
@@ -534,8 +532,7 @@ class EditProductOfferView(View):
             start_date = request.POST.get('start_date')
 
             end_date = request.POST.get('end_date')
-            print(title, description, offer_discount, start_date, end_date)
-
+            
             
             start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
 
@@ -582,13 +579,13 @@ class ToggleProductStatusView(View):
                 {'success': False, 'message': 'No variants are listed for this product.'},
                 status=400
             )
-        # print("the variants are ", variants)
+        
         product.is_listed = not product.is_listed
         product.save()
 
         
 
-        print("product is listed :", product.is_listed)
+        
         return JsonResponse(
             {'success': True, 'is_listed': product.is_listed},
             status=200
@@ -656,15 +653,15 @@ class ToggleCustomerStatusView(View):
     def post(self, request, pk):
         user = get_object_or_404(CustomUser, pk=pk)
         
-        # print("the variants are ", variants)
+        
         user.is_active = not user.is_active
         user.save()
 
         # Variant.objects.filter(product=product).update(is_listed=product.is_listed)
         # variants = get_object_or_404(Variant, product_id=product.id)
-        # print("the variants are ", variants)
+        
 
-        print("customer is active :", user.is_active)
+        
         return JsonResponse({'success': True, 'is_active': user.is_active})
     
 
@@ -693,7 +690,7 @@ class TogglCategoryStatusView(View):
         category = get_object_or_404(Category, pk=pk)
         category.is_listed = not category.is_listed
         category.save()
-        print("category is listed", category.is_listed)
+        
         return JsonResponse({'success': True, 'is_list': category.is_listed})
     
 
@@ -731,7 +728,7 @@ class AddCategoryView(View):
         else:
             category = Category.objects.create(name=category_name, description=description, is_listed=is_listed)
             category.save()
-            print("category created")
+            
 
             return redirect('admin-category')
 
@@ -758,8 +755,7 @@ class CategoryUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
-        print("request.user =", self.request.user)
-        print("type =", type(self.request.user))
+        
         context['user_id'] = self.request.user.id
         return context
     
@@ -770,9 +766,9 @@ class AddCategoryOffer(View):
     def get(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
         today = timezone.now().date()
-        print(today)
         
-        print("category id", category.id)
+        
+        
         errors = request.session.pop("add_category_offer_error", None)
         data = request.session.pop("add_category_offer_data", None)
 
@@ -791,7 +787,7 @@ class AddCategoryOffer(View):
 
     def post(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
-        print(category)
+        
         # offer = get_object_or_404(Offer, id=category.o)
 
         form = OfferForm(request.POST)
@@ -803,13 +799,13 @@ class AddCategoryOffer(View):
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
 
-            # print("title",title)
+            
             # today = timezone.now().date()
 
             start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
             end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
 
-            # print(start_date,"today",today)
+            
             # if not start_date >= today:
             #     error_notify(self.request, 'Start date must be greater than equal to today ' )
             #     return redirect('addcategory_offer', category_id=category_id)
@@ -821,8 +817,7 @@ class AddCategoryOffer(View):
                 title=title, offer_percent=discount, about=about,
                 start_date=start_date, end_date=end_date,
             )
-            print("offer created", offer)
-
+            
             category.offer = offer
             category.save()
             success_notify(request, f"successfully add the offer for category")
@@ -861,7 +856,7 @@ class EditCategoryOffer(View):
 
         # find offer using foreign key
         offer = get_object_or_404(Offer, id=category.offer_id)
-        print("the offer title is :", offer.title)
+        
 
         form = OfferForm(request.POST)
         if form.is_valid():
@@ -971,7 +966,7 @@ class AddVariantView(View):
             variant_stock = request.POST.get('stock', '').strip()
             variant_is_listed = request.POST.get('variant_is_listed') == 'on'
 
-            print("variant name :", variant_name,"variant description :", variant_description, "variant_price :", variant_price, "variant_discount :", variant_discount, "variant stock :", variant_stock, "variant is listed :", variant_is_listed)
+            
 
             # if not variant_name:
                 
@@ -1032,9 +1027,7 @@ class EditVariantView(View):
             }
     
         # the offer final price test
-        # print("main discount:", variant.final_price)
-        # print("variant price:", variant.price, "variant discount", variant.discount)
-        # print("product category offer", variant.product.category.offer.offer_percent)
+       
 
         return render(request, 'adminpanel/add-variant.html', context)
 
@@ -1060,7 +1053,7 @@ class EditVariantView(View):
                 request.session["edit_variant_data"] = request.POST
                 return redirect('edit_variant', variant_id=variant_id)
 
-            print("variant name :", variant_name,"variant description :", variant_description, "variant_price :", variant_price, "variant_discount :", variant_discount, "variant stock :", variant_stock)
+            
 
             variant.name = variant_name
             variant.description = variant_description
@@ -1084,7 +1077,7 @@ class ToggleVariatStatusView(View):
     def post(self, request, pk):
         variant = get_object_or_404(Variant, pk=pk)
         
-        # print("the variants are ", variants)
+        
         variant.is_listed = not variant.is_listed
         variant.save()
         product = variant.product
@@ -1092,17 +1085,15 @@ class ToggleVariatStatusView(View):
             product.is_listed = False
             product.save()
 
-        # if (variant.is_listed and variant.product.is_listed and variant.product.category.is_listed):
-        #     print('nisam')
+        
 
         #     CartItem.objects.filter(product=variant.product, variant=variant, is_active=False).update(is_active=True)
-        # elif not (variant.is_listed and variant.product.is_listed and variant.product.category.is_listed):
-        #     print('variant', variant.is_listed)
+        # elif not (variant.is_listed and variant.product.is_listed and variant.product.category.is_listed):  
         #     cart_items = CartItem.objects.filter(product=variant.product, variant=variant, is_active=True).update(is_active=False)
 
         # Variant.objects.filter(product=product).update(is_listed=product.is_listed)
         # variants = get_object_or_404(Variant, product_id=product.id)
-        # print("the variants are ", variants)
+        
 
         
         return JsonResponse({'success': True, 'is_listed': variant.is_listed})
@@ -1142,7 +1133,7 @@ class AdminLoginView(View):
             if CustomUser.objects.filter(email=emails).exists():
 
                 user_obj = get_object_or_404(CustomUser, email=emails)
-                print("the customer active status:", user_obj.is_active)
+                
                 if not user_obj.is_active:
                     request.session["admin_signin_errors"] = {"email": ["This email is blocked"]}
                     request.session["admin_signin_data"] = request.POST
@@ -1158,8 +1149,7 @@ class AdminLoginView(View):
                 request.session["admin_signin_data"] = request.POST
                 return redirect("admin_login")
             
-            print('enter email:', emails )
-            print('enter email:', passwords )
+            
             user.status = True
             user.save()
             if user.is_superuser:

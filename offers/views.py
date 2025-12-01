@@ -126,7 +126,7 @@ class EditCouponView(View):
                 error_notify(request, "try again")
                 return redirect('admin_coupon_list')
         coupon_id = request.POST.get('coupon_id')
-        print(coupon_id)
+        
         if Coupon.objects.filter(id=coupon_id):
             coupon = get_object_or_404(Coupon, id=coupon_id)
 
@@ -139,7 +139,7 @@ class EditCouponView(View):
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
 
-            print(coupon_id)
+            
 
             
             if Coupon.objects.filter(code__iexact=coupon_code).exclude(id=coupon_id).exists():
@@ -152,7 +152,7 @@ class EditCouponView(View):
             
             
             # coupon = get_object_or_404(Coupon, id=coupon_id)
-            print('coupon', coupon.code)
+            
             coupon.code=coupon_code
             coupon.min_purchase_amount=min_price
             coupon.max_redeemable_price=max_price

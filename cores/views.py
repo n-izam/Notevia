@@ -51,7 +51,7 @@ class StaticProductListView(View):
         brand_option = request.GET.getlist('brand')
         page = request.GET.get('page', 1)
 
-        print("search for ",search_q, "| sort by:", sort_option, "| category by :", cat_option, "| brand:", brand_option, "| page:", page)
+        
 
         category = Category.objects.filter(is_listed=True)
         brand = Brand.objects.all()
@@ -79,7 +79,7 @@ class StaticProductListView(View):
             # products = products.order_by('base_price')
             products = products.order_by('base_price')
 
-            # print("products", products)
+            
         
         elif sort_option == "price_desc":
             # products = products.order_by('-base_price')
@@ -105,7 +105,7 @@ class StaticProductListView(View):
         for product in products:
             main_image = product.images.filter(is_main=True).first()
             # main_variant = product.variants.filter(is_listed=True).order_by('-stock').first()
-            # print(main_variant.price)
+            
             product_with_image.append({
                 "product": product,
                 "main_image": main_image,
@@ -125,7 +125,7 @@ class StaticProductListView(View):
             paginated_products = paginator.page(paginator.num_pages)
 
 
-        # print(product_with_image)
+        
         context = {
             "product_with_image": paginated_products,
             # "user_id": request.user.id,
@@ -149,7 +149,7 @@ class StaticProductDetailsView(View):
     def get(self, request, product_id):
 
         main_get = request.GET.get('main','').strip()
-        print("main new ", main_get)
+        
 
 
         main_product = get_object_or_404(Product, id=product_id)
@@ -160,19 +160,18 @@ class StaticProductDetailsView(View):
         
 
         images = main_product.images.all()
-        print("images are", images)
+        
 
         variants = main_product.variants.filter(is_listed=True)
-        print(" variants", variants)
+        
         variants = variants.order_by('-stock')
-        print('variants based on stock', variants)
+        
 
         if not main_get:
             main_variant = variants.first()
         else:
             main_variant = variants.get(name=main_get)
-        print("main variant discount", main_variant.discount_percent)
-        print("main variant main_offer", main_variant.main_offer)
+        
 
         # for related products
 
@@ -286,7 +285,7 @@ class ProductlistingView(View):
         max_price = request.GET.get('max_price', '').strip()
         page = request.GET.get('page', 1)
 
-        print("search for ",search_q, "| sort by:", sort_option, "| category by :", cat_option, "| brand:", brand_option, "| page:", page)
+        
 
         if max_price and not min_price:
             min_price = ''
@@ -332,7 +331,7 @@ class ProductlistingView(View):
             # products = products.order_by('base_price')
             products = products.order_by('base_price')
 
-            # print("products", products)
+            
         
         elif sort_option == "price_desc":
             # products = products.order_by('-base_price')
@@ -358,7 +357,7 @@ class ProductlistingView(View):
         for product in products:
             main_image = product.images.filter(is_main=True).first()
             # main_variant = product.variants.filter(is_listed=True).order_by('-stock').first()
-            # print(main_variant.price)
+            
             product_with_image.append({
                 "product": product,
                 "main_image": main_image,
@@ -378,7 +377,7 @@ class ProductlistingView(View):
             paginated_products = paginator.page(paginator.num_pages)
 
 
-        # print(product_with_image)
+       
         context = {
             "product_with_image": paginated_products,
             "user_id": request.user.id,
@@ -404,7 +403,7 @@ class ProductDetailsView(View):
     def get(self, request, product_id):
 
         main_get = request.GET.get('main','').strip()
-        print("main new ", main_get)
+        
 
 
         main_product = get_object_or_404(Product, id=product_id)
@@ -415,19 +414,18 @@ class ProductDetailsView(View):
         
 
         images = main_product.images.all()
-        print("images are", images)
+        
 
         variants = main_product.variants.filter(is_listed=True)
-        print(" variants", variants)
+        
         variants = variants.order_by('-stock')
-        print('variants based on stock', variants)
+        
 
         if not main_get:
             main_variant = variants.first()
         else:
             main_variant = variants.get(name=main_get)
-        print("main variant discount", main_variant.discount_percent)
-        print("main variant main_offer", main_variant.main_offer)
+        
 
         # for related products
 

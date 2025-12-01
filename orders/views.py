@@ -109,22 +109,22 @@ class ConfirmationCartView(View):
         
         # if request.GET.get('applied_coupon'):
         applied_coupon = request.GET.get('applied_coupon','').strip()
-        print("the coupon:",applied_coupon)
+        
 
 
         address_id = request.GET.get('address')
-        print("address id", address_id)
+        
 
         if request.GET.get('payment'):
             payment_method = request.GET.get('payment')
 
-            print('payment method is :', payment_method,"address id:", address_id)
+            
 
         if not address_id:
             return redirect('address_selection')
         
         select_address = get_object_or_404(Address, id=address_id)
-        print('address ', select_address)
+        
         cart = get_object_or_404(Cart, user=request.user)
 
         cart_items = (
@@ -171,13 +171,13 @@ class ConfirmationCartView(View):
                     return redirect(url)
             
             is_coupon_apply = user_coupon.apply_discount(cart.main_total_price)
-            print("is applicable", is_coupon_apply)
+            
         
         final_over_all_amount = cart.over_all_amount_coupon(is_coupon_apply)
-        print("main total :", final_over_all_amount)
+        
 
         final_tax_with_coupon = cart.final_tax_with_coupon(is_coupon_apply)
-        print("main total tax:", final_tax_with_coupon)
+        
         
         coupons = Coupon.objects.filter(is_active=True)
         
@@ -208,7 +208,7 @@ class PlaceOrderView(View):
         payment_method = request.GET.get('payment')
         applied_coupon = request.GET.get('apply_coupon','').strip()
         final_over_all_amount = request.GET.get('final_amount')
-        print('coupon ', applied_coupon)
+        
 
         # if not request.session.get('payment_confirm'):
         #     return redirect('order_listing')
@@ -298,7 +298,7 @@ class PlaceOrderView(View):
         if order.razorpay_order_id:   # ← already paid once
             return redirect('razorpay_checkout', order_id=order.order_id)
 
-        print('payment method is :', payment_method,"address id:", address_id)
+        
 
         if payment_method == 'COD':
             cart = get_object_or_404(Cart, user=request.user)
@@ -366,8 +366,7 @@ def razorpay_callback(request):
         signature  = request.POST.get('razorpay_signature')
         order_identity = request.POST.get('order_idetity')
 
-        print('razorpay_payment_id', order_id," - ", order_identity)
-        print('razorpay_payment_id', payment_id)
+        
 
         cart = get_object_or_404(Cart, user=request.user)
 
@@ -511,7 +510,7 @@ class OrderListingView(OrderStatusUpdateByDateMixin, View):
 
         if query:
             orders = orders.filter(Q(status__icontains=query))
-        print("orders: ", orders)
+        
 
         # paginator = Paginator(orders, 5) 
 
@@ -561,7 +560,7 @@ class OrderDetailView(View):
         order = get_object_or_404(Order, id=order_id)
 
         order_address = order.orders_address
-        print('order address', order_address)
+        
 
         order_items = order.items.select_related( 'product', 'variant' ).all()
 
@@ -572,9 +571,9 @@ class OrderDetailView(View):
         return_items = []
         for item_request in return_item_requests:
             if item_request.order_item in order_items:
-                # print("item:",item_request.order_item)
+                
                 return_items.append(item_request.order_item)
-        print("return request ;", return_items)
+        
 
 
         orderitem_with_image = []
@@ -584,7 +583,7 @@ class OrderDetailView(View):
                 "order_item": order_item,
                 "main_image": main_image,
             })
-        print("orders: ", order)
+        
 
         breadcrumb = [
             {"name": "Profile", "url": "/accounts/profile/"},
@@ -617,7 +616,7 @@ class OrderTrackingView(View):
             return redirect('order_listing')
 
         order = get_object_or_404(Order, id=order_id)
-        print("orders: ", order)
+        
 
         breadcrumb = [
             {"name": "Profile", "url": "/accounts/profile/"},
@@ -662,7 +661,7 @@ class CancelOrderView(View):
         if order.items.filter(is_cancel=False).exists():
             if order.payment_method not in ['COD', 'Cash on Delivery']:
                 refund_amount = order.over_all_amount
-                print(f"total refund for order {order.order_id}", refund_amount)
+                
 
                 wallet = get_object_or_404(Wallet, user=request.user)
                 transaction = wallet.credit(Decimal(order.over_all_amount), message=f"Order {order.order_id} cancellation amount" )
@@ -693,7 +692,7 @@ class CancelOrderItemView(View):
 
     def post(self, request, order_id, item_id):
 
-        print("order_id", order_id)
+        
 
         order = get_object_or_404(Order, id=order_id, user=request.user)
         if order.status not in ['Pending', 'Processing']:
@@ -701,13 +700,12 @@ class CancelOrderItemView(View):
             return redirect('order_details', order_id-order.id )
         
         item = get_object_or_404(OrderItem, id=item_id, order=order)
-        print('irem discoount')
-        print("hi")
+        
         
         if item.variant:
             if order.payment_method not in ['COD', 'Cash on Delivery']:
                 refund_amount = item.return_with_tax_price()
-                print(f"refund amount {item.product.name}-{item.price}-{item.variant.name}", refund_amount)
+                
                 wallet = get_object_or_404(Wallet, user=request.user)
                 transaction = wallet.credit(Decimal(refund_amount), message=f"Order #{order.order_id} refund for item:{item.product.name} ")
                 transaction.order=order
@@ -978,7 +976,7 @@ class AdminOrderDetailView(View):
         
 
         order_address = order.orders_address
-        print('order address', order_address)
+        
 
         order_items = order.items.select_related( 'product', 'variant' ).all()
 
@@ -994,7 +992,7 @@ class AdminOrderDetailView(View):
                 "order_item": order_item,
                 "main_image": main_image,
             })
-        print("orders: ", order)
+        
 
         breadcrumb = [
             {"name": "Dashboard", "url": f"/adminpanel/admindash/{request.user.id}/"},

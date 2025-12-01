@@ -1331,3 +1331,28 @@ INFO 2025-11-29 22:36:35,031 autoreload 65582 8568817728 Watching for file chang
 WARNING 2025-11-29 22:39:39,816 log 65582 6190018560 Bad Request: /adminpanel/toggles-status/7/
 WARNING 2025-11-29 22:44:35,580 log 65582 6190018560 Bad Request: /adminpanel/toggles-status/7/
 WARNING 2025-11-29 22:46:18,419 log 65582 6190018560 Bad Request: /adminpanel/toggles-status/7/
+INFO 2025-11-29 22:50:56,024 autoreload 67252 8568817728 Watching for file changes with StatReloader
+WARNING 2025-11-29 22:51:05,625 log 67252 6130282496 Bad Request: /adminpanel/toggles-status/7/
+WARNING 2025-11-29 22:51:10,524 log 67252 6130282496 Bad Request: /adminpanel/toggles-status/7/
+WARNING 2025-11-29 22:51:11,798 log 67252 6130282496 Bad Request: /adminpanel/toggles-status/7/
+WARNING 2025-11-29 22:51:13,299 log 67252 6130282496 Bad Request: /adminpanel/toggles-status/7/
+WARNING 2025-11-29 22:51:19,963 log 67252 6130282496 Bad Request: /adminpanel/toggles-status/7/
+INFO 2025-11-29 22:51:54,925 views 67252 6163935232 the item count is :4
+INFO 2025-11-29 22:52:00,055 views 67252 6163935232 the item count is :5
+INFO 2025-11-29 22:52:07,774 views 67252 6163935232 the item count is :5
+INFO 2025-11-29 22:52:16,163 views 67252 6163935232 the item count is :5
+WARNING 2025-11-29 22:53:47,569 log 67252 6130282496 Bad Request: /adminpanel/toggles-status/7/
+WARNING 2025-11-29 22:53:48,496 log 67252 6130282496 Bad Request: /adminpanel/toggles-status/7/
+WARNING 2025-11-29 22:54:32,713 log 67252 6130282496 Bad Request: /adminpanel/toggles-status/3/
+INFO 2025-12-01 12:59:24,193 autoreload 74693 8568817728 Watching for file changes with StatReloader
+WARNING 2025-12-01 12:59:28,492 log 74693 6174961664 Not Found: /favicon.ico
+INFO 2025-12-01 12:59:55,545 views 74693 6174961664 the item count is :0
+INFO 2025-12-01 13:00:17,925 views 74693 6174961664 the item count is :0
+INFO 2025-12-01 13:00:20,985 views 74693 6174961664 the item count is :1
+INFO 2025-12-01 13:00:26,312 views 74693 6174961664 the item count is :2
+INFO 2025-12-01 13:00:27,971 views 74693 6174961664 the item count is :3
+INFO 2025-12-01 13:00:31,662 views 74693 6174961664 the item count is :4
+INFO 2025-12-01 13:00:37,465 views 74693 6174961664 the item count is :5
+INFO 2025-12-01 13:01:02,999 views 74693 6174961664 the item count is :5
+INFO 2025-12-01 13:40:16,987 autoreload 74693 8568817728 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-01 14:06:49,368 autoreload 76037 8568817728 Watching for file changes with StatReloader

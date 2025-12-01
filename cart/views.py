@@ -117,9 +117,9 @@ class AddToCartFromDetailView(View):
                 # main_variant = Variant.objects.filter(product=product, name=main_get, is_listed=True) # when use this we can get queryset 
 
 
-        print("main variant", main_get, "quantity", quantity, "product id", product_id, type(product_id))
+        
 
-        print("main product is:", product.name,"-", product.category, "product-", product, "main variant-", main_variant)
+        
 
         
 
@@ -163,7 +163,7 @@ class CartQuantityUpdateView(View):
             info_notify(request, "Please note: A maximum of 10 units per item can be added to your cart.")
             return redirect('cart_page')
 
-        print('cart item id is :', cart_item_id, 'quantity is:', quantity)
+        
 
         if not CartItem.objects.filter(id=cart_item_id ,is_active=True).exists():
             error_notify(request, "the item is not exists in cart")
@@ -192,7 +192,7 @@ class RemoveFromCartView(View):
 
     def get(self, request):
         cart_item_id = request.GET.get('remove_product')
-        print("item is ", cart_item_id)
+        
 
         if not CartItem.objects.filter(id=cart_item_id).exists():
             info_notify(request, "removing this item is not possible")
@@ -252,13 +252,13 @@ class UserWalletView(View):
     
     def post(self, request):
         amount = request.POST.get('money')
-        print('amount need to add wallet:', amount)
+        
         wallet = get_object_or_404(Wallet, user=request.user)
         if float(amount)<=0:
             error_notify(request, 'must enter the amount greater than zero')
             return redirect('wallet')
         transaction = wallet.credit(Decimal(amount), message="amount added to wallet")
-        print('transaction', transaction.id)
+        
 
         amount_in_paise = int(transaction.amount * 100)
         razorpay_transaction = client.order.create({
@@ -287,8 +287,7 @@ def razorpay_callback_wallet(request):
         signature  = request.POST.get('razorpay_signature')
         transaction_identity = request.POST.get('order_idetity')
 
-        print('razorpay_payment_id', order_id," - ", transaction_identity)
-        print('razorpay_payment_id', payment_id)
+        
 
         try:
             transaction = WalletTransaction.objects.get(razorpay_order_id=order_id)
@@ -319,10 +318,10 @@ def razorpay_callback_wallet(request):
         if not request.session.get('wallet_payment_confirm'):
             return redirect('wallet')
         transaction_id = request.GET.get('transaction')
-        print('transaction id:', transaction_id)
+        
         transaction = get_object_or_404(WalletTransaction, id=transaction_id)
         amount_in_paise = int(transaction.amount * 100)
-        print(amount_in_paise)
+        
         context = {
             "transaction": transaction,
             "razorpay_key_id": settings.RAZORPAY_KEY_ID,
