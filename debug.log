@@ -1356,3 +1356,4 @@ INFO 2025-12-01 13:00:37,465 views 74693 6174961664 the item count is :5
 INFO 2025-12-01 13:01:02,999 views 74693 6174961664 the item count is :5
 INFO 2025-12-01 13:40:16,987 autoreload 74693 8568817728 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
 INFO 2025-12-01 14:06:49,368 autoreload 76037 8568817728 Watching for file changes with StatReloader
+INFO 2025-12-01 14:10:30,137 autoreload 76967 8568817728 Watching for file changes with StatReloader
