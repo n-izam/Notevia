@@ -1359,3 +1359,6 @@ INFO 2025-12-01 14:06:49,368 autoreload 76037 8568817728 Watching for file chang
 INFO 2025-12-01 14:10:30,137 autoreload 76967 8568817728 Watching for file changes with StatReloader
 INFO 2025-12-01 14:55:27,652 autoreload 78910 8568817728 Watching for file changes with StatReloader
 INFO 2025-12-01 14:59:10,562 autoreload 80100 8568817728 Watching for file changes with StatReloader
+INFO 2025-12-01 16:41:41,544 autoreload 85837 8568817728 Watching for file changes with StatReloader
+INFO 2025-12-01 16:42:54,600 autoreload 85837 8568817728 /Users/nizam/python/week_9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-01 21:27:14,224 autoreload 86965 8568817728 Watching for file changes with StatReloader

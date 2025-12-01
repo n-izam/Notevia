@@ -119,12 +119,18 @@ WSGI_APPLICATION = 'notevia.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='mydb'),
-        'USER': config('DB_USER', default='user'),
-        'PASSWORD': config('DB_PASS', default='pass'),
-        'HOST': config('DB_HOST', default='localhost'),
+        'URL': os.getenv('DATABASE_URL'),
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
     }
 }
+import dj_database_url
+
+if os.getenv('DATABASE_URL'):
+    
+    DATABASES['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
 
 
 # Password validation
@@ -180,9 +186,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 cloudinary.config(
 
-    cloud_name = config('cloud_name'),
-    api_key = config('api_key'),
-    api_secret = config('api_secret'),
+    cloud_name=os.getenv('CLOUDINARY_URL').split('@')[1],
+    api_key=os.getenv('CLOUDINARY_URL').split(':')[1].split('@')[0],
+    api_secret=os.getenv('CLOUDINARY_URL').split(':')[2].split('@')[0],
 )
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
