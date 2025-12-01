@@ -1,0 +1,125 @@
+
+{% extends "base1.html" %}
+
+{% load static %}
+
+{% block title %} Home Page {% endblock %}
+<!-- {% block head %} {% endblock %} -->
+ {% block style %}
+ 
+ <style>
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        color: #333;
+        background-color: #fff;
+    }
+
+    .page-title-section {
+        background-color: #f8f9fa; /* Light grey background for the header */
+        padding: 60px 0;
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .page-title-section h1 {
+        font-size: 3.5rem;
+        font-weight: 600;
+        color: #212529; /* Dark text color */
+    }
+
+    .privacy-content {
+        
+        margin: 0 auto;
+    }
+
+    .privacy-content h4 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .privacy-content p {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #555;
+        margin-bottom: 1.5rem;
+    }
+
+    .privacy-content strong {
+        display: block;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+</style>
+
+ {% endblock %}
+
+{% block content %}
+
+    <div class="px-4">
+        
+        <!-- Page Title -->
+        <div class="page-title-section">
+            <div class="container">
+                <h1>Privacy Policy</h1>
+            </div>
+        </div>
+        <!-- /Page Title -->
+
+        <!-- Main Page Content -->
+        <section class="main-page-content pb-5">
+            <div class="">
+                <div class="privacy-content px-4 mx-4">
+                    <h4>The Company Private Limited Policy</h4>
+                    <p>NOTEVIA (“we”, “our”, “us”) values your trust and cares about how your personal information is collected, used, and shared. This Privacy Policy explains what information we collect when you use our website, how we use it, and the choices you have regarding your data. By accessing or using the NOTEVIA website, you agree to the practices described in this Privacy Policy.</p>
+                    
+                    <p>We may collect the following types of information:
+                        <strong>Personal Information:</strong> Such as your name, email address, phone number, shipping/billing address, and payment details when you make a purchase or create an account.
+                        <strong>Non-Personal Information:</strong> Such as browser type, device information, IP address, and browsing behavior on our website.
+                        <strong>Communications:</strong> Any information you provide when contacting us through email, forms, or customer support.
+                    </p>
+
+                    <p>Your information may be used for:
+                        Processing and fulfilling your orders.
+                        Communicating with you about your purchases, shipping, and customer service requests.
+                        Sending you updates, promotions, and newsletters (only if you opt-in).
+                        Improving our website, services, and shopping experience.
+                        Protecting against fraud and ensuring secure transactions.
+                    </p>
+
+                    <p>We do not sell or rent your personal information. However, we may share it with trusted third parties for:
+                        Payment Processing (secure payment gateways),
+                        Shipping & Delivery (courier partners), and
+                        Service Providers (IT support, analytics, and marketing tools).
+                        We may also disclose information if required by law or to protect our legal rights.
+                    </p>
+
+                    <p>Our website uses cookies and similar tools to improve your browsing experience, analyze traffic, and personalize content. You can manage or disable cookies through your browser settings.</p>
+                    
+                    <p>
+                        <strong>Data Security</strong>
+                        We take reasonable steps to protect your personal data from unauthorized access, misuse, or disclosure. However, please note that no online transmission or storage system is 100% secure.
+                    </p>
+                    <p>
+                        <strong>Your Choices</strong>
+                        You may update or correct your account details at any time. You may unsubscribe from marketing emails by clicking the “unsubscribe” link in any email. You may also request the deletion of your account by contacting us.
+                    </p>
+                    <p>
+                        <strong>Third-Party Links</strong>
+                        Our website may contain links to other websites. NOTEVIA is not responsible for the privacy practices or content of those third-party sites.
+                    </p>
+                    <p>
+                        <strong>Updates to This Policy</strong>
+                        We may update this Privacy Policy from time to time. Any changes will be reflected on this page with a revised “last updated” date. Continued use of our website after changes means you accept the updated policy.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+
+    {% endblock %}

@@ -1,0 +1,730 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoteVia Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-white" id="sidebar-wrapper">
+            <div class="sidebar-heading">
+                <img src="{% static 'images/logo/logo12.png' %}" alt="NoteVia Logo" width="120">
+            </div>
+            <div class="list-group list-group-flush my-3">
+                <a href="{% url 'admin-dash' user_id=user_id %}" 
+                class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-dash' %}active{% endif %}">
+                    <i class="bi bi-grid-1x2-fill me-2"></i>Dashboard
+                </a>
+                <a href="{% url 'admin-product' %}" 
+                class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-product' %}active{% endif %}">
+                    <i class="bi bi-box-seam-fill me-2"></i>Products
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="bi bi-list-ul me-2"></i>Order List
+                </a>
+                <a href="{% url 'admin-customers' %}" 
+                class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-customers' %}active{% endif %}">
+                    <i class="bi bi-person-fill me-2"></i>Customer
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="bi bi-currency-dollar me-2"></i>Sales
+                </a>
+                <a href="{% url 'admin-category' %}" 
+                class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-category' %}active{% endif %}">
+                    <i class="bi bi-grid-fill me-2"></i>Category
+                </a>
+                <a href="#" 
+                class="list-group-item list-group-item-action ">
+                    <i class="bi bi-ticket-perforated-fill me-2"></i>Coupons
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="bi bi-image-fill me-2"></i>Banner
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <a href="#" class="list-group-item list-group-item-action account-btn">Account</a>
+                <a href="{% url 'signout' user_id=user_id %}" class="list-group-item list-group-item-action logout-btn">Logout</a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-list fs-4 me-3" id="menu-toggle"></i>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://i.imgur.com/e8bsh4w.png" alt="Admin" width="40" class="rounded-circle me-2">
+                                {{user.full_name}}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li><a class="dropdown-item" href="#">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- start from  -->
+            <div class="container-fluid">
+                <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
+                    <!-- Add Product Section -->
+                    <div class="container-fluid">
+                        <h2 class="h3 mb-4">Edit Product of {{product.brand.name}}</h2>
+                        <form id="productForm" enctype="multipart/form-data">
+                            {% csrf_token%}
+                            <!-- Hidden input for product_id -->
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <!-- Add Product Form Card -->
+                            <div class="card add-product-form">
+                                <div class="card-body">
+                                    <!-- Brand -->
+                                    <div class="mb-4">
+                                        <label for="brandType" class="form-label">Brand</label>
+                                        <select class="form-select" id="brandType" name="brand">
+                                            <option value="">Select type</option>
+                                            {% for brand in brands %}
+                                                <!-- <option value="{{ brand.id }}">{{ brand.name }}</option> -->
+                                                
+                                                <option value="{{ brand.id }}" {% if brand.id == product.brand.id %}selected{% endif %}>{{ brand.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <span class="error" id="error_brand"></span>
+                                        <a href="#" class="btn btn-dark mt-2" data-bs-toggle="modal" data-bs-target="#addBrandModal">+ Add New Brand</a>
+                                    </div>
+                                    <!-- Product Name -->
+                                    <div class="mb-4">
+                                        <label for="productName" class="form-label">Product Name</label>
+                                        <input type="text" class="form-control" name="product_name" id="productName" placeholder="Perfume">
+                                        <span class="error" id="error_product_name"></span>
+                                    </div>
+                                    <!-- Product Description -->
+                                    <div class="mb-4">
+                                        <label for="productDescription" class="form-label">Product Description</label>
+                                        <textarea class="form-control" name="product_description" id="productDescription" rows="4" placeholder="Write your description here..."></textarea>
+                                        <span class="error" id="error_product_description"></span>
+                                    </div>
+                                    <!-- Product Images -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Product Images</label>
+                                        <div class="row g-3">
+                                            <!-- Image Upload Slot 1 -->
+                                            <div class="col-md-4">
+                                                <div class="image-upload-slot" data-slot="1">
+                                                    <img src="" class="image-preview" alt="Image preview 1">
+                                                    <div class="default-view">
+                                                        <i class="fas fa-image icon"></i>
+                                                        <span>Add Image</span>
+                                                    </div>
+                                                </div>
+                                                <input type="file" class="d-none image-upload-input" name="image_1" data-slot="1" accept="image/*">
+                                            </div>
+                                            <!-- Image Upload Slot 2 -->
+                                            <div class="col-md-4">
+                                                <div class="image-upload-slot" data-slot="2">
+                                                    <img src="" class="image-preview" alt="Image preview 2">
+                                                    <div class="default-view">
+                                                        <i class="fas fa-image icon"></i>
+                                                        <span>Add Image</span>
+                                                    </div>
+                                                </div>
+                                                <input type="file" class="d-none image-upload-input" name="image_2" data-slot="2" accept="image/*">
+                                            </div>
+                                            <!-- Image Upload Slot 3 -->
+                                            <div class="col-md-4">
+                                                <div class="image-upload-slot" data-slot="3">
+                                                    <img src="" class="image-preview" alt="Image preview 3">
+                                                    <div class="default-view">
+                                                        <i class="fas fa-image icon"></i>
+                                                        <span>Add Image</span>
+                                                    </div>
+                                                </div>
+                                                <input type="file" class="d-none image-upload-input" name="image_3" data-slot="3" accept="image/*">
+                                            </div>
+                                        </div>
+                                        <span class="error" id="error_images"></span>
+                                    </div>
+                                    <!-- Category -->
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-4">
+                                            <label for="productType" class="form-label">Product Type (Category)</label>
+                                            <select class="form-select" name="category" id="productType">
+                                                <option value="">Select type</option>
+                                                {% for category in categories %}
+                                                    <!-- <option value="{{ category.id }}">{{ category.name }}</option> -->
+                                                    <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <span class="error" id="error_category"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Variant Form -->
+                            <!-- <div class="card-body p-4 mt-3 variant-form">
+                                <h2 class="h4 mb-0">Variant Details</h2>
+                                <hr> -->
+                                <!-- Variant Name -->
+                                <!-- <div class="mb-4">
+                                    <label for="variantName" class="form-label">Variant Name</label>
+                                    <input type="text" class="form-control" name="variant_name" id="variantName" placeholder="e.g., Ruled, Unruled, Square Grid">
+                                    <div class="form-text">This name must be unique for this product.</div>
+                                    <span class="error" id="error_variant_name"></span>
+                                </div> -->
+                                <!-- Description -->
+                                <!-- <div class="mb-4">
+                                    <label for="variantDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" name="variant_description" id="variantDescription" rows="4" placeholder="Describe this variant..."></textarea>
+                                    <span class="error" id="error_variant_description"></span>
+                                </div> -->
+                                <!-- Price and Stock -->
+                                <!-- <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label for="variantPrice" class="form-label">Price</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Rs.</span>
+                                            <input type="number" class="form-control" name="variant_price" id="variantPrice" step="0.01" placeholder="0.00">
+                                            <span class="error" id="error_variant_price"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="variantDiscount" class="form-label">Discount Percentage</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" name="variant_discount" id="variantDiscount" step="0.01" placeholder="0">
+                                            <span class="input-group-text">%</span>
+                                            <span class="error" id="error_variant_discount"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="variantStock" class="form-label">Stocks</label>
+                                        <input type="number" class="form-control" name="variant_stock" id="variantStock" placeholder="0">
+                                        <span class="error" id="error_variant_stock"></span>
+                                    </div>
+                                </div> -->
+                                <!-- Is Listed Status -->
+                                <!-- <div class="mb-4">
+                                    <label class="form-label d-block">Initial Status</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="variant_is_listed" id="variantIsListed" checked>
+                                        <label class="form-check-label" for="variantIsListed">Set as Listed (Visible to customers)</label>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <span class="error" id="error_general"></span>
+                            <div class="d-flex justify-content-end mt-4">
+                                <a type="button" href="{% url 'admin-product' %}" class="btn btn-cancel me-2">Cancel</a>
+                                <button type="submit" class="btn btn-save">Update Product</button>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+<!-- Cropper Modal -->
+<div class="modal fade" id="cropperModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crop Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="img-container">
+                    <img id="imageToCrop" src="">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="cropButton">Crop & Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Brand Modal -->
+<div class="modal fade" id="addBrandModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Brand</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addBrandForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="newBrandName" class="form-label">Brand Name</label>
+                        <input type="text" class="form-control" id="newBrandName" name="brand_name" required>
+                        <span class="error" id="error_brand_name"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Brand</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error { color: red; font-size: 0.9em; display: block; margin-top: 5px; }
+</style>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <!-- YOUR CUSTOM SCRIPT -->
+    
+ <!-- <script>
+    var el = document.getElementById("wrapper");
+var toggleButton = document.getElementById("menu-toggle");
+
+toggleButton.onclick = function () {
+    el.classList.toggle("toggled");
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+    // --- Add Brand without Reload ---
+    const addBrandForm = document.getElementById('addBrandForm');
+    const addBrandModalEl = document.getElementById('addBrandModal');
+    const addBrandModal = new bootstrap.Modal(addBrandModalEl);
+    const brandTypeSelect = document.getElementById('brandType');
+
+    addBrandForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const brandNameInput = document.getElementById('newBrandName');
+        const brandName = brandNameInput.value.trim();
+        document.getElementById('error_brand_name').textContent = '';
+
+        if (!brandName) {
+            document.getElementById('error_brand_name').textContent = 'Brand name is required.';
+            return;
+        }
+
+        const csrfTokenInput = addBrandForm.querySelector('[name=csrfmiddlewaretoken]');
+        const csrfToken = csrfTokenInput ? csrfTokenInput.value.trim() : null;
+        console.log('CSRF Token from addBrandForm:', csrfToken);
+        if (!csrfToken || csrfToken.length !== 64) {
+            document.getElementById('error_brand_name').textContent = 'Invalid CSRF token. Please reload the page.';
+            return;
+        }
+
+        fetch('/adminpanel/api/add-brand/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ brand_name: brandName })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const newOption = new Option(data.brand.name, data.brand.id, true, true);
+                brandTypeSelect.add(newOption);
+                addBrandModal.hide();
+                brandNameInput.value = '';
+            } else {
+                document.getElementById('error_brand_name').textContent = data.error || 'Could not add brand.';
+            }
+        })
+        .catch(error => {
+            console.error('Error adding brand:', error);
+            document.getElementById('error_brand_name').textContent = 'An error occurred. Please try again.';
+        });
+    });
+
+    // --- Image Cropper Logic ---
+    const cropperModalEl = document.getElementById('cropperModal');
+    const cropperModal = new bootstrap.Modal(cropperModalEl);
+    const imageToCrop = document.getElementById('imageToCrop');
+    const cropButton = document.getElementById('cropButton');
+    const imageUploadSlots = document.querySelectorAll('.image-upload-slot');
+    let cropper;
+    let activeSlot = null;
+    const croppedImagesData = { 1: null, 2: null, 3: null };
+
+    imageUploadSlots.forEach(slot => {
+        slot.addEventListener('click', () => {
+            activeSlot = slot.dataset.slot;
+            document.querySelector(`.image-upload-input[data-slot="${activeSlot}"]`).click();
+        });
+    });
+
+    document.querySelectorAll('.image-upload-input').forEach(input => {
+        input.addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                const file = files[0];
+                if (!['image/png', 'image/jpeg'].includes(file.type)) {
+                    alert('Only PNG or JPEG images are allowed.');
+                    input.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = () => {
+                    imageToCrop.src = reader.result;
+                    cropperModal.show();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+    cropperModalEl.addEventListener('shown.bs.modal', () => {
+        cropper = new Cropper(imageToCrop, {
+            aspectRatio: NaN,
+            viewMode: 1,
+            dragMode: 'move',
+            background: false,
+            autoCropArea: 0.8,
+            responsive: true,
+            zoomable: true,
+            movable: true,
+            cropBoxResizable: true,
+            cropBoxMovable: true,
+        });
+    });
+
+    cropperModalEl.addEventListener('hidden.bs.modal', () => {
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        const activeInput = document.querySelector(`.image-upload-input[data-slot="${activeSlot}"]`);
+        if (activeInput) activeInput.value = '';
+    });
+
+    cropButton.addEventListener('click', () => {
+        if (!cropper) return;
+
+        const canvas = cropper.getCroppedCanvas({
+            width: 512,
+            height: 512,
+            imageSmoothingQuality: 'high',
+        });
+
+        const previewEl = document.querySelector(`.image-upload-slot[data-slot="${activeSlot}"] .image-preview`);
+        previewEl.src = canvas.toDataURL();
+        previewEl.style.display = 'block';
+
+        document.querySelector(`.image-upload-slot[data-slot="${activeSlot}"] .default-view`).style.display = 'none';
+
+        canvas.toBlob((blob) => {
+            croppedImagesData[activeSlot] = blob;
+        });
+
+        cropperModal.hide();
+    });
+
+    // --- Form Submission ---
+    document.getElementById('productForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+    
+        // Disable submit button
+        const submitBtn = document.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+    
+        // Get product ID from form
+        const productId = document.querySelector('input[name="product_id"]').value;
+        console.log('Product ID:', productId);
+    
+        const formData = new FormData(this);
+        console.log('FormData entries:');
+        for (const [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+        }
+        for (const slot in croppedImagesData) {
+            if (croppedImagesData[slot]) {
+                console.log(`Appending image for slot ${slot}:`, croppedImagesData[slot]);
+                formData.append(`cropped_image_${slot}`, croppedImagesData[slot], `image_${slot}.png`);
+            }
+        }
+    
+        fetch(`/adminpanel/adminproduct/${productId}/edit`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert('Product updated successfully!');
+                this.reset();
+                document.querySelectorAll('.image-preview').forEach(img => {
+                    img.src = '';
+                    img.style.display = 'none';
+                });
+                document.querySelectorAll('.default-view').forEach(div => div.style.display = 'block');
+                for (const slot in croppedImagesData) croppedImagesData[slot] = null;
+                window.location.href = '/adminpanel/adminproduct/';
+            } else {
+                document.getElementById('error_general').textContent = data.error || 'Failed to update product.';
+            }
+        })
+        .catch(error => {
+            console.error('Error Details:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
+            document.getElementById('error_general').textContent = 'An error occurred: ' + error.message;
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+        });
+    });
+});
+ </script> -->
+
+ <script>
+    var el = document.getElementById("wrapper");
+var toggleButton = document.getElementById("menu-toggle");
+
+toggleButton.onclick = function () {
+    el.classList.toggle("toggled");
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+    // --- Add Brand without Reload ---
+    const addBrandForm = document.getElementById('addBrandForm');
+    const addBrandModalEl = document.getElementById('addBrandModal');
+    const addBrandModal = new bootstrap.Modal(addBrandModalEl);
+    const brandTypeSelect = document.getElementById('brandType');
+
+    addBrandForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const brandNameInput = document.getElementById('newBrandName');
+        const brandName = brandNameInput.value.trim();
+        document.getElementById('error_brand_name').textContent = '';
+
+        if (!brandName) {
+            document.getElementById('error_brand_name').textContent = 'Brand name is required.';
+            return;
+        }
+
+        const csrfTokenInput = addBrandForm.querySelector('[name=csrfmiddlewaretoken]');
+        const csrfToken = csrfTokenInput ? csrfTokenInput.value.trim() : null;
+        console.log('CSRF Token from addBrandForm:', csrfToken);
+        if (!csrfToken || csrfToken.length !== 64) {
+            document.getElementById('error_brand_name').textContent = 'Invalid CSRF token. Please reload the page.';
+            return;
+        }
+
+        fetch('/adminpanel/api/add-brand/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ brand_name: brandName })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const newOption = new Option(data.brand.name, data.brand.id, true, true);
+                brandTypeSelect.add(newOption);
+                addBrandModal.hide();
+                brandNameInput.value = '';
+            } else {
+                document.getElementById('error_brand_name').textContent = data.error || 'Could not add brand.';
+            }
+        })
+        .catch(error => {
+            console.error('Error adding brand:', error);
+            document.getElementById('error_brand_name').textContent = 'An error occurred. Please try again.';
+        });
+    });
+
+    // --- Image Cropper Logic ---
+    const cropperModalEl = document.getElementById('cropperModal');
+    const cropperModal = new bootstrap.Modal(cropperModalEl);
+    const imageToCrop = document.getElementById('imageToCrop');
+    const cropButton = document.getElementById('cropButton');
+    const imageUploadSlots = document.querySelectorAll('.image-upload-slot');
+    let cropper;
+    let activeSlot = null;
+    const croppedImagesData = { 1: null, 2: null, 3: null };
+
+    imageUploadSlots.forEach(slot => {
+        slot.addEventListener('click', () => {
+            activeSlot = slot.dataset.slot;
+            document.querySelector(`.image-upload-input[data-slot="${activeSlot}"]`).click();
+        });
+    });
+
+    document.querySelectorAll('.image-upload-input').forEach(input => {
+        input.addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                const file = files[0];
+                if (!['image/png', 'image/jpeg'].includes(file.type)) {
+                    alert('Only PNG or JPEG images are allowed.');
+                    input.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = () => {
+                    imageToCrop.src = reader.result;
+                    cropperModal.show();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+    cropperModalEl.addEventListener('shown.bs.modal', () => {
+        cropper = new Cropper(imageToCrop, {
+            aspectRatio: NaN,
+            viewMode: 1,
+            dragMode: 'move',
+            background: false,
+            autoCropArea: 0.8,
+            responsive: true,
+            zoomable: true,
+            movable: true,
+            cropBoxResizable: true,
+            cropBoxMovable: true,
+        });
+    });
+
+    cropperModalEl.addEventListener('hidden.bs.modal', () => {
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        const activeInput = document.querySelector(`.image-upload-input[data-slot="${activeSlot}"]`);
+        if (activeInput) activeInput.value = '';
+    });
+
+    cropButton.addEventListener('click', () => {
+        if (!cropper) return;
+
+        const canvas = cropper.getCroppedCanvas({
+            width: 512,
+            height: 512,
+            imageSmoothingQuality: 'high',
+        });
+
+        const previewEl = document.querySelector(`.image-upload-slot[data-slot="${activeSlot}"] .image-preview`);
+        previewEl.src = canvas.toDataURL();
+        previewEl.style.display = 'block';
+
+        document.querySelector(`.image-upload-slot[data-slot="${activeSlot}"] .default-view`).style.display = 'none';
+
+        canvas.toBlob((blob) => {
+            croppedImagesData[activeSlot] = blob;
+        });
+
+        cropperModal.hide();
+    });
+
+    // --- Form Submission ---
+    document.getElementById('productForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+    
+        const submitBtn = document.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        
+        // Clear all previous errors
+        document.querySelectorAll('.error').forEach(el => el.textContent = '');
+    
+        const productId = document.querySelector('input[name="product_id"]').value;
+        const formData = new FormData(this);
+        
+        for (const slot in croppedImagesData) {
+            if (croppedImagesData[slot]) {
+                formData.append(`cropped_image_${slot}`, croppedImagesData[slot], `image_${slot}.png`);
+            }
+        }
+    
+        fetch(`/adminpanel/adminproduct/${productId}/edit`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                // 'Content-Type': 'multipart/form-data' is not needed; the browser sets it automatically for FormData
+            },
+            body: formData
+        })
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))
+        .then(({ status, body }) => {
+            if (body.success) {
+                alert('Product updated successfully!');
+                window.location.href = '/adminpanel/adminproduct/';
+            } else {
+                // --- ERROR HANDLING LOGIC ---
+                if (body.errors) {
+                    // Handle field-specific errors
+                    for (const field in body.errors) {
+                        const errorElement = document.getElementById(`error_${field}`);
+                        if (errorElement) {
+                            errorElement.textContent = body.errors[field];
+                        } else {
+                            // If a specific field span isn't found, show it in the general error area
+                             document.getElementById('error_general').textContent += body.errors[field] + ' ';
+                        }
+                    }
+                } else if (body.error) {
+                    // Handle a single, general error message
+                    document.getElementById('error_general').textContent = body.error;
+                } else {
+                    // Fallback for an unknown error format
+                    document.getElementById('error_general').textContent = 'An unknown error occurred. Please try again.';
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error submitting form:', error);
+            document.getElementById('error_general').textContent = 'A network or server error occurred. Please try again.';
+        })
+        .finally(() => {
+            // Re-enable the submit button
+            submitBtn.disabled = false;
+        });
+    });
+});
+ </script>
+
+    
+
+</body>
+</html>

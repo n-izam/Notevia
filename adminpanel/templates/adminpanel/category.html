@@ -1,0 +1,372 @@
+{% extends "adminbase.html" %}
+
+{% load static %}
+
+{% block title %} Category Management {% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+{% endblock %}
+
+{% block style %}
+<style>
+    /* --- General & Responsive Layout --- */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap; /* Allows items to wrap to the next line on small screens */
+        gap: 1rem; /* Adds space between items when they wrap */
+        margin-bottom: 1.5rem;
+    }
+    .page-header h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    .search-and-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* --- Search Input --- */
+    .clearable-input {
+        position: relative;
+        width: 250px;
+    }
+    .clearable-input input {
+        padding-right: 2.2rem;
+    }
+    .clearable-input .clear-btn {
+        position: absolute;
+        top: 50%;
+        right: 0.6rem;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: #888;
+        display: none;
+    }
+    .clearable-input .clear-btn.visible { display: block; }
+
+    /* --- Table Styles --- */
+    .table-wrapper {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .table td, .table th {
+        vertical-align: middle;
+    }
+    .table .action-icons a, .table .action-icons button {
+        color: #6c757d;
+        margin: 0 0.25rem;
+    }
+    .table .action-icons a:hover, .table .action-icons button:hover {
+        color: #212529;
+    }
+
+    /* --- Offer Column Styling --- */
+    .offer-details .offer-meta {
+        font-size: 0.8rem;
+        color: #6c757d;
+        line-height: 1.4;
+    }
+    .offer-details .offer-percent {
+        font-weight: 600;
+        color: #28a745;
+    }
+    .offer-actions {
+        display: flex;
+        align-items: center;
+        margin-top: 0.5rem;
+    }
+
+    /* --- Mobile Responsiveness --- */
+    @media (max-width: 767.98px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .search-and-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .clearable-input {
+            width: 100%;
+        }
+    }
+
+    /* --- Toast Notifications (from your original code, looks great!) --- */
+    .toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 5000; }
+    .toast { backdrop-filter: blur(8px); background: rgba(17, 17, 17, 0.85) !important; color: #fff !important; border-radius: 12px !important; padding: 0.75rem 1rem; border: 1px solid rgba(255, 255, 255, 0.15) !important; box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35); animation: slideFadeIn 0.5s ease-out; }
+    .toast-body { font-size: 0.95rem; font-weight: 500; }
+    .toast.bg-success { background: rgba(0, 255, 100, 0.15) !important; border-left: 4px solid #00ff73 !important; color: #409365 !important; }
+    .toast.bg-danger { background: rgba(255, 0, 0, 0.15) !important; border-left: 4px solid #ff3b3b !important; color: #bb4141 !important; }
+    @keyframes slideFadeIn { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0px) scale(1); } }
+
+    /* --- Modern & Responsive Modal Styles --- */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 4000;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 0;
+        border: 1px solid #888;
+        width: 90%;
+        max-width: 600px;
+        border-radius: 0.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        animation: slideDown 0.4s ease-out;
+    }
+    .modal-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .modal-header h2 { font-size: 1.25rem; margin: 0; }
+    .modal-body { padding: 1.5rem; }
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #dee2e6;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+    .close { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .close:hover, .close:focus { color: black; }
+    @keyframes slideDown { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+    /* Modal Form Styles */
+    .modal .form-group { margin-bottom: 1.25rem; }
+    .modal .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+    .modal .form-group input, .modal .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ced4da; border-radius: 0.25rem; }
+    .modal .date-inputs { display: flex; align-items: center; gap: 1rem; }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
+            <nav aria-label="breadcrumb" class="mt-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Category</li>
+                </ol>
+            </nav>
+
+            <div class="page-header">
+                <h1>CATEGORY</h1>
+                <a href="{% url 'add-category' %}" class="btn btn-dark">
+                    <i class="fas fa-plus me-1"></i> Add Category
+                </a>
+            </div>
+
+            <div class="table-wrapper">
+                <div class="search-and-actions">
+                    <form method="GET" action="" class="d-flex align-items-center">
+                        <div class="clearable-input me-2">
+                            <input type="text" name="q" class="form-control form-control-sm" placeholder="Search categories..." value="{{ query }}" id="searchField" autocomplete="off" />
+                            <button type="button" class="clear-btn" id="btnClear" aria-label="Clear">&times;</button>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-dark">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">SNO</th>
+                                <th scope="col">Category Name</th>
+                                <th scope="col">Added</th>
+                                <th scope="col">Unlist/List</th>
+                                <th scope="col">Action</th>
+                                <th scope="col">Offer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cat in category %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ cat.name }}</td>
+                                <td>{{ cat.updated_at.date }}</td>
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="switch{{ cat.id }}" {% if cat.is_listed %}checked{% endif %} onchange="toggleStatus('{{cat.id}}')">
+                                    </div>
+                                </td>
+                                <td class="action-icons">
+                                    <a href="#" class="btn btn-sm" aria-label="View {{cat.name}}"><i class="fas fa-eye"></i></a>
+                                    <a href="{% url 'edit_category' cat.id %}" class="btn btn-sm" aria-label="Edit {{cat.name}}"><i class="fas fa-edit"></i></a>
+                                    {% if cat.is_listed %}
+                                    <a href="{% url 'category_delete' cat.id %}" class="btn btn-sm text-danger" aria-label="Delete {{cat.name}}"><i class="fas fa-trash"></i></a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if cat.offer %}
+                                    <div class="offer-details">
+                                        <div class="offer-meta">
+                                            <span class="offer-percent">{{ cat.offer.offer_percent }}% OFF</span> | {{ cat.offer.title }}
+                                        </div>
+                                        <div class="offer-meta">Ends: {{ cat.offer.end_date|date:"j M Y" }}</div>
+                                        <div class="offer-actions">
+                                            <a href="{% url 'editcategory_offer' cat.id %}" class="btn btn-sm" aria-label="Edit Offer"><i class="fas fa-edit"></i></a>
+                                            <a href="{% url 'category_remove_offer' cat.id %}" class="btn btn-sm text-danger" aria-label="Remove Offer"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <a href="{% url 'addcategory_offer' cat.id %}" class="btn btn-dark btn-sm">Add Offer</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5">
+                                    <p class="text-muted">No categories found.</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container">
+    {% for message in messages %}
+    <div class="toast align-items-center border-0 mb-2 {% if message.tags == 'error' %} bg-danger {% elif message.tags == 'success' %} bg-success {% elif message.tags == 'warning' %} bg-warning {% else %} bg-info {% endif %}">
+        <div class="d-flex">
+            <div class="toast-body">
+                {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>{% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>{% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                {{ message }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block modal %}
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Add Product Offer</h2>
+            <span class="close closeModal">&times;</span>
+        </div>
+        <form id="offerForm" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="offer-title">Offer Title</label>
+                    <input type="text" id="offer-title" name="offer-title" class="form-control" placeholder="e.g., Summer Sale">
+                </div>
+                <div class="form-group">
+                    <label for="offerabout">Description</label>
+                    <textarea class="form-control" id="offerabout" name="about" rows="4" placeholder="Type offer description here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="discount-percent">Discount Percentage</label>
+                    <input type="number" id="discount-percent" name="discount" class="form-control" placeholder="e.g., 15">
+                </div>
+                <div class="form-group">
+                    <label>Date Range</label>
+                    <div class="date-inputs">
+                        <input type="date" id="start-date" name="start-date" class="form-control">
+                        <span>To</span>
+                        <input type="date" id="end-date" name="end-date" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light closeModal">Cancel</button>
+                <button type="submit" class="btn btn-dark" id="modalSubmitBtn">Add Offer</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    // Toggle Category Status
+    function toggleStatus(categoryId) {
+        const csrfToken = '{{ csrf_token }}';
+        axios.post(`/adminpanel/toggle-status/${categoryId}/`, {}, {
+            headers: { 'X-CSRFToken': csrfToken }
+        })
+        .then(response => {
+            if (response.data.success) {
+                console.log(`Category ${categoryId} status updated.`);
+                // You could add a toast notification here instead of just logging
+                window.location.reload(); // Reload to see changes
+            }
+        })
+        .catch(error => {
+            console.error("Error updating status:", error);
+        });
+    }
+
+    // Clearable Search Input
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById("searchField");
+        const clearBtn = document.getElementById("btnClear");
+
+        if (input && clearBtn) {
+            const toggleClearBtn = () => clearBtn.classList.toggle("visible", input.value.length > 0);
+            
+            input.addEventListener("input", toggleClearBtn);
+            
+            clearBtn.addEventListener("click", () => {
+                input.value = "";
+                toggleClearBtn();
+                input.focus();
+            });
+
+            toggleClearBtn(); // Check on page load
+        }
+
+        // Initialize Toasts
+        document.querySelectorAll('.toast').forEach(el => new bootstrap.Toast(el).show());
+
+        // Modal Logic
+        const modal = document.getElementById("myModal");
+        const closeModalBtns = document.querySelectorAll(".closeModal");
+        
+        // Example: How you might open the modal (you'll need to adapt the trigger)
+        // document.getElementById("openModalBtn").onclick = () => modal.style.display = "block";
+        
+        closeModalBtns.forEach(btn => btn.onclick = () => modal.style.display = "none");
+        
+        window.onclick = (event) => {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    });
+</script>
+{% endblock %}

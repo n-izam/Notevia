@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Order Return Request Approved</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        background-color: #ffffff;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        color: #27ae60;
+      }
+      h3 {
+        color: #2ecc71;
+      }
+      .note {
+        background-color: #eafaf1;
+        border-left: 4px solid #27ae60;
+        padding: 10px 15px;
+        margin-top: 20px;
+        border-radius: 4px;
+        color: #1e8449;
+        font-size: 14px;
+      }
+      p {
+        color: #333;
+        line-height: 1.6;
+      }
+      .footer {
+        margin-top: 30px;
+        font-size: 13px;
+        color: #888;
+        text-align: center;
+      }
+      .order-box {
+        background-color: #f8f8f8;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 15px;
+        border: 1px solid #eee;
+      }
+      .highlight {
+        color: #27ae60;
+        font-weight: bold;
+      }
+      a.button {
+        display: inline-block;
+        background-color: #27ae60;
+        color: #ffffff !important;
+        padding: 10px 18px;
+        margin-top: 15px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      a.button:hover {
+        background-color: #1e8449;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Order Return Request Approved</h2>
+      <p>Hello {{ user.full_name }},</p>
+      <p>
+        Good news! Your return request for the following order has been 
+        <span class="highlight">approved</span> by our admin team.
+      </p>
+
+      <div class="order-box">
+        <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+        <p><strong>Approved Date:</strong> {{ approved_date }}</p>
+      </div>
+
+      <p>
+        Our logistics team will contact you shortly to arrange pickup or further
+        return instructions. Please ensure the product is packed securely and ready
+        for collection.
+      </p>
+
+      <!-- <a href="{{ order_link }}" class="button">View Order Details</a> -->
+
+      <div class="note">
+        ✅ <strong>Tip:</strong> Do not share your order or personal details with anyone.
+        Our team will never ask for sensitive information via email or phone.
+      </div>
+
+      <div class="footer">
+        © {{ current_year }} Your Company Name — All rights reserved.
+      </div>
+    </div>
+  </body>
+</html>

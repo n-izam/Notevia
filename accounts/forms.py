@@ -1,7 +1,8 @@
 from django import forms
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 import re
+from .utils import validationerror
 
 User = get_user_model()
 
@@ -24,34 +25,44 @@ class SignupForm(forms.ModelForm):
             "phone_no": forms.TextInput(attrs={"class": "form-control", "placeholder": "10-digit Phone No (optional)"}),
         }
 
-    # ✅ custom validations
+    # custom validations
+    def clean_full_name(self):
+        full_name = self.cleaned_data.get("full_name")
+        
+        if not re.match(r'^[A-Za-z\s]+$', full_name):
+            validationerror("Name can contain only alphabets and spaces.")
+        else:
+            return full_name
+
     def clean_email(self):
         email = self.cleaned_data.get("email")
+        
         if User.objects.filter(email=email).exists():
-            raise ValidationError("Email already exists")
+            validationerror("Email already exists")
         else:
             return email
 
     def clean_phone_no(self):
         phone = self.cleaned_data.get("phone_no")
         if phone and (not phone.isdigit() or len(phone) != 10):
-            raise ValidationError("Phone number must be exactly 10 digits")
+            validationerror("Phone number must be exactly 10 digits")
         else:
             return phone
 
     def clean_password(self):
         password = self.cleaned_data.get("password")
-        # ✅ at least 8 chars, upper, lower, number, special char
+        
+        # at least 8 chars, upper, lower, number, special char
         if len(password) < 8:
-            raise ValidationError("Password must be at least 8 characters long")
+            validationerror("Password must be at least 8 characters long")
         elif not re.search(r"[A-Z]", password):
-            raise ValidationError("Password must contain at least one uppercase letter")
+            validationerror("Password must contain at least one uppercase letter")
         elif not re.search(r"[a-z]", password):
-            raise ValidationError("Password must contain at least one lowercase letter")
+            raise validationerror("Password must contain at least one lowercase letter")
         elif not re.search(r"[0-9]", password):
-            raise ValidationError("Password must contain at least one digit")
+            raise validationerror("Password must contain at least one digit")
         elif not re.search(r"[@$!%*?&]", password):
-            raise ValidationError("Password must contain at least one special character (@, $, !, %, *, ?, &)")
+            raise validationerror("Password must contain at least one special character (@, $, !, %, *, ?, &)")
         else:
             return password
 
@@ -63,3 +74,75 @@ class SignupForm(forms.ModelForm):
         if password and confirm_password and password != confirm_password:
             self.add_error("confirm_password", "Passwords do not match")
             
+class SigninForm(forms.Form):
+    email = forms.EmailField(required=True)
+    password = forms.CharField(widget=forms.PasswordInput(), required=True)
+
+
+class AddressForm(forms.Form):
+
+    full_name = forms.CharField(max_length=100, required=True)
+    email = forms.EmailField(required=True)
+    phone_no = forms.CharField(max_length=10, required=True)
+    district = forms.CharField(max_length=100, required=True)
+    state = forms.CharField(max_length=100, required=True)
+    city = forms.CharField(max_length=100, required=True)
+    address_field = forms.CharField(required=True)
+    pincode = forms.CharField(max_length=10, required=True)
+
+    def clean_phone_no(self):
+        phone = self.cleaned_data.get("phone_no")
+        if phone and (not phone.isdigit() or len(phone) != 10):
+            validationerror("Phone number must be exactly 10 digits")
+        else:
+            return phone
+        
+    def clean_full_name(self):
+        full_name = self.cleaned_data.get("full_name")
+        
+        if not re.match(r'^[A-Za-z\s]+$', full_name):
+            validationerror("Name can contain only alphabets and spaces.")
+        elif not full_name or len(full_name) < 3:
+            validationerror("Name must contain greater that 3 charecters.")
+        else:
+            return full_name
+        
+    def clean_address_field(self):
+        address_field = self.cleaned_data.get("address_field")
+        if not address_field.replace(" ", "").isalpha():
+            validationerror("Address can contain only alphabets and spaces.")
+        else:
+            return address_field
+    
+class ChangePasswordForm(forms.Form):
+
+    current_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    new_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
+
+    def clean_current_password(self):
+        current_password = self.cleaned_data.get("current_password")
+        if not current_password:
+            validationerror("old password is required")
+        else:
+            return current_password
+        
+    def clean_new_password(self):
+        new_password = self.cleaned_data.get("new_password")
+        current_password = self.cleaned_data.get("current_password")
+        if not new_password and current_password:
+            validationerror("Enter your new password")
+        else:
+            return new_password
+        
+    
+    def clean_confirm_password(self):
+        confirm_password = self.cleaned_data.get("confirm_password")
+        new_password = self.cleaned_data.get("new_password")
+        if not confirm_password and new_password:
+            validationerror("Confirm your password ")
+        if new_password != confirm_password:
+            validationerror("New passwords do not match ")
+        else:
+            return confirm_password
+        

@@ -1,0 +1,330 @@
+
+{% extends 'base_user.html' %}
+
+{% load static %}
+
+{% block title %} Customer {% endblock %}
+
+{% block head %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+{% endblock %}
+
+{% block style %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<link rel="stylesheet" href="{% static 'css/profile_style.css' %}">
+
+<style>
+
+    /* Toast container responsiveness */
+  .toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 5000;
+  }
+
+  @media (max-width: 576px) {
+      .toast-container {
+          top: auto !important;
+          bottom: 1rem !important;
+          right: 50% !important;
+          transform: translateX(50%);
+          width: 90%;
+      }
+  }
+
+  /* Base Toast Style */
+  .toast {
+      backdrop-filter: blur(8px);
+      background: rgba(17, 17, 17, 0.85) !important; /* glassy black */
+      color: #fff !important;
+      border-radius: 12px !important;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+      animation: slideFadeIn 0.5s ease-out;
+  }
+
+  /* Toast body text */
+  .toast-body {
+      font-size: 0.95rem;
+      font-weight: 500;
+  }
+
+  /* SUCCESS */
+  .toast.bg-success {
+      background: rgba(0, 255, 100, 0.15) !important;
+      border-left: 4px solid #00ff73 !important;
+      color: #409365 !important;
+  }
+
+  /* ERROR */
+  .toast.bg-danger {
+      background: rgba(255, 0, 0, 0.15) !important;
+      border-left: 4px solid #ff3b3b !important;
+      color: #bb4141 !important;
+  }
+
+  /* WARNING */
+  .toast.bg-warning {
+      background: rgba(255, 193, 7, 0.15) !important;
+      border-left: 4px solid #ffc107 !important;
+      color: #a1842f !important;
+  }
+
+  /* INFO */
+  .toast.bg-info {
+      background: rgba(0, 200, 255, 0.15) !important;
+      border-left: 4px solid #00cfff !important;
+      color: #3092a8 !important;
+  }
+
+  /* Beautiful animation */
+  @keyframes slideFadeIn {
+      0% {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+      }
+      100% {
+          opacity: 1;
+          transform: translateY(0px) scale(1);
+      }
+  }
+</style>
+
+{% endblock %}
+
+
+{% block content2 %}
+<!-- Right Content -->
+<!-- Right Content -->
+<div class="col-lg-9 col-md-8 mt-4 mt-md-0">
+    <!-- <div>
+        <p class="text-muted small mb-4">Profile ></p>
+    </div> -->
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            {% for crumb in breadcrumb %}
+                {% if forloop.last %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ crumb.name }}</li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+    <section class="profile-content">
+        <h2 class="text-center fw-bold mb-4" style="letter-spacing: 1px;">EDIT YOUR PROFILE</h2>
+
+        <!-- Profile Picture Edit Section -->
+        <form action="{% url 'change_profile' %}" method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <div class="profile-picture-edit text-center mb-5">
+                <div class="position-relative d-inline-block">
+                    <img src="{{ user_profile }}" 
+                            alt="{{ user.full_name }}'s Profile Picture" 
+                            class="profile-img-preview rounded-circle" 
+                            id="profileImagePreview">
+                    <label for="profileImageUpload" class="edit-icon-label" title="Change profile picture">
+                        <i class="bi bi-pencil-fill edit-icons"></i>
+                    </label>
+                    <input type="file" id="profileImageUpload" name="profile" class="d-none" accept="image/*">
+                </div>
+                <button type="submit"  class="btn btn-dark">save</button>
+            </div>
+        </form>
+
+        <!-- Form Section -->
+        <div class="form-container-wrapper p-4 p-md-5">
+            <form action="{% url 'profile_edit' %}" method="POST" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                <div class="row">
+                    <!-- <div class="profile-picture-edit text-center mb-5">
+                        <div class="position-relative d-inline-block">
+                            <img src="{{ user_profile.image.url }}" 
+                                    alt="{{ user.full_name }}'s Profile Picture" 
+                                    class="profile-img-preview rounded-circle" 
+                                    id="profileImagePreview">
+                            <label for="profileImageUpload" class="edit-icon-label" title="Change profile picture">
+                                <i class="bi bi-pencil-fill edit-icons"></i>
+                            </label>
+                            <input type="file" id="profileImageUpload" name="profile_image" class="d-none" accept="image/*">
+                        </div>
+                    </div> -->
+                    <div class="col-md-6 mb-4">
+                        <label for="fullName" class="form-label">Full name</label>
+                        <input type="text" class="form-control" name="full_name" id="fullName" value="{{ user.full_name }}">
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="text" class="form-control" name="email" id="email" value="{{ user.email }}">
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label for="phoneNumber" class="form-label">Phone number</label>
+                        <input type="text" class="form-control" name="phone_no" id="phoneNumber" 
+                                value="{% if user.phone_no %}{{ user.phone_no }}{% else %}{% endif %}">
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn update-btn">UPDATE</button>
+                </div>
+            </form>
+        </div>
+        <!-- Toast container (fixed position) -->
+        <div class="toast-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="toast align-items-center border-0 mb-2
+                        {% if message.tags == 'error' %} bg-danger
+                        {% elif message.tags == 'success' %} bg-success 
+                        {% elif message.tags == 'warning' %} bg-warning 
+                        {% else %} bg-info
+                        {% endif %}
+                    ">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                            {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
+                            {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                            {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                {{ message }}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+
+
+
+{% block modal %}
+
+<!-- Modal for Cropping -->
+<div id="cropModal" class="modal" tabindex="-1" style="display: none; background-color: rgba(0,0,0,0.7); position: fixed; top:0; left:0; right:0; bottom:0; z-index: 1050; justify-content:center; align-items:center;">
+    <div style="background:white; padding:20px; border-radius:10px; max-width:600px; width:90%;">
+        <div style="text-align:right;">
+            <button type="button" id="cancelCrop" class="btn btn-sm btn-danger">Cancel</button>
+        </div>
+        <div>
+            <img id="imageToCrop" style="width:100%; max-height:70vh; object-fit:contain;">
+        </div>
+        <div class="text-center mt-3">
+            <button type="button" id="applyCrop" class="btn btn-success">Set Image</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<!-- toast -->
+<script>
+
+    //document.addEventListener('DOMContentLoaded', function () {
+    //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    //toastElList.map(function (toastEl) {
+        //var t = new bootstrap.Toast(toastEl);
+        //t.show();
+    //});
+//});
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.toast').forEach(el => {
+            new bootstrap.Toast(el).show();
+        });
+    });
+
+    
+</script>
+<script>
+    // this is a reload script
+
+    window.addEventListener("pageshow", function(event) {
+        //If the page is loaded from the browser's back/forward cache
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+    
+    // profile image preview
+
+    document.getElementById('profileImageUpload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-img-preview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    let cropper;
+    const fileInput = document.getElementById('profileImageUpload');
+    const preview = document.getElementById('profileImagePreview');
+    const modal = document.getElementById('cropModal');
+    const imageToCrop = document.getElementById('imageToCrop');
+    const applyCropBtn = document.getElementById('applyCrop');
+    const cancelCropBtn = document.getElementById('cancelCrop');
+
+    fileInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            imageToCrop.src = event.target.result;
+            modal.style.display = 'flex'; // show modal
+
+            // Destroy any existing cropper instance
+            if (cropper) cropper.destroy();
+
+            cropper = new Cropper(imageToCrop, {
+                aspectRatio: NaN,  // free ratio
+                viewMode: 1,
+                background: false,
+            });
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Cancel cropping
+    cancelCropBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        cropper.destroy();
+        fileInput.value = ""; // clear input
+    });
+
+    // Apply cropping
+    applyCropBtn.addEventListener('click', () => {
+        cropper.getCroppedCanvas().toBlob((blob) => {
+            const croppedFile = new File([blob], 'cropped.jpg', { type: 'image/jpeg' });
+            
+            // Update preview
+            const objectUrl = URL.createObjectURL(croppedFile);
+            preview.src = objectUrl;
+
+            // Replace original file input with cropped image
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(croppedFile);
+            fileInput.files = dataTransfer.files;
+
+            modal.style.display = 'none';
+            cropper.destroy();
+        }, 'image/jpeg', 0.5); // 0.5 = 50% quality (adjust as needed)
+    });
+    </script>
+
+{% endblock %}

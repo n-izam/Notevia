@@ -1,0 +1,880 @@
+{% extends "base1.html" %}
+
+{% load static %}
+
+{% block title %} Order confirmation {% endblock %}
+<!-- {% block head %} {% endblock %} -->
+
+{% block style %}
+<style>
+    /* Left Column: Order Summary Card */
+    .order-summary-card {
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 15px; /* Note: The CSS has both 20px and 15px, I'll use 15px to match the last rule */
+        box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+        height: 100%; /* This ensures the card can stretch to the full height of the column if needed */
+    }
+
+    .summary-item-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px; /* Note: The CSS has both 8px and 10px, using the last rule */
+    }
+
+    /* Right Column: General Card Styling */
+    .checkout-card {
+        background-color: #ffffff;
+        border: 1px solid #e9ecef;
+        border-radius: 15px;
+        overflow: hidden; /* This is important for the title background to look correct with rounded corners */
+    }
+
+    .checkout-card-title {
+        background-color: #f8f9fa;
+        padding: 0.75rem 1.5rem;
+        margin: 0;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .checkout-card .card-content {
+        padding: 1.5rem;
+    }
+
+    /* Address Card Specifics */
+    .address-text {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: #555;
+    }
+
+    /* Payment Method Card Specifics */
+    .payment-option {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        cursor: pointer;
+    }
+
+    .payment-option:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Custom Radio Button Styling */
+    .payment-option input[type="radio"] {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        margin-right: 1rem;
+        width: 1.25em;
+        height: 1.25em;
+        border: 1px solid #ced4da;
+        border-radius: 50%;
+        display: grid;
+        place-content: center;
+    }
+
+    .payment-option input[type="radio"]::before {
+        content: "";
+        width: 0.65em;
+        height: 0.65em;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em #000;
+    }
+
+    .payment-option input[type="radio"]:checked::before {
+        transform: scale(1);
+    }
+
+    .payment-option input[type="radio"]:checked {
+        border-color: #000;
+    }
+
+    .payment-option label {
+        flex-grow: 1;
+        cursor: pointer;
+    }
+
+    /* Price Details Card Specifics */
+    .price-details span {
+        font-size: 0.9rem;
+    }
+
+    /* Coupon Input Group Styling */
+    .input-group .form-control {
+        border-right: 0;
+    }
+
+    .input-group .btn {
+        border-radius: 0;
+    }
+
+    .input-group .btn:last-child {
+        border-top-right-radius: 0.375rem;
+        border-bottom-right-radius: 0.375rem;
+    }
+
+    /* Container for the scrollable product list */
+    .product-list-scrollable {
+        /* 
+        This is the key property. 
+        Set a max-height that comfortably fits about 5 items.
+        You may need to adjust this value based on your exact item height and margins.
+        */
+        max-height: 450px; 
+        
+        /* 
+        This tells the browser to automatically add a vertical scrollbar 
+        ONLY when the content inside exceeds the max-height.
+        */
+        overflow-y: auto;
+        
+        /* 
+        Adds some padding on the right to prevent the content from
+        being hidden underneath the scrollbar.
+        */
+        padding-right: 15px;
+    }
+
+    /* --- Optional: Clean Custom Scrollbar Styling (for modern browsers) --- */
+
+    .product-list-scrollable::-webkit-scrollbar {
+    width: 8px;
+    }
+
+    .product-list-scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+    }
+
+    .product-list-scrollable::-webkit-scrollbar-thumb {
+    background: #cccccc;
+    border-radius: 10px;
+    }
+
+    .product-list-scrollable::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+    }
+
+    /* --- Ensure your existing styles are present --- */
+
+    .order-summary-card {
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+        height: 100%;
+    }
+
+    .summary-item-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    /* --- STYLES FOR THE ORDER SUMMARY --- */
+
+    /* Style for the 'Item' and 'Price' header */
+    .product-list-header h6:last-child {
+        min-width: 80px; /* Sets a minimum width for the "Price" column */
+        text-align: right; /* Aligns the "Price" text to the right */
+    }
+
+    /* 1. Container for the scrollable product list */
+    .product-list-scrollable {
+        max-height: 400px;  /* Sets the maximum height before scrolling begins */
+        overflow-y: auto;   /* Adds a vertical scrollbar only when needed */
+        padding: 1rem;      /* Adds some internal spacing */
+        border: 1px solid #e9ecef; /* Adds a clean, light gray border */
+        border-radius: 10px; /* Rounds the corners of the border */
+    }
+
+    /* 2. Price column alignment */
+    .summary-item .item-price {
+        min-width: 80px;    /* Same width as the header to ensure alignment */
+        text-align: right;  /* Aligns the actual price to the right */
+    }
+
+    /* (Optional) Clean Custom Scrollbar Styling */
+    .product-list-scrollable::-webkit-scrollbar {
+    width: 8px;
+    }
+
+    .product-list-scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+    }
+
+    .product-list-scrollable::-webkit-scrollbar-thumb {
+    background: #cccccc;
+    border-radius: 10px;
+    }
+
+    .product-list-scrollable::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+    }
+
+    /* --- Ensure your existing styles are present --- */
+
+    .order-summary-card {
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+        height: 100%;
+    }
+
+    .summary-item-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    /* modal style start here */
+
+    /* Modal Styling Only */
+    .modal-header {
+        background-color: #212529;
+        color: white;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .modal-body {
+        background-color: #f8f9fa;
+        padding: 20px;
+    }
+
+    .coupon-scroll {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    /* Coupon Card Styling */
+    .coupon-card {
+        background: white;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 12px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .coupon-card:hover {
+        border-color: #212529;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .coupon-code {
+        font-size: 18px;
+        font-weight: bold;
+        color: #212529;
+        word-break: break-all;
+        font-family: 'Courier New', monospace;
+        background-color: #e9ecef;
+        padding: 8px 10px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+    }
+
+    .coupon-discount {
+        color: #28a745;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .coupon-expiry {
+        color: #6c757d;
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    .copy-btn {
+        background-color: #212529;
+        color: white;
+        border: none;
+        padding: 6px 16px;
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        width: 100%;
+    }
+
+    .copy-btn:hover {
+        background-color: #0d6efd;
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Scrollbar Styling */
+    .coupon-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .coupon-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .coupon-scroll::-webkit-scrollbar-thumb {
+        background: #212529;
+        border-radius: 10px;
+    }
+
+    .coupon-scroll::-webkit-scrollbar-thumb:hover {
+        background: #0d6efd;
+    }
+
+    .modal-footer {
+        background-color: #f8f9fa;
+    }
+
+    /* Responsive */
+    @media (max-width: 576px) {
+        .coupon-card {
+            padding: 12px;
+        }
+
+        .coupon-code {
+            font-size: 16px;
+        }
+
+        .coupon-scroll {
+            max-height: 60vh;
+        }
+    }
+
+    /* Toast container responsiveness */
+    .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 5000;
+      }
+  
+      @media (max-width: 576px) {
+          .toast-container {
+              top: auto !important;
+              bottom: 1rem !important;
+              right: 50% !important;
+              transform: translateX(50%);
+              width: 90%;
+          }
+      }
+  
+      /* Base Toast Style */
+      .toast {
+          backdrop-filter: blur(8px);
+          background: rgba(17, 17, 17, 0.85) !important; /* glassy black */
+          color: #fff !important;
+          border-radius: 12px !important;
+          padding: 0.75rem 1rem;
+          border: 1px solid rgba(255, 255, 255, 0.15) !important;
+          box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+          animation: slideFadeIn 0.5s ease-out;
+      }
+  
+      /* Toast body text */
+      .toast-body {
+          font-size: 0.95rem;
+          font-weight: 500;
+      }
+  
+      /* SUCCESS */
+      .toast.bg-success {
+          background: rgba(0, 255, 100, 0.15) !important;
+          border-left: 4px solid #00ff73 !important;
+          color: #409365 !important;
+      }
+  
+      /* ERROR */
+      .toast.bg-danger {
+          background: rgba(255, 0, 0, 0.15) !important;
+          border-left: 4px solid #ff3b3b !important;
+          color: #bb4141 !important;
+      }
+  
+      /* WARNING */
+      .toast.bg-warning {
+          background: rgba(255, 193, 7, 0.15) !important;
+          border-left: 4px solid #ffc107 !important;
+          color: #a1842f !important;
+      }
+  
+      /* INFO */
+      .toast.bg-info {
+          background: rgba(0, 200, 255, 0.15) !important;
+          border-left: 4px solid #00cfff !important;
+          color: #3092a8 !important;
+      }
+  
+      /* Beautiful animation */
+      @keyframes slideFadeIn {
+          0% {
+              opacity: 0;
+              transform: translateY(20px) scale(0.95);
+          }
+          100% {
+              opacity: 1;
+              transform: translateY(0px) scale(1);
+          }
+      }
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="mx-2 my-2">
+
+    <main class="container my-5 py-5">
+        
+            <div class="row g-5">
+                <!-- Left Column: Order Summary -->
+                <div class="col-lg-7">
+                    <div class="order-summary-card">
+                        <h4 class="mb-4">Order Summary</h4>
+                
+                        <!-- A. HEADER FOR THE ITEMS LIST -->
+                        <div class="product-list-header d-flex justify-content-between mb-3">
+                            <h6 class="text-muted">Item</h6>
+                            <h6 class="text-muted">Price</h6>
+                        </div>
+                
+                        <!-- B. SCROLLABLE CONTAINER -->
+                        <div class="product-list-scrollable">
+
+                            {% for item in cartitem_with_image %}
+                            <!-- Product 1 -->
+                            <div class="summary-item d-flex align-items-center mb-4">
+                                <img src="{{item.main_image.image.url}}" alt="Papergrid - KING SIZE" class="summary-item-img me-4">
+                                <div class="flex-grow-1">
+                                    <p class="mb-1"><strong>{{item.cart_item.product.brand.name}} - {{item.cart_item.product.name}} </strong></p>
+                                    <p class="mb-0"><span class="text-muted fst-italic fw-light" style="font-size: 14px;">variant type: </span>{{item.cart_item.variant.name}}</p>
+                                    <p class="text-muted small mb-1">Quantity : {{item.cart_item.quantity}}</p>
+                                    <span class="text-success fst-italic fw-light" style="font-size: 14px;">for quantity: {{item.cart_item.variant.discount_percent}}%off</span>
+                                </div>
+                                <!-- C. WRAPPED PRICE FOR ALIGNMENT -->
+                                <div class="item-price">
+                                    <!-- <span class=" badge bg-success rounded-pill">{{item.cart_item.discount_offer}}%off</span> -->
+                                    <del class="fw-bold mb-0">Rs. {{item.cart_item.main_subtotal}}</del>
+                                    <p class="fw-bold mb-0">Rs. {{item.cart_item.after_discount_subtotal}}</p>
+                                    <span class="text-success">dicount: Rs. -{{item.cart_item.discount_subtotal}}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <!-- Product 2 -->
+                            <!-- <div class="summary-item d-flex align-items-center mb-4">
+                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Papergrid - SHORT NOTE" class="summary-item-img me-4">
+                                <div class="flex-grow-1">
+                                    <p class="mb-1"><strong>Papergrid - SHORT NOTE</strong></p>
+                                    <p class="text-muted small mb-1">Quantity : 1</p>
+                                </div>
+                                <div class="item-price">
+                                    <p class="fw-bold mb-0">Rs. 30</p>
+                                </div>
+                            </div> -->
+                
+                            <!-- Product 3 -->
+                            <!-- <div class="summary-item d-flex align-items-center mb-4">
+                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Another Product" class="summary-item-img me-4">
+                                <div class="flex-grow-1">
+                                    <p class="mb-1"><strong>Another Product</strong></p>
+                                    <p class="text-muted small mb-1">Quantity : 2</p>
+                                </div>
+                                <div class="item-price">
+                                    <p class="fw-bold mb-0">Rs. 100</p>
+                                </div>
+                            </div> -->
+                
+                            <!-- ... more products ... -->
+                            <!-- Product 4 -->
+                            <!-- <div class="summary-item d-flex align-items-center mb-4">
+                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Another Product" class="summary-item-img me-4">
+                                <div class="flex-grow-1">
+                                    <p class="mb-1"><strong>Another Product</strong></p>
+                                    <p class="text-muted small mb-1">Quantity : 2</p>
+                                </div>
+                                <div class="item-price">
+                                    <p class="fw-bold mb-0">Rs. 100</p>
+                                </div>
+                            </div> -->
+                            <!-- Product 5 -->
+                            <!-- <div class="summary-item d-flex align-items-center mb-4">
+                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Another Product" class="summary-item-img me-4">
+                                <div class="flex-grow-1">
+                                    <p class="mb-1"><strong>Another Product</strong></p>
+                                    <p class="text-muted small mb-1">Quantity : 2</p>
+                                </div>
+                                <div class="item-price">
+                                    <p class="fw-bold mb-0">Rs. 100</p>
+                                </div>
+                            </div> -->
+                            <!-- Product 6 -->
+                            <!-- <div class="summary-item d-flex align-items-center mb-4">
+                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Another Product" class="summary-item-img me-4">
+                                <div class="flex-grow-1">
+                                    <p class="mb-1"><strong>Another Product</strong></p>
+                                    <p class="text-muted small mb-1">Quantity : 2</p>
+                                </div>
+                                <div class="item-price">
+                                    <p class="fw-bold mb-0">Rs. 100</p>
+                                </div>
+                            </div> -->
+                            <!-- Product 7 -->
+                            <!-- <div class="summary-item d-flex align-items-center mb-4">
+                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Another Product" class="summary-item-img me-4">
+                                <div class="flex-grow-1">
+                                    <p class="mb-1"><strong>Another Product</strong></p>
+                                    <p class="text-muted small mb-1">Quantity : 2</p>
+                                </div>
+                                <div class="item-price">
+                                    <p class="fw-bold mb-0">Rs. 100</p>
+                                </div>
+                            </div> -->
+                
+                        </div> <!-- Close the scrollable container -->
+                        
+                        <hr>
+                        <!-- <div class="d-flex justify-content-between fw-bold">
+                            <span>Subtotal</span>
+                            <div class="">
+                                <span>Rs. {{ cart.total_price }}</span>
+                                <span class="text-success fst-italic fw-light">dicount: Rs. -{{cart.deduct_amount}}</span>
+                            </div>
+
+                        </div> -->
+                        <div class="fw-bold">
+                            <div class="d-flex justify-content-between">
+                            <span>Total</span>
+                            <span>Rs. {{ cart.total_price }}</span>
+                            </div>
+                        
+                            <div class="d-flex justify-content-between text-success fst-italic fw-light">
+                            <span>Discount</span>
+                            <span>-Rs. {{ cart.deduct_amount }}</span>
+                            </div>
+                        
+                            <div class="d-flex justify-content-between mt-2 border-top pt-2">
+                            <span>Subtotal</span>
+                            <span>Rs. {{ cart.main_total_price }}</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- Delivery Address Card -->
+                        <div class="checkout-card mb-4">
+                            <h6 class="checkout-card-title">DELIVERY ADDRESS</h6>
+                            <div class="card-content">
+                                <p class="mb-1"><strong>DELIVERING TO</strong></p>
+                                <p class="address-text mb-0">
+                                    
+                                    {{select_address.full_name}}-{{select_address.phone_no}}<br>
+                                    AM {{select_address.full_name}} AM FROM {{select_address.city}} {{select_address.address}} {{select_address.district}}, {{select_address.state}} - {{select_address.pin_code}}
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Right Column: Address, Payment & Price Details -->
+                <div class="col-lg-5">
+                    <form action="{% url 'place_order' %}" method="get">
+                        {% csrf_token %}
+                        {% if select_address %}
+                        <input type="hidden" name="address" value="{{select_address.id}}">
+                        {% endif %}
+                        {% if applied_coupon %}
+                        <input type="hidden" name="apply_coupon" value="{{valid_coupon}}">
+                        {% endif %}
+                        {% if final_over_all_amount %}
+                        <input type="hidden" name="final_amount" value="{{final_over_all_amount}}"> 
+                        {% endif %}
+                        <!-- Payment Method Card -->
+                        <div>
+                            <div class="checkout-card mb-4">
+                                <h6 class="checkout-card-title">PAYMENT METHOD</h6>
+                                <div class="card-content">
+                                    <!-- Payment options here -->
+                                    {% if final_over_all_amount > 1000 %}
+                                    <div class="payment-option">
+                                        <input type="radio" id="cod" name="payment" value="COD" disabled>
+                                        <label for="cod">
+                                            <span class="fw-bold">CASH ON DELIVERY</span>
+                                            <small class="d-block text-muted">COD not available for orders above Rs 1000</small>
+                                        </label>
+                                    </div>
+                                    {% else %}
+                                    <div class="payment-option">
+                                        <input type="radio" id="cod" name="payment" value="COD" >
+                                        <label for="cod">
+                                            <span class="fw-bold">CASH ON DELIVERY</span>
+                                            <small class="d-block text-muted">COD not available for orders above Rs 1000</small>
+                                        </label>
+                                    </div>
+                                    {% endif %}
+                                    <div class="payment-option">
+                                        <input type="radio" id="online" name="payment" value="ONLINE">
+                                        <label for="online">
+                                            <span class="fw-bold">ONLINE PAYMENT</span>
+                                            <small class="d-block text-muted">Pay using UPI, Card, or Net Banking</small>
+                                        </label>
+                                    </div>
+                                    <div class="payment-option">
+                                        <input type="radio" id="wallet" name="payment" value="Wallet" >
+                                        <label for="wallet">
+                                            <span class="fw-bold">PAYMENT THROUGH WALLET</span>
+                                            <small class="d-block text-muted">Wallet Payment is Beneficial</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Price Details Card -->
+                        <div class="checkout-card">
+                            <h6 class="checkout-card-title">PRICE DETAILS</h6>
+                            <div class="card-content">
+                                <div class="price-details">
+                                    <div class="d-flex justify-content-between mb-2"><span>Total MRP</span> <span>Rs. {{cart.total_price}}</span></div>
+                                    <div class="d-flex justify-content-between mb-2 text-success"><span>Discount on MRP</span> <span>- Rs. {{cart.deduct_amount}}</span></div>
+                                    <div class="d-flex justify-content-between mb-2"><span>Subtotal</span> <span>Rs. {{cart.main_total_price}}</span></div>
+                                    <div class="d-flex justify-content-between mb-2"><span>Delivery Charges</span> <span>Free</span></div>
+                                    <div class="d-flex justify-content-between mb-2 text-success"><span>Coupon Discount</span> 
+                                        {% if not applied_coupon %}<span>- Rs. 00.00</span>{% else %}
+                                        <span>- Rs. {{applied_coupon}}</span>{% endif %}
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-3"><span>Tax ({{tax}}%)</span> <span>Rs. {{final_tax_with_coupon}}</span></div>
+                                    
+                                </div>
+                                {% if not applied_coupon %}
+                                    <div class="input-group mb-3">
+                                            <input type="text" id="couponInput" name="applied_coupon" class="form-control rounded" placeholder="KAKAKA">
+                                            <button class="btn btn-dark mx-2 rounded" id="applyCoupon" type="button">APPLY</button>
+                                            <!-- VIEW COUPONS Button that triggers modal -->
+                                            <button class="btn btn-dark rounded" type="button" data-bs-toggle="modal" data-bs-target="#couponModal">VIEW COUPONS</button>
+                                    </div>
+                                    {% else %}
+                                    <div class="input-group mb-3">
+                                        
+                                        <input type="text" id="couponInput" class="form-control rounded" value="" placeholder="{{valid_coupon}}" disabled>
+                                        <button class="btn btn-dark mx-2 rounded" id="applyCoupon" type="button">REMOVE COUPON</button>
+                                        <!-- VIEW COUPONS Button that triggers modal -->
+                                        <!-- <button class="btn btn-dark rounded" type="button" data-bs-toggle="modal" data-bs-target="#couponModal">VIEW COUPONS</button> -->
+                                    </div>
+                                {% endif %}
+                                <hr>
+                                <div class="d-flex justify-content-between align-items-center fw-bold">
+                                    <div>
+                                        <h5 class="mb-0">Total</h5>
+                                        <small class="fw-normal text-muted">incl. taxes</small>
+                                    </div>
+                                    <h4 class="mb-0">Rs. {{final_over_all_amount}}</h4>
+                                </div>
+                                <form action="" method="get">
+                                    
+                                    <input type="hidden" >
+                                    <div class="d-grid mt-4">
+                                        <button class="btn btn-dark btn-lg" type="submit">CONTINUE</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- Toast container (fixed position) -->
+                    <div class="toast-container">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="toast align-items-center border-0 mb-2
+                                    {% if message.tags == 'error' %} bg-danger
+                                    {% elif message.tags == 'success' %} bg-success 
+                                    {% elif message.tags == 'warning' %} bg-warning 
+                                    {% else %} bg-info
+                                    {% endif %}
+                                ">
+                                    <div class="d-flex">
+                                        <div class="toast-body">
+                                        {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
+                                        {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                                        {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                            {{ message }}
+                                        </div>
+                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        
+    </main>
+</div>
+
+{% endblock %}
+
+{% block modal %}
+
+<!-- Coupon Modal -->
+<div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="couponModalLabel">🎟️ Active Coupons</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% if coupons %}
+            <!-- Modal Body with Scrollable Coupons -->
+            <div class="modal-body">
+                <div class="coupon-scroll">
+                    {% for coupon in coupons %}
+                    <!-- Coupon 1 -->
+                    <div class="coupon-card">
+                        <div class="coupon-code text-center">{{coupon.code}}</div>
+                        <div class="coupon-discount d-flex justify-content-between align-item-center">
+                            <div class=""><span class="fw-light">min purchase:{{coupon.min_purchase_amount}}</span></div>
+                            <div class="">💰 Get {{coupon.discount_percentage}}% Off</div>
+                        </div>
+                        <div class="coupon-expiry d-flex justify-content-between align-item-center">
+                            <div>⏰ Expires: {{coupon.valid_to|date:"j M Y"}}</div>
+                            <div>usage limit is {{coupon.usage_limit}}</div>
+                        </div>
+                        <button class="copy-btn" onclick="copyToClipboard('{{coupon.code}}')">📋 Copy Code</button>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Coupon 2 -->
+                    <!-- <div class="coupon-card">
+                        <div class="coupon-code">FLAT50</div>
+                        <div class="coupon-discount">💰 Get $50 Off</div>
+                        <div class="coupon-expiry">⏰ Expires: Dec 25, 2024</div>
+                        <button class="copy-btn" onclick="copyToClipboard('FLAT50')">📋 Copy Code</button>
+                    </div> -->
+
+                    <!-- Coupon 3 -->
+                    <!-- <div class="coupon-card">
+                        <div class="coupon-code">FREESHIP</div>
+                        <div class="coupon-discount">🚚 Free Shipping</div>
+                        <div class="coupon-expiry">⏰ Expires: Jan 15, 2025</div>
+                        <button class="copy-btn" onclick="copyToClipboard('FREESHIP')">📋 Copy Code</button>
+                    </div> -->
+
+                    <!-- Coupon 4 -->
+                    <!-- <div class="coupon-card">
+                        <div class="coupon-code">WELCOME15</div>
+                        <div class="coupon-discount">💰 Get 15% Off</div>
+                        <div class="coupon-expiry">⏰ Expires: Jan 20, 2025</div>
+                        <button class="copy-btn" onclick="copyToClipboard('WELCOME15')">📋 Copy Code</button>
+                    </div> -->
+
+                    <!-- Coupon 5 -->
+                    <!-- <div class="coupon-card">
+                        <div class="coupon-code">TRIPLE10</div>
+                        <div class="coupon-discount">💰 Get 10% Off (Every 3 purchases)</div>
+                        <div class="coupon-expiry">⏰ Expires: Feb 1, 2025</div>
+                        <button class="copy-btn" onclick="copyToClipboard('TRIPLE10')">📋 Copy Code</button>
+                    </div> -->
+
+                    <!-- Coupon 6 -->
+                    <!-- <div class="coupon-card">
+                        <div class="coupon-code">VIP100</div>
+                        <div class="coupon-discount">💰 Get 25% Off + Free Shipping</div>
+                        <div class="coupon-expiry">⏰ Expires: Jan 30, 2025</div>
+                        <button class="copy-btn" onclick="copyToClipboard('VIP100')">📋 Copy Code</button>
+                    </div> -->
+                </div>
+            </div>
+            {% else %}
+            <div class="modal-body">
+                <h4 class="text-warning" > there is no coupons available </h4>
+
+            </div>
+            {% endif %}
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    // this is a reload script
+
+    window.addEventListener("pageshow", function(event) {
+        //If the page is loaded from the browser's back/forward cache
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
+    async function copyToClipboard(code) {
+        try {
+            // Use the modern Clipboard API
+            await navigator.clipboard.writeText(code);
+            //alert('Code copied to clipboard: ' + code); // optional feedback
+        } catch (err) {
+            // Fallback for older browsers
+            const tempInput = document.createElement('input');
+            tempInput.value = code;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('Code copied to clipboard (fallback): ' + code);
+        }
+    }
+
+    document.getElementById('applyCoupon').addEventListener('click', function() {
+        const coupon = document.getElementById('couponInput').value;
+    
+        // Update the URL query parameter
+        const url = new URL(window.location);
+        url.searchParams.set('applied_coupon', coupon);
+    
+        // Navigate to the new URL with query param
+        window.location.href = url.toString();
+    });
+    
+</script>
+<script>
+
+    //document.addEventListener('DOMContentLoaded', function () {
+    //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    //toastElList.map(function (toastEl) {
+        //var t = new bootstrap.Toast(toastEl);
+        //t.show();
+    //});
+//});
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.toast').forEach(el => {
+            new bootstrap.Toast(el).show();
+        });
+    });
+
+    
+</script>
+
+{% endblock %}

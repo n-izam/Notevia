@@ -1,0 +1,226 @@
+{% extends "static_base.html" %}
+
+{% load static %}
+{% load socialaccount %}
+
+{% block title %} Home Page {% endblock %}
+{% block head %}
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0"> 
+{% endblock %}
+
+{% block style %}
+
+<style>
+
+    body{
+        background-color: #f9f9f9;
+    }
+    .main-cont {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+         /* A light grey background to see the form container */
+    }
+
+    .signup-container {
+      width: 100%;
+      max-width: 400px;
+    }
+    .btn-black {
+      background-color: #000;
+      color: #fff;
+    }
+    .btn-black:hover {
+      background-color: #333;
+      color: #fff;
+    }
+    .google-btn {
+      border: 1px solid #ddd;
+      background-color: #fff;
+    }
+
+    /* Toast container responsiveness */
+    .toast-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 5000;
+    }
+
+    @media (max-width: 576px) {
+      .toast-container {
+          top: auto !important;
+          bottom: 1rem !important;
+          right: 50% !important;
+          transform: translateX(50%);
+          width: 90%;
+      }
+    }
+
+    /* Base Toast Style */
+    .toast {
+      backdrop-filter: blur(8px);
+      background: rgba(17, 17, 17, 0.85) !important; /* glassy black */
+      color: #fff !important;
+      border-radius: 12px !important;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+      animation: slideFadeIn 0.5s ease-out;
+    }
+
+    /* Toast body text */
+    .toast-body {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* SUCCESS */
+    .toast.bg-success {
+      background: rgba(0, 255, 100, 0.15) !important;
+      border-left: 4px solid #00ff73 !important;
+      color: #409365 !important;
+    }
+
+    /* ERROR */
+    .toast.bg-danger {
+      background: rgba(255, 0, 0, 0.15) !important;
+      border-left: 4px solid #ff3b3b !important;
+      color: #bb4141 !important;
+    }
+
+    /* WARNING */
+    .toast.bg-warning {
+      background: rgba(255, 193, 7, 0.15) !important;
+      border-left: 4px solid #ffc107 !important;
+      color: #a1842f !important;
+    }
+
+    /* INFO */
+    .toast.bg-info {
+      background: rgba(0, 200, 255, 0.15) !important;
+      border-left: 4px solid #00cfff !important;
+      color: #3092a8 !important;
+    }
+
+    /* Beautiful animation */
+    @keyframes slideFadeIn {
+      0% {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+      }
+      100% {
+          opacity: 1;
+          transform: translateY(0px) scale(1);
+      }
+    }
+  </style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="main-cont">
+    <div class="signup-container text-center">
+        <h3 class="mb-4 fw-bold">Log in</h3>
+        
+        <form action="{% url 'signin'  %}" method="POST" novalidate>
+          {% csrf_token %}
+          <div class="mb-3 text-start">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="Email" value="{% if form.email.errors %} {{ form.email.value }} {% endif %}">
+            {% if form.email.errors %}
+            <p class="text-danger small">{{ form.email.errors.0 }}</p>
+            {% endif %}
+          </div>
+          
+          <div class="mb-3 text-start">
+            <label class="form-label">Password</label>
+            <div class="input-group">
+              <input type="password" class="form-control" name="password" placeholder="Password.">
+              <!-- <span class="input-group-text"><i class="bi bi-eye"></i></span> -->
+            </div>
+            {% if form.password.errors %}
+            <p class="text-danger small">{{ form.password.errors.0 }}</p>
+            {% endif %}
+          </div>
+    
+          
+          <p class="small text-end">
+            <a class="text-decoration-none" href="{% url 'forgot_pass' %}">Forgot Password?</a>
+          </p>
+        
+          
+          <button type="submit" class="btn btn-black w-100 mb-3">Log in</button>
+    
+          <div class="d-flex align-items-center mb-3">
+            <hr class="flex-grow-1">
+            <span class="px-2 text-muted">Or Register with</span>
+            <hr class="flex-grow-1">
+          </div>
+    
+          <a type="button" href="{% provider_login_url 'google' %}" class="btn google-btn w-100">
+            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" class="me-2">
+            Google
+          </a>
+          <p class="small">
+            Create an account <a href="{% url 'signup' %}">Sign up</a>
+          </p>
+        </form>
+          <!-- Toast container (fixed position) -->
+          <div class="toast-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="toast align-items-center border-0 mb-2
+                        {% if message.tags == 'error' %} bg-danger
+                        {% elif message.tags == 'success' %} bg-success 
+                        {% elif message.tags == 'warning' %} bg-warning 
+                        {% else %} bg-info
+                        {% endif %}
+                    ">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                              {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
+                              {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                              {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                {{ message }}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+      </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script>
+
+  //document.addEventListener('DOMContentLoaded', function () {
+    //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    //toastElList.map(function (toastEl) {
+        //var t = new bootstrap.Toast(toastEl);
+        //t.show();
+    //});
+//});
+
+  document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.toast').forEach(el => {
+          new bootstrap.Toast(el).show();
+      });
+  });
+
+  
+</script>
+
+{% endblock %}

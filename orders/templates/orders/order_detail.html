@@ -1,0 +1,625 @@
+
+{% extends 'base_user.html' %}
+
+{% load static %}
+
+{% block title %} Address {% endblock %}
+
+{% block head %}
+
+    {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<link rel="stylesheet" href="{% static 'css/profile_style.css' %}">
+
+<style>
+    .order-details-container {
+        font-family: sans-serif;
+    }
+    
+    .summary-card,
+    .order-list-card {
+        background-color: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .status-pending {
+        color: #f1a831;
+        background-color: rgba(230, 201, 60, 0.296);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-shipped {
+        color: #2883a7;
+        background-color: rgba(40, 167, 159, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-cancelled {
+        color: #a73128;
+        background-color: rgba(167, 40, 40, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-deliverd {
+        color: #28a745;
+        background-color: rgba(186, 72, 37, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    
+    
+    .product-count {
+        background-color: #e9ecef;
+        color: #495057;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 0.8em;
+        font-weight: normal;
+    }
+    
+    .product-item {
+        border-bottom: 1px solid #dee2e6;
+    }
+    .product-item:last-child {
+        border-bottom: none;
+    }
+    
+    .product-thumbnail {
+        width: 50px;
+        height: 50px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+    }
+    .product-image {
+        width: 100px;
+        height: 100px; /* Made the image square for consistency */
+        object-fit: cover; /* Prevents image from stretching */
+        border-radius: 10px;
+        border: 1px solid #e9ecef; /* Added a proper border */
+    }
+    
+    .sku-link {
+        color: #0d6efd;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .sku-link:hover {
+        text-decoration: underline;
+    }
+    
+    .totals-section {
+        border-top: 1px solid #dee2e6;
+    }
+
+    /* rating button */
+    .rating-btn {
+        display: inline-block;
+        background-color: #ff9138e0;   /* fresh green */
+        color: #fff;
+        padding: 5px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: background-color 0.25s ease, transform 0.15s ease;
+    }
+
+    .rating-btn:hover {
+        background-color: #f0be8f;  /* darker green on hover */
+        color: #b95722;
+        transform: translateY(-2px); /* slight lift effect */
+    }
+    
+    .rating-btn:active {
+        transform: translateY(0); /* return on click */
+    }
+    /* return item button */
+    .return-item-btn {
+        display: inline-block;
+        background-color: #ff5338e0;   /* fresh green */
+        color: #fff;
+        padding: 5px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: background-color 0.25s ease, transform 0.15s ease;
+    }
+
+    .return-item-btn:hover {
+        background-color: #f9b6a3;  /* darker green on hover */
+        color: #9f0b0b;
+        transform: translateY(-2px); /* slight lift effect */
+    }
+    
+    .return-item-btn:active {
+        transform: translateY(0); /* return on click */
+    }
+
+    
+    /* return item style */
+    /* Add this to your existing styles */
+    /*
+    .request-management-card {
+        background-color: rgb(255, 255, 254); 
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    
+    .request-management-card .card-title-secondary {
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .request-management-card .reason-quote {
+        border-left: 3px solid #6c757d;
+        padding-left: 1rem;
+        margin: 0.5rem 0 0 0;
+        font-style: italic;
+    }
+    */
+
+    /* --- 1. The Scrollable Wrapper --- */
+    .scrollable-requests-wrapper {
+        /* 
+        Adjust this height based on the average size of your cards. 
+        approx 450px - 500px is usually enough to show 2 cards fully.
+        If a 3rd card appears, the scrollbar will trigger.
+        */
+        max-height: 480px; 
+        overflow-y: auto; /* Adds scrollbar only when needed */
+        overflow-x: hidden;
+        padding-right: 5px; /* Prevents scrollbar from overlapping content */
+        padding-bottom: 10px; /* Space at the bottom */
+    }
+
+    /* Optional: Custom Scrollbar styling for Webkit browsers (Chrome/Safari) */
+    .scrollable-requests-wrapper::-webkit-scrollbar {
+        width: 6px;
+    }
+    .scrollable-requests-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    .scrollable-requests-wrapper::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+    }
+    .scrollable-requests-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    /* --- 2. Your Existing Card Styles (Refined) --- */
+    .request-management-card {
+        background-color: rgb(255, 255, 254);
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        /* Ensure it doesn't spill out horizontally */
+        width: 100%;
+        box-sizing: border-box; 
+    }
+
+    .request-management-card .card-title-secondary {
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .request-management-card .reason-quote {
+        border-left: 3px solid #6c757d;
+        padding-left: 1rem;
+        margin: 0.5rem 0 1rem 0; /* Added bottom margin */
+        font-style: italic;
+        font-size: 0.95rem;
+        color: #555;
+        background-color: #f8f9fa; /* Slight background for readability */
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-radius: 0 4px 4px 0;
+    }
+
+    /* --- 3. Responsive Design (Mobile) --- */
+    @media (max-width: 768px) {
+        .scrollable-requests-wrapper {
+            /* On mobile, maybe allow it to take up a percentage of the screen height */
+            max-height: 60vh; 
+        }
+
+        .request-management-card {
+            padding: 1rem; /* Reduce padding on small screens */
+            margin-top: 1rem !important; /* Reduce the mt-4 spacing */
+        }
+
+        .request-management-card .card-title-secondary {
+            font-size: 1rem; /* Slightly smaller title */
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .request-management-card .reason-quote {
+            font-size: 0.9rem;
+        }
+    }
+
+
+
+    
+</style>
+
+{% endblock %}
+
+
+
+{% block content2 %}
+
+<!-- Right Content -->
+<div class="col-lg-9">
+    <div class="container my-4 my-md-5 order-details-container">
+        <!-- Breadcrumb Header -->
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                {% for crumb in breadcrumb %}
+                    {% if forloop.last %}
+                        <li class="breadcrumb-item active" aria-current="page">{{ crumb.name }}</li>
+                    {% else %}
+                        <li class="breadcrumb-item"><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </nav>
+    
+        <h2 class="mb-4 fw-bold">Order Details</h2>
+    
+        <div class="row">
+            <!-- Left Column: Order Summary -->
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <div class="summary-card p-4">
+                    <p class="fw-bold">Order# {{order.order_id}}</p>
+                    <p class="text-muted mb-2">Ordered on {{ order.created_at|date:"j F Y" }}</p>
+                    
+                    <hr>
+                    <div class="d-flex justify-content-between border-top border-bottom border-2">
+                        <h6 class="fw-bold">Shipping Address</h6>
+                        <h6 class="fw-bold text-end">Payment Method</h6>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p class="text-muted small">
+                            Address type: {{order.orders_address.address_type}},<br>
+                            {{order.orders_address.full_name}},<br>
+                            {{order.orders_address.address}},<br>
+                            {{order.orders_address.city}}, {{order.orders_address.district}}<br>
+                            {{order.orders_address.state}} - {{order.orders_address.pin_code}}<br>
+                            Contact Number : {{order.orders_address.phone_no}}
+                        </p>
+                        <p class="text-muted small text-end">
+                            {{order.payment_method}}
+                            {% if order.is_paid %}
+                            <span class="badge pillow bg-success rounded">Paid</span>
+                            {% endif %}
+                        </p>
+                        
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between py-2 fw-bold h5">
+                        <span>Grand Total</span>
+                        <span>₹{{order.over_all_amount_all}}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Status :</h6>
+                        {% if order.status == 'Delivered' %}
+                        <div class="status-deliverd">{{order.status}}</div>
+                        {% elif order.status == 'Pending' %}
+                        <div class="status-pending">{{order.status}}</div>
+                        {% elif order.status == 'Processing' %}
+                        <div class="status-pending">{{order.status}}</div>
+                        {% elif order.status == 'Cancelled' %}
+                        <div class="status-cancelled">{{order.status}}</div>
+                        {% elif order.status == 'Shipped' %}
+                        <div class="status-shipped">{{order.status}}</div>
+                        {% elif order.status == 'Returned' %}
+                        <div class="status-pending">{{order.status}}</div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid mt-4">
+                        <a href="{% url 'order_tracking' order.id %}" class="btn btn-dark btn-lg">Track Order</a>
+                    </div>
+                </div>
+
+                <!-- =================================================================== -->
+                        <!-- START: New Cancellation & Return Management Card -->
+                        <!-- =================================================================== -->
+
+                        <!-- This entire card will only appear if a reason exists -->
+                        {% if order.cancel_reason or order.return_requests.reason %}
+                        <div class="request-management-card mt-4">
+                            
+                            <!-- Card Title -->
+                            <h5 class="card-title-secondary">
+                                {% if order.return_requests.reason %}
+                                    Return Request
+                                {% else %}
+                                    Cancellation Reason
+                                {% endif %}
+                            </h5>
+
+                            <!-- Reason Display -->
+                            <p class="text-muted mb-1"><strong>Reason Given:</strong></p>
+                            <blockquote class="reason-quote">
+                                {{ order.cancel_reason|default:order.return_requests.reason }}
+                            </blockquote>
+
+                            <!-- Return Management Form (only shows for returns) -->
+                            {% if order.return_requests.reason %}
+                                <hr class="my-4">
+                                    <p class="mb-2">
+                                        <strong>Current Status:</strong> 
+                                        <span class="badge bg-secondary">{{ order.return_requests.status }}</span>
+                                    </p>
+                            {% endif %}
+
+                        </div>
+                        {% elif return_item_requests %}
+                        <!-- Wrapper for scroll functionality -->
+                        <div class="scrollable-requests-wrapper">
+    
+                            {% for item_request in return_item_requests %}
+                            <div class="request-management-card mt-4">
+                                
+                                <!-- Card Title -->
+                                <h5 class="card-title-secondary">
+                                    Return Item Request
+                                </h5>
+                        
+                                <!-- Reason Display -->
+                                <p class="text-muted mb-1"><small><strong>Reason Given:</strong></small></p>
+                                <blockquote class="reason-quote">
+                                    {{ item_request.reason }}
+                                </blockquote>
+                        
+                                <!-- Return Management Form -->
+                                {% if item_request.reason %}
+                                    <hr class="my-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="text-muted status-label">Current Status:</span> 
+                                        <span class="badge bg-secondary">{{ item_request.status }}</span>
+                                    </div>
+                                {% endif %}
+                        
+                            </div>
+                            {% endfor %}
+                        
+                        </div>
+
+                        {% endif %}
+
+                        <!-- =================================================================== -->
+                        <!-- END: New Cancellation & Return Management Card -->
+                        <!-- =================================================================== -->
+            </div>
+    
+            <!-- Right Column: Order List & Totals -->
+            <div class="col-lg-8">
+                <div class="order-list-card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-3 text-start">Order List <span class="product-count">{{order.items.count}} Products </span></h5>
+                        {% if  order.status == 'Delivered' %}
+                        <a href="{% url 'download_invoice' order.id %}" class="btn btn-outline-dark btn-end"><i class="fas fa-file-invoice me-2"></i>Invoice</a>
+                        {% endif %}
+                    </div>
+                    <!-- Table Header -->
+                    <div class="d-none d-md-flex row text-muted mb-2">
+                        <div class="col-md-5">Product</div>
+                        <div class="col-md-2">Brand</div>
+                        <div class="col-md-2 text-center">Price</div>
+                        <div class="col-md-1 text-end">QTY</div>
+                        <div class="col-md-2 text-end">Total</div>
+                    </div>
+
+                    {% for item in orderitem_with_image %}
+                        <!-- Product Item 1 -->
+                        <div class="row align-items-center product-item py-3">
+                            <div class="col-5 col-md-5 d-flex align-items-center">
+                                <a href=" {% url 'shop_productdetail' item.order_item.product.id %}"><img src="{{item.main_image.image.url}}" alt="Product Image" class="product-image"></a>
+
+                                <div class="ms-1">
+                                    <p class="mb-0 fw-bold">{{item.order_item.product.name}}</p>
+                                    <span class="fw-light text-muted" >variant type: {{item.order_item.variant.name}} </span>
+                                    
+                                    <div>
+                                        {% if not item.order_item.is_cancel %}
+                                            {% if order.status != 'Delivered' and order.status != 'Shipped' and order.status != 'Payment Failed' %}
+                                                {% if not item.order_item.is_return  %}
+                                                    <form action="{% url 'cancel_order_item' item.order_item.order.id item.order_item.id %}" method="POST" class="delete-form">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class=" text-decoration-none text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#000000;">Cancel item</button>
+                                                    </form>
+                                                {% endif %}    
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#953535;">item cancelled</span>
+                                        {% endif %}
+                                        {% if item.order_item.is_return %}
+                                            <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#953535;">Item Returned</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
+                            <div class="col-2 col-md-2"><a href="#" class="sku-link">{{item.order_item.product.brand.name}}</a></div>
+                            <div class="col-2 col-md-2 text-md-center">₹{{item.order_item.real_price}}</div>
+                            <div class="col-3 col-md-1 text-end">{{item.order_item.quantity}}pcs</div>
+                            <div class="col-12 col-md-2 text-end fw-bold mt-2 mt-md-0" >
+                                <del class="fw-light text-muted">₹{{item.order_item.sub_real_price}}</del>
+                                <p class="m-0">₹{{item.order_item.total_price}}</p>
+                                <span class="fw-light text-success">-₹{{item.order_item.sub_discount}}</span>
+                            </div> 
+                            {% if  order.status == 'Delivered' %}
+                                {% if not item.order_item.is_cancel %}
+                                    <div class="d-flex align-item-center justify-content-end">
+                                        {% if not item.order_item in return_items %}
+                                            <a href="{% url 'product_rating' %}?variant_id={{item.order_item.variant.id}}&order_id={{item.order_item.order.id}}" class="rating-btn me-1">Give Rating</a>
+                                        {% endif %}
+                                        {% if return_item_requests %}
+                                            {% if not order.return_requests.reason%}
+                                                {% if not item.order_item in return_items %}
+                                                    <a href="{% url 'return_order_item' order.id item.order_item.id %}" class="return-item-btn ms-1">Ruturn Item</a>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            {% if not order.return_requests.reason%}
+                                                <a href="{% url 'return_order_item' order.id item.order_item.id %}" class="return-item-btn ms-1">Ruturn Item</a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <!-- Product Item 2 -->
+                    <!-- <div class="row align-items-center product-item py-3">
+                        <div class="col-5 col-md-5 d-flex align-items-center">
+                            <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Product Image" class="product-image">
+                            <div>
+                                <p class="mb-0 fw-bold">Papergrid - KING SIZE</p>
+                                <a href="#" class="small text-muted">Remove item</a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-md-2"><a href="#" class="sku-link">302011</a></div>
+                        <div class="col-2 col-md-2 text-md-center">1 pcs</div>
+                        <div class="col-3 col-md-1 text-end">₹65</div>
+                        <div class="col-12 col-md-2 text-end fw-bold mt-2 mt-md-0">₹65</div>
+                    </div> -->
+    
+                    <!-- Totals Section -->
+                    <div class="totals-section mt-4">
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Total MRP :</span>
+                            <span>₹{{order.total_items_amount}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-success">Discount :</span>
+                            <span class="text-success">-₹{{order.total_discount}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Subtotal :</span>
+                            <span class="">₹{{order.total_amount}}</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Coupon : <span class="fw-bold text-dark"></span></span>
+                            <span>-₹{{order.coupon_amount}}</span>
+
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Tax :</span>
+                            <div class="text-end">
+                                <span>+₹{{order.tax_amount}}</span><br>
+                                <span class="text-muted fw-light">(Tax calculated from subtotal)</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span class="text-muted">delivery charg :</span>
+                            <span>Free</span>
+                        </div>
+                        
+                        <hr>
+                        <div class="d-flex justify-content-between py-2 fw-bold h5">
+                            <span>Grand Total</span>
+                            <span>₹{{order.over_all_amount}}</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-end mt-4">
+                    <button class="btn btn-dark me-2">GO Back</button>
+                    {% if order.status != 'Delivered' and  order.status != 'Shipped' and order.status != 'Cancelled' and order.status != 'Payment Failed' and order.status != 'Returned' %}
+                    <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger">Cancel Order</a>
+                    {% endif %}
+
+                    {% if  order.status == 'Delivered' %}
+                    {% if not return_item_requests %}
+                    {% if not order.return_requests.reason %}
+                    <a href="{% url 'return_order' order.id %}" class="btn btn-danger"><i class="fas fa-redo me-2"></i>Return</a>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% if  order.status == 'Payment Failed' and order.razorpay_order_id %}
+                    <a href="#" class="btn btn-danger"><i class="fas fa-redo me-2"></i>Re try</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+
+
+<script>
+    document.querySelectorAll('.delete-form').forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "This action cannot be undone. after cancel the item.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, delete it!',
+          customClass: {
+            confirmButton: 'btn btn-danger me-1' ,
+            cancelButton: 'btn btn-dark ms-1' ,
+          },
+          buttonsStyling: false
+        }).then((result) => {
+          if (result.isConfirmed) {
+            form.submit();
+          }
+        });
+      });
+    });
+</script>
+
+{% if messages %}
+{% for message in messages %}
+<script>
+    Swal.fire({
+      icon: "{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}",
+      title: "{{ message }}",
+      showConfirmButton: false,
+      timer: 2000
+    });
+  
+</script>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

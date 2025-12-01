@@ -1,0 +1,526 @@
+{% extends "adminbase.html" %}
+
+{% load static %}
+
+{% block title %} productlist {% endblock %}
+
+{% block head %} <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> {% endblock %}
+
+{% block style %}
+
+<style>
+    /* === General Order Page Styles === */
+    .orders-container {
+        font-family: sans-serif;
+    }
+
+    .order-card {
+        background-color: #fff;
+        border-radius: 15px;
+        margin-bottom: 2rem; /* Increased margin for better separation */
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        position: relative; /* Crucial for positioning the status badge */
+        overflow: hidden; /* Ensures child elements respect the border-radius */
+    }
+
+    /* === Order Header (ID) === */
+    .order-header {
+        margin-bottom: 20px;
+        padding-right: 140px; /* Add padding to prevent text from overlapping with the status */
+    }
+
+    .order-id {
+        font-weight: bold;
+        font-size: 1.1em;
+        color: #333;
+    }
+
+    /* === Status Badge (Top Right) === */
+    .status {
+        font-weight: bold;
+        padding: 8px 12px;
+        border-radius: 0 15px 0 15px; /* Stylish corner rounding */
+        font-size: 0.8em;
+        text-transform: uppercase;
+        position: absolute; /* Position relative to the .order-card */
+        top: 0;
+        right: 0;
+    }
+
+    .status-delivered {
+        background-color: #e9f7ef; /* Light green background */
+        color: #28a745; /* Green text */
+    }
+
+    .status-Shipped {
+        background-color: #ccf9fb; /* Light green background */
+        color: #219484; /* Green text */
+    }
+
+    .status-processing {
+        background-color: #fff8e1; /* Light yellow background */
+        color: #f59e0b; /* Yellow text */
+    }
+
+    .status-cancelled {
+        background-color: #feedec; /* Light red background */
+        color: #dc3545; /* Red text */
+    }
+
+    /* === Order Body (Image, Details, Actions) === */
+    .order-body {
+        display: flex;
+        align-items: center;
+        gap: 20px; /* Creates space between flex items */
+    }
+
+    .product-image {
+        width: 100px;
+        height: 100px; /* Made the image square for consistency */
+        object-fit: cover; /* Prevents image from stretching */
+        border-radius: 10px;
+        border: 1px solid #e9ecef; /* Added a proper border */
+    }
+
+    .order-details {
+        flex-grow: 1; /* Takes up the available space */
+    }
+
+    /* === Action Buttons & Delivery Date === */
+    .order-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px; /* Space between button groups and delivery date */
+    }
+
+    .order-actions .btn-group {
+        display: flex;
+        gap: 10px; /* Space between buttons */
+        flex-wrap: wrap; /* Allows buttons to wrap on smaller screens */
+        justify-content: flex-end;
+    }
+
+    .order-actions .btn {
+        /* Removed fixed width, using padding for responsive sizing */
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        border-radius: 8px; /* Slightly rounded buttons */
+        white-space: nowrap; /* Prevents text from breaking */
+    }
+
+    .delivery-date {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #333;
+        text-align: right;
+    }
+
+    /* === Pagination Styles === */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .pagination .page-item .page-link {
+        border-radius: 50%;
+        margin: 0 5px;
+        color: #333;
+        border: none;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #333;
+        color: #fff;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #ccc;
+    }
+
+    .pagination .page-item .page-link:hover {
+        background-color: #f0f0f0;
+    }
+
+    /* === RESPONSIVE STYLES for tablets and mobiles === */
+    @media (max-width: 992px) {
+        .order-body {
+            flex-direction: column; /* Stack items vertically */
+            align-items: flex-start; /* Align to the left */
+        }
+
+        .order-actions {
+            width: 100%; /* Take full width in the stacked layout */
+            align-items: flex-start; /* Align buttons to the left */
+            margin-top: 15px;
+        }
+
+        .order-actions .btn-group,
+        .delivery-date {
+            width: 100%;
+            justify-content: flex-start; /* Align buttons and text to the left */
+            text-align: left;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .order-id {
+            font-size: 1em;
+        }
+
+        .status {
+            font-size: 0.75em;
+            padding: 6px 10px;
+        }
+
+        .order-actions .btn {
+            padding: 6px 12px; /* Reduce button padding */
+            font-size: 0.8rem; /* Reduce button font size */
+        }
+
+        .delivery-date {
+            font-size: 1em;
+        }
+
+        .pagination .page-item .page-link {
+            margin: 0 2px;
+        }
+    }
+
+    /* search and heading */
+
+    .search-listing{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .clearable-input {
+      position: relative;
+      width: 250px; /* adjust width as you like */
+    }
+    .clearable-input input {
+      padding-right: 2.2rem; /* space for the clear “×” button */
+    }
+    .clearable-input .clear-btn {
+      position: absolute;
+      top: 50%;
+      right: 0.6rem;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      color: #888;
+      display: none;
+    }
+    .clearable-input .clear-btn.visible {
+      display: block;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Assuming your sidebar is on the left -->
+        <!-- <nav class="col-md-2 d-none d-md-block bg-light sidebar"> -->
+            <!-- Sidebar content here -->
+        <!-- </nav> -->
+
+        <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
+            
+            <div class="container my-5 orders-container">
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        {% for crumb in breadcrumb %}
+                            {% if forloop.last %}
+                                <li class="breadcrumb-item active" aria-current="page">{{ crumb.name }}</li>
+                            {% else %}
+                                <li class="breadcrumb-item"><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ol>
+                </nav>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h3 mb-0">Orders</h2>
+                    <div class="d-flex">
+                        <div class="search-listing mx-3">
+                            <form method="GET" action="" class="d-flex align-items-center">
+                                <div class="clearable-input me-2">
+                                  <input type="text" name="q" class="form-control form-control-sm" placeholder="Search..." value="{{ query }}" id="searchField" autocomplete="off" />
+                                  <button type="button" class="clear-btn" id="btnClear" aria-label="Clear">&times;</button>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-dark">
+                                  <i class="fas fa-search"></i>
+                                </button>
+                              </form>
+                        </div>
+                        <!-- <a href="{% url 'add_product' %}" class="btn btn-dark">+ Add Product</a> -->
+                    </div>
+                </div>
+                <div>
+                    <div class="btn-group">
+                        <!-- Main button shows current status -->
+                        <button type="button" class="btn btn-dark btn-lg">
+                            {% if stat %}
+                            {{stat}}
+                          {% else %}
+                          Filter
+                          {% endif %}
+                        </button>
+                    
+                        <!-- Dropdown toggle -->
+                        <button type="button" class="btn btn-dark btn-lg dropdown-toggle dropdown-toggle-split" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                          <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                    
+                        <!-- Dropdown items (loop through all status choices) -->
+                        <ul class="dropdown-menu">
+                          {% for value, label in status_choices %}
+                            <li>
+                              <a class="dropdown-item {% if value == order.status %}active{% endif %}" 
+                                 href="?stat={{value}}{% if query %}&q={{query}}{% endif %}">
+                                {{ label }}
+                              </a>
+                            </li>
+                          {% endfor %}
+                          <li>
+                            <a class="dropdown-item {% if value == order.status %}active{% endif %}" 
+                                 href="?stat={% if query %}&q={{query}}{% endif %}">
+                                Clear
+                              </a>
+                          </li>
+                        </ul>
+                      </div>
+                </div>
+
+                {% if orders %}
+                {% for order in orders %}
+                <!-- Order 1: Delivered -->
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id my-2">
+                            Order id : {{order.order_id}}
+                            <div>
+                                Customer : {{order.user.full_name}}
+                                <br>
+                                Email : {{order.user.email}}
+                            </div>
+
+                        </div>
+                        {% if order.status == 'Delivered' %}
+                        <div class="status status-delivered">Status : {{order.status}}</div>
+                        {% elif order.status == 'Pending' %}
+                        <div class="status status-processing">Status : {{order.status}}</div>
+                        {% elif order.status == 'Processing' %}
+                        <div class="status status-processing">Status : {{order.status}}</div>
+                        {% elif order.status == 'Cancelled' %}
+                        <div class="status status-cancelled">Status : {{order.status}}</div>
+                        {% elif order.status == 'Shipped' %}
+                        <div class="status status-Shipped">Status : {{order.status}}</div>
+                        {% elif order.status == 'Payment Failed' %}
+                        <div class="status status-cancelled">Status : {{order.status}}</div>
+                        {% elif order.status == 'Returned' %}
+                        <div class="status status-processing">Status : {{order.status}}</div>
+                        {% endif %}
+                    </div>
+                    <div class="order-body">
+                        <img src="{{order.get_first_product_image}}" alt="Product Image" class="product-image">
+                        <div class="order-details">
+                            <p class="mb-1"><strong>Rs. {{order.over_all_amount_all}}</strong> <span class="fw-light">(incl. taxes)</span></p>
+                            <p class="mb-1">total items : {{order.total_quantity}}</p>
+                            <p class="text-muted">Ordered on {{ order.created_at|date:"j F Y" }}</p>
+                        </div>
+                        <div class="order-actions">
+                            <div>
+                                <!-- <button class="btn btn-outline-dark"><i class="fas fa-undo me-2"></i>return</button> -->
+                                <!-- <button class="btn btn-outline-dark"><i class="fas fa-file-invoice me-2"></i>Invoice</button> -->
+                                <a href="{% url 'admin_order_detail' order.id %}" class="btn btn-dark">View Details</a>
+                                
+                            </div>
+                            {% if order.return_requests.reason and order.return_requests.status == 'Pending' %}
+                                <span class="text-warning badge pillow bg-dark border-2 border-wight">Return status : {{order.return_requests.status}}</span>
+                                {% endif %}
+                            {% if order.status == 'Cancelled' or order.status == 'Payment Failed' or order.status == 'Returned' %}
+                            {% else %}
+                            <div class="mt-3 delivery-date">{{order.delivery_date|date:"j F Y"}}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+            <!-- EMPTY ORDERS STATE -->
+            <div class="container my-5 text-center">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <!-- You can use an emoji or a Font Awesome icon -->
+                                <div class="empty-icon mb-4" style="font-size: 5rem; color: #6c757d;">
+                                    &#128722; <!-- Shopping Cart Emoji -->
+                                    <!-- Or use a Font Awesome icon: -->
+                                    <!-- <i class="fas fa-shopping-bag"></i> -->
+                                </div>
+                                <h3 class="fw-bold mb-3">Your Orders History is Empty</h3>
+                                <p class="text-muted mb-4">
+                                    Customers haven't placed any orders yet. All your future orders will be saved here for you to view and track.
+                                </p>
+                                <!-- <a href="{% url 'shop_products' %}" class="btn btn-dark btn-lg">
+                                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                                </a> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+                <!-- Order 2: Processing -->
+                <!-- <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">Order id : 555333-33211</div>
+                        <div class="status status-processing">Status : PROCESSING</div>
+                    </div>
+                    <div class="order-body">
+                        <img src="https://i.imgur.com/example-product-2.png" alt="Product Image" class="product-image">
+                        <div class="order-details">
+                            <p class="mb-1"><strong>Rs. 200</strong></p>
+                            <p class="mb-1">total items : 2</p>
+                            <p class="text-muted">Ordered on 15 September 2024</p>
+                        </div>
+                        <div class="order-actions">
+                            <div>
+                                <button class="btn btn-dark">View Details</button> -->
+                                <!-- <button class="btn btn-outline-danger">Cancel Order</button> -->
+                            <!-- </div>
+                            <div class="mt-3 delivery-date">Expect Delivery on 26 October</div>
+                        </div>
+                    </div>
+                </div> -->
+        
+                <!-- Order 3: Cancelled -->
+                <!-- <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">Order id : 555333-33211</div>
+                        <div class="status status-cancelled">Status : Cancelled</div>
+                    </div>
+                    <div class="order-body">
+                        <img src="https://i.imgur.com/example-product-3.png" alt="Product Image" class="product-image">
+                        <div class="order-details">
+                            <p class="mb-1"><strong>Rs. 200</strong></p>
+                            <p class="mb-1">total items : 2</p>
+                            <p class="text-muted">Ordered on 15 September 2024</p>
+                        </div>
+                        <div class="order-actions"> -->
+                            <!-- <button class="btn btn-outline-dark"><i class="fas fa-redo me-2"></i>Re-Order</button> -->
+                            <!-- <button class="btn btn-dark">View Details</button>
+                        </div>
+                    </div>
+                </div> -->
+                
+                <!-- Pagination -->
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="d-flex justify-content-center mt-5">
+                    <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if stat %}&stat={{ stat }}{% endif %}">
+                            &lsaquo;
+                        </a>
+                        </li>
+                    {% endif %}
+                
+                    {% for num in custom_range %}
+                        {% if num == '...' %}
+                            <li class="page-item disabled">
+                                <a class="page-link">...</a>
+                            </li>
+                        {% elif num == page_obj.number %}
+                            <li class="page-item active">
+                                <a class="page-link" href="#">{{ num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if stat %}&stat={{ stat }}{% endif %}">
+                                    {{ num }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if stat %}&stat={{ stat }}{% endif %}">
+                            &rsaquo;
+                        </a>
+                        </li>
+                    {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            
+              
+        </main>
+    </div>
+</div>
+<!-- end here -->
+{% endblock %}
+
+
+{% block script %}
+
+<script>
+
+    // this is a reload script
+
+    window.addEventListener("pageshow", function(event) {
+        //If the page is loaded from the browser's back/forward cache
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
+
+    const input = document.getElementById("searchField");
+    const clearBtn = document.getElementById("btnClear");
+
+    // Show or hide clear button depending on input value
+    input.addEventListener("input", () => {
+      if (input.value.length > 0) {
+        clearBtn.classList.add("visible");
+      } else {
+        clearBtn.classList.remove("visible");
+      }
+    });
+
+    // Clear input when × clicked
+    clearBtn.addEventListener("click", () => {
+      input.value = "";
+      clearBtn.classList.remove("visible");
+      input.focus();
+    });
+
+    // On page load, if field has prefilled text, show clear button
+    window.addEventListener("load", () => {
+      if (input.value.length > 0) {
+        clearBtn.classList.add("visible");
+      }
+    });
+</script>
+
+{% endblock %}

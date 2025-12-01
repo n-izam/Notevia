@@ -17,15 +17,32 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.shortcuts import render
 from django.urls import path, include
+from django.conf.urls import handler404
+from .views import Custom404View
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),
-    path('cores/', include('cores.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('', include('cores.urls')),
+    path('adminpanel/',include('adminpanel.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('cart/', include('cart.urls')), 
+    path('orders/', include('orders.urls')),
+    path('offers/', include('offers.urls')),
+    path('products/', include('products.urls')),
+
+
+    path('raise-404/', lambda request: None),
     
 ]
+
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+handler404 = Custom404View.as_view()
 
 # if settings.DEBUG:
 #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

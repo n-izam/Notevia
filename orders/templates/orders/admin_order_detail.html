@@ -1,0 +1,669 @@
+{% extends "adminbase.html" %}
+
+{% load static %}
+
+{% block title %} productlist {% endblock %}
+
+{% block head %} <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> {% endblock %}
+
+{% block style %}
+
+<style>
+    .order-details-container {
+        font-family: sans-serif;
+    }
+    
+    .summary-card,
+    .order-list-card {
+        background-color: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .status-pending {
+        color: #f1a831;
+        background-color: rgba(230, 201, 60, 0.296);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-shipped {
+        color: #2883a7;
+        background-color: rgba(40, 167, 159, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-cancelled {
+        color: #a73128;
+        background-color: rgba(167, 40, 40, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    .status-deliverd {
+        color: #28a745;
+        background-color: rgba(186, 72, 37, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+    
+    
+    .product-count {
+        background-color: #e9ecef;
+        color: #495057;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 0.8em;
+        font-weight: normal;
+    }
+    
+    .product-item {
+        border-bottom: 1px solid #dee2e6;
+    }
+    .product-item:last-child {
+        border-bottom: none;
+    }
+    
+    .product-thumbnail {
+        width: 50px;
+        height: 50px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+    }
+    .product-image {
+        width: 100px;
+        height: 100px; /* Made the image square for consistency */
+        object-fit: cover; /* Prevents image from stretching */
+        border-radius: 10px;
+        border: 1px solid #e9ecef; /* Added a proper border */
+    }
+    
+    .sku-link {
+        color: #0d6efd;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .sku-link:hover {
+        text-decoration: underline;
+    }
+    
+    .totals-section {
+        border-top: 1px solid #dee2e6;
+    }
+
+    /* return item tyle */
+    /* Add this to your existing styles */
+    /*
+    .request-management-card {
+        background-color: rgb(255, 255, 254);   
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .request-management-card .card-title-secondary {
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .request-management-card .reason-quote {
+        border-left: 3px solid #6c757d;
+        padding-left: 1rem;
+        margin: 0.5rem 0 0 0;
+        font-style: italic;
+    }
+
+    .return-update-form .badge {
+        font-size: 0.9em;
+    }
+    */
+
+    /* --- 1. The Scrollable Wrapper --- */
+    .return-requests-scroll-container {
+        /* 
+        Estimate: One card with form is approx 300px. 
+        Setting max-height to 650px ensures 2 cards fit nicely.
+        The 3rd card will trigger the scrollbar.
+        */
+        max-height: 450px; 
+        overflow-y: auto; /* Scroll only when necessary */
+        overflow-x: hidden;
+        padding-right: 8px; /* Space for scrollbar */
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Custom Scrollbar for better visuals */
+    .return-requests-scroll-container::-webkit-scrollbar {
+        width: 6px;
+    }
+    .return-requests-scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    .return-requests-scroll-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+    .return-requests-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #bbb;
+    }
+
+    /* --- 2. Card Styles (Your Existing + Tweaks) --- */
+    .request-management-card {
+        background-color: rgb(255, 255, 254);
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .request-management-card .card-title-secondary {
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .request-management-card .reason-quote {
+        border-left: 3px solid #6c757d;
+        padding-left: 1rem;
+        margin: 0.5rem 0 1rem 0;
+        font-style: italic;
+        background-color: #f9f9f9; /* Added light bg for readability */
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .return-update-form .badge {
+        font-size: 0.9em;
+        padding: 0.5em 0.8em;
+    }
+
+    /* Ensure the Select dropdown takes available space */
+    .return-update-form select.form-select {
+        flex: 1; /* Grows to fill space next to the button */
+        min-width: 140px; /* Prevents it from getting unreadably small */
+    }
+
+    /* --- 3. Responsive Design (Mobile) --- */
+    @media (max-width: 768px) {
+        
+        /* Adjust Scroll Container Height for Mobile */
+        .return-requests-scroll-container {
+            max-height: 60vh; /* Use 60% of screen height instead of fixed pixels */
+        }
+
+        /* Compress Card Padding */
+        .request-management-card {
+            padding: 1rem;
+            margin-top: 1rem !important; /* Overwrite bootstrap mt-4 */
+        }
+
+        .request-management-card .card-title-secondary {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Form Adjustments for Small Screens */
+        .return-update-form .d-flex {
+            /* On very small screens, stack the select and button */
+            flex-wrap: wrap; 
+        }
+        
+        .return-update-form .btn {
+            width: 100%; /* Make button full width on mobile for easier tapping */
+            margin-top: 5px;
+        }
+        
+        .return-update-form select.form-select {
+            width: 100%;
+        }
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Assuming your sidebar is on the left -->
+        <!-- <nav class="col-md-2 d-none d-md-block bg-light sidebar"> -->
+            <!-- Sidebar content here -->
+        <!-- </nav> -->
+
+        <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
+            
+            <div class="container my-4 my-md-5 order-details-container">
+                <!-- Breadcrumb Header -->
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        {% for crumb in breadcrumb %}
+                            {% if forloop.last %}
+                                <li class="breadcrumb-item active" aria-current="page">{{ crumb.name }}</li>
+                            {% else %}
+                                <li class="breadcrumb-item"><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ol>
+                </nav>
+            
+                <h2 class="mb-4 fw-bold">Order Details</h2>
+            
+                <div class="row">
+                    <!-- Left Column: Order Summary -->
+                    <div class="col-lg-4 mb-4 mb-lg-0">
+                        <div class="summary-card p-4">
+                            <p class="fw-bold">Order# {{order.order_id}}</p>
+
+                            <div class="fw-bold my-2">
+                                Customer : {{order.user.full_name}}
+                                <br>
+                                Email : {{order.user.email}}
+                            </div>
+
+                            <p class="text-muted mb-2">Ordered on {{ order.created_at|date:"j F Y" }}</p>
+                            
+                            <hr>
+                            <div class="d-flex justify-content-between border-top border-bottom border-2">
+                                <h6 class="fw-bold">Shipping Address</h6>
+                                <h6 class="fw-bold text-end">Payment Method</h6>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="text-muted small">
+                                    Address type: {{order.orders_address.address_type}},<br>
+                                    {{order.orders_address.full_name}},<br>
+                                    {{order.orders_address.address}},<br>
+                                    {{order.orders_address.city}}, {{order.orders_address.district}}<br>
+                                    {{order.orders_address.state}} - {{order.orders_address.pin_code}}<br>
+                                    Contact Number : {{order.orders_address.phone_no}}
+                                </p>
+                                <p class="text-muted small text-end">
+                                    {{order.payment_method}} <br>
+                                    {% if order.is_paid %}
+                                    <span class="badge pillow bg-success rounded">Paid</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between py-2 fw-bold h5">
+                                <span>Order Total</span>
+                                
+                                <span>₹{{order.over_all_amount_all}}</span>
+                                
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">Status :</h6>
+                                {% if order.status == 'Delivered' %}
+                                <div class="status-deliverd">{{order.status}}</div>
+                                {% elif order.status == 'Pending' %}
+                                <div class="status-pending">{{order.status}}</div>
+                                {% elif order.status == 'Processing' %}
+                                <div class="status-pending">{{order.status}}</div>
+                                {% elif order.status == 'Cancelled' %}
+                                <div class="status-cancelled">{{order.status}}</div>
+                                {% elif order.status == 'Shipped' %}
+                                <div class="status-shipped">{{order.status}}</div>
+                                {% elif order.status == 'Payment Failed' %}
+                                <div class="status-cancelled">{{order.status}}</div>
+                                {% elif order.status == 'Returned' %}
+                                <div class="status-pending">{{order.status}}</div>
+                                {% endif %}
+                            </div>
+                            <div class="d-grid mt-4">
+                                <div class="btn-group">
+                                  <!-- Main button shows current status -->
+                                  <button type="button" class="btn btn-dark btn-lg">
+                                    {{ order.get_status_display }}
+                                  </button>
+                              
+                                  <!-- Dropdown toggle -->
+                                  <button type="button" class="btn btn-dark btn-lg dropdown-toggle dropdown-toggle-split" 
+                                          data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                  </button>
+                              
+                                  <!-- Dropdown items (loop through all status choices) -->
+                                  <ul class="dropdown-menu">
+                                    {% for value, label in status_choices %}
+                                      <li>
+                                        <a class="dropdown-item confirm-status {% if value == order.status %}active{% endif %}" 
+                                           href="{% url 'update_order_status' order.id value %}">
+                                          {{ label }}
+                                        </a>
+                                      </li>
+                                    {% endfor %}
+                                  </ul>
+                                </div>
+                            </div>                      
+                        </div>
+
+                        <!-- =================================================================== -->
+                        <!-- START: New Cancellation & Return Management Card -->
+                        <!-- =================================================================== -->
+
+                        <!-- This entire card will only appear if a reason exists -->
+                        {% if order.cancel_reason or order.return_requests.reason %}
+                        <div class="request-management-card mt-4">
+                            
+                            <!-- Card Title -->
+                            <h5 class="card-title-secondary">
+                                {% if order.return_requests.reason %}
+                                    Return Request
+                                {% else %}
+                                    Cancellation Reason
+                                {% endif %}
+                            </h5>
+
+                            <!-- Reason Display -->
+                            <p class="text-muted mb-1"><strong>Reason Given:</strong></p>
+                            <blockquote class="reason-quote">
+                                {{ order.cancel_reason|default:order.return_requests.reason }}
+                            </blockquote>
+
+                            <!-- Return Management Form (only shows for returns) -->
+                            {% if order.return_requests.reason %}
+                                <hr class="my-4">
+                                
+                                <form method="POST" action="{% url 'return_update' order.id order.user.id %}" class="return-update-form delete-form">
+                                    {% csrf_token %}
+
+                                    <p class="mb-2">
+                                        <strong>Current Status:</strong> 
+                                        <span class="badge bg-secondary">{{ order.return_requests.status }}</span>
+                                    </p>
+
+                                    <!-- This section only appears if the return is still pending a decision -->
+                                    {% if order.return_requests.status != 'Approved' and order.return_requests.status != 'Rejected' %}
+                                        <label for="status" class="form-label small fw-bold">Update Status:</label>
+                                        <div class="d-flex gap-2">
+                                            <select name="status" id="status" class="form-select" required>
+                                                {% for value, label in return_status_choices %}
+                                                    <option value="{{ value }}" {% if value == order.return_requests.status %}selected{% endif %}>
+                                                        {{ label }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="submit" class="btn btn-success flex-shrink-0">Confirm</button>
+                                        </div>
+                                    {% endif %}
+                                </form>
+                            {% endif %}
+
+                        </div>
+                        {% elif return_item_requests %}
+                            <!-- Wrapper for scroll functionality -->
+                            <div class="return-requests-scroll-container">
+
+                                {% for item_request in return_item_requests %}
+                                    <div class="request-management-card mt-4">
+                                        
+                                        <!-- Card Title -->
+                                        <h5 class="card-title-secondary">
+                                                Return Item Request
+                                        </h5>
+
+                                        <!-- Reason Display -->
+                                        <p class="text-muted mb-1"><strong>Reason Given:</strong></p>
+                                        <blockquote class="reason-quote">
+                                            {{ item_request.reason }}
+                                        </blockquote>
+
+                                        <!-- Return Management Form -->
+                                        {% if item_request.reason %}
+                                            <hr class="my-4">
+                                            
+                                            <form method="POST" action="{% url 'return_item_update' order.id item_request.order_item.id order.user.id %}" class="return-update-form delete-form">
+                                                {% csrf_token %}
+
+                                                <p class="mb-3">
+                                                    <strong>Current Status:</strong> 
+                                                    <span class="badge bg-secondary">{{ item_request.status }}</span>
+                                                </p>
+
+                                                <!-- Status Update Section -->
+                                                {% if item_request.status != 'Approved' and item_request.status != 'Rejected' %}
+                                                    <label for="status" class="form-label small fw-bold">Update Status:</label>
+                                                    
+                                                    <!-- Added 'flex-wrap' to handle very small mobile screens -->
+                                                    <div class="d-flex gap-2 flex-wrap align-items-center">
+                                                        <select name="status" id="status" class="form-select" required>
+                                                            {% for value, label in return_item_status_choices %}
+                                                                <option value="{{ value }}" {% if value == item_request.status %}selected{% endif %}>
+                                                                    {{ label }}
+                                                                </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                        <button type="submit" class="btn btn-success flex-shrink-0">Confirm</button>
+                                                    </div>
+                                                {% endif %}
+                                            </form>
+                                        {% endif %}
+
+                                    </div>
+                                {% endfor %}
+                                
+                            </div>
+                        {% endif %}
+
+                        <!-- =================================================================== -->
+                        <!-- END: New Cancellation & Return Management Card -->
+                        <!-- =================================================================== -->
+                    </div>
+            
+                    <!-- Right Column: Order List & Totals -->
+                    <div class="col-lg-8">
+                        <div class="order-list-card p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold mb-3 text-start">Order List <span class="product-count">{{order.items.count}} Products </span></h5>
+                                
+                                <!-- <button class="btn btn-outline-dark btn-end"><i class="fas fa-file-invoice me-2"></i>Invoice</button> -->
+                                
+                            </div>
+                            <!-- Table Header -->
+                            <div class="d-none d-md-flex row text-muted mb-2">
+                                <div class="col-md-5">Product</div>
+                                <div class="col-md-2">Brand</div>
+                                <div class="col-md-2 text-center">Price</div>
+                                <div class="col-md-1 text-end">QTY</div>
+                                <div class="col-md-2 text-end">Total</div>
+                            </div>
+        
+                            {% for item in orderitem_with_image %}
+                            <!-- Product Item 1 -->
+                            <div class="row align-items-center product-item py-3">
+                                <div class="col-5 col-md-5 d-flex align-items-center">
+                                    <img src="{{item.main_image.image.url}}" alt="Product Image" class="product-image">
+        
+                                    <div class="ms-1">
+                                        <p class="mb-0 fw-bold">{{item.order_item.product.name}}</p>
+                                        <span class="fw-light text-muted" >variant type: {{item.order_item.variant.name}} </span>
+                                        {% if item.order_item.is_cancel %}
+                                        <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#953535;">Item Cancelled</span>
+                                        {% elif item.order_item.is_return %}
+                                        <span class="text-white fw-normal badge  rounded-pill border border-2" style="font-size: 14px; background-color:#953535;">Item Returned</span>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                                <div class="col-2 col-md-2"><a href="#" class="sku-link">{{item.order_item.product.brand.name}}</a></div>
+                                <div class="col-2 col-md-2 text-md-center">₹{{item.order_item.real_price}}</div>
+                                <div class="col-3 col-md-1 text-end">{{item.order_item.quantity}}pcs</div>
+                                <div class="col-12 col-md-2 text-end fw-bold mt-2 mt-md-0" >
+                                    <del class="fw-light text-muted">₹{{item.order_item.sub_real_price}}</del>
+                                    <p class="m-0">₹{{item.order_item.total_price}}</p>
+                                    <span class="fw-light text-success">-₹{{item.order_item.sub_discount}}</span><br>
+                                    
+                                </div> 
+                            </div>
+                            {% endfor %}
+        
+                            <!-- Product Item 2 -->
+                            <!-- <div class="row align-items-center product-item py-3">
+                                <div class="col-5 col-md-5 d-flex align-items-center">
+                                    <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" alt="Product Image" class="product-image">
+                                    <div>
+                                        <p class="mb-0 fw-bold">Papergrid - KING SIZE</p>
+                                        <a href="#" class="small text-muted">Remove item</a>
+                                    </div>
+                                </div>
+                                <div class="col-2 col-md-2"><a href="#" class="sku-link">302011</a></div>
+                                <div class="col-2 col-md-2 text-md-center">1 pcs</div>
+                                <div class="col-3 col-md-1 text-end">₹65</div>
+                                <div class="col-12 col-md-2 text-end fw-bold mt-2 mt-md-0">₹65</div>
+                            </div> -->
+            
+                            <!-- Totals Section -->
+                            <div class="totals-section mt-4">
+                                <div class="d-flex justify-content-between py-2">
+                                    <span class="text-muted">Subtotal :</span>
+                                    <span>₹{{order.total_items_amount}}</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2">
+                                    <span class="text-success">Discount :</span>
+                                    <span class="text-success">-₹{{order.total_discount}}</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2">
+                                    <span class="text-muted">Tax :</span>
+                                    <div class="text-end">
+                                        <span>+₹{{order.tax_amount}}</span><br>
+                                        <span class="text-muted fw-light">(Tax calculated from subtotal)</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between py-2">
+                                    <span class="text-muted">delivery charg :</span>
+                                    <span>Free</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2">
+                                    <span class="text-muted">Coupon : <span class="fw-bold text-dark"></span></span>
+                                    <span>-₹{{order.coupon_amount}}</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between py-2 fw-bold h5">
+                                    <span>Grand Total</span>
+                                    {% if not order.status == 'Cancelled' %}
+                                    <span>₹{{order.over_all_amount}}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-end mt-4">
+                        
+                                <a href="{% url 'admin_order_list' %}" class="btn btn-secondary">Go Back</a>
+                        </div>
+                        <!-- <button class="btn btn-danger">Cancel Order</button> -->
+                            
+                            <!-- <button class="btn btn-danger"><i class="fas fa-redo me-2"></i>Re-Order</button> -->
+                    </div>
+                </div>
+            </div>
+              
+        </main>
+    </div>
+</div>
+<!-- end here -->
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+    // this is a reload script
+
+    window.addEventListener("pageshow", function(event) {
+        //If the page is loaded from the browser's back/forward cache
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+
+    //document.querySelectorAll('.delete-form').forEach(form => {
+      //form.addEventListener('submit', function(e) {
+        //e.preventDefault();
+        //Swal.fire({
+          //title: 'Are you sure?',
+          //text: "This action cannot be undone.",
+          //icon: 'warning',
+          //showCancelButton: true,
+          //confirmButtonColor: '#3085d6',
+          //cancelButtonColor: '#d33',
+          //confirmButtonText: 'Yes, delete it!'
+        //}).then((result) => {
+          //if (result.isConfirmed) {
+            //form.submit();
+          //}
+        //});
+      //});
+    //});
+
+    
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone. after the Approval or rejection.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, go on!',
+            customClass: {
+            confirmButton: 'btn btn-danger me-1' ,
+            cancelButton: 'btn btn-dark ms-1' ,
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+            form.submit();
+            }
+        });
+        });
+    });
+    
+</script>
+<script>
+    document.querySelectorAll('.confirm-status').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // Stop immediate navigation
+            const url = this.getAttribute('href');
+    
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action cannot be undone after approval",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, go on!',
+                customClass: {
+                    confirmButton: 'btn btn-danger me-1',
+                    cancelButton: 'btn btn-dark ms-1'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url; // Navigate manually
+                }
+            });
+        });
+    });
+    </script>
+
+{% endblock %}
+
+

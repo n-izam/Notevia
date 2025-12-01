@@ -1,0 +1,272 @@
+{% extends "adminbase.html" %}
+
+{% load static %}
+
+{% block title %} Add category {% endblock %}
+
+{% block head %} <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> {% endblock %}
+
+{% block style %}
+<style>
+    /* Toast container responsiveness */
+    .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 5000;
+      }
+  
+      @media (max-width: 576px) {
+          .toast-container {
+              top: auto !important;
+              bottom: 1rem !important;
+              right: 50% !important;
+              transform: translateX(50%);
+              width: 90%;
+          }
+      }
+  
+      /* Base Toast Style */
+      .toast {
+          backdrop-filter: blur(8px);
+          background: rgba(17, 17, 17, 0.85) !important; /* glassy black */
+          color: #fff !important;
+          border-radius: 12px !important;
+          padding: 0.75rem 1rem;
+          border: 1px solid rgba(255, 255, 255, 0.15) !important;
+          box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+          animation: slideFadeIn 0.5s ease-out;
+      }
+  
+      /* Toast body text */
+      .toast-body {
+          font-size: 0.95rem;
+          font-weight: 500;
+      }
+  
+      /* SUCCESS */
+      .toast.bg-success {
+          background: rgba(0, 255, 100, 0.15) !important;
+          border-left: 4px solid #00ff73 !important;
+          color: #409365 !important;
+      }
+  
+      /* ERROR */
+      .toast.bg-danger {
+          background: rgba(255, 0, 0, 0.15) !important;
+          border-left: 4px solid #ff3b3b !important;
+          color: #bb4141 !important;
+      }
+  
+      /* WARNING */
+      .toast.bg-warning {
+          background: rgba(255, 193, 7, 0.15) !important;
+          border-left: 4px solid #ffc107 !important;
+          color: #a1842f !important;
+      }
+  
+      /* INFO */
+      .toast.bg-info {
+          background: rgba(0, 200, 255, 0.15) !important;
+          border-left: 4px solid #00cfff !important;
+          color: #3092a8 !important;
+      }
+  
+      /* Beautiful animation */
+      @keyframes slideFadeIn {
+          0% {
+              opacity: 0;
+              transform: translateY(20px) scale(0.95);
+          }
+          100% {
+              opacity: 1;
+              transform: translateY(0px) scale(1);
+          }
+      }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- View Variants Section -->
+<div class="container-fluid">
+
+        <div class="row">
+            <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">   
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="#">Products</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Variants</li>
+                        </ol>
+                        </nav>
+                        <div class="mt-5">
+                        <h2 class="h4 mt-1 mb-0">Variants for '{{product.name}}-{{product.category.name}}'</h2>
+                    </div>
+                    </div>
+                    <a href="{% url 'add-variant' product.id %}" class="btn btn-dark">+ Add Variant</a>
+                </div>
+
+                <!-- Variants Table Card -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col">Variant Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Stock</th>
+                                        <th scope="col">Added Date</th>
+                                        <th scope="col">List/Unlist</th>
+                                        <th scope="col" class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Variant Item 1: Ruled -->
+                                     {% for variant in variants %}
+                                    <tr>
+                                        <td><strong>{{variant.name}} </strong></td>
+                                        <td>{{ variant.description }}</td>
+                                        <td>{{ variant.price }}</td>
+                                        <td>{{ variant.stock }}</td>
+                                        <td>{{ variant.updated_at.date }}</td>
+                                        <td>
+                                            <div class="form-check form-switch">
+                            
+                                                <input class="form-check-input" type="checkbox" role="switch" 
+                                                    id="switch{{ variant.id }}" 
+                                                    {% if variant.is_listed %} checked {% endif %}
+                                                    onchange="toggleStatus('{{ variant.id }}')">
+                                                <label class="form-check-label" for="variantSwitch1"></label>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">
+                                            <a href="{% url 'edit_variant' variant.id %}" class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fas fa-pencil-alt"></i></a>
+                                            <button class="btn btn-sm btn-outline-danger" aria-label="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                            
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    <!-- Variant Item 2: Unruled -->
+                                    <!-- <tr>
+                                        <td><strong>Unruled</strong></td>
+                                        <td>Blank pages for sketching and notes.</td>
+                                        <td>Rs. 60</td>
+                                        <td>550</td>
+                                        <td>20 Dec 2022</td>
+                                        <td>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="variantSwitch2" checked>
+                                                <label class="form-check-label" for="variantSwitch2"></label>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">
+                                            <button class="btn btn-sm btn-outline-danger" aria-label="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr> -->
+                                    
+                                    <!-- Variant Item 3: Dotted Grid (Unlisted) -->
+                                    <!-- <tr>
+                                        <td><strong>Dotted Grid</strong></td>
+                                        <td>Dotted grid for bullet journaling.</td>
+                                        <td>Rs. 70</td>
+                                        <td>0</td>
+                                        <td>15 Dec 2022</td>
+                                        <td>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="variantSwitch3">
+                                                <label class="form-check-label" for="variantSwitch3"></label>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">
+                                            <button class="btn btn-sm btn-outline-danger" aria-label="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr> -->
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <!-- Toast container (fixed position) -->
+            <div class="toast-container">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="toast align-items-center border-0 mb-2
+                            {% if message.tags == 'error' %} bg-danger
+                            {% elif message.tags == 'success' %} bg-success 
+                            {% elif message.tags == 'warning' %} bg-warning 
+                            {% else %} bg-info
+                            {% endif %}
+                        ">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
+                                {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                                {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                    {{ message }}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function toggleStatus(variantId) {
+      const csrfToken = '{{ csrf_token }}';
+  
+      axios.post(`/adminpanel/toggles-status-variant/${variantId}/`, {}, {
+        headers: {
+          'X-CSRFToken': csrfToken
+        }
+      })
+      .then(response => {
+        if (response.data.success) {
+          const isListed = response.data.is_listed;
+          console.log(`Variant ${variantId} is now:`, isListed ? 'Listed ✅' : 'Unlisted ❌');
+          window.location.reload();
+        }
+      })
+      .catch(error => {
+        console.error("Error updating status:", error);
+      });
+    }
+  </script>
+    <!-- toast -->
+    <script>
+
+        //document.addEventListener('DOMContentLoaded', function () {
+        //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        //toastElList.map(function (toastEl) {
+            //var t = new bootstrap.Toast(toastEl);
+            //t.show();
+        //});
+    //});
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.toast').forEach(el => {
+                new bootstrap.Toast(el).show();
+            });
+        });
+    
+        
+    </script>
+{% endblock %}

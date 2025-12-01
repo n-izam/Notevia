@@ -1,3 +1,4 @@
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,7 +41,7 @@
       {% csrf_token %}
       <div class="mb-3 text-start">
         <label class="form-label">Email</label>
-        <input type="email" name="email" class="form-control" placeholder="Label (required)">
+        <input type="email" name="email" class="form-control" placeholder="email (required)">
       </div>
       
       <div class="mb-3 text-start">
@@ -50,9 +51,10 @@
           <span class="input-group-text"><i class="bi bi-eye"></i></span>
         </div>
       </div>
-      
 
-      <p class="small">Create an account <a href="signup">Sign up</a></p>
+      
+      <p class="small text-end"><a class="text-decoration-none" href="{% url 'signup' %}">Forgot Password?</a></p>
+    
       
       <button type="submit" class="btn btn-black w-100 mb-3">Log in</button>
 
@@ -62,10 +64,11 @@
         <hr class="flex-grow-1">
       </div>
 
-      <button type="button" class="btn google-btn w-100">
+      <a type="button" href="{% provider_login_url 'google' %}" class="btn google-btn w-100">
         <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" class="me-2">
         Google
-      </button>
+      </a>
+      <p class="small">Create an account <a href="{% url 'signup' %}">Sign up</a></p>
     </form>
     {% if messages %}
         {% for message in messages %}
