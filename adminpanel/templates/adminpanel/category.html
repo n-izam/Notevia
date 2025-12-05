@@ -217,7 +217,7 @@
                                     </div>
                                 </td>
                                 <td class="action-icons">
-                                    <a href="#" class="btn btn-sm" aria-label="View {{cat.name}}"><i class="fas fa-eye"></i></a>
+                                    
                                     <a href="{% url 'edit_category' cat.id %}" class="btn btn-sm" aria-label="Edit {{cat.name}}"><i class="fas fa-edit"></i></a>
                                     {% if cat.is_listed %}
                                     <a href="{% url 'category_delete' cat.id %}" class="btn btn-sm text-danger" aria-label="Delete {{cat.name}}"><i class="fas fa-trash"></i></a>

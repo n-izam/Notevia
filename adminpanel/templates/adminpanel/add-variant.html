@@ -24,9 +24,9 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
                     {% if request.resolver_match.url_name == 'add-variant' %}
-                    <form action="{% url 'add-variant' product.id %}" method="POST">
+                    <form action="{% url 'add-variant' product.id %}" method="POST" novalidate>
                         {% else %}
-                        <form action="{% url 'edit_variant' variant.id %}" method="POST">
+                        <form action="{% url 'edit_variant' variant.id %}" method="POST" novalidate>
                             {% endif %}
                         {% csrf_token %}
                         <!-- Variant Name -->

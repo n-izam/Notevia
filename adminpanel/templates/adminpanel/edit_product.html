@@ -115,52 +115,85 @@
                                     <!-- Product Name -->
                                     <div class="mb-4">
                                         <label for="productName" class="form-label">Product Name</label>
-                                        <input type="text" class="form-control" name="product_name" id="productName" placeholder="Perfume">
+                                        <input type="text" class="form-control" name="product_name" id="productName" placeholder="Perfume" value="{{product.name}}">
                                         <span class="error" id="error_product_name"></span>
                                     </div>
                                     <!-- Product Description -->
                                     <div class="mb-4">
                                         <label for="productDescription" class="form-label">Product Description</label>
-                                        <textarea class="form-control" name="product_description" id="productDescription" rows="4" placeholder="Write your description here..."></textarea>
+                                        <textarea class="form-control" name="product_description" id="productDescription" rows="4" placeholder="Write your description here...">{{ product.description }}</textarea>
                                         <span class="error" id="error_product_description"></span>
                                     </div>
                                     <!-- Product Images -->
                                     <div class="mb-4">
                                         <label class="form-label">Product Images</label>
                                         <div class="row g-3">
+                                            
                                             <!-- Image Upload Slot 1 -->
                                             <div class="col-md-4">
                                                 <div class="image-upload-slot" data-slot="1">
-                                                    <img src="" class="image-preview" alt="Image preview 1">
-                                                    <div class="default-view">
+                                                    <img src="{% if images|length >= 1 %}{{ images.0.image.url }}{% endif %}" 
+                                                         class="image-preview" 
+                                                         alt="Image preview 1"
+                                                         style="display: block;">
+                                                    <div class="default-view" style="display: none;">
                                                         <i class="fas fa-image icon"></i>
                                                         <span>Add Image</span>
                                                     </div>
+                                                    <!-- Optional: Delete button overlay -->
+                                                    {% if images|length >= 1 %}
+                                                    <div class="delete-overlay" data-slot="1" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                                        <i class="fas fa-trash"></i> Remove
+                                                    </div>
+                                                    {% endif %}
                                                 </div>
                                                 <input type="file" class="d-none image-upload-input" name="image_1" data-slot="1" accept="image/*">
+                                                <!-- Hidden input to track if image should be deleted -->
+                                                <input type="hidden" name="delete_image_1" value="0" class="delete-flag">
                                             </div>
+                                    
                                             <!-- Image Upload Slot 2 -->
                                             <div class="col-md-4">
                                                 <div class="image-upload-slot" data-slot="2">
-                                                    <img src="" class="image-preview" alt="Image preview 2">
-                                                    <div class="default-view">
+                                                    <img src="{% if images|length >= 2 %}{{ images.1.image.url }}{% endif %}" 
+                                                         class="image-preview" 
+                                                         alt="Image preview 2"
+                                                         style="display: block;">
+                                                    <div class="default-view" style="display: none;">
                                                         <i class="fas fa-image icon"></i>
                                                         <span>Add Image</span>
                                                     </div>
+                                                    {% if images|length >= 2 %}
+                                                    <div class="delete-overlay" data-slot="2" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                                        <i class="fas fa-trash"></i> Remove
+                                                    </div>
+                                                    {% endif %}
                                                 </div>
                                                 <input type="file" class="d-none image-upload-input" name="image_2" data-slot="2" accept="image/*">
+                                                <input type="hidden" name="delete_image_2" value="0" class="delete-flag">
                                             </div>
+                                    
                                             <!-- Image Upload Slot 3 -->
                                             <div class="col-md-4">
                                                 <div class="image-upload-slot" data-slot="3">
-                                                    <img src="" class="image-preview" alt="Image preview 3">
-                                                    <div class="default-view">
+                                                    <img src="{% if images|length >= 3 %}{{ images.2.image.url }}{% endif %}" 
+                                                         class="image-preview" 
+                                                         alt="Image preview 3"
+                                                         style="display: block;">
+                                                    <div class="default-view" style="display: none;">
                                                         <i class="fas fa-image icon"></i>
                                                         <span>Add Image</span>
                                                     </div>
+                                                    {% if images|length >= 3 %}
+                                                    <div class="delete-overlay" data-slot="3" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                                        <i class="fas fa-trash"></i> Remove
+                                                    </div>
+                                                    {% endif %}
                                                 </div>
                                                 <input type="file" class="d-none image-upload-input" name="image_3" data-slot="3" accept="image/*">
+                                                <input type="hidden" name="delete_image_3" value="0" class="delete-flag">
                                             </div>
+                                            
                                         </div>
                                         <span class="error" id="error_images"></span>
                                     </div>
@@ -602,6 +635,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     input.value = '';
                     return;
                 }
+                // ADD THIS LINE HERE - if user selects a new image, cancel any previous "delete" intention
+                const slot = input.dataset.slot;
+                const deleteFlag = document.querySelector(`input[name="delete_image_${slot}"]`);
+                if (deleteFlag) {
+                    deleteFlag.value = '0';  // We're uploading a new one → don't delete old
+                }
                 const reader = new FileReader();
                 reader.onload = () => {
                     imageToCrop.src = reader.result;
@@ -638,24 +677,65 @@ document.addEventListener('DOMContentLoaded', function () {
 
     cropButton.addEventListener('click', () => {
         if (!cropper) return;
-
+    
         const canvas = cropper.getCroppedCanvas({
             width: 512,
             height: 512,
             imageSmoothingQuality: 'high',
         });
-
+    
         const previewEl = document.querySelector(`.image-upload-slot[data-slot="${activeSlot}"] .image-preview`);
-        previewEl.src = canvas.toDataURL();
+        previewEl.src = canvas.toDataURL('image/png');
         previewEl.style.display = 'block';
-
+    
+        // Hide default "Add Image" placeholder
         document.querySelector(`.image-upload-slot[data-slot="${activeSlot}"] .default-view`).style.display = 'none';
-
+    
+        // Store cropped blob for form submission
         canvas.toBlob((blob) => {
             croppedImagesData[activeSlot] = blob;
-        });
-
+        }, 'image/png');
+    
+        // CRITICAL: User has uploaded/cropped a new image → cancel any previous "delete" intention
+        const deleteFlag = document.querySelector(`input[name="delete_image_${activeSlot}"]`);
+        if (deleteFlag) {
+            deleteFlag.value = '0';  // Do NOT delete the old image on backend
+        }
+    
+        // Remove the red "Remove" overlay (user clearly wants to keep/replace this image)
+        const overlay = document.querySelector(`.image-upload-slot[data-slot="${activeSlot}"] .delete-overlay`);
+        if (overlay) {
+            overlay.remove();
+        }
+    
+        // Finally hide the modal
         cropperModal.hide();
+    });
+
+    // --- Remove existing image ---
+    document.querySelectorAll('.delete-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const slot = this.dataset.slot;
+            const slotEl = document.querySelector(`.image-upload-slot[data-slot="${slot}"]`);
+            const preview = slotEl.querySelector('.image-preview');
+            const defaultView = slotEl.querySelector('.default-view');
+            const deleteFlag = slotEl.parentElement.querySelector('.delete-flag');
+
+            // Visual reset
+            preview.src = '';
+            preview.style.display = 'none';
+            defaultView.style.display = 'flex';
+            this.remove();
+
+            // Mark for deletion on backend
+            if (deleteFlag) {
+                deleteFlag.value = '1';
+            }
+
+            // Clear any new cropped image
+            delete croppedImagesData[slot];
+        });
     });
 
     // --- Form Submission ---

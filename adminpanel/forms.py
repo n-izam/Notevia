@@ -52,10 +52,22 @@ class VariantForm(forms.Form):
 
     def clean_discount_percent(self):
         discount_percent = self.cleaned_data.get('discount_percent')
-        if discount_percent <= 0:
-            validationerror("discount must be a positive number")
+
+        if not re.match(r'^(100(\.00?)?|[0-9]?\d(\.\d{1,2})?)$', str(discount_percent)):
+                validationerror('Variant percentage must be a valid number (e.g., 0 to 100.00) or 0.')
         else:
             return discount_percent
+        
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if not name.replace(" ", "").isalpha():
+            validationerror('Variant name can contain only alphabets and spaces.')
+                
+        elif  len(name) < 4:
+            validationerror('proper Variant name needed more character')
+            
+        else:
+            return name
         
     def clean_stock(self):
         stock = self.cleaned_data.get('stock')
@@ -70,5 +82,18 @@ class VariantForm(forms.Form):
             validationerror("stock must be a positive number")
         else:
             return price
+        
+
+class CategoryForm(forms.Form):
     
+    name = forms.CharField(max_length=255, required=True)
+    description = forms.CharField(required=True)
+
+    def clean_name(self):
+        name = self.cleaned_data.get("name")
+        if not name.replace(" ", "").isalpha():
+            validationerror("Category name can contain only alphabets and spaces.")
+        else:
+            return name
+        
     

@@ -21,13 +21,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q, Sum, F
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from cart.models import Cart, CartItem
-from .forms import OfferForm, VariantForm
+from .forms import OfferForm, VariantForm, CategoryForm
 from orders.models import Order, OrderItem
 from decimal import Decimal
 from django.db.models.functions import Coalesce
 from collections import defaultdict
 from accounts.forms import SigninForm
 from  django.contrib.auth import authenticate, login, logout
+from django.db import transaction
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 
@@ -245,6 +247,10 @@ class AddProductView(LoginRequiredMixin, View):
 
             if not product_name:
                 errors['product_name'] = 'Product name is required.'
+            if not product_name.replace(" ", "").isalpha():
+                errors['product_name'] = 'Product name can contain only alphabets and spaces.'
+            if  len(product_name) < 4:
+                errors['product_name'] = 'proper product name needed'
             if not product_description:
                 errors['product_description'] = 'Product description is required.'
             if not category_id or not Category.objects.filter(id=category_id, is_listed=True).exists():
@@ -274,12 +280,16 @@ class AddProductView(LoginRequiredMixin, View):
 
             if not variant_name:
                 errors['variant_name'] = 'Variant name is required.'
+            if not variant_name.replace(" ", "").isalpha():
+                errors['variant_name'] = 'Variant name can contain only alphabets and spaces.'
+            if  len(variant_name) < 4:
+                errors['variant_name'] = 'proper Variant name needed'
             if not variant_price or not re.match(r'^\d+(\.\d{1,2})?$', variant_price):
                 errors['variant_price'] = 'Variant price must be a valid number (e.g., 99.99).'
             if not variant_stock.isdigit() or int(variant_stock) < 0:
                 errors['variant_stock'] = 'Variant stock must be a non-negative integer.'
-            if not re.match(r'^\d+(\.\d{1,2})?$|^0$', variant_discount):
-                errors['variant_discount'] = 'Variant discount must be a valid number (e.g., 10.00) or 0.'
+            if not re.match(r'^(100(\.00?)?|[0-9]?\d(\.\d{1,2})?)$', variant_discount):
+                errors['variant_discount'] = 'Variant percentage must be a valid number (e.g., 0 to 100.00) or 0.'
 
             if errors:
                 return JsonResponse({'success': False, 'errors': errors}, status=400)
@@ -302,33 +312,36 @@ class AddProductView(LoginRequiredMixin, View):
             if errors:
                 return JsonResponse({'success': False, 'errors': errors}, status=400)
 
-            
-            product = Product.objects.create(name=product_name, description=product_description, category=category, brand=brand)
-            
+            try:
+                with transaction.atomic():
+                    product = Product.objects.create(name=product_name, description=product_description, category=category, brand=brand)
+                    
 
-            variant = Variant.objects.create(product=product, name=variant_name, description=variant_description, price=variant_price, discount=variant_discount, stock=variant_stock, is_listed=variant_is_listed)
-            
+                    variant = Variant.objects.create(product=product, name=variant_name, description=variant_description, price=variant_price, discount=variant_discount, stock=variant_stock, is_listed=variant_is_listed)
+                    
 
-            # --- Save Images ---
-            for index, image in enumerate(images):
-                productimage = ProductImage.objects.create( product=product, image=image, is_main=(index == 0) )
-                
-                
+                    # --- Save Images ---
+                    for index, image in enumerate(images):
+                        productimage = ProductImage.objects.create( product=product, image=image, is_main=(index == 0) )
+                        
+                        
 
-            
+                    
 
-            # --- Save Variant ---
-            # Variant.objects.create(
-            #     product=product,
-            #     name=variant_name,
-            #     description=variant_description,
-            #     price=float(variant_price),
-            #     discount=float(variant_discount),
-            #     stock=int(variant_stock),
-            #     is_listed=variant_is_listed
-            # )
+                    # --- Save Variant ---
+                    # Variant.objects.create(
+                    #     product=product,
+                    #     name=variant_name,
+                    #     description=variant_description,
+                    #     price=float(variant_price),
+                    #     discount=float(variant_discount),
+                    #     stock=int(variant_stock),
+                    #     is_listed=variant_is_listed
+                    # )
 
-            return JsonResponse({'success': True, 'message': 'Product added successfully!'})
+                return JsonResponse({'success': True, 'message': 'Product added successfully!'})
+            except Exception as e:
+                return JsonResponse({"error": str(e)}, status=400)
 
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -342,11 +355,23 @@ class EditProductView(View):
     def get(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
         brands = Brand.objects.all()
-        images = product.images.all()
+        # existing_images = list(product.images.all().order_by('id'))
+        images = product.images.all().order_by('id')
+        # # Pad with None so we always have 3 slots
+        # while len(existing_images) < 3:
+        #     existing_images.append(None)
 
         categories = Category.objects.filter(is_listed=True)
 
-        return render(request, 'adminpanel/edit_product.html', {"product": product, "user_id":request.user.id, "brands":brands, "categories":categories, "images": images})
+        context = {
+            "product": product,
+            "user_id":request.user.id,
+            "brands":brands,
+            "categories":categories,
+            "images": images,
+        }
+
+        return render(request, 'adminpanel/edit_product.html', context)
     def post(self, request, product_id):
         try:
             errors = {}
@@ -361,6 +386,10 @@ class EditProductView(View):
 
             if not product_name:
                 errors['product_name'] = 'Product name is required.'
+            if not product_name.replace(" ", "").isalpha():
+                errors['product_name'] = 'Product name can contain only alphabets and spaces.'
+            if  len(product_name) < 4:
+                errors['product_name'] = 'proper product name needed'
             if not product_description:
                 errors['product_description'] = 'Product description is required.'
             if not category_id or not Category.objects.filter(id=category_id, is_listed=True).exists():
@@ -370,12 +399,59 @@ class EditProductView(View):
 
             # --- Images ---
             
+
             
-            images = [request.FILES.get(f'cropped_image_{i}') for i in range(1, 4)]
-            images = [img for img in images if img]
-            
-            if len(images) < 3:
+            # images = [request.FILES.get(f'cropped_image_{i}') for i in range(1, 4)]
+            # images = [img for img in images if img]
+            # === IMAGE HANDLING - FINAL & WORKING VERSION ===
+            # === IMAGE HANDLING - BULLETPROOF FINAL VERSION ===
+            # === IMAGE HANDLING - SAFE & PROFESSIONAL FINAL VERSION ===
+            new_images = [request.FILES.get(f'cropped_image_{i}') for i in range(1, 4)]
+            new_images = [img for img in new_images if img]
+
+            # Which slots user wants to delete (but we won't delete yet!)
+            delete_slots = {
+                i for i in range(1, 4)
+                if request.POST.get(f'delete_image_{i}') == '1'
+            }
+
+            # Load current images (do NOT delete anything yet!)
+            current_images = list(ProductImage.objects.filter(product_id=product_id).order_by('id'))
+            print("current images", current_images)
+
+            # Build final list of image files (InMemoryUploadedFile or existing File)
+            final_image_files = [None, None, None]  # slot 1,2,3
+
+            # Step 1: Fill with existing images UNLESS user clicked remove AND didn't upload new one
+            for idx, img_obj in enumerate(current_images[:3]):
+                slot = idx + 1
+                slot_has_new_image = request.FILES.get(f'cropped_image_{slot}') is not None
+
+                # Only keep old image if:
+                # - User did NOT click remove OR
+                # - User clicked remove BUT then uploaded a new one (cancels delete)
+                if slot in delete_slots and not slot_has_new_image:
+                    # We will skip this image → it will be deleted later if form is valid
+                    continue
+                else:
+                    final_image_files[idx] = img_obj.image  # keep old file
+
+            # Step 2: Add new uploaded/cropped images (they override everything)
+            for slot in range(1, 4):
+                new_file = request.FILES.get(f'cropped_image_{slot}')
+                if new_file:
+                    # Use the new image (in same order user uploaded)
+                    if new_images:
+                        final_image_files[slot - 1] = new_images.pop(0)
+
+            # Step 3: Final count
+            valid_images = [img for img in final_image_files if img is not None]
+
+            if len(valid_images) < 3:
                 errors['images'] = 'At least 3 images are required.'
+            
+            # if len(images) < 3:
+            #     errors['images'] = 'At least 3 images are required.'
 
             if errors:
                 return JsonResponse({'success': False, 'errors': errors}, status=400)
@@ -391,26 +467,37 @@ class EditProductView(View):
 
             if errors:
                 return JsonResponse({'success': False, 'errors': errors}, status=400)
-
-
-            product.name = product_name
-            product.description = product_description
-            product.category = category
-            product.brand = brand
-            product.save()
             
-            if images:
-                ProductImage.objects.filter(product_id=product_id).delete()
+            try:
+                with transaction.atomic():
+                    product.name = product_name
+                    product.description = product_description
+                    product.category = category
+                    product.brand = brand
+                    product.save()
+                    
+                
+                    ProductImage.objects.filter(product_id=product_id).delete()
 
-                for index, image in enumerate(images):
-                    ProductImage.objects.create(
-                        product=product, image=image, is_main=(index == 0)
+                    for index, image_file in enumerate(valid_images[:3]):
+                        ProductImage.objects.create(
+                            product=product,
+                            image=image_file,
+                            is_main=(index == 0)  # First image = main
                         )
 
+                    # for index, image in enumerate(images):
+                    #     ProductImage.objects.create(
+                    #         product=product, image=image, is_main=(index == 0)
+                    #         )
+
             
             
 
-            return JsonResponse({'success': True, 'message': 'Product added successfully!'})
+                return JsonResponse({'success': True, 'message': 'Product added successfully!'})
+            except Exception as e:
+                return JsonResponse({"error": str(e)}, status=400)
+                
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
@@ -701,36 +788,57 @@ class AddCategoryView(View):
 
     def get(self, request):
 
-        return render(request, 'adminpanel/add-category.html', {"user_id": request.user.id})
+        errors = request.session.pop("add_category_error", None)
+        data = request.session.pop("add_category_data", None)
+
+        form = CategoryForm(data if data else None)
+
+        if errors:
+            form._errors = errors
+
+        return render(request, 'adminpanel/add-category.html', {"user_id": request.user.id, "form": form})
     
     def post(self, request):
 
-        category_name = request.POST.get('category_name')
-        description = request.POST.get('description')
-
-        status = request.POST.get('categoryStatus')
-        # return HttpResponse(f"the status is {status}")
-
-        if status == 'listed':
-            is_listed = True
-        else:
-            is_listed = False
-
-        if not category_name:
-            
-            info_notify(request, "enter the category name")
-            return redirect('add-category')
-        elif not description:
-            
-            info_notify(request, "give any description")
-            return redirect('add-category')
         
-        else:
-            category = Category.objects.create(name=category_name, description=description, is_listed=is_listed)
+        
+
+        
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            # return HttpResponse(f"the status is {status}")
+            name = request.POST.get('name')
+            description = request.POST.get('description')
+            status = request.POST.get('categoryStatus')
+            
+
+            if status == 'listed':
+                is_listed = True
+            else:
+                is_listed = False
+            
+            if len(description) < 10:
+                request.session["add_category_error"] = {"description": ["proper description needed"]}
+                request.session["add_category_data"] = request.POST
+                return redirect('add-category')
+
+            if Category.objects.filter(name__iexact=name).exists():
+
+                request.session["add_category_error"] = {"name": ["Variant name already exists for this product."]}
+                request.session["add_category_data"] = request.POST
+                return redirect('add-category')
+            
+            
+            
+            category = Category.objects.create(name=name, description=description, is_listed=is_listed)
             category.save()
             
 
             return redirect('admin-category')
+        else:
+            request.session["add_category_error"] = form.errors
+            request.session["add_category_data"] = request.POST
+            return redirect('add-category')
 
 # edit categkory
 @method_decorator(login_required(login_url='signin'), name='dispatch')
@@ -744,7 +852,31 @@ class CategoryUpdateView(UpdateView):
     def form_valid(self, form):
 
         name = form.cleaned_data['name']
+        description = form.cleaned_data['description']
         category_id = self.get_object().id
+
+
+        if not description:
+            form.add_error('description',"proper description required")
+            return self.form_invalid(form)
+        
+        if len(name) < 15:
+            form.add_error('description',"proper description required")
+            return self.form_invalid(form)
+        
+        
+        # if not description.replace(" ", "", ",", "!").isalnum():
+        #     form.add_error('description',"Category description can contain only alphabets and spaces number .")
+        #     return self.form_invalid(form)
+        if len(name) < 4:
+            form.add_error('name',"give the proper category name")
+            return self.form_invalid(form)
+
+        if not name.replace(" ", "").isalpha():
+            form.add_error('name',"Category name can contain only alphabets and spaces.")
+            return self.form_invalid(form)
+        
+
 
         if Category.objects.filter(name__iexact=name).exclude(id=category_id).exists():
             form.add_error('name',"Category with this name already exists.")
@@ -755,8 +887,12 @@ class CategoryUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
+        category_id = self.get_object().id
+        category = get_object_or_404(Category, id=category_id)
+
         
         context['user_id'] = self.request.user.id
+        context['category'] = category
         return context
     
 
@@ -968,23 +1104,7 @@ class AddVariantView(View):
 
             
 
-            # if not variant_name:
-                
-            #     error_notify(self.request, 'Variant name is required.')
-            #     return redirect('add-variant', product_id=product_id)
-            # elif not variant_price or not re.match(r'^\d+(\.\d{1,2})?$', variant_price):
-
-            #     # errors['variant_price'] = 'Variant price must be a valid number (e.g., 99.99).'
-            #     error_notify(self.request, 'Variant price must be a valid number (e.g., 99.99).')
-            #     return redirect('add-variant', product_id=product_id)
-            # elif not variant_stock.isdigit() or int(variant_stock) < 0:
-            #     # errors['variant_stock'] = 'Variant stock must be a non-negative integer.'
-            #     error_notify(self.request, 'Variant stock must be a non-negative integer.')
-            #     return redirect('add-variant', product_id=product_id)
-            # elif not re.match(r'^\d+(\.\d{1,2})?$|^0$', variant_discount):
-            #     # errors['variant_discount'] = 'Variant discount must be a valid number (e.g., 10.00) or 0.'
-            #     error_notify(self.request, 'Variant discount must be a valid number (e.g., 10.00) or 0.')
-            #     return redirect('add-variant', product_id=product_id)
+            
             if Variant.objects.filter(product_id=product_id, name__iexact=variant_name).exists():
                 # error_notify(self.request, 'Variant name already exists for this product.')
                 request.session["add_variant_error"] = {"name": ["Variant name already exists for this product."]}

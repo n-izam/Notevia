@@ -30,7 +30,7 @@
                         {% if request.resolver_match.url_name == 'add-category' %}
                         <div class="mb-4">
                             <label for="categoryName" class="form-label">Category Name</label>
-                            <input type="text" class="form-control" id="categoryName" name="category_name" placeholder="Type category name here..." >
+                            <input type="text" class="form-control" id="categoryName" name="name" placeholder="Type category name here..." value="{% if form.name.errors %}{{ form.name.value|default:'' }}{% endif %}">
                             {% if form.name.errors %}
                             <small style="color:red;">{{ form.name.errors.0 }}</small>
                             {% endif %}
@@ -38,10 +38,11 @@
                         {% else %}
                         <div class="mb-4">
                             <label for="categoryName" class="form-label">Category Name</label>
-                            <input type="text" class="form-control" id="categoryName" name="name" placeholder="Type category name here..." >
+                            <input type="text" class="form-control" id="categoryName" name="name" placeholder="Type category name here..." value="{% if form.name.errors %}{{ form.name.value|default:'' }} {% else %} {{ category.name|default:'' }} {% endif %}">
                             {% if form.name.errors %}
                             <small style="color:red;">{{ form.name.errors.0 }}</small>
                             {% endif %}
+                        
                         </div>
                         {% endif %}
 
@@ -49,12 +50,18 @@
                         {% if request.resolver_match.url_name == 'add-category' %}
                         <div class="mb-4">
                             <label for="categoryDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here..."></textarea>
+                            <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here...">{% if form.description.errors %}{{ form.description.value|default:'' }} {% endif %}</textarea>
+                            {% if form.description.errors %}
+                            <small style="color:red;">{{ form.description.errors.0 }}</small>
+                            {% endif %}
                         </div>
                         {% else %}
                         <div class="mb-4">
                             <label for="categoryDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here..."></textarea>
+                            <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here...">{% if form.description.errors %}{{ form.description.value|default:'' }} {% else %} {{ category.description|default:'' }} {% endif %}</textarea>
+                            {% if form.description.errors %}
+                            <small style="color:red;">{{ form.description.errors.0 }}</small>
+                            {% endif %}
                         </div>
                         {% endif %}
 
