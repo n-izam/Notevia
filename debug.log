@@ -1357,3 +1357,279 @@ INFO 2025-12-01 13:01:02,999 views 74693 6174961664 the item count is :5
 INFO 2025-12-01 13:40:16,987 autoreload 74693 8568817728 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
 INFO 2025-12-01 14:06:49,368 autoreload 76037 8568817728 Watching for file changes with StatReloader
 INFO 2025-12-01 14:10:30,137 autoreload 76967 8568817728 Watching for file changes with StatReloader
+INFO 2025-12-04 21:28:25,467 autoreload 15922 8435435584 Watching for file changes with StatReloader
+WARNING 2025-12-04 21:30:42,230 log 15922 6182907904 Not Found: /favicon.ico
+INFO 2025-12-04 21:31:19,131 autoreload 16120 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 21:32:42,441 autoreload 16120 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:32:43,022 autoreload 16179 8435435584 Watching for file changes with StatReloader
+WARNING 2025-12-04 21:34:59,328 log 16179 6155153408 Not Found: /favicon.ico
+WARNING 2025-12-04 21:38:45,265 log 16179 6188806144 Not Found: /favicon.ico
+INFO 2025-12-04 21:40:16,348 autoreload 16479 8435435584 Watching for file changes with StatReloader
+WARNING 2025-12-04 21:41:47,496 log 16479 6425997312 Not Found: /favicon.ico
+WARNING 2025-12-04 21:41:57,939 log 16479 12935360512 Not Found: /favicon.ico
+INFO 2025-12-04 21:49:16,347 autoreload 16479 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:49:16,979 autoreload 16728 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 21:49:20,354 autoreload 16728 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:49:20,704 autoreload 16741 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 21:49:21,959 autoreload 16741 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:50:32,617 autoreload 16910 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 21:51:31,327 autoreload 16910 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:51:31,952 autoreload 16948 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 21:51:42,731 autoreload 16948 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:53:45,580 autoreload 17405 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 21:54:36,704 autoreload 17405 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:54:37,254 autoreload 17445 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 21:54:38,657 autoreload 17445 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:54:38,951 autoreload 17451 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 21:54:44,328 autoreload 17451 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:54:44,667 autoreload 17461 8435435584 Watching for file changes with StatReloader
+ERROR 2025-12-04 21:55:08,624 log 17461 6204010496 Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py", line 29, in get
+    for product in latest_products:
+                   ^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 384, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 255, in connect
+    conn_params = self.get_connection_params()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 241, in get_connection_params
+    raise ImproperlyConfigured(
+    ...<2 lines>...
+    )
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the NAME or OPTIONS['service'] value.
+ERROR 2025-12-04 21:56:14,209 log 17461 6204010496 Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py", line 29, in get
+    for product in latest_products:
+                   ^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 384, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 255, in connect
+    conn_params = self.get_connection_params()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 241, in get_connection_params
+    raise ImproperlyConfigured(
+    ...<2 lines>...
+    )
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the NAME or OPTIONS['service'] value.
+INFO 2025-12-04 21:56:36,243 autoreload 17461 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:56:36,952 autoreload 17640 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 21:56:40,376 autoreload 17640 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 21:58:18,158 autoreload 17786 8435435584 Watching for file changes with StatReloader
+ERROR 2025-12-04 22:00:35,541 log 17786 6196178944 Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 244, in _get_session
+    return self._session_cache
+           ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SessionStore' object has no attribute '_session_cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py", line 20, in get
+    if request.user.is_authenticated:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+    ~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/middleware.py", line 40, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/middleware.py", line 20, in get_user
+    request._cached_user = auth.get_user(request)
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/__init__.py", line 304, in get_user
+    user_id = _get_user_session_key(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/__init__.py", line 95, in _get_user_session_key
+    return get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])
+                                               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 55, in __getitem__
+    return self._session[key]
+           ^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/sessions/backends/base.py", line 249, in _get_session
+    self._session_cache = self.load()
+                          ~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 55, in load
+    s = self._get_session_from_db()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/sessions/backends/db.py", line 34, in _get_session_from_db
+    return self.model.objects.get(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        session_key=self.session_key, expire_date__gt=timezone.now()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 629, in get
+    num = len(clone)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1621, in execute_sql
+    cursor = self.connection.cursor()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/base/base.py", line 255, in connect
+    conn_params = self.get_connection_params()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 241, in get_connection_params
+    raise ImproperlyConfigured(
+    ...<2 lines>...
+    )
+django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the NAME or OPTIONS['service'] value.
+INFO 2025-12-04 22:02:01,986 autoreload 17786 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 22:02:02,556 autoreload 17884 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 22:02:04,922 autoreload 17884 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 22:02:05,246 autoreload 17900 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-04 22:02:07,633 autoreload 17900 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 22:02:26,887 autoreload 18003 8435435584 Watching for file changes with StatReloader
+DEBUG 2025-12-04 22:03:37,340 connectionpool 18003 6123483136 Starting new HTTPS connection (1): oauth2.googleapis.com:443
+DEBUG 2025-12-04 22:03:37,806 connectionpool 18003 6123483136 https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+INFO 2025-12-04 22:05:03,043 autoreload 18003 8435435584 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-04 22:05:03,699 autoreload 18112 8435435584 Watching for file changes with StatReloader
+INFO 2025-12-05 09:34:34,834 autoreload 21068 8435435584 Watching for file changes with StatReloader
+WARNING 2025-12-05 09:34:58,241 log 21068 6169522176 Not Found: /favicon.ico
+WARNING 2025-12-05 10:05:52,120 log 21068 6136442880 Not Found: /orders/order_confirmation/
+WARNING 2025-12-05 10:06:45,818 log 21068 6136442880 Not Found: /orders/order_confirmation/
+INFO 2025-12-05 10:07:04,184 autoreload 21773 8435435584 Watching for file changes with StatReloader
+WARNING 2025-12-05 10:07:18,610 log 21773 6191968256 Not Found: /home/2/s
+WARNING 2025-12-05 10:07:49,652 log 21773 6208794624 Not Found: /orders/order_confirmation/
+DEBUG 2025-12-05 10:15:41,208 connectionpool 21773 6191968256 Starting new HTTPS connection (1): api.razorpay.com:443
+DEBUG 2025-12-05 10:15:42,897 connectionpool 21773 6191968256 https://api.razorpay.com:443 "POST /v1/orders HTTP/1.1" 200 219
+WARNING 2025-12-05 10:16:27,482 log 21773 6208794624 Not Found: /static/css/profile_style.css
+WARNING 2025-12-05 10:16:34,854 log 21773 6208794624 Not Found: /static/css/profile_style.css
+WARNING 2025-12-05 10:16:44,579 log 21773 6208794624 Not Found: /static/css/profile_style.css
+WARNING 2025-12-05 10:17:11,625 log 21773 6208794624 Not Found: /static/css/style3.css
+WARNING 2025-12-05 10:17:11,625 log 21773 6225620992 Not Found: /static/images/logo/logo12.png
+WARNING 2025-12-05 10:17:12,020 log 21773 6191968256 Not Found: /static/js/script.js
+WARNING 2025-12-05 10:17:12,844 log 21773 6191968256 Not Found: /favicon.ico
+WARNING 2025-12-05 10:17:28,177 log 21773 6226194432 Not Found: /static/js/script.js
+WARNING 2025-12-05 10:17:28,272 log 21773 6208794624 Not Found: /static/images/logo/logo12.png
+WARNING 2025-12-05 10:17:28,273 log 21773 6191968256 Not Found: /static/css/style3.css
+WARNING 2025-12-05 10:17:29,137 log 21773 6191968256 Not Found: /favicon.ico
+INFO 2025-12-05 10:18:20,212 autoreload 22175 8435435584 Watching for file changes with StatReloader
+WARNING 2025-12-05 10:18:35,687 log 22175 6135312384 Not Found: /favicon.ico
+WARNING 2025-12-05 10:18:35,691 log 22175 6135312384 Not Found: /favicon.ico
+WARNING 2025-12-05 10:18:35,694 log 22175 6135312384 Not Found: /favicon.ico
+WARNING 2025-12-05 10:18:45,530 log 22175 6152138752 Not Found: /static/images/logo/logo12.png
+WARNING 2025-12-05 10:18:45,531 log 22175 6135312384 Not Found: /static/css/style3.css
+WARNING 2025-12-05 10:18:45,533 log 22175 6168965120 Not Found: /static/js/script.js
+WARNING 2025-12-05 10:20:27,798 log 22175 6135312384 Not Found: /static/css/style3.css
+WARNING 2025-12-05 10:20:27,807 log 22175 6135312384 Not Found: /static/images/logo/logo12.png
+WARNING 2025-12-05 10:20:27,810 log 22175 6152138752 Not Found: /static/js/script.js
+INFO 2025-12-05 10:21:20,773 autoreload 22425 8435435584 Watching for file changes with StatReloader
+WARNING 2025-12-05 10:21:40,670 log 22425 6183792640 Not Found: /favicon.ico
+DEBUG 2025-12-05 10:23:34,985 connectionpool 22425 6183792640 Starting new HTTPS connection (1): api.cloudinary.com:443
+DEBUG 2025-12-05 10:23:38,421 connectionpool 22425 6183792640 https://api.cloudinary.com:443 "POST /v1_1/dbufuuut7/image/upload HTTP/1.1" 200 None
+INFO 2025-12-05 10:28:23,421 views 22425 6183792640 refferal for : Muhammed
