@@ -596,7 +596,7 @@
                 <!-- Right Column: Address, Payment & Price Details -->
                 <div class="col-lg-5">
                     <form action="{% url 'place_order' %}" method="get">
-                        {% csrf_token %}
+                        
                         {% if select_address %}
                         <input type="hidden" name="address" value="{{select_address.id}}">
                         {% endif %}
@@ -663,9 +663,11 @@
                                     <div class="d-flex justify-content-between mb-3"><span>Tax ({{tax}}%)</span> <span>Rs. {{final_tax_with_coupon}}</span></div>
                                     
                                 </div>
+                                
                                 {% if not applied_coupon %}
                                     <div class="input-group mb-3">
                                             <input type="text" id="couponInput" name="applied_coupon" class="form-control rounded" placeholder="KAKAKA">
+                                            <!-- <input type="hidden" name="address" value="{{select_address.id}}" id="addressInput" class="form-control rounded"> -->
                                             <button class="btn btn-dark mx-2 rounded" id="applyCoupon" type="button">APPLY</button>
                                             <!-- VIEW COUPONS Button that triggers modal -->
                                             <button class="btn btn-dark rounded" type="button" data-bs-toggle="modal" data-bs-target="#couponModal">VIEW COUPONS</button>
@@ -715,7 +717,7 @@
                                         {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
                                             {{ message }}
                                         </div>
-                                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                        <button type="button" class="btn-close btn-close-muted me-2 m-auto" data-bs-dismiss="toast"></button>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -856,8 +858,33 @@
         // Navigate to the new URL with query param
         window.location.href = url.toString();
     });
+
+    
     
 </script>
+<!-- <script>
+    document.getElementById('applyCoupon').addEventListener('click', function () {
+        const coupon = document.getElementById('couponInput').value;
+        const address = document.getElementById('addressInput').value;
+    
+        fetch("{% url 'order_confirmation' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: new URLSearchParams({
+                applied_coupon: coupon,
+                address: address
+            })
+        })
+        .then(response => response.text())
+        .then(data => {
+            // reload the page OR update totals dynamically
+            window.location.reload();
+        });
+    });
+</script> -->
 <script>
 
     //document.addEventListener('DOMContentLoaded', function () {

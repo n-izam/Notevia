@@ -6,6 +6,8 @@ from .models import Cart, CartItem, Wallet, WalletTransaction
 from django.db import models
 from accounts.utils import success_notify, info_notify, error_notify, profile, custom_page_range
 from decimal import Decimal
+from orders.models import Order, OrderItem, OrderAddress
+
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -31,6 +33,29 @@ client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_S
 class CartPageView(View):
 
     def get(self, request):
+
+        if request.session.get('payment_confirm'):
+            if request.session.get('session_order'):
+                order_id = request.session.get('session_order')
+                try:
+                    session_order = Order.objects.get(razorpay_order_id=order_id)
+                except Order.DoesNotExist:
+                    request.session.pop('payment_confirm', None)
+                    del request.session['session_order']
+                    return redirect('cart_page')
+                # session_order = get_object_or_404(Order, id=order_id)
+                for item in session_order.items.all():
+                    item.variant.stock += item.quantity
+                    item.variant.save()
+                    
+                session_order.items.all().delete()
+                session_order.orders_address.delete()
+                session_order.delete()
+            request.session.pop('payment_confirm', None)
+            del request.session['session_order']
+            
+            error_notify(request, 'Try again, payment gateway failed..!')
+            return redirect('cart_page')
 
         cart, created = Cart.objects.get_or_create(user=request.user)
         

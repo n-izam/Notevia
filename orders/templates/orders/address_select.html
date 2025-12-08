@@ -322,7 +322,11 @@
                                 {% if address.is_default %}
                                 <span class=" badge bg-success rounded-pill me-auto">Default</span>
                                 {% endif %}
-                                <a href="{% url 'order_confirmation' %}?address={{address.id}}" class="btn btn-dark w-100 mt-3">DELIVER HERE</a>
+                                <form action="" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="address" value="{{address.id}}" id="">
+                                    <button type="submit" class="btn btn-dark w-100 mt-3">DELIVER HERE</button>
+                                </form>
                             </div>
                         </div>
                         {% endfor %}
@@ -408,6 +412,12 @@
         if (event.persisted) {
             window.location.reload();
         }
+    });
+
+    document.querySelectorAll('.address-card').forEach(card => {
+        card.addEventListener('click', () => {
+            card.querySelector('form').submit()
+        });
     });
 </script>
 <!-- toast -->

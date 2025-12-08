@@ -1180,6 +1180,7 @@ class EditVariantView(View):
             variant.price = variant_price
             variant.discount = variant_discount
             variant.stock = variant_stock
+            #raise Exception("Testing 500 error")
             variant.save()
 
             success_notify(request, "new variant Updated successfully")
@@ -1205,7 +1206,12 @@ class ToggleVariatStatusView(View):
             product.is_listed = False
             product.save()
 
+        print(f"variant listed {variant.product.name}-{variant.is_listed}" )
         
+        if variant.is_listed:
+            pass #create fuction for cart update
+        else:
+            pass
 
         #     CartItem.objects.filter(product=variant.product, variant=variant, is_active=False).update(is_active=True)
         # elif not (variant.is_listed and variant.product.is_listed and variant.product.category.is_listed):  
