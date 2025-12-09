@@ -17,10 +17,11 @@ from django.core.exceptions import ValidationError
 from cloudinary.uploader import destroy
 import re
 from products.models import Referral, Wishlist
-from cart.models import Wallet
+from cart.models import Wallet, WalletTransaction
 from decimal import Decimal
 from django.contrib.auth.decorators import login_required
-
+from orders.models import Order, OrderItem, OrderAddress
+from time import time
 
 # Create your views here.
 @method_decorator(never_cache, name='dispatch')
@@ -307,6 +308,65 @@ class SignOutView(View):
 
     def get(self, request, user_id):
 
+        wallet_confirm = request.session.get('wallet_payment_confirm')
+        transaction_id = request.session.get('session_transaction')
+
+        # If required session keys are missing → clear & redirect
+        if  wallet_confirm and transaction_id:
+            
+
+            # Get wallet
+            if not Wallet.objects.filter(user=request.user).exists():
+                request.session.pop('wallet_payment_confirm', None)
+                request.session.pop('session_transaction', None)
+                return redirect('wallet')
+
+            session_wallet = get_object_or_404(Wallet, user=request.user)
+
+            # Validate transaction
+            if not WalletTransaction.objects.filter(wallet=session_wallet, id=transaction_id).exists():
+                request.session.pop('wallet_payment_confirm', None)
+                request.session.pop('session_transaction', None)
+                return redirect('wallet')
+
+            session_transaction = get_object_or_404(WalletTransaction, id=transaction_id)
+
+            # Process wallet logic
+            session_wallet.set_wallet_amount(session_transaction.amount)
+            session_transaction.delete()
+
+            # Clean up session keys
+            request.session.pop('wallet_payment_confirm', None)
+            request.session.pop('session_transaction', None)
+
+            #error_notify(request, 'Try again, payment gateway failed..!')
+            
+        else:
+            request.session.pop('wallet_payment_confirm', None)
+            request.session.pop('session_transaction', None)
+
+        if request.session.get('payment_confirm'):
+            if request.session.get('session_order'):
+                order_id = request.session.get('session_order')
+                try:
+                    session_order = Order.objects.get(razorpay_order_id=order_id)
+                except Order.DoesNotExist:
+                    request.session.pop('payment_confirm', None)
+                    del request.session['session_order']
+                    return redirect('cart_page')
+                # session_order = get_object_or_404(Order, id=order_id)
+                for item in session_order.items.all():
+                    item.variant.stock += item.quantity
+                    item.variant.save()
+                    
+                session_order.items.all().delete()
+                session_order.orders_address.delete()
+                session_order.delete()
+            request.session.pop('payment_confirm', None)
+            del request.session['session_order']
+            
+            error_notify(request, 'Try again, payment gateway failed..!')
+
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         user = get_object_or_404(CustomUser, id=user_id)
         logout(request)
@@ -316,6 +376,66 @@ class SignOutView(View):
 
         return redirect('signin')
     def post(self, request, user_id):
+
+        wallet_confirm = request.session.get('wallet_payment_confirm')
+        transaction_id = request.session.get('session_transaction')
+
+        # If required session keys are missing → clear & redirect
+        if  wallet_confirm and transaction_id:
+            
+
+            # Get wallet
+            if not Wallet.objects.filter(user=request.user).exists():
+                request.session.pop('wallet_payment_confirm', None)
+                request.session.pop('session_transaction', None)
+                return redirect('wallet')
+
+            session_wallet = get_object_or_404(Wallet, user=request.user)
+
+            # Validate transaction
+            if not WalletTransaction.objects.filter(wallet=session_wallet, id=transaction_id).exists():
+                request.session.pop('wallet_payment_confirm', None)
+                request.session.pop('session_transaction', None)
+                return redirect('wallet')
+
+            session_transaction = get_object_or_404(WalletTransaction, id=transaction_id)
+
+            # Process wallet logic
+            session_wallet.set_wallet_amount(session_transaction.amount)
+            session_transaction.delete()
+
+            # Clean up session keys
+            request.session.pop('wallet_payment_confirm', None)
+            request.session.pop('session_transaction', None)
+
+            error_notify(request, 'Try again, payment gateway failed..!')
+            
+        else:
+            request.session.pop('wallet_payment_confirm', None)
+            request.session.pop('session_transaction', None)
+
+        
+        if request.session.get('payment_confirm'):
+            if request.session.get('session_order'):
+                order_id = request.session.get('session_order')
+                try:
+                    session_order = Order.objects.get(razorpay_order_id=order_id)
+                except Order.DoesNotExist:
+                    request.session.pop('payment_confirm', None)
+                    del request.session['session_order']
+                    return redirect('cart_page')
+                # session_order = get_object_or_404(Order, id=order_id)
+                for item in session_order.items.all():
+                    item.variant.stock += item.quantity
+                    item.variant.save()
+                    
+                session_order.items.all().delete()
+                session_order.orders_address.delete()
+                session_order.delete()
+            request.session.pop('payment_confirm', None)
+            del request.session['session_order']
+            
+            error_notify(request, 'Try again, payment gateway failed..!')
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         user = get_object_or_404(CustomUser, id=user_id)
         
@@ -346,27 +466,38 @@ class ForgotPassView(View):
 
         
         if request.session.get("forgot_otp_request"):
-            request.session.pop("forgot_otp_request", None)
             
-        # if request.session.get("forgot_otp_verified"):
-
-        #     return render(request, '')
+            if request.session.get("otpExpiry"):
+                
+                del request.session["otpExpiry"]
+            if request.session.get("forgot_email"):
+                try:
+                    forgot_email = request.session.get("forgot_email")
+                    user = get_object_or_404(CustomUser, email=forgot_email)
+                except:
+                    request.session.pop("forgot_otp_request", None)
+                    request.session.pop("forgot_email", None)
+            UserOTP.objects.filter(user=user).delete()
+            request.session.pop("forgot_otp_request", None)
+            request.session.pop("forgot_email", None)
+            
+        
             
         return render(request, 'accounts/forgotpass.html')
     
     def post(self, request):
 
-        email = request.POST.get('email')
-        if not email:
+        enter_email = request.POST.get('email')
+        if not enter_email:
             warning_notify(request, 'enter proper email')
             return redirect('forgot_pass')
 
 
-        if not CustomUser.objects.filter(email=email).exists():
+        if not CustomUser.objects.filter(email=enter_email).exists():
             error_notify(request, 'thre is no account use this email')
             return redirect('forgot_pass')
         
-        user = get_object_or_404(CustomUser, email=email)
+        user = get_object_or_404(CustomUser, email=enter_email)
         
         otp = UserOTP.generate_otp()
         
@@ -386,7 +517,11 @@ class ForgotPassView(View):
 
         success_notify(request, "We sent you an OTP. Please verify your email.")
         # return redirect('forgot_pass')
+        expiry_time = int(time()) + 180  # 180 seconds
+        request.session["otpExpiry"] = expiry_time
+        request.session.modified = True
         request.session["forgot_otp_request"] = True
+        request.session["forgot_email"] = enter_email
         return redirect("verify_forgot_otp", user_id=user.id)
     
 @method_decorator(never_cache, name='dispatch')
@@ -406,20 +541,29 @@ class VerifyForgotOTPView(View):
         # forgot otp session check
         
         
+        
         if request.session.get("forgot_otp_verified"):
 
             warning_notify(request, "Change password then move forward")
             return redirect('new_pass', user_id=user_id)
         
         if not request.session.get("forgot_otp_request"):
-            error_notify(request, 'try again something went wrong')
-            return redirect('forgot_pass')
+            if not request.session.get("otpExpiry"):
+
+                error_notify(request, 'try again something went wrong')
+                return redirect('forgot_pass')
         
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         user = get_object_or_404(CustomUser, id=user_id)
+        expiry_time = request.session.get("otpExpiry", 0)
 
+        context = {
+            "user_id": user_id,
+            "user": user,
+            "expiry": expiry_time,
+        }
         
-        return render(request, "accounts/verify_forgot_otp.html", {"user_id": user_id, "user": user})
+        return render(request, "accounts/verify_forgot_otp.html", context)
     
     def post(self, request, user_id):
         entered_otp = request.POST.get("otp")
@@ -433,7 +577,7 @@ class VerifyForgotOTPView(View):
             error_notify(request, "check your email and enter your otp")
             return redirect('verify_forgot_otp', user_id=user.id)
 
-        if otp_obj.otp == entered_otp and otp_obj.created_at >=  timezone.now() - timedelta(minutes=5):
+        if otp_obj.otp == entered_otp and otp_obj.updated_at >=  timezone.now() - timedelta(minutes=3):
             
             
             
@@ -442,7 +586,10 @@ class VerifyForgotOTPView(View):
             # request.session.pop("signup_done", None)
             request.session["forgot_otp_verified"] = True
             if request.session.get("forgot_otp_request"):
+                
+                del request.session["otpExpiry"]
                 request.session.pop("forgot_otp_request", None)
+                request.session.pop("forgot_email", None)
 
             otp_obj.delete()
             success_notify(request, "Your account has been verified. You can create new password now.")
@@ -456,6 +603,8 @@ class VerifyForgotOTPView(View):
 class ResendPasswordOTPView(View):
     def get(self, request, user_id):
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
+        if not request.session.get("otpExpiry"):
+            return redirect("forgot_pass")
         user = get_object_or_404(CustomUser, id=user_id)
         otp = UserOTP.generate_otp()
         
@@ -473,7 +622,8 @@ class ResendPasswordOTPView(View):
         email.attach_alternative(html_content, "text/html")
         email.send()
 
-        
+        new_expiry = int(time()) + 180
+        request.session["otpExpiry"] = new_expiry
         
         success_notify(request, "A new OTP has been sent to your email.")
         return redirect("verify_forgot_otp", user_id=user.id)

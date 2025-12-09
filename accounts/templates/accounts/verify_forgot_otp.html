@@ -155,13 +155,13 @@
     <!-- Resend OTP -->
     <p class="small mt-3">
       Didn’t get the OTP? 
-      <a href="{% url 'resend_forgot_otp' user_id=user_id %}" class="fw-bold">Resend OTP</a>
+      <a href="{% url 'resend_forgot_otp' user_id=user_id %}" id="resendBtn" onclick="resendOTP()" class="fw-bold">Resend OTP</a>
     </p>
   </div>
 
   <!-- timer  -->
   
-<script>
+<!-- <script>
     let timeLeft = 60; // seconds
     let timer = setInterval(function() {
         if(timeLeft <= 0){
@@ -172,6 +172,43 @@
         }
         timeLeft -= 1;
     }, 1000);
+</script> -->
+
+
+
+
+<script>
+  const expiryTime = Number("{{ expiry|default:0 }}") * 1000;
+
+  function startTimer() {
+      let timer = setInterval(function () {
+          let now = Date.now();
+          let timeLeft = Math.floor((expiryTime - now) / 1000);
+
+          if (timeLeft <= 0) {
+              clearInterval(timer);
+              document.getElementById("timer").innerHTML = "OTP expired, please resend.";
+          } else {
+              let minutes = Math.floor(timeLeft / 60);
+              let seconds = timeLeft % 60;
+
+              // Add leading zero for seconds
+              seconds = seconds < 10 ? "0" + seconds : seconds;
+
+              document.getElementById("timer").innerHTML = "Expires in " + minutes + ":" + seconds;
+          }
+
+      }, 1000);
+  }
+
+  startTimer();
+</script>
+<script>
+  // Detect if user navigated from a different page
+  if (performance.navigation.type !== performance.navigation.TYPE_RELOAD) {
+      // Fresh visit → clear old expiry from backend on next visit
+      fetch("/reset-otp-expiry/");
+  }
 </script>
 
   <!-- Bootstrap JS -->

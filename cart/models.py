@@ -167,6 +167,13 @@ class Wallet(models.Model):
             message=message
         )
         return transaction
+    
+    def set_wallet_amount(self, amount):
+        if self.balance < amount:
+            raise ValueError("Insufficient balance")
+        self.balance -= amount
+        self.save()
+        return self.balance
 
 def generate_transaction_id():
     return f"TXN-{timezone.now().strftime('%Y%m%d')}-{uuid.uuid4().hex[:4].upper()}"

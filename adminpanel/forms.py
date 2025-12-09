@@ -91,8 +91,8 @@ class CategoryForm(forms.Form):
 
     def clean_name(self):
         name = self.cleaned_data.get("name")
-        if not name.replace(" ", "").isalpha():
-            validationerror("Category name can contain only alphabets and spaces.")
+        if not name.replace(" ", "").isalnum():
+            validationerror("Category name can contain only alphabets, number and spaces.")
         else:
             return name
         

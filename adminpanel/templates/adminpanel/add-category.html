@@ -58,7 +58,7 @@
                         {% else %}
                         <div class="mb-4">
                             <label for="categoryDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here...">{% if form.description.errors %}{{ form.description.value|default:'' }} {% else %} {{ category.description|default:'' }} {% endif %}</textarea>
+                            <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here...">{% if form.description.errors %}{{ form.description.value|default:'' }}{% else %}{{ category.description|default:'' }}{% endif %}</textarea>
                             {% if form.description.errors %}
                             <small style="color:red;">{{ form.description.errors.0 }}</small>
                             {% endif %}

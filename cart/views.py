@@ -201,6 +201,8 @@ class CartQuantityUpdateView(View):
         #     return redirect('cart_page')
         
         if int(quantity) > cart_item.variant.stock:
+            cart_item.quantity=1
+            cart_item.save()
             info_notify(request, f"maximum stock reached")
             return redirect('cart_page')
             
@@ -236,14 +238,45 @@ class RemoveFromCartView(View):
 class UserWalletView(View):
 
     def get(self, request):
-        if request.session.get('wallet_payment_confirm'):
-            transaction_id = request.session.get('session_transaction')
+        wallet_confirm = request.session.get('wallet_payment_confirm')
+        transaction_id = request.session.get('session_transaction')
+
+        # If required session keys are missing → clear & redirect
+        if  wallet_confirm and transaction_id:
+            
+
+            # Get wallet
+            if not Wallet.objects.filter(user=request.user).exists():
+                request.session.pop('wallet_payment_confirm', None)
+                request.session.pop('session_transaction', None)
+                return redirect('wallet')
+
+            session_wallet = get_object_or_404(Wallet, user=request.user)
+
+            # Validate transaction
+            if not WalletTransaction.objects.filter(wallet=session_wallet, id=transaction_id).exists():
+                request.session.pop('wallet_payment_confirm', None)
+                request.session.pop('session_transaction', None)
+                return redirect('wallet')
+
             session_transaction = get_object_or_404(WalletTransaction, id=transaction_id)
+
+            # Process wallet logic
+            session_wallet.set_wallet_amount(session_transaction.amount)
             session_transaction.delete()
+
+            # Clean up session keys
             request.session.pop('wallet_payment_confirm', None)
-            del request.session['session_transaction']
+            request.session.pop('session_transaction', None)
+
             error_notify(request, 'Try again, payment gateway failed..!')
-            return redirect('wallet')
+            
+        else:
+            request.session.pop('wallet_payment_confirm', None)
+            request.session.pop('session_transaction', None)
+            
+            
+                
 
         page = request.GET.get('page', 1)
         wallet, create = Wallet.objects.get_or_create(user=request.user)

@@ -30,6 +30,7 @@ from accounts.forms import SigninForm
 from  django.contrib.auth import authenticate, login, logout
 from django.db import transaction
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from .utils import cart_update
 
 
 
@@ -860,8 +861,8 @@ class CategoryUpdateView(UpdateView):
             form.add_error('description',"proper description required")
             return self.form_invalid(form)
         
-        if len(name) < 15:
-            form.add_error('description',"proper description required")
+        if len(description) < 15:
+            form.add_error('description',"please leave, proper description required")
             return self.form_invalid(form)
         
         
@@ -872,8 +873,8 @@ class CategoryUpdateView(UpdateView):
             form.add_error('name',"give the proper category name")
             return self.form_invalid(form)
 
-        if not name.replace(" ", "").isalpha():
-            form.add_error('name',"Category name can contain only alphabets and spaces.")
+        if not name.replace(" ", "").isalnum():
+            form.add_error('name',"Category name can contain only alphabets, number and spaces.")
             return self.form_invalid(form)
         
 
@@ -1209,9 +1210,9 @@ class ToggleVariatStatusView(View):
         print(f"variant listed {variant.product.name}-{variant.is_listed}" )
         
         if variant.is_listed:
-            pass #create fuction for cart update
+            status =  cart_update(variant)
         else:
-            pass
+            status =  cart_update(variant)
 
         #     CartItem.objects.filter(product=variant.product, variant=variant, is_active=False).update(is_active=True)
         # elif not (variant.is_listed and variant.product.is_listed and variant.product.category.is_listed):  

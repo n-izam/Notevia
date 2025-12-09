@@ -126,14 +126,27 @@ class ChangePasswordForm(forms.Form):
             validationerror("old password is required")
         else:
             return current_password
+    
+    
         
     def clean_new_password(self):
         new_password = self.cleaned_data.get("new_password")
         current_password = self.cleaned_data.get("current_password")
         if not new_password and current_password:
             validationerror("Enter your new password")
+        elif len(new_password) < 8:
+            validationerror("Password must be at least 8 characters long")
+        elif not re.search(r"[A-Z]", new_password):
+            validationerror("Password must contain at least one uppercase letter")
+        elif not re.search(r"[a-z]", new_password):
+            validationerror("Password must contain at least one lowercase letter")
+        elif not re.search(r"[0-9]", new_password):
+            validationerror("Password must contain at least one digit")
+        elif not re.search(r"[@$!%*?&]", new_password):
+            validationerror("Password must contain at least one special character (@, $, !, %, *, ?, &)")
         else:
             return new_password
+    
         
     
     def clean_confirm_password(self):
