@@ -56,12 +56,15 @@ class AddressSelectionView(View):
             if request.session.get('session_order'):
                 order_id = request.session.get('session_order')
                 try:
-                    session_order = Order.objects.get(razorpay_order_id=order_id)
+                    session_order = Order.objects.get(id=order_id)
                 except Order.DoesNotExist:
                     request.session.pop('payment_confirm', None)
                     del request.session['session_order']
                     return redirect('cart_page')
                 # session_order = get_object_or_404(Order, id=order_id)
+                if session_order.coupon_code:
+                    used_coupon = get_object_or_404(Coupon, code=session_order.coupon_code)
+                    update_usage = used_coupon.decrement_usage(request.user)
                 for item in session_order.items.all():
                     item.variant.stock += item.quantity
                     item.variant.save()
@@ -125,7 +128,7 @@ class AddressSelectionView(View):
     def post(self, request):
 
         address_id = request.POST.get('address')
-        print("addres", address_id)
+        
         request.session['selected_address'] = address_id
 
         return redirect('order_confirmation')
@@ -139,13 +142,17 @@ class ConfirmationCartView(View):
         if request.session.get('payment_confirm'):
             if request.session.get('session_order'):
                 order_id = request.session.get('session_order')
+                
                 try:
-                    session_order = Order.objects.get(razorpay_order_id=order_id)
+                    session_order = Order.objects.get(id=order_id)
                 except Order.DoesNotExist:
                     request.session.pop('payment_confirm', None)
                     del request.session['session_order']
                     return redirect('cart_page')
                 # session_order = get_object_or_404(Order, id=order_id)
+                if session_order.coupon_code:
+                    used_coupon = get_object_or_404(Coupon, code=session_order.coupon_code)
+                    update_usage = used_coupon.decrement_usage(request.user)
                 for item in session_order.items.all():
                     item.variant.stock += item.quantity
                     item.variant.save()
@@ -162,21 +169,18 @@ class ConfirmationCartView(View):
         
         # if request.GET.get('applied_coupon'):
         applied_coupon = request.GET.get('applied_coupon','').strip()
-        print("applied coupon", applied_coupon)
         
+        if not request.session.get('selected_address'):
+            return redirect('address_selection')
 
 
         address_id = request.session.get('selected_address')
-        print("addres", address_id)
+        
         
 
         if request.GET.get('payment'):
             payment_method = request.POST.get('payment')
 
-            
-
-        if not address_id:
-            return redirect('address_selection')
         
         select_address = get_object_or_404(Address, id=address_id)
         
@@ -217,21 +221,23 @@ class ConfirmationCartView(View):
             user_coupon = get_object_or_404(Coupon, code=applied_coupon)
             if cart.main_total_price < user_coupon.min_purchase_amount:
                 info_notify(request, f"minimum puchase amount is {user_coupon.min_purchase_amount}")
-                #url = f'{reverse("order_confirmation")}?address={address_id}'
+                
                 return redirect('order_confirmation')
             if not user_coupon.is_valid():
                 info_notify(request, f"the Coupon is not valid")
-                #url = f'{reverse("order_confirmation")}?address={address_id}'
+                
                 return redirect('order_confirmation')
             if CouponUsage.objects.filter(user=request.user, coupon=user_coupon).exists():
                 coupon_usage = get_object_or_404(CouponUsage, user=request.user, coupon=user_coupon)
                 if coupon_usage.usage_count >= user_coupon.usage_limit: 
                     info_notify(request, f"{user_coupon} coupon maximum usage is exceded")
-                    #url = f'{reverse("order_confirmation")}?address={address_id}'
+                    
                     return redirect('order_confirmation')
             
             is_coupon_apply = user_coupon.apply_discount(cart.main_total_price)
-            print("applied coupon", is_coupon_apply)
+            
+        elif applied_coupon:
+            info_notify(request, f"the applied coupon {applied_coupon} is not exists")
             
         
         final_over_all_amount = cart.over_all_amount_coupon(is_coupon_apply)
@@ -264,14 +270,15 @@ class ConfirmationCartView(View):
 @method_decorator(never_cache, name='dispatch')
 class PlaceOrderView(View):
 
-    def get(self, request):
+    def post(self, request):
         
-        address_id = request.GET.get('address')
-        payment_method = request.GET.get('payment')
-        applied_coupon = request.GET.get('apply_coupon','').strip()
-        final_over_all_amount = request.GET.get('final_amount')
-        
+        address_id = request.POST.get('address')
+        payment_method = request.POST.get('payment')
+        applied_coupon = request.POST.get('apply_coupon','').strip()
+        final_over_all_amount = request.POST.get('final_amount')
 
+        if request.session.get('selected_address'):
+            request.session.pop('selected_address', None)
         # if not request.session.get('payment_confirm'):
         #     return redirect('order_listing')
 
@@ -281,7 +288,7 @@ class PlaceOrderView(View):
         
         address = get_object_or_404(Address, id=address_id)
 
-        if not request.GET.get('payment'):
+        if not request.POST.get('payment'):
             info_notify(request, "select your payment method please.. ")
             # here is how pass query params in redirection
             # url = f'{reverse("order_confirmation")}?address={address.id}'
@@ -426,8 +433,8 @@ class PlaceOrderView(View):
 
             if request.session.get('selected_address'):
                 request.session.pop('selected_address', None)
-            pay_url = f'{reverse("razorpay_callback")}?order={order.id}'
-            return redirect(pay_url)
+            # pay_url = f'{reverse("razorpay_callback")}?order={order.id}'
+            return redirect("razorpay_callback")
 
 @csrf_exempt
 def razorpay_callback(request):
@@ -444,12 +451,12 @@ def razorpay_callback(request):
             cart = get_object_or_404(Cart, user=request.user)
 
             try:
-                order = Order.objects.get(razorpay_order_id=999)
+                order = Order.objects.get(razorpay_order_id=order_id)
             except Order.DoesNotExist:
+                info_notify(request, "the order is not confirmed. The amount has been added to your wallet. Please try again. ")
                 return redirect('cart_page')
             
-            # order.is_paid = True
-            # order.save()
+            
 
             # Verify signature
             generated_signature = hmac.new(
@@ -457,7 +464,7 @@ def razorpay_callback(request):
                 f"{order_id}|{payment_id}".encode(),
                 hashlib.sha256
             ).hexdigest()
-            print(signature)
+            
 
             if generated_signature != signature:
                 # FAILURE — Payment is not legitimate
@@ -469,8 +476,7 @@ def razorpay_callback(request):
             order.razorpay_signature = signature
             order.status = 'Pending'
             order.save()
-            if True:
-                raise Exception("Simulated server crash 500")
+            
 
             
             cart.items.filter(is_active=True).delete()
@@ -491,7 +497,9 @@ def razorpay_callback(request):
         if not request.session.get('payment_confirm'):
             return redirect('cart_page')
         
-        order_id = request.GET.get('order')
+        order_id = request.session.get('session_order')
+        if not Order.objects.filter(id=order_id).exists():
+            return redirect('cart_page')
         order = get_object_or_404(Order, id=order_id)
         amount_in_paise = int(order.over_all_amount * 100)
         context = {
@@ -538,9 +546,12 @@ class OrderCancelReturnCartView(View):
             used_coupon = get_object_or_404(Coupon, code=order.coupon_code)
             update_usage = used_coupon.decrement_usage(request.user)
 
-        
-        wallet= get_object_or_404(Wallet, user=request.user)
-        transaction = wallet.credit(Decimal(order.over_all_amount), message=f"Order {order.order_id} payment failure")
+        if order.is_paid:
+
+            wallet= get_object_or_404(Wallet, user=request.user)
+            transaction = wallet.credit(Decimal(order.over_all_amount), message=f"Order {order.order_id} payment failure")
+        else:
+            info_notify(request, "We couldn’t complete your order. Please try again.")
 
         for item in order.items.all():
             item.variant.stock += item.quantity
@@ -549,7 +560,7 @@ class OrderCancelReturnCartView(View):
         order.items.all().delete()
         order.orders_address.delete()
         order.delete()
-        info_notify(request, "We couldn’t complete your order due to an error. The amount has been added to your wallet. Please try again.")
+        
         return redirect('cart_page')
     
 @method_decorator(login_required(login_url='signin'), name='dispatch')
@@ -563,6 +574,9 @@ class PaymentFailedView(View):
             del request.session['session_order']
             
         order = get_object_or_404(Order, id=order_id, user=request.user)
+        if order.coupon_code:
+                    used_coupon = get_object_or_404(Coupon, code=order.coupon_code)
+                    update_usage = used_coupon.decrement_usage(request.user)
         order.status='Payment Failed'
         order.save()
         for item in order.items.all():
@@ -610,12 +624,15 @@ class OrderListingView(OrderStatusUpdateByDateMixin, View):
             if request.session.get('session_order'):
                 order_id = request.session.get('session_order')
                 try:
-                    session_order = Order.objects.get(razorpay_order_id=order_id)
+                    session_order = Order.objects.get(id=order_id)
                 except Order.DoesNotExist:
                     request.session.pop('payment_confirm', None)
                     del request.session['session_order']
                     return redirect('cart_page')
                 # session_order = get_object_or_404(Order, id=order_id)
+                if session_order.coupon_code:
+                    used_coupon = get_object_or_404(Coupon, code=session_order.coupon_code)
+                    update_usage = used_coupon.decrement_usage(request.user)
                 for item in session_order.items.all():
                     item.variant.stock += item.quantity
                     item.variant.save()
@@ -626,7 +643,7 @@ class OrderListingView(OrderStatusUpdateByDateMixin, View):
             request.session.pop('payment_confirm', None)
             del request.session['session_order']
             
-            error_notify(request, 'Try again, payment gateway failed..!')
+            error_notify(request, 'payment gateway failed..!, try again')
             
             
 
@@ -1048,12 +1065,15 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
             if request.session.get('session_order'):
                 order_id = request.session.get('session_order')
                 try:
-                    session_order = Order.objects.get(razorpay_order_id=order_id)
+                    session_order = Order.objects.get(id=order_id)
                 except Order.DoesNotExist:
                     request.session.pop('payment_confirm', None)
                     del request.session['session_order']
                     return redirect('cart_page')
                 # session_order = get_object_or_404(Order, id=order_id)
+                if session_order.coupon_code:
+                    used_coupon = get_object_or_404(Coupon, code=session_order.coupon_code)
+                    update_usage = used_coupon.decrement_usage(request.user)
                 for item in session_order.items.all():
                     item.variant.stock += item.quantity
                     item.variant.save()

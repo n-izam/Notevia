@@ -33,9 +33,12 @@ class StaticHomeView(View):
                 "main_image": main_image 
             })
         # user = CustomUser.objects.get(id=user_id)
+        category = Category.objects.filter(is_listed=True)
+
 
         context = {
             "product_with_image":product_with_image,
+            'categories': category,
         }
         
         return render(request, 'cores/static_home.html', context)
@@ -251,6 +254,7 @@ class HomeView(View):
 
     def get(self, request, user_id):
         latest_products = Product.objects.filter(is_deleted=False, is_listed=True).order_by('-created_at')[:4]
+        category = Category.objects.filter(is_listed=True)
 
         product_with_image = []
         for product in latest_products:
@@ -267,6 +271,7 @@ class HomeView(View):
             "product_with_image":product_with_image,
             "user_id": user_id,
             "wishlist_products": wishlist_products,
+            'categories': category,
         }
         
         return render(request, 'cores/home1.html', context)

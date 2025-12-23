@@ -179,70 +179,59 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
-  <!-- timer  -->
   <!-- <script>
-
-    // this is a reload script
+    // If the page is loaded from the browser's back/forward cache
+    window.addEventListener("pageshow", () => {
+      const nav = performance.getEntriesByType("navigation")[0];
+      if (nav && nav.type === "back_forward") {
+          window.location.reload();
+      }
+  });
   
+  </script> -->
+  <script>
     window.addEventListener("pageshow", function(event) {
       //If the page is loaded from the browser's back/forward cache
       if (event.persisted) {
           window.location.reload();
       }
   });
-  
-      let timeLeft = 60; // seconds
-      let timer = setInterval(function() {
-          if(timeLeft <= 0){
-              clearInterval(timer);
-              document.getElementById("timer").innerHTML = "OTP expired, please resend.";
-          } else {
-              document.getElementById("timer").innerHTML = "Expires in " + timeLeft + "s";
-          }
-          timeLeft -= 1;
-      }, 1000);
-  </script> -->
-  <script>
-
-    // reload script to prevent cached back/forward page
-    window.addEventListener("pageshow", function(event) {
-      if (event.persisted) {
-          window.location.reload();
-      }
-    });
-  
-    let timeLeft = 180; // total seconds
-  
-    let timer = setInterval(function() {
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            document.getElementById("timer").innerHTML = "OTP expired, please resend.";
-        } else {
-            // Convert to mm:ss
-            let minutes = Math.floor(timeLeft / 60);
-            let seconds = timeLeft % 60;
-  
-            // Ensure 2-digit format
-            let formattedTime =
-                String(minutes).padStart(2, '0') + ":" +
-                String(seconds).padStart(2, '0');
-  
-            document.getElementById("timer").innerHTML = "Expires in " + formattedTime;
-        }
-        timeLeft -= 1;
-    }, 1000);
-  
   </script>
+  <script>
+    const expiryTime = Number("{{ expiry|default:0 }}") * 1000;
+  
+    function startTimer() {
+        let timer = setInterval(function () {
+            let now = Date.now();
+            let timeLeft = Math.floor((expiryTime - now) / 1000);
+  
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                document.getElementById("timer").innerHTML = "OTP expired, please resend.";
+            } else {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+  
+                // Add leading zero for seconds
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+  
+                document.getElementById("timer").innerHTML = "Expires in " + minutes + ":" + seconds;
+            }
+  
+        }, 1000);
+    }
+  
+    startTimer();
+  </script>
+  <!-- <script>
+    // Detect if user navigated from a different page
+    if (performance.navigation.type !== performance.navigation.TYPE_RELOAD) {
+        // Fresh visit → clear old expiry from backend on next visit
+        fetch("/reset-otp-expiry/");
+    }
+  </script> -->
   <!-- toast -->
   <script>
-
-      //document.addEventListener('DOMContentLoaded', function () {
-      //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-      //toastElList.map(function (toastEl) {
-          //var t = new bootstrap.Toast(toastEl);
-          //t.show();
-      //});
-    //});
 
       document.addEventListener('DOMContentLoaded', () => {
           document.querySelectorAll('.toast').forEach(el => {

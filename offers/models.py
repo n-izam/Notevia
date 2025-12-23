@@ -31,6 +31,7 @@ class Coupon(models.Model):
         
         self.usage_count += 1
         self.save()
+        
 
         usage, created = CouponUsage.objects.get_or_create(coupon=self, user=user)
         usage.increment_usage()
@@ -40,6 +41,7 @@ class Coupon(models.Model):
         
         self.usage_count -= 1
         self.save()
+        
 
         usage, created = CouponUsage.objects.get_or_create(coupon=self, user=user)
         usage.decrement_usage()
@@ -85,11 +87,13 @@ class CouponUsage(models.Model):
         self.usage_count += 1
         self.last_used = timezone.now()
         self.save()
+        
 
     def decrement_usage(self):
         self.usage_count -= 1
         self.last_used = timezone.now()
         self.save()
+        
 
     def __str__(self):
         return f"{self.user} used {self.coupon.code} {self.usage_count} times"

@@ -12,8 +12,8 @@ class OfferForm(forms.Form):
     offer_title = forms.CharField(max_length=255, required=True)
     discount = forms.DecimalField(max_digits=10, decimal_places=2, required=True)
     about = forms.CharField(required=True)
-    start_date = forms.DateField(required=True)
-    end_date = forms.DateField(required=True)
+    start_date = forms.DateField(required=True, input_formats=['%d/%m/%Y'])
+    end_date = forms.DateField(required=True, input_formats=['%d/%m/%Y'])
 
     def clean_start_date(self):
         today = timezone.now().date()
@@ -88,6 +88,7 @@ class CategoryForm(forms.Form):
     
     name = forms.CharField(max_length=255, required=True)
     description = forms.CharField(required=True)
+    image = forms.ImageField(required=True)  # ✅ add this
 
     def clean_name(self):
         name = self.cleaned_data.get("name")

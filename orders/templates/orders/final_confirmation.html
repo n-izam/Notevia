@@ -595,8 +595,8 @@
         
                 <!-- Right Column: Address, Payment & Price Details -->
                 <div class="col-lg-5">
-                    <form action="{% url 'place_order' %}" method="get">
-                        
+                    <form action="{% url 'place_order' %}" method="POST">
+                        {% csrf_token %}
                         {% if select_address %}
                         <input type="hidden" name="address" value="{{select_address.id}}">
                         {% endif %}
@@ -689,13 +689,13 @@
                                     </div>
                                     <h4 class="mb-0">Rs. {{final_over_all_amount}}</h4>
                                 </div>
-                                <form action="" method="get">
+                                <!-- <form action="" method="get"> -->
                                     
-                                    <input type="hidden" >
+                                    <!-- <input type="hidden" > -->
                                     <div class="d-grid mt-4">
                                         <button class="btn btn-dark btn-lg" type="submit">CONTINUE</button>
                                     </div>
-                                </form>
+                                <!-- </form> -->
                             </div>
                         </div>
                     </form>

@@ -64,8 +64,8 @@
                     <input type="text"
                     class="form-control" 
                     name="start_date" id="startDate" 
-                    placeholder="mm/dd/yyyy"
-                    value="{% if request.resolver_match.url_name == 'addcategory_offer' %}{{ form.start_date.value|default:'' }}{% else %}{{ category.offer.start_date|date:'m/d/Y' }}{% endif %}">
+                    placeholder="dd/mm/yyyy"
+                    value="{% if request.resolver_match.url_name == 'addcategory_offer' %}{{ form.start_date.value|default:'' }}{% else %}{{ category.offer.start_date|date:'d/m/Y' }}{% endif %}">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                     </div>
@@ -80,8 +80,8 @@
                     <input type="text" 
                     class="form-control" 
                     name="end_date" id="endDate" 
-                    placeholder="mm/dd/yyyy"
-                    value="{% if request.resolver_match.url_name == 'addcategory_offer' %}{{ form.end_date.value|default:'' }}{% else %}{{ category.offer.end_date|date:'m/d/Y' }}{% endif %}">
+                    placeholder="dd/mm/yyyy"
+                    value="{% if request.resolver_match.url_name == 'addcategory_offer' %}{{ form.end_date.value|default:'' }}{% else %}{{ category.offer.end_date|date:'d/m/Y' }}{% endif %}">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                     </div>
@@ -111,11 +111,21 @@
 <!-- Bootstrap Datepicker JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
-<script>
+<!-- <script>
     $(document).ready(function(){
         // Initialize datepicker
         $('.date').datepicker({
             format: 'mm/dd/yyyy',
+            autoclose: true,
+            todayHighlight: true
+        });
+    });
+</script> -->
+
+<script>
+    $(document).ready(function(){
+        $('.date').datepicker({
+            format: 'dd/mm/yyyy',
             autoclose: true,
             todayHighlight: true
         });

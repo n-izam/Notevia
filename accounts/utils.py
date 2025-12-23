@@ -70,3 +70,8 @@ def custom_page_range(current_page, total_pages):
             final_pages.append(p)
 
     return final_pages
+
+
+# def otp_limit():
+#     for i in range(1, 5):
+#         yield i

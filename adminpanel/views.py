@@ -402,11 +402,7 @@ class EditProductView(View):
             
 
             
-            # images = [request.FILES.get(f'cropped_image_{i}') for i in range(1, 4)]
-            # images = [img for img in images if img]
-            # === IMAGE HANDLING - FINAL & WORKING VERSION ===
-            # === IMAGE HANDLING - BULLETPROOF FINAL VERSION ===
-            # === IMAGE HANDLING - SAFE & PROFESSIONAL FINAL VERSION ===
+            
             new_images = [request.FILES.get(f'cropped_image_{i}') for i in range(1, 4)]
             new_images = [img for img in new_images if img]
 
@@ -418,7 +414,7 @@ class EditProductView(View):
 
             # Load current images (do NOT delete anything yet!)
             current_images = list(ProductImage.objects.filter(product_id=product_id).order_by('id'))
-            print("current images", current_images)
+            
 
             # Build final list of image files (InMemoryUploadedFile or existing File)
             final_image_files = [None, None, None]  # slot 1,2,3
@@ -451,8 +447,7 @@ class EditProductView(View):
             if len(valid_images) < 3:
                 errors['images'] = 'At least 3 images are required.'
             
-            # if len(images) < 3:
-            #     errors['images'] = 'At least 3 images are required.'
+            
 
             if errors:
                 return JsonResponse({'success': False, 'errors': errors}, status=400)
@@ -535,42 +530,20 @@ class AddProductOfferView(View):
             start_date = request.POST.get('start_date')
             end_date = request.POST.get('end_date')
 
-            # if not title:
-            #     error_notify(self.request, 'Leave offer title ' )
-            #     return redirect('addproduct_offer', product_id=product_id)
-            # if not about:
-            #     error_notify(self.request, 'Leave offer discription ' )
-            #     return redirect('addproduct_offer', product_id=product_id)
-            # if not discount:
-            #     error_notify(self.request, 'Leave product offer discount ' )
-            #     return redirect('addproduct_offer', product_id=product_id)
-            # if not start_date:
-            #     error_notify(self.request, 'Set product offer start date ' )
-            #     return redirect('addproduct_offer', product_id=product_id)
-            # if not end_date:
-            #     error_notify(self.request, 'Set product offer End date ' )
-            #     return redirect('addproduct_offer', product_id=product_id)
-
-
+            
             
 
-            start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
-            end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
-
-            # today = timezone.now().date()
-
             
-            # if not start_date >= today:
-            #     error_notify(self.request, 'Start date must be greater than equal to today ' )
-            #     return redirect('addproduct_offer', product_id=product_id)
-            # if not end_date > today:
-            #     error_notify(self.request, 'End date must be greater than today' )
-            #     return redirect('addproduct_offer', product_id=product_id)
 
             offer = Offer.objects.create(
-                title=title, offer_percent=discount, about=about,
-                start_date=start_date, end_date=end_date,
-            )
+                title=form.cleaned_data['offer_title'],
+                offer_percent=form.cleaned_data['discount'],
+                about=form.cleaned_data['about'],
+                start_date=form.cleaned_data['start_date'],  # ✅ date object
+                end_date=form.cleaned_data['end_date'],      # ✅ date object
+                )
+
+            
             
 
             product.offer = offer
@@ -622,17 +595,17 @@ class EditProductOfferView(View):
             end_date = request.POST.get('end_date')
             
             
-            start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
+            # start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
 
-            end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
+            # end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
 
             offer = get_object_or_404(Offer, id=product.offer_id)
 
-            offer.title = title
-            offer.about = description
+            offer.title = form.cleaned_data['offer_title']
+            offer.about = form.cleaned_data['about']
             offer.offer_percent = offer_discount
-            offer.start_date = start_date
-            offer.end_date = end_date
+            offer.start_date = form.cleaned_data['start_date']
+            offer.end_date = form.cleaned_data['end_date']
 
             offer.save()
             success_notify(request, f"successfully updated offer{offer.title} is add for product{product.name}")
@@ -804,19 +777,25 @@ class AddCategoryView(View):
         
         
 
+        form = CategoryForm(request.POST, request.FILES)
         
-        form = CategoryForm(request.POST)
         if form.is_valid():
             # return HttpResponse(f"the status is {status}")
-            name = request.POST.get('name')
-            description = request.POST.get('description')
+            name = form.cleaned_data['name']
+            description = form.cleaned_data['description']
             status = request.POST.get('categoryStatus')
+            image = form.cleaned_data['image']
             
 
             if status == 'listed':
                 is_listed = True
             else:
                 is_listed = False
+            if not image:
+                error_notify(request, "proper image needed")
+                request.session["add_category_error"] = {"image": ["proper image needed"]}
+                request.session["add_category_data"] = request.POST
+                return redirect('add-category')
             
             if len(description) < 10:
                 request.session["add_category_error"] = {"description": ["proper description needed"]}
@@ -825,13 +804,17 @@ class AddCategoryView(View):
 
             if Category.objects.filter(name__iexact=name).exists():
 
-                request.session["add_category_error"] = {"name": ["Variant name already exists for this product."]}
+                request.session["add_category_error"] = {"name": ["category name already exists for this product."]}
                 request.session["add_category_data"] = request.POST
                 return redirect('add-category')
             
             
             
-            category = Category.objects.create(name=name, description=description, is_listed=is_listed)
+            category = Category.objects.create(
+                name=name,
+                description=description, 
+                image=image, 
+                is_listed=is_listed)
             category.save()
             
 
@@ -846,7 +829,7 @@ class AddCategoryView(View):
 @method_decorator(never_cache, name='dispatch')
 class CategoryUpdateView(UpdateView):
     model = Category
-    fields = ['name', 'description']
+    fields = ['name', 'description', 'image']
     template_name = 'adminpanel/add-category.html'
     success_url = reverse_lazy('admin-category')
 
@@ -854,8 +837,13 @@ class CategoryUpdateView(UpdateView):
 
         name = form.cleaned_data['name']
         description = form.cleaned_data['description']
+        image = form.cleaned_data['image']
         category_id = self.get_object().id
+        
 
+        if not image:
+            form.add_error('description',"proper image required")
+            return self.form_invalid(form)
 
         if not description:
             form.add_error('description',"proper description required")
@@ -866,9 +854,7 @@ class CategoryUpdateView(UpdateView):
             return self.form_invalid(form)
         
         
-        # if not description.replace(" ", "", ",", "!").isalnum():
-        #     form.add_error('description',"Category description can contain only alphabets and spaces number .")
-        #     return self.form_invalid(form)
+        
         if len(name) < 4:
             form.add_error('name',"give the proper category name")
             return self.form_invalid(form)
@@ -939,21 +925,22 @@ class AddCategoryOffer(View):
             
             # today = timezone.now().date()
 
-            start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
-            end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
+            # start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
+            # end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
 
             
-            # if not start_date >= today:
-            #     error_notify(self.request, 'Start date must be greater than equal to today ' )
-            #     return redirect('addcategory_offer', category_id=category_id)
-            # if not end_date > today:
-            #     error_notify(self.request, 'End date must be greater than today' )
-            #     return redirect('addcategory_offer', category_id=category_id)
-
+            
+            # offer = Offer.objects.create(
+            #     title=title, offer_percent=discount, about=about,
+            #     start_date=start_date, end_date=end_date,
+            # )
             offer = Offer.objects.create(
-                title=title, offer_percent=discount, about=about,
-                start_date=start_date, end_date=end_date,
-            )
+                title=form.cleaned_data['offer_title'],
+                offer_percent=form.cleaned_data['discount'],
+                about=form.cleaned_data['about'],
+                start_date=form.cleaned_data['start_date'],  # ✅ date object
+                end_date=form.cleaned_data['end_date'],      # ✅ date object
+                )
             
             category.offer = offer
             category.save()
@@ -997,16 +984,16 @@ class EditCategoryOffer(View):
 
         form = OfferForm(request.POST)
         if form.is_valid():
-            title = request.POST.get('offer_title')
-            about = request.POST.get('about')
-            discount = request.POST.get('discount')
-            start_date = request.POST.get('start_date')
-            end_date = request.POST.get('end_date')
+            title = form.cleaned_data['offer_title']
+            about = form.cleaned_data['about']
+            discount = form.cleaned_data['discount']
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
 
 
-            start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
+            # start_date = datetime.strptime(start_date, '%m/%d/%Y').date()
 
-            end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
+            # end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
 
 
             offer.title = title
@@ -1207,7 +1194,7 @@ class ToggleVariatStatusView(View):
             product.is_listed = False
             product.save()
 
-        print(f"variant listed {variant.product.name}-{variant.is_listed}" )
+        
         
         if variant.is_listed:
             status =  cart_update(variant)

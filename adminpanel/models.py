@@ -32,6 +32,11 @@ class Offer(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
+    image = CloudinaryField(
+        'image', folder='category/',
+        blank=True,
+        null=True
+    )
     offer = models.ForeignKey(
         Offer, on_delete=models.SET_NULL, null=True, blank=True, related_name="categories"
     ) 
@@ -168,9 +173,11 @@ class Variant(models.Model):
 
         if discounts:
             max_discount = max(discounts)
+        else:
+            max_discount = None
             
 
-        return round(max_discount, 2)
+        return round(max_discount, 2) if max_discount is not None else 0
     
     @property
     def main_offer(self):

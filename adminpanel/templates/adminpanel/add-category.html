@@ -1,110 +1,619 @@
 
-{% extends "adminbase.html" %}
-
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if request.resolver_match.url_name == 'add-category' %}Add category {% else %} Edit category {% endif %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-{% block title %}{% if request.resolver_match.url_name == 'add-category' %}Add category {% else %} Edit category {% endif %}Add category {% endblock %}
-<!-- {% block head %} {% endblock %} -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-{% block content %}
-<!-- Add Category Section -->
-<div class="container-fluid">
 
-    <div class="row">
+    <style>
+        .product-image-upload {
+            border: 2px dashed #adb5bd;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .product-image-upload:hover {
+            border-color: #6c757d;
+            background-color: rgba(0,0,0,0.05);
+        }
+        
+        #imagePreview img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        /* Crop Grid Overlay (matches screenshot style) */
+        /* Custom Crop Modal */
+        .crop-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
 
-        <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
+        .crop-modal-content {
+            background: #fff;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
 
-            <!-- Page Header -->
-            <h2 class="h3 mb-4 text-dark">{% if request.resolver_match.url_name == 'add-category' %}ADD A CATEGORY {% else %} EDIT CATEGORY OF {{category.name}} {% endif %}</h2>
+        .crop-modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-            <!-- Add Category Form Card -->
-            <div class="card border-0">
-                <div class="card-body p-4">
-                    {% if request.resolver_match.url_name == 'add-category' %}
-                    <form action="{% url 'add-category' %}" method="POST">
-                        {% else %}
-                        <form method="post">
-                            {% endif %}
-                        {% csrf_token %}
-                        <!-- Category Name -->
-                        {% if request.resolver_match.url_name == 'add-category' %}
-                        <div class="mb-4">
-                            <label for="categoryName" class="form-label">Category Name</label>
-                            <input type="text" class="form-control" id="categoryName" name="name" placeholder="Type category name here..." value="{% if form.name.errors %}{{ form.name.value|default:'' }}{% endif %}">
-                            {% if form.name.errors %}
-                            <small style="color:red;">{{ form.name.errors.0 }}</small>
-                            {% endif %}
+        .crop-modal-header h5 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .crop-modal-body {
+            padding: 20px;
+            background: #f8f9fa;
+            text-align: center;
+        }
+
+        .img-container {
+            max-width: 100%;
+            max-height: 60vh;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .crop-modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #dee2e6;
+            text-align: right;
+        }
+
+        .crop-modal-footer button {
+            margin-left: 10px;
+        }
+
+        /* Cropper styles */
+        .cropper-view-box,
+        .cropper-face {
+            border: 2px solid #007bff !important;
+            border-radius: 4px;
+        }
+
+        .cropper-line {
+            background-color: #007bff !important;
+        }
+
+        .cropper-point {
+            background-color: #007bff !important;
+            width: 8px !important;
+            height: 8px !important;
+        }
+
+        /* Toast container responsiveness */
+    .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 5000;
+      }
+  
+      @media (max-width: 576px) {
+          .toast-container {
+              top: auto !important;
+              bottom: 1rem !important;
+              right: 50% !important;
+              transform: translateX(50%);
+              width: 90%;
+          }
+      }
+  
+      /* Base Toast Style */
+      .toast {
+          backdrop-filter: blur(8px);
+          background: rgba(17, 17, 17, 0.85) !important; /* glassy black */
+          color: #fff !important;
+          border-radius: 12px !important;
+          padding: 0.75rem 1rem;
+          border: 1px solid rgba(255, 255, 255, 0.15) !important;
+          box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+          animation: slideFadeIn 0.5s ease-out;
+      }
+  
+      /* Toast body text */
+      .toast-body {
+          font-size: 0.95rem;
+          font-weight: 500;
+      }
+  
+      /* SUCCESS */
+      .toast.bg-success {
+          background: rgba(0, 255, 100, 0.15) !important;
+          border-left: 4px solid #00ff73 !important;
+          color: #409365 !important;
+      }
+  
+      /* ERROR */
+      .toast.bg-danger {
+          background: rgba(255, 0, 0, 0.15) !important;
+          border-left: 4px solid #ff3b3b !important;
+          color: #bb4141 !important;
+      }
+  
+      /* WARNING */
+      .toast.bg-warning {
+          background: rgba(255, 193, 7, 0.15) !important;
+          border-left: 4px solid #ffc107 !important;
+          color: #a1842f !important;
+      }
+  
+      /* INFO */
+      .toast.bg-info {
+          background: rgba(0, 200, 255, 0.15) !important;
+          border-left: 4px solid #00cfff !important;
+          color: #3092a8 !important;
+      }
+  
+      /* Beautiful animation */
+      @keyframes slideFadeIn {
+          0% {
+              opacity: 0;
+              transform: translateY(20px) scale(0.95);
+          }
+          100% {
+              opacity: 1;
+              transform: translateY(0px) scale(1);
+          }
+      }
+    </style>
+</head>
+<body>
+
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-white" id="sidebar-wrapper">
+            <div class="sidebar-heading">
+                <img src="{% static 'images/logo/logo12.png' %}" alt="NoteVia Logo" width="120">
+            </div>
+            <div class="list-group list-group-flush my-3">
+                <a href="{% url 'admin-dash' user_id=user_id %}" 
+                class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-dash' %}active{% endif %}">
+                    <i class="bi bi-grid-1x2-fill me-2"></i>Dashboard
+                </a>
+                <a href="{% url 'admin-product' %}" 
+                class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-product' %}active{% endif %}">
+                    <i class="bi bi-box-seam-fill me-2"></i>Products
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="bi bi-list-ul me-2"></i>Order List
+                </a>
+                <a href="{% url 'admin-customers' %}" 
+                class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-customers' %}active{% endif %}">
+                    <i class="bi bi-person-fill me-2"></i>Customer
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="bi bi-currency-dollar me-2"></i>Sales
+                </a>
+                <a href="{% url 'admin-category' %}" 
+                class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-category' %}active{% endif %}">
+                    <i class="bi bi-grid-fill me-2"></i>Category
+                </a>
+                <a href="#" 
+                class="list-group-item list-group-item-action ">
+                    <i class="bi bi-ticket-perforated-fill me-2"></i>Coupons
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="bi bi-image-fill me-2"></i>Banner
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <a href="#" class="list-group-item list-group-item-action account-btn">Account</a>
+                <a href="{% url 'signout' user_id=user_id %}" class="list-group-item list-group-item-action logout-btn">Logout</a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-list fs-4 me-3" id="menu-toggle"></i>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle second-text fw-bold" href="#" id="navbarDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://i.imgur.com/e8bsh4w.png" alt="Admin" width="40" class="rounded-circle me-2">
+                                {{user.full_name}}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li><a class="dropdown-item" href="#">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- start from  -->
+            <div class="container-fluid">
+                <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
+                    <!-- Add Product Section -->
+                    <div class="container-fluid">
+
+                        <div class="row">
+                    
+                            <main class="col-md-9 col-lg-10 px-md-4 main-content right-main">
+                    
+                                <!-- Page Header -->
+                                <h2 class="h3 mb-4 text-dark">{% if request.resolver_match.url_name == 'add-category' %}ADD A CATEGORY {% else %} EDIT CATEGORY OF {{category.name}} {% endif %}</h2>
+                    
+                                <!-- Add Category Form Card -->
+                                <div class="card border-0">
+                                    <div class="card-body p-4">
+                                        {% if request.resolver_match.url_name == 'add-category' %}
+                                        <form action="{% url 'add-category' %}" method="POST" enctype="multipart/form-data">
+                                            {% else %}
+                                            <form method="post" enctype="multipart/form-data">
+                                                {% endif %}
+                                            {% csrf_token %}
+                                            <!-- Category Name -->
+                                            {% if request.resolver_match.url_name == 'add-category' %}
+                                            <div class="mb-4">
+                                                <label for="categoryName" class="form-label">Category Name</label>
+                                                <input type="text" class="form-control" id="categoryName" name="name" placeholder="Type category name here..." value="{% if form.name.errors %}{{ form.name.value|default:'' }}{% endif %}">
+                                                {% if form.name.errors %}
+                                                <small style="color:red;">{{ form.name.errors.0 }}</small>
+                                                {% endif %}
+                                            </div>
+                                            {% else %}
+                                            <div class="mb-4">
+                                                <label for="categoryName" class="form-label">Category Name</label>
+                                                <input type="text" class="form-control" id="categoryName" name="name" placeholder="Type category name here..." value="{% if form.name.errors %}{{ form.name.value|default:'' }} {% else %} {{ category.name|default:'' }} {% endif %}">
+                                                {% if form.name.errors %}
+                                                <small style="color:red;">{{ form.name.errors.0 }}</small>
+                                                {% endif %}
+                                            
+                                            </div>
+                                            {% endif %}
+
+                                            <!-- Category Image -->
+                                            {% if request.resolver_match.url_name == 'add-category' %}
+                                            <!-- Category Image -->
+                                            <div class="mb-4">
+                                                <label class="form-label">Category Image</label>
+                                                
+                                                <!-- Image Preview Area -->
+                                                <div class="product-image-upload border rounded bg-dark bg-opacity-10 p-4 text-center" 
+                                                     id="imagePreviewContainer" style="min-height: 200px; position: relative;">
+                                                    
+                                                    <!-- Placeholder (no image) -->
+                                                    <div id="imagePlaceholder">
+                                                        <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                                            <i class="bi bi-image fs-1 text-muted mb-3"></i>
+                                                            <button type="button" class="btn btn-outline-secondary btn-sm" id="addCategoryImageBtn">
+                                                                <i class="bi bi-plus-lg me-1"></i> Add Image
+                                                            </button>
+                                                            <small class="text-muted mt-2">Recommended: 800x800px | Max 2MB</small>
+                                                        </div>
+                                                    </div>
+                                            
+                                                    <!-- Preview (image added) -->
+                                                    <div id="imagePreview" class="position-relative d-none">
+                                                        <img id="previewImg" src="" alt="Category Image" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                                                        <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 shadow" id="removeImageBtn">
+                                                            <i class="bi bi-trash"></i> Remove
+                                                        </button>
+                                                    </div>
+                                            
+                                                    <!-- IMPORTANT: Single file input for upload -->
+                                                    <input type="file" name="image" id="categoryImageInput" accept="image/*" style="display:none;">
+                                                </div>
+                                                {% if form.image.errors %}
+                                                <small style="color:red;">{{ form.image.errors.0 }}</small>
+                                                {% endif %}
+                                            </div>
+                                            
+                                            {% else %}
+                                            <!-- Category Image -->
+                                            <div class="mb-4">
+                                                <label class="form-label">Category Image</label>
+                                                
+                                                <!-- Image Preview Area -->
+                                                <div class="product-image-upload border rounded bg-dark bg-opacity-10 p-4 text-center" 
+                                                     id="imagePreviewContainer" style="min-height: 200px; position: relative;">
+                                                    
+                                                    <!-- Placeholder (no image) -->
+                                                    <div id="imagePlaceholder">
+                                                        <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                                            <i class="bi bi-image fs-1 text-muted mb-3"></i>
+                                                            <button type="button" class="btn btn-outline-secondary btn-sm" id="addCategoryImageBtn">
+                                                                <i class="bi bi-plus-lg me-1"></i> Add Image
+                                                            </button>
+                                                            <small class="text-muted mt-2">Recommended: 800x800px | Max 2MB</small>
+                                                        </div>
+                                                    </div>
+                                            
+                                                    <!-- Preview (image added) -->
+                                                    <div id="imagePreview" class="position-relative d-none">
+                                                        <img id="previewImg" src="" alt="Category Image" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                                                        <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 shadow" id="removeImageBtn">
+                                                            <i class="bi bi-trash"></i> Remove
+                                                        </button>
+                                                    </div>
+                                            
+                                                    <!-- IMPORTANT: Single file input for upload -->
+                                                    <input type="file" name="image" id="categoryImageInput" accept="image/*" value="{% if form.image.errors %}{{ form.image.value|default:'' }}{% endif %}" style="display:none;">
+                                                </div>
+                                                {% if form.image.errors %}
+                                                <small style="color:red;">{{ form.image.errors.0 }}</small>
+                                                {% endif %}
+                                            </div>
+                                            {% endif %}
+                    
+                                            <!-- Description -->
+                                            {% if request.resolver_match.url_name == 'add-category' %}
+                                            <div class="mb-4">
+                                                <label for="categoryDescription" class="form-label">Description</label>
+                                                <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here...">{% if form.description.errors %}{{ form.description.value|default:'' }} {% endif %}</textarea>
+                                                {% if form.description.errors %}
+                                                <small style="color:red;">{{ form.description.errors.0 }}</small>
+                                                {% endif %}
+                                            </div>
+                                            {% else %}
+                                            <div class="mb-4">
+                                                <label for="categoryDescription" class="form-label">Description</label>
+                                                <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here...">{% if form.description.errors %}{{ form.description.value|default:'' }}{% else %}{{ category.description|default:'' }}{% endif %}</textarea>
+                                                {% if form.description.errors %}
+                                                <small style="color:red;">{{ form.description.errors.0 }}</small>
+                                                {% endif %}
+                                            </div>
+                                            {% endif %}
+                    
+                                            <!-- Status Radio Buttons -->
+                                            {% if request.resolver_match.url_name == 'add-category' %}
+                                            <div class="mb-4">
+                                                <label class="form-label d-block">Should be</label>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="categoryStatus" id="statusListed" value="listed" checked>
+                                                    <label class="form-check-label" for="statusListed">
+                                                        Listed
+                                                    </label>
+                                                </div>
+                    
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="categoryStatus" id="statusUnlisted" value="unlisted">
+                                                    <label class="form-check-label" for="statusUnlisted">
+                                                        Unlisted
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                    
+                                            <!-- Submit Button -->
+                                            {% if request.resolver_match.url_name == 'add-category' %}
+                                            <div class="mt-4">
+                                                <button type="submit" class="btn btn-dark">Add Category</button>
+                                            </div>
+                                            {% else %}
+                                            <div class="mt-4">
+                                                <button type="submit" class="btn btn-dark">Edit Category</button>
+                                            </div>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                </div>
+                            </main>
                         </div>
-                        {% else %}
-                        <div class="mb-4">
-                            <label for="categoryName" class="form-label">Category Name</label>
-                            <input type="text" class="form-control" id="categoryName" name="name" placeholder="Type category name here..." value="{% if form.name.errors %}{{ form.name.value|default:'' }} {% else %} {{ category.name|default:'' }} {% endif %}">
-                            {% if form.name.errors %}
-                            <small style="color:red;">{{ form.name.errors.0 }}</small>
-                            {% endif %}
-                        
-                        </div>
-                        {% endif %}
-
-                        <!-- Description -->
-                        {% if request.resolver_match.url_name == 'add-category' %}
-                        <div class="mb-4">
-                            <label for="categoryDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here...">{% if form.description.errors %}{{ form.description.value|default:'' }} {% endif %}</textarea>
-                            {% if form.description.errors %}
-                            <small style="color:red;">{{ form.description.errors.0 }}</small>
-                            {% endif %}
-                        </div>
-                        {% else %}
-                        <div class="mb-4">
-                            <label for="categoryDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="categoryDescription" name="description" rows="5" placeholder="Type category description here...">{% if form.description.errors %}{{ form.description.value|default:'' }}{% else %}{{ category.description|default:'' }}{% endif %}</textarea>
-                            {% if form.description.errors %}
-                            <small style="color:red;">{{ form.description.errors.0 }}</small>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-
-                        <!-- Status Radio Buttons -->
-                        {% if request.resolver_match.url_name == 'add-category' %}
-                        <div class="mb-4">
-                            <label class="form-label d-block">Should be</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="categoryStatus" id="statusListed" value="listed" checked>
-                                <label class="form-check-label" for="statusListed">
-                                    Listed
-                                </label>
-                            </div>
-
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="categoryStatus" id="statusUnlisted" value="unlisted">
-                                <label class="form-check-label" for="statusUnlisted">
-                                    Unlisted
-                                </label>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <!-- Submit Button -->
-                        {% if request.resolver_match.url_name == 'add-category' %}
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-dark">Add Category</button>
-                        </div>
-                        {% else %}
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-dark">Edit Category</button>
-                        </div>
-                        {% endif %}
-                    </form>
-                        {% if messages %}
+                    </div>
+                </main>
+                <!-- Toast container (fixed position) -->
+                <div class="toast-container">
+                    {% if messages %}
                         {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+                            <div class="toast align-items-center border-0 mb-2
+                                {% if message.tags == 'error' %} bg-danger
+                                {% elif message.tags == 'success' %} bg-success 
+                                {% elif message.tags == 'warning' %} bg-warning 
+                                {% else %} bg-info
+                                {% endif %}
+                            ">
+                                <div class="d-flex">
+                                    <div class="toast-body">
+                                    {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
+                                    {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                                    {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                        {{ message }}
+                                    </div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                </div>
+                            </div>
                         {% endfor %}
-                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
-        </main>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+<!-- Custom Crop Modal (matches your screenshot style) -->
+<div id="cropModal" class="crop-modal" style="display: none;">
+    <div class="crop-modal-content">
+        <div class="crop-modal-header">
+            <h5>Crop Image</h5>
+            <button type="button" id="cancelCrop" class="btn-close">×</button>
+        </div>
+        <div class="crop-modal-body">
+            <div class="img-container">
+                <img id="imageToCrop" src="" alt="Image to crop">
+            </div>
+        </div>
+        <div class="crop-modal-footer">
+            <button type="button" id="cancelCropBtn" class="btn btn-secondary">Cancel</button>
+            <button type="button" id="cropButton" class="btn btn-primary">Crop & Save</button>
+        </div>
     </div>
 </div>
 
-{% endblock %}
+<!-- Add Brand Modal -->
+
+
+<style>
+    .error { color: red; font-size: 0.9em; display: block; margin-top: 5px; }
+</style>
+
+    <!-- Cropper.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <script>
+    // Category Image Cropper
+    document.addEventListener('DOMContentLoaded', function () {
+        const imageInput = document.getElementById('categoryImageInput');
+        const addBtn = document.getElementById('addCategoryImageBtn');
+        const removeBtn = document.getElementById('removeImageBtn');
+        const placeholder = document.getElementById('imagePlaceholder');
+        const previewDiv = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+
+        const cropModal = document.getElementById('cropModal');
+        const imageToCrop = document.getElementById('imageToCrop');
+        const cropButton = document.getElementById('cropButton');
+        const cancelBtns = document.querySelectorAll('#cancelCrop, #cancelCropBtn');
+
+        let cropperInstance = null;
+
+        // Trigger file input
+        addBtn?.addEventListener('click', () => imageInput.click());
+
+        // Open modal when file is selected
+        imageInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                imageToCrop.src = event.target.result;
+                cropModal.style.display = 'flex'; // Show custom modal
+
+                // Destroy previous cropper
+                if (cropperInstance) cropperInstance.destroy();
+
+                // Initialize Cropper with free ratio
+                cropperInstance = new Cropper(imageToCrop, {
+                    aspectRatio: NaN, // Free crop (just like screenshot)
+                    viewMode: 1,
+                    autoCropArea: 0.85,
+                    responsive: true,
+                    cropBoxResizable: true,
+                    cropBoxMovable: true,
+                    dragMode: 'move',
+                    background: false,
+                    guides: true,
+                    center: true,
+                    highlight: false,
+                    modal: true
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Crop & Save
+        cropButton.addEventListener('click', function () {
+            if (!cropperInstance) return;
+
+            cropperInstance.getCroppedCanvas({
+                width: 800,
+                height: 800,
+                fillColor: '#ffffff'
+            }).toBlob(function (blob) {
+                const croppedFile = new File([blob], 'cropped_category.jpg', { type: 'image/jpeg' });
+
+                // Set cropped file to input
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(croppedFile);
+                imageInput.files = dataTransfer.files;
+
+                // Show preview
+                const previewUrl = URL.createObjectURL(croppedFile);
+                previewImg.src = previewUrl;
+                placeholder.classList.add('d-none');
+                previewDiv.classList.remove('d-none');
+
+                // Hide modal & clean up
+                cropModal.style.display = 'none';
+                if (cropperInstance) {
+                    cropperInstance.destroy();
+                    cropperInstance = null;
+                }
+            }, 'image/jpeg', 0.92);
+        });
+
+        // Cancel buttons (both close X and Cancel)
+        cancelBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                cropModal.style.display = 'none';
+                if (cropperInstance) {
+                    cropperInstance.destroy();
+                    cropperInstance = null;
+                }
+                imageInput.value = ''; // Clear input
+            });
+        });
+
+        // Remove image
+        removeBtn?.addEventListener('click', function () {
+            previewImg.src = '';
+            imageInput.value = '';
+            placeholder.classList.remove('d-none');
+            previewDiv.classList.add('d-none');
+        });
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.toast').forEach(el => {
+                new bootstrap.Toast(el).show();
+            });
+        });
+    </script>
+        {% if category.image %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const previewImg = document.getElementById('previewImg');
+            const placeholder = document.getElementById('imagePlaceholder');
+            const previewDiv = document.getElementById('imagePreview');
+
+            previewImg.src = '{{ category.image.url }}';
+            placeholder.classList.add('d-none');
+            previewDiv.classList.remove('d-none');
+        });
+
+        
+    </script>
+{% endif %}
+
+</body>
+</html>

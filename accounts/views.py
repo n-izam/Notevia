@@ -22,6 +22,7 @@ from decimal import Decimal
 from django.contrib.auth.decorators import login_required
 from orders.models import Order, OrderItem, OrderAddress
 from time import time
+from offers.models import Coupon, CouponUsage
 
 # Create your views here.
 @method_decorator(never_cache, name='dispatch')
@@ -36,13 +37,23 @@ class SignupView(View):
                 return redirect("cores-home", user_id=request.user.id)
             
         if request.session.get('user_email'):
+            try:
+                session_email = request.session.get('user_email')
+                SignUpUserOTP.objects.filter(email=session_email).delete()
+            except:
+                del request.session['user_email']
+                del request.session['user_full_name']
+                del request.session['user_phone_no']
+                del request.session['user_password']
             del request.session['user_email']
             del request.session['user_full_name']
             del request.session['user_phone_no']
             del request.session['user_password']
+            
             return redirect('signup')
-    
-
+        if request.session.get('signup_otpExpiry'):
+            del request.session['signup_otpExpiry']
+        
         # this is important because chaange password safety
         if request.session.get("forgot_otp_verified"):
             request.session.pop("forgot_otp_verified", None)
@@ -79,7 +90,7 @@ class SignupView(View):
             # otp sending session
             html_content = render_to_string("emails/otp_signup.html", {"full_name": full_name, "otp": otp})
             email = EmailMultiAlternatives(
-                subject="Verify Your Account",
+                subject="Signup Verify Your Account",
                 body=f"Your OTP is {otp} ",
                 from_email=settings.EMAIL_HOST_USER,
                 to=[user_email],
@@ -96,7 +107,9 @@ class SignupView(View):
             request.session['user_full_name'] = full_name
             request.session['user_phone_no'] = user_phone_no
             request.session['user_password'] = user_password
-
+            expiry_time = int(time()) + 180  # 180 seconds
+            request.session["signup_otpExpiry"] = expiry_time
+            request.session.modified = True
 
             success_notify(request, "We sent you an OTP. Please verify your email.")
             
@@ -120,12 +133,16 @@ class VerifySignUpOTPView(View):
             return redirect("signin")
         if not request.session.get('user_email'):
             return redirect('signup')
+        if not request.session.get('signup_otpExpiry'):
+            return redirect('signup')
+        
+
         
         full_name = request.session.get('user_full_name')
         user_email = request.session.get('user_email')
         user_phone_no = request.session.get('user_phone_no')
         user_password = request.session.get('user_password')
-        
+        expiry_time = request.session.get("signup_otpExpiry", 0)
         
 
 
@@ -136,7 +153,8 @@ class VerifySignUpOTPView(View):
             "full_name": full_name,
               "user_email": user_email,
               "user_phone_no": user_phone_no,
-              "user_password": user_password
+              "user_password": user_password,
+              "expiry": expiry_time,
               }
         return render(request, "accounts/verify_signup_otp.html", context)
     
@@ -157,7 +175,7 @@ class VerifySignUpOTPView(View):
             error_notify(request, "enter your otp")
             return redirect('verify_signup_otp')
 
-        if otp_obj.otp == entered_otp and otp_obj.created_at >=  timezone.now() - timedelta(minutes=5):
+        if otp_obj.otp == entered_otp and otp_obj.updated_at >=  timezone.now() - timedelta(minutes=3):
 
             # make session and clear previos session
             request.session["otp_verified"] = True
@@ -184,12 +202,13 @@ class VerifySignUpOTPView(View):
                     transaction = wallet.credit(Decimal(referral_credit), message=f"Congrats {referral.user.full_name}! Your friend {full_name} used your referral code and the bonus is now added" )
                     del request.session['referral_code']
                 except Referral.DoesNotExist:
-                    pass
+                    info_notify(request, "Some thing went wrong in referral process")
             
             del request.session['user_email']
             del request.session['user_full_name']
             del request.session['user_phone_no']
             del request.session['user_password']
+            del request.session['signup_otpExpiry']
 
             success_notify(request, "Your account has been verified. You can log in now.")
             return redirect("signin")
@@ -200,7 +219,11 @@ class VerifySignUpOTPView(View):
         
 @method_decorator(never_cache, name='dispatch')
 class ResendSignUpOTPView(View):
-    def get(self, request):
+    def post(self, request):
+        if not request.session.get('signup_otpExpiry'):
+            return redirect('signup')
+        if not request.session.get('user_email'):
+            return redirect('signup')
         user_email = request.session.get('user_email')
         full_name = request.session.get('user_full_name')
         otp = SignUpUserOTP.generate_otp()
@@ -218,6 +241,8 @@ class ResendSignUpOTPView(View):
         email.attach_alternative(html_content, "text/html")
         email.send()
 
+        
+        request.session["signup_otpExpiry"] = int(time()) + 180
         
         
         success_notify(request, "A new OTP has been sent to your email.")
@@ -349,12 +374,15 @@ class SignOutView(View):
             if request.session.get('session_order'):
                 order_id = request.session.get('session_order')
                 try:
-                    session_order = Order.objects.get(razorpay_order_id=order_id)
+                    session_order = Order.objects.get(id=order_id)
                 except Order.DoesNotExist:
                     request.session.pop('payment_confirm', None)
                     del request.session['session_order']
                     return redirect('cart_page')
                 # session_order = get_object_or_404(Order, id=order_id)
+                if session_order.coupon_code:
+                    used_coupon = get_object_or_404(Coupon, code=session_order.coupon_code)
+                    update_usage = used_coupon.decrement_usage(request.user)
                 for item in session_order.items.all():
                     item.variant.stock += item.quantity
                     item.variant.save()
@@ -369,6 +397,8 @@ class SignOutView(View):
 
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         user = get_object_or_404(CustomUser, id=user_id)
+        if request.session.get('selected_address'):
+                request.session.pop('selected_address', None)
         logout(request)
         user.status = False
         
@@ -413,18 +443,20 @@ class SignOutView(View):
         else:
             request.session.pop('wallet_payment_confirm', None)
             request.session.pop('session_transaction', None)
-
         
         if request.session.get('payment_confirm'):
             if request.session.get('session_order'):
                 order_id = request.session.get('session_order')
                 try:
-                    session_order = Order.objects.get(razorpay_order_id=order_id)
+                    session_order = Order.objects.get(id=order_id)
                 except Order.DoesNotExist:
                     request.session.pop('payment_confirm', None)
                     del request.session['session_order']
                     return redirect('cart_page')
                 # session_order = get_object_or_404(Order, id=order_id)
+                if session_order.coupon_code:
+                    used_coupon = get_object_or_404(Coupon, code=session_order.coupon_code)
+                    update_usage = used_coupon.decrement_usage(request.user)
                 for item in session_order.items.all():
                     item.variant.stock += item.quantity
                     item.variant.save()
@@ -438,7 +470,8 @@ class SignOutView(View):
             error_notify(request, 'Try again, payment gateway failed..!')
         # user = CustomUser.objects.get(id=user_id)# add get_object_or_404
         user = get_object_or_404(CustomUser, id=user_id)
-        
+        if request.session.get('selected_address'):
+                request.session.pop('selected_address', None)
         logout(request)
         user.status = False
         
@@ -754,7 +787,7 @@ class ProfileEditView(View):
 
         user = get_object_or_404(CustomUser, id=request.user.id)
 
-        if request.session.get('email'):
+        if request.session.get('email') or request.session.get('profile_otpExpiry'):
             if SignUpUserOTP.objects.filter(email=request.session.get('email')).exists():
                 SignUpUserOTP.objects.filter(email=request.session.get('email')).delete()
             if UserOTP.objects.filter(user=user).exists():
@@ -763,7 +796,11 @@ class ProfileEditView(View):
             del request.session['full_name']
             del request.session['email']
             del request.session['phone_no']
+            request.session.pop("profile_otpExpiry", None)
+            request.session.pop("profile_otpExpiry", None)
             return redirect("profile")
+
+        
 
         # user_profile = get_object_or_404(UserProfile, user=user)
         user_profile = profile(request)
@@ -842,7 +879,7 @@ class ProfileEditView(View):
         # otp sending session
         html_content = render_to_string("emails/otp_profile.html", {"full_name": full_name, "otp": otp})
         email = EmailMultiAlternatives(
-            subject="Verify Your Account",
+            subject="Verify Your New Email",
             body=f"Your OTP is {otp} ",
             from_email=settings.EMAIL_HOST_USER,
             to=[enter_email],
@@ -854,6 +891,8 @@ class ProfileEditView(View):
         request.session['full_name'] = full_name
         request.session['phone_no'] = phone_no
         request.session['email'] = enter_email
+        request.session["profile_otpExpiry"] = int(time()) + 180
+        request.session.modified = True
         
 
 
@@ -865,17 +904,31 @@ class VerifyNewMailView(View):
 
         if not request.user.is_authenticated:
             return redirect("sigin")
-        
-        if request.session.get("new_mail_otp_verified"):
-            info_notify(request, "verify your old mail, then only the mail can update")
-            return redirect('verify_profile')
-        
         if not request.session.get('email'):
             # info_notify(request, "try again")
             return redirect("profile")
+        
+        if not request.session.get('profile_otpExpiry'):
+            info_notify(request, "try again something went wrong.")
+            return redirect('profile')
+        
+        
+        if request.session.get("new_mail_otp_verified"):
+            if not request.session.get('profile_mail_otpExpiry'):
+                info_notify(request, "something went wrong try agian")
+                UserOTP.objects.filter(user=request.user).delete()
+                del request.session['profile_mail_otpExpiry']
+                request.session.pop("new_mail_otp_verified", None)
+                return redirect('profile_edit')
+            info_notify(request, "verify your old mail, then only the mail can update")
+            return redirect('verify_profile')
+        
+        
+        expiry_time = request.session.get('profile_otpExpiry')
 
         context = {
             "email" : request.session.get('email'),
+            'expiry': expiry_time,
         }
         return render(request, "accounts/verify_otp.html", context)
     
@@ -888,6 +941,10 @@ class VerifyNewMailView(View):
             error_notify(request, "Session expired. Please try again.")
 
             return redirect('profile_edit')
+        
+        if not request.session.get('email'):
+            
+            return redirect('verify_new_mail')
 
         if not request.POST.get("otp"):
             error_notify(request, "check your email and enter your otp")
@@ -900,9 +957,19 @@ class VerifyNewMailView(View):
         
         otp_obj = get_object_or_404(SignUpUserOTP, email=new_email)
 
-        if otp_obj.otp == entered_otp and otp_obj.updated_at >=  timezone.now() - timedelta(minutes=3):
-
-           
+        if otp_obj.updated_at >=  timezone.now() - timedelta(minutes=3):
+            
+            if otp_obj.otp != entered_otp:
+                attempt = request.session.get('otp_attempt', 0) + 1
+                request.session['otp_attempt'] = attempt
+                
+                if attempt > 3:
+                    
+                    request.session.pop('otp_attempt', None)
+                    info_notify(request, 'OTP is wrong, try again')
+                    return redirect('profile_edit')
+                info_notify(request, f'OTP is wrong, try again. Attempts left:{4 - attempt}')
+                return redirect('verify_new_mail')
 
             user = request.user
             
@@ -923,15 +990,19 @@ class VerifyNewMailView(View):
             email.send()
 
             request.session["new_mail_otp_verified"] = True
+            request.session.pop('otp_attempt', None)
+            del request.session['profile_otpExpiry']
 
             otp_obj.delete()
-            success_notify(request, "new user mail is verified, We sent you an OTP. Please verify your email.")
+            request.session["profile_mail_otpExpiry"] = int(time()) + 180
+            success_notify(request, "new user mail is verified, We sent you an OTP to old mail. Please verify your email.")
             return redirect("verify_profile")
         else:
             otp_obj.delete()
             del request.session['full_name']
             del request.session['email']
             del request.session['phone_no']
+            del request.session['profile_otpExpiry']
             warning_notify(request, "your otp validity is over enter your mail again")
             return redirect("profile_edit")
             
@@ -948,7 +1019,7 @@ class ResendNewMailOtpView(View):
 
             return redirect('profile_edit')
 
-        email = request.session.get('email')
+        # email = request.session.get('email')
         otp = SignUpUserOTP.generate_otp()
         
         new_mail_otp = SignUpUserOTP.objects.update_or_create(email=new_email, defaults={"otp": otp})
@@ -965,6 +1036,9 @@ class ResendNewMailOtpView(View):
         email.attach_alternative(html_content, "text/html")
         email.send()
 
+        request.session["profile_otpExpiry"] = int(time()) + 180
+        request.session.pop('otp_attempt', None)
+
         success_notify(request, "A new OTP has been sent to your email.")
         return redirect("verify_new_mail")
 
@@ -977,7 +1051,7 @@ class VerifyProfileOTPView(View):
         if not request.user.is_authenticated:
             return redirect("sigin")
         
-        if not request.session.get("new_mail_otp_verified"):
+        if not request.session.get("new_mail_otp_verified") or not request.session.get('profile_mail_otpExpiry'):
             
             return redirect('profile_edit')
         
@@ -987,9 +1061,11 @@ class VerifyProfileOTPView(View):
         
         
         user = get_object_or_404(CustomUser, id=request.user.id)
+        expiry_time = request.session.get('profile_mail_otpExpiry')
         context = {
             "user_id": request.user.id,
             "user": user,
+            'expiry': expiry_time,
         }
         
         return render(request, "accounts/verify_otp.html", context)
@@ -1020,32 +1096,44 @@ class VerifyProfileOTPView(View):
 
 
 
-        if otp_obj.otp == entered_otp and otp_obj.updated_at >=  timezone.now() - timedelta(minutes=3):
-            
-            
+        if otp_obj.updated_at >=  timezone.now() - timedelta(minutes=3):
             
 
-            # make session and clear previos session
+            if otp_obj.otp != entered_otp:
+                attempt = request.session.get('otp_attempt', 0) + 1
+                request.session['otp_attempt'] = attempt
+                
+                if attempt > 3:
+                    request.session.pop('otp_attempt', None)
+                    info_notify(request, 'OTP is wrong, try again')
+                    return redirect('profile_edit')
+                info_notify(request, f'OTP is wrong, try again. Attempts left:{4 - attempt}')
+                return redirect('verify_profile')
             
-            # request.session["chabge_otp_verified"] = True
+
+            
 
             user.full_name = full_name
             user.phone_no = phone_no
             user.email = email
             user.save()
             
+            request.session.pop('otp_attempt', None)
             request.session.pop("new_mail_otp_verified", None)
             otp_obj.delete()
             del request.session['full_name']
             del request.session['email']
             del request.session['phone_no']
+            del request.session['profile_mail_otpExpiry']
             success_notify(request, "Successfully updated your profile details.")
             return redirect("profile")
         else:
             otp_obj.delete()
+            request.session.pop("new_mail_otp_verified", None)
             del request.session['full_name']
             del request.session['email']
             del request.session['phone_no']
+            del request.session['profile_mail_otpExpiry']
             warning_notify(request, "your otp validity is over enter your mail again")
             return redirect("profile_edit")
 
@@ -1072,7 +1160,8 @@ class ResendProfileOTPView(View):
         email.attach_alternative(html_content, "text/html")
         email.send()
 
-        
+        request.session["profile_mail_otpExpiry"] = int(time()) + 180
+        request.session.pop('otp_attempt', None)
         
         success_notify(request, "A new OTP has been sent to your email.")
         return redirect("verify_profile")

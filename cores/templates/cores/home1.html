@@ -137,62 +137,49 @@
         <h2 class="text-center mb-4"><b>SHOP BY CATEGORIES</b></h2>
         </div>
 
-        <div id="categoryCarousel" class="carousel slide">
+        <div id="categoryCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="category-card">
-                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760154643/products/azkm4byzkqlah8tz8rhi.png" class="d-block w-100" alt="A4 Notebook">
-                                <a href="#" class="btn btn-light category-btn">A4 NOTEBOOK</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="category-card">
-                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760154643/products/azkm4byzkqlah8tz8rhi.png" class="d-block w-100" alt="King Size Notebook">
-                                 <a href="#" class="btn btn-light category-btn">KING SIZE</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="category-card">
-                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760154643/products/azkm4byzkqlah8tz8rhi.png" class="d-block w-100" alt="Short Note">
-                                 <a href="#" class="btn btn-light category-btn">SHORT NOTE</a>
-                            </div>
+        
+                {% for category in categories %}
+                    {% if forloop.first %}
+                    <div class="carousel-item active">
+                        <div class="row">
+                    {% elif forloop.counter0|divisibleby:3 %}
+                    </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="row">
+                    {% endif %}
+        
+                    <div class="col-md-4">
+                        <div class="category-card text-center">
+                            {% if category.image %}
+                                <img src="{{ category.image.url }}" class="d-block w-100" alt="{{ category.name }}">
+                            {% endif %}
+                            <a href="#" class="btn btn-light category-btn">
+                                {{ category.name|upper }}
+                            </a>
                         </div>
                     </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="category-card">
-                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760154643/products/azkm4byzkqlah8tz8rhi.png" class="d-block w-100" alt="A4 Notebook">
-                                 <a href="#" class="btn btn-light category-btn">POCKET SIZE</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="category-card">
-                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760154643/products/azkm4byzkqlah8tz8rhi.png" class="d-block w-100" alt="King Size Notebook">
-                                 <a href="#" class="btn btn-light category-btn">LEGAL PAD</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="category-card">
-                                <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760154643/products/azkm4byzkqlah8tz8rhi.png" class="d-block w-100" alt="Short Note">
-                                 <a href="#" class="btn btn-light category-btn">SPIRAL BOUND</a>
-                            </div>
+        
+                    {% if forloop.last %}
                         </div>
                     </div>
-                </div>
+                    {% endif %}
+                {% endfor %}
+        
             </div>
+        
+            <!-- Controls -->
             <button class="carousel-control-prev" type="button" data-bs-target="#categoryCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+                <span class="carousel-control-prev-icon"></span>
             </button>
+        
             <button class="carousel-control-next" type="button" data-bs-target="#categoryCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+                <span class="carousel-control-next-icon"></span>
             </button>
         </div>
+        
     </div>
 
     <!-- product best seller -->
