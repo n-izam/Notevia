@@ -1,13 +1,10 @@
-
 {% extends 'base_user.html' %}
-
 {% load static %}
 
 {% block title %} Address {% endblock %}
 
 {% block style %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
 <link rel="stylesheet" href="{% static 'css/profile_style.css' %}">
 
 <style>
@@ -32,7 +29,7 @@
     /* Base Toast Style */
     .toast {
         backdrop-filter: blur(8px);
-        background: rgba(17, 17, 17, 0.85) !important; /* glassy black */
+        background: rgba(17, 17, 17, 0.85) !important;
         color: #fff !important;
         border-radius: 12px !important;
         padding: 0.75rem 1rem;
@@ -41,65 +38,76 @@
         animation: slideFadeIn 0.5s ease-out;
     }
 
-    /* Toast body text */
-    .toast-body {
-        font-size: 0.95rem;
-        font-weight: 500;
-    }
+    .toast-body { font-size: 0.95rem; font-weight: 500; }
+    .toast.bg-success { background: rgba(0, 255, 100, 0.15) !important; border-left: 4px solid #00ff73 !important; color: #409365 !important; }
+    .toast.bg-danger { background: rgba(255, 0, 0, 0.15) !important; border-left: 4px solid #ff3b3b !important; color: #bb4141 !important; }
+    .toast.bg-warning { background: rgba(255, 193, 7, 0.15) !important; border-left: 4px solid #ffc107 !important; color: #a1842f !important; }
+    .toast.bg-info { background: rgba(0, 200, 255, 0.15) !important; border-left: 4px solid #00cfff !important; color: #3092a8 !important; }
 
-    /* SUCCESS */
-    .toast.bg-success {
-        background: rgba(0, 255, 100, 0.15) !important;
-        border-left: 4px solid #00ff73 !important;
-        color: #409365 !important;
-    }
-
-    /* ERROR */
-    .toast.bg-danger {
-        background: rgba(255, 0, 0, 0.15) !important;
-        border-left: 4px solid #ff3b3b !important;
-        color: #bb4141 !important;
-    }
-
-    /* WARNING */
-    .toast.bg-warning {
-        background: rgba(255, 193, 7, 0.15) !important;
-        border-left: 4px solid #ffc107 !important;
-        color: #a1842f !important;
-    }
-
-    /* INFO */
-    .toast.bg-info {
-        background: rgba(0, 200, 255, 0.15) !important;
-        border-left: 4px solid #00cfff !important;
-        color: #3092a8 !important;
-    }
-
-    /* Beautiful animation */
     @keyframes slideFadeIn {
-        0% {
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
+        0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0px) scale(1); }
+    }
+
+    /* Address Card Base */
+    .address-card {
+        transition: transform 0.2s ease;
+        background: #fff;
+    }
+    .address-card:hover {
+        transform: translateY(-5px);
+    }
+
+    /* SCROLLABLE LOGIC */
+    .scrollable-address-list {
+        max-height: 720px; /* Approx height for 2 rows (4 cards) on desktop */
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 8px;
+    }
+
+    /* Custom Scrollbar */
+    .scrollable-address-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    .scrollable-address-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    .scrollable-address-list::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+    .scrollable-address-list::-webkit-scrollbar-thumb:hover {
+        background: #bbb;
+    }
+
+    /* SMALL DEVICE REDUCTIONS */
+    @media (max-width: 768px) {
+        .scrollable-address-list {
+            max-height: 580px; /* Approx height for 2 cards on mobile */
         }
-        100% {
-            opacity: 1;
-            transform: translateY(0px) scale(1);
+        .address-card h5 { font-size: 1rem; }
+        .address-card p { font-size: 0.85rem; margin-bottom: 0.25rem !important; }
+        .address-card .badge { font-size: 0.7rem; }
+        .btn-sm { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
+        .section-title-responsive { font-size: 1.5rem; }
+        .address-wrapper { padding: 1rem !important; }
+    }
+
+    @media (max-width: 576px) {
+         .scrollable-address-list {
+            max-height: 520px; 
+        }
+        .address-card {
+            padding: 1.25rem !important;
         }
     }
 </style>
-
 {% endblock %}
 
-
-
 {% block content2 %}
-
-<!-- Right Content -->
 <div class="col-lg-9 col-md-8 mt-4 mt-md-0">
-    <!-- <div>
-        <p class="text-muted small mb-4">Profile ></p>
-    </div> -->
-    <!-- Breadcrumb Navigation -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             {% for crumb in breadcrumb %}
@@ -111,83 +119,63 @@
             {% endfor %}
         </ol>
     </nav>
-    <section class="profile-content address-container">
-        <h2 class="text-center mb-5">Delivery Address</h2>
 
-        <div class="address-wrapper p-4 p-md-5">
-            <div class="row">
-                <!-- Address Card 1 -->
-                 {% for address in addresses %}
-                <div class="col-lg-6 mb-4">
-                    <div class="address-card h-100 p-4">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="fw-bold mb-1">{{address.full_name}}</h5>
-                                <span class="badge address-tag text-uppercase">{{address.address_type}}</span>
+    <section class="profile-content address-container shadow-sm">
+        <h2 class="text-center mb-4 mb-md-5 section-title-responsive">Delivery Address</h2>
+
+        <div class="address-wrapper p-3 p-sm-4 p-md-5">
+            <!-- Scrollable Wrapper Start -->
+            <div class="scrollable-address-list">
+                <div class="row gy-4">
+                    {% for address in addresses %}
+                    <div class="col-lg-6">
+                        <div class="address-card h-100 p-3 p-sm-4 border shadow-xs rounded-4">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="text-truncate">
+                                    <h5 class="fw-bold mb-1 text-truncate">{{address.full_name}}</h5>
+                                    <span class="badge address-tag text-uppercase">{{address.address_type}}</span>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                            <div class="address-details mb-auto">
+                                <p class="mb-1 text-muted">{{address.address}}</p>
+                                <p class="mb-1 text-muted">{{address.city}}, {{address.district}}</p>
+                                <p class="mb-1 text-muted">{{address.state}} - {{address.pin_code}}</p>
+                                <p class="mb-1 small"><strong>Email:</strong> {{address.email}}</p>
+                                <p class="mb-0 small"><strong>Phone:</strong> {{address.phone_no}}</p>
+                            </div>
+                            
+                            <div class="address-actions mt-4 pt-3 border-top d-flex flex-wrap align-items-center gap-2">
+                                <div class="me-auto">
+                                    {% if address.is_default %}
+                                    <span class="badge bg-success rounded-pill px-3 py-2">DEFAULT</span>
+                                    {% else %}
+                                    <a href="{% url 'set_default' address_id=address.id %}?set_main=True" class="btn btn-sm btn-set-default">SET DEFAULT</a>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <a href="{% url 'edit_address' address_id=address.id %}" class="btn btn-outline-secondary btn-sm rounded-circle p-2 border-0" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'remove_address' address_id=address.id %}?delete=True" class="btn btn-sm btn-delete px-3">DELETE</a>
+                                </div>
                             </div>
                         </div>
-                        <hr class="my-3">
-                        <div class="address-details">
-                            <p class="mb-1">{{address.address}}</p>
-                            <p class="mb-1">{{address.city}}, {{address.district}}, {{address.state}}</p>
-                            <p class="mb-1">{{address.pin_code}}</p>
-                            <p class="mb-1">{{address.email}}</p>
-                            <p class="mb-0">{{address.phone_no}}</p>
-                        </div>
-                        <div class="address-actions mt-4 d-flex align-items-center">
-                            {% if address.is_default %}
-                            <span  class="badge bg-success rounded-pill me-auto">DEFAULT</span>
-                            {% else %}
-                            <a href="{% url 'set_default' address_id=address.id %}?set_main=True" class="btn btn-sm btn-set-default me-auto">SET DEFAULT</a>
-                            {% endif %}
-                            <a href="{% url 'edit_address' address_id=address.id %}" class="btn btn-icon me-2" title="Edit Address"><i class="bi bi-pencil"></i></a>
-                            <a href="{% url 'remove_address' address_id=address.id %}?delete=True" class="btn btn-sm btn-delete">DELETE</a>
-                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-
-                <!-- Address Card 2 -->
-                <!-- <div class="col-lg-6 mb-4">
-                    <div class="address-card h-100 p-4">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="fw-bold mb-1">John wick</h5>
-                                <span class="badge address-tag text-uppercase">Home</span>
-                            </div>
-                        </div>
-                        <hr class="my-3">
-                        <div class="address-details">
-                            <p class="mb-1">nisams house2</p>
-                            <p class="mb-1">palakkad, pattambi, KERALA</p>
-                            <p class="mb-1">678456</p>
-                            <p class="mb-1">okarthik509@gmail.com</p>
-                            <p class="mb-0">12345 67890</p>
-                        </div>
-                        <div class="address-actions mt-4 d-flex align-items-center">
-                            <button class="btn btn-sm btn-set-default me-auto">SET DEFAULT</button>
-                            <a href="#" class="btn btn-icon me-2" title="Edit Address"><i class="bi bi-pencil"></i></a>
-                            <button class="btn btn-sm btn-delete">DELETE</button>
-                        </div>
-                    </div>
-                </div> -->
-
-                <!-- Example of a single address taking full width -->
-                <!--
-                <div class="col-lg-12 mb-4">
-                    <div class="address-card h-100 p-4">
-                        ... content ...
-                    </div>
-                </div>
-                -->
-
             </div>
+            <!-- Scrollable Wrapper End -->
 
             <!-- Add New Address Button -->
-            <div class="text-center mt-4">
-                <a class="btn btn-add-new" href="{% url 'add_address' %}">ADD NEW ADDRESS</a>
+            <div class="text-center mt-5">
+                <a class="btn btn-add-new w-responsive px-md-5 py-2 fw-bold" href="{% url 'add_address' %}">
+                    <i class="bi bi-plus-lg me-2"></i>ADD NEW ADDRESS
+                </a>
             </div>
         </div>
+
+        <!-- Glassy Toasts -->
         <div class="toast-container">
             {% if messages %}
                 {% for message in messages %}
@@ -200,9 +188,9 @@
                     ">
                         <div class="d-flex">
                             <div class="toast-body">
-                            {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
-                            {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
-                            {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
+                                {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2"></i>
+                                {% elif message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                                {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
                                 {{ message }}
                             </div>
                             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
@@ -216,24 +204,11 @@
 {% endblock %}
 
 {% block script %}
-<!-- toast -->
 <script>
-
-    //document.addEventListener('DOMContentLoaded', function () {
-    //var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-    //toastElList.map(function (toastEl) {
-        //var t = new bootstrap.Toast(toastEl);
-        //t.show();
-    //});
-//});
-
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.toast').forEach(el => {
-            new bootstrap.Toast(el).show();
+            new bootstrap.Toast(el, { autohide: true, delay: 5000 }).show();
         });
     });
-
-    
 </script>
 {% endblock %}
-

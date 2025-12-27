@@ -146,9 +146,9 @@
                                         </td>
                                         <td class="text-end">
                                             <a href="{% url 'edit_variant' variant.id %}" class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                            <button class="btn btn-sm btn-outline-danger" aria-label="Delete">
+                                            <!-- <button class="btn btn-sm btn-outline-danger" aria-label="Delete">
                                                 <i class="fas fa-trash-alt"></i>
-                                            </button>
+                                            </button> -->
                                             
                                         </td>
                                     </tr>
@@ -218,7 +218,7 @@
                                 {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>{% endif %}
                                     {{ message }}
                                 </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                                <button type="button" class="btn-close btn-close-muted me-2 m-auto" data-bs-dismiss="toast"></button>
                             </div>
                         </div>
                     {% endfor %}

@@ -384,7 +384,7 @@ footer hr {
 .price-section .final-price {
     font-size: 1.75rem;
     font-weight: bold;
-    color: #4fc28fee;
+    color: #269c41ee;
 }
 .price-section .base-price {
     color: #6c757d;
@@ -955,3 +955,284 @@ footer hr {
 }
 
 
+
+/* ============================================================
+   RESPONSIVE OVERRIDES (Add this to the bottom of style3.css)
+   ============================================================ */
+
+/* General Mobile Fixes */
+html, body {
+    overflow-x: hidden; /* Prevents unwanted horizontal scrolling */
+    width: 100%;
+}
+
+/* Carousel Adjustments */
+@media (max-width: 768px) {
+    .carousel-caption h1 {
+        font-size: 2rem; /* Scaled down from 4rem */
+    }
+    .carousel-caption p {
+        font-size: 1rem;
+    }
+    .carousel-item img {
+        height: 50vh; /* Shorter height for mobile */
+    }
+    #categoryCarousel .carousel-control-prev,
+    #categoryCarousel .carousel-control-next {
+        left: 5px; /* Move arrows inside the screen */
+        right: 5px;
+    }
+}
+
+/* Product Detail Zoom Fix */
+/* Disable the side-zoom result on tablets and mobile because there is no space */
+@media (max-width: 991px) {
+    #zoom-result {
+        display: none !important; 
+    }
+    .product-zoom-container {
+        cursor: default;
+    }
+    #image-lens {
+        display: none !important;
+    }
+    /* Switch to internal zoom or just disable it for touch */
+    .main-image-container:hover #mainProductImage {
+        transform: none; 
+    }
+}
+
+/* Order Summary & Checkout Cards */
+@media (max-width: 768px) {
+    .order-summary-card, 
+    .address-selection-container, 
+    .checkout-card .card-content {
+        padding: 1.2rem; /* Reduced padding from 2.5rem */
+    }
+    
+    .address-card, .add-new-address-card {
+        margin-bottom: 1rem;
+    }
+
+    .summary-item-img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Review Section */
+@media (max-width: 576px) {
+    .review-header {
+        flex-direction: column;
+    }
+    .reviewer-info {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    .review-card {
+        padding: 1rem;
+    }
+}
+
+/* Cart & Wishlist */
+@media (max-width: 768px) {
+    .cart-item-img {
+        width: 60px;
+    }
+    .price-col, .total-col {
+        font-weight: bold;
+        margin-top: 5px;
+    }
+    .remove-link {
+        margin-left: 0;
+        display: block;
+        margin-top: 5px;
+    }
+}
+
+/* Grid Adjustments for Product Listing */
+@media (max-width: 576px) {
+    .col-6 { /* Ensures 2 products per row on very small screens */
+        padding: 5px;
+    }
+    .product-card .card-title {
+        font-size: 0.8rem;
+    }
+}
+
+/* Fix for Sidebar Filters on Mobile */
+@media (max-width: 991px) {
+    .filter-section {
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+    }
+}
+
+/* Utility to ensure images don't overflow */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* ============================================================
+   RESPONSIVE OVERRIDES (STATIC & MAIN)
+   ============================================================ */
+
+/* Prevent overflow on all devices */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Header Adjustments */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background: #fff;
+        padding: 1rem;
+        border-top: 1px solid #eee;
+        margin-top: 0.5rem;
+    }
+    
+    .nav-item .nav-link {
+        padding: 10px 0 !important;
+        border-bottom: 1px solid #f8f9fa;
+    }
+}
+
+/* Footer Adjustments for Mobile */
+@media (max-width: 767px) {
+    footer .col-lg-4 {
+        margin-bottom: 2rem;
+    }
+    
+    .social-icons {
+        justify-content: center;
+        display: flex;
+    }
+    
+    footer h5 {
+        margin-top: 1rem;
+    }
+}
+
+/* Typography Scaling */
+@media (max-width: 576px) {
+    h1 { font-size: 1.75rem !important; }
+    h2 { font-size: 1.5rem !important; }
+    p { font-size: 0.9rem; }
+}
+
+/* Social Icon Sizes */
+.social-icons .social-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+}
+
+/* Button responsiveness */
+.btn-outline-dark, .btn-dark {
+    transition: all 0.3s ease;
+}
+
+/* Padding for main content to avoid sticking to edges */
+main {
+    min-height: 60vh;
+}
+
+
+/* ============================================================
+   ULTIMATE HOME PAGE RESPONSIVE OVERRIDES
+   ============================================================ */
+
+/* 1. Universal Reset for Home Pages */
+main:not(.profile-container) {
+    margin-top: 0 !important;
+}
+
+/* 2. Hero Section Mobile Fixes */
+@media (max-width: 768px) {
+    .hero-img {
+        height: 350px;
+        object-fit: cover;
+    }
+    .hero-title {
+        font-size: 1.8rem !important;
+    }
+    .carousel-caption {
+        bottom: 15% !important;
+        text-align: center !important;
+        left: 5% !important;
+        right: 5% !important;
+    }
+}
+
+/* 3. Category Carousel Fix (Crucial for 3-item mobile layout) */
+.category-card {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5; /* Ensures all category images have same proportions */
+}
+
+.category-img-wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+.category-img-wrapper img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.category-btn {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: 700;
+    font-size: 0.8rem;
+    min-width: 80%;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 2;
+}
+
+@media (max-width: 768px) {
+    .section-title { font-size: 1.4rem; }
+    
+    .category-btn {
+        font-size: 0.6rem !important;
+        bottom: 8px !important;
+        padding: 4px 2px !important;
+        min-width: 90%;
+        border-radius: 4px;
+    }
+}
+
+/* 4. Product Cards (2 per row on mobile) */
+@media (max-width: 576px) {
+    .col-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+    .product-card .card-title {
+        font-size: 0.75rem !important;
+    }
+    .product-card .fw-bold {
+        font-size: 0.85rem;
+    }
+}
+
+/* 5. Shop Gram Mosaic Gaps */
+@media (max-width: 768px) {
+    .gram-image-wrapper {
+        margin-bottom: 5px;
+    }
+}
+
+/* 6. Carousel Controls */
+.carousel-control-prev, .carousel-control-next {
+    width: 5%;
+}

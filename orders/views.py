@@ -1102,6 +1102,25 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
         if stat:
             orders = orders.filter(status=stat)
 
+        # return_item_request_orders = []
+        # for order in orders:
+        #     return_item_requests = ReturnItemRequest.objects.filter(order=order).order_by('-status')
+        #     return_item_request_orders.append(return_item_requests)
+
+        # print('return',return_item_request_orders)
+        # for order_item_requests in return_item_request_orders:
+        #     if order_item_requests:
+        #         print("hi")
+
+        return_summary = {}
+
+        for order in orders:
+            requests = ReturnItemRequest.objects.filter(order=order)
+
+            order.return_pending = requests.filter(status='Pending').count()
+            order.return_approved = requests.filter(status='Approved').count()
+            order.return_rejected = requests.filter(status='Rejected').count()
+
         paginator = Paginator(orders, 3)
         try:
             paginated_orders = paginator.page(page)
@@ -1126,7 +1145,8 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
             "query":query,
             "stat": stat,
             'status_choices': Order.STATUS_CHOICES,
-            "custom_range": custom_range
+            "custom_range": custom_range,
+            'return_summary': return_summary
         }
 
         return render(request, 'orders/admin_order_listing.html', context)

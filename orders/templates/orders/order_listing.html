@@ -352,7 +352,7 @@
             <div class="order-header">
                 <div class="order-id">Order id : {{order.order_id}}</div>
                 {% if order.status == 'Delivered' %}
-                <div class="status status-delivered">Status : DELIVERED {{order.status}}</div>
+                <div class="status status-delivered">Status :  {{order.status}}</div>
                 {% elif order.status == 'Pending' %}
                 <div class="status status-processing">Status : {{order.status}}</div>
                 {% elif order.status == 'Processing' %}

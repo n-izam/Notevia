@@ -81,6 +81,63 @@
            transform: translateY(0px) scale(1);
        }
      }
+
+     /* ... Keep your existing CSS ... */
+
+    /* Mobile Responsiveness Sizing Adjustments */
+    @media (max-width: 576px) {
+        .product-details-container {
+            margin-top: 1rem !important;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .product-title {
+            font-size: 1.4rem !important;
+            margin-top: 15px;
+        }
+        .final-price {
+            font-size: 1.3rem !important;
+        }
+        .btn-ruling {
+            font-size: 0.8rem !important;
+            padding: 5px 8px !important;
+        }
+        .breadcrumb {
+            font-size: 0.8rem;
+        }
+        .quantity-selector {
+            max-width: 130px;
+        }
+        /* Similar Products Specific Mobile Sizing */
+        .similar-products-section h2 {
+            font-size: 1.5rem !important;
+        }
+        .product-card .card-title {
+            font-size: 0.8rem !important;
+            line-height: 1.2;
+        }
+        .product-card .card-text {
+            font-size: 0.9rem !important;
+        }
+        .product-card .card-body {
+            padding: 10px 5px !important;
+        }
+        .product-card .fa-heart {
+            font-size: 1rem !important;
+        }
+    }
+
+    /* Ensure horizontal spacing between the 2 items in a row on mobile */
+    @media (max-width: 767px) {
+        .similar-products-row {
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+        .similar-products-row [class*='col-'] {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -189,7 +246,11 @@
                     
                     <div class="d-flex align-items-center mb-4">
                         <button id="addToCartBtn" class="btn btn-dark btn-lg w-100 me-3" role="button" >Add to cart</button>
-                        <button class="btn btn-outline-dark wishlist-btn" type="button"><i class="far fa-heart"></i></button>
+                        {% if main_variant.product.id in wishlist_products %}
+                        <a href="{% url 'remove_from_wishlist' %}?product_id={{main_variant.product.id}}&next={{ request.path }}" class="btn btn-outline-danger wishlist-btn" type="button"><i class="fas fa-heart"></i></a>
+                        {% else %}
+                        <a href="{% url 'add_to_wishlist' %}?product_id={{main_variant.product.id}}&next={{ request.path }}" class="btn btn-outline-danger wishlist-btn" type="button"><i class="far fa-heart"></i></a>
+                        {% endif %}
                     </div>
                 </form>
     
@@ -241,25 +302,37 @@
             <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
                 <!-- Existing Reviews -->
                 <div class="row g-4">
+                    {% if reviews %}
+                    {% for review in reviews %}
                     <!-- Sample Review Card 1 -->
                     <div class="col-md-6">
                         <div class="review-card">
                             <div class="review-header">
                                 <div class="stars">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star text-muted"></i>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
+                                <!-- <div class="stars">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div> -->
                                 <div class="reviewer-info">
-                                    <strong>Samantha D.</strong>
+                                    <strong>{{review.user.full_name}}.</strong>
                                     <i class="fas fa-check-circle verified-icon"></i>
                                 </div>
-                                <a href="#" class="options-icon"><i class="fas fa-ellipsis-h"></i></a>
+                                <!-- <a href="#" class="options-icon"><i class="fas fa-ellipsis-h"></i></a> -->
                             </div>
-                            <p class="review-text">Stylish and reliable, this watch blends elegance with functionality. Its sleek design, comfortable fit, and precise timekeeping make it a perfect choice for everyday use or special occasions.</p>
-                            <p class="review-date">Posted on August 14, 2025</p>
+                            <p class="review-text">{{review.comment}}</p>
+                            <p class="review-date">Posted on {{review.updated_at|date:"j F Y" }}</p>
                         </div>
                     </div>
+                    {% endfor %}
                     <!-- Sample Review Card 2 -->
-                    <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                         <div class="review-card">
                             <div class="review-header">
                                 <div class="stars">
@@ -274,12 +347,21 @@
                             <p class="review-text">Stylish and reliable, this watch blends elegance with functionality. Its sleek design, comfortable fit, and precise timekeeping make it a perfect choice for everyday use or special occasions.</p>
                             <p class="review-date">Posted on August 14, 2025</p>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- Add more review cards as needed -->
+                     {% else %}
+                     <div class="col-md-6">
+                        <div class="review-card">
+                            
+                            <p class="review-text text-muted">🛍️ No customer reviews yet.</p>
+                            
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
     
                 <!-- Write a Review Form -->
-                <div class="write-review-section mt-5">
+                <!-- <div class="write-review-section mt-5">
                     <hr>
                     <h3 class="fw-bold">Write a Review</h3>
                     <form>
@@ -295,80 +377,42 @@
                         </div>
                         <button type="submit" class="btn btn-dark">Submit Review</button>
                     </form>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 
-    <div class="container my-5 py-5">
+    <div class="container my-5 py-5 similar-products-section">
         <div class="text-center mb-5">
             <h2 class="fw-bold">Similar products</h2>
         </div>
-        <div class="row">
-            <!-- Product 1 -->
-             {% for item in product_with_image %}
-            <div class="col-lg-3 col-md-6 mb-4">
+        <!-- Added 'similar-products-row' for custom gutter control -->
+        <div class="row similar-products-row">
+            {% for item in product_with_image %}
+            <!-- Changed to col-6 for mobile, col-md-4 for tablets, col-lg-3 for desktop -->
+            <div class="col-6 col-md-4 col-lg-3 mb-4">
                 <div class="card h-100 border-0 product-card gram-image-wrapper">
-                    <a href="{% url 'shop_productdetail' item.product.id %}">
-                    <img src="{{item.main_image.image.url}}" class="card-img-top" alt="Papergrid - SHORT NOTE">
-                </a>
+                    <a href="{% url 'static_product_detail' item.product.id %}">
+                        <img src="{{item.main_image.image.url}}" class="card-img-top" alt="{{ item.product.name }}">
+                    </a>
                     <div class="card-body text-center">
-                        <div class="d-flex justify-content-center align-items-center">
+                        <!-- Adjusted for better mobile alignment -->
+                        <div class="d-flex justify-content-between align-items-start">
                             <div class="text-start me-auto">
-                                <p class="card-title mb-0">{{ item.product.name }} - {{ item.product.category.name }}</p>
+                                <p class="card-title mb-1">{{ item.product.name }}</p>
                                 <p class="card-text fw-bold">Rs. {{ item.product.base_price }}</p>
                             </div>
-                            <a href="#" class="text-dark fs-5"><i class="far fa-heart"></i></a>
+                            
+                            {% if item.product.id in wishlist_products %}
+                            <a href="{% url 'remove_from_wishlist' %}?product_id={{item.product.id}}&next={{ request.get_full_path }}" class="text-danger" type="button"><i class="fas fa-heart"></i></a>
+                            {% else %}
+                            <a href="{% url 'add_to_wishlist' %}?product_id={{item.product.id}}&next={{ request.get_full_path }}" class="text-danger" type="button"><i class="far fa-heart"></i></a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
             {% endfor %}
-            <!-- Product 2 -->
-            <!-- <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card border-0 text-center">
-                    <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="card-img-top" alt="Classmates - SHORT NOTE">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="text-start me-auto">
-                                <p class="card-title mb-0">Classmates - SHORT NOTE</p>
-                                <p class="card-text fw-bold">From $18.95</p>
-                            </div>
-                            <a href="#" class="text-dark fs-5"><i class="far fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Product 3 -->
-            <!-- <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card border-0 text-center">
-                    <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109421/products/mq2mfnb9kgyzy52lhlg5.png" class="card-img-top" alt="Papergrid - A4 Notebook">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="text-start me-auto">
-                                <p class="card-title mb-0">Papergrid - A4 Notebook</p>
-                                <p class="card-text fw-bold">$10.00</p>
-                            </div>
-                            <a href="#" class="text-dark fs-5"><i class="far fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Product 4 -->
-            <!-- <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card border-0 text-center">
-                    <img src="https://res.cloudinary.com/dbufuuut7/image/upload/v1760109484/products/faifyjprcn0hlry03axu.png" class="card-img-top" alt="Papergrid - KING SIZE">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="text-start me-auto">
-                               <p class="card-title mb-0">Papergrid - KING SIZE</p>
-                               <p class="card-text fw-bold">$16.95</p>
-                            </div>
-                            <a href="#" class="text-dark fs-5"><i class="far fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
     <!-- Toast container (fixed position) -->
@@ -521,6 +565,16 @@
         });
     
         
+    </script>
+    <script>
+        // this is a reload script
+    
+        window.addEventListener("pageshow", function(event) {
+            //If the page is loaded from the browser's back/forward cache
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
     </script>
   
 

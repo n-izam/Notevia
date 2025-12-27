@@ -9,55 +9,7 @@
 }
 
 /* Left Sidebar */
-.profile-sidebar {
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,.07);
-    padding: 1.5rem;
-}
-.profile-header {
-    display: flex;
-    align-items: center;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 1rem;
-}
-.profile-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-right: 1rem;
-}
-.profile-img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-}
-.profile-name {
-    font-weight: 400;
-    font-size: 1.2rem;
-    margin-left: 1rem;
-}
-.profile-nav .nav-link {
-    color: #555;
-    padding: 0.75rem 1rem;
-    margin: 0.25rem 0;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    transition: all 0.2s ease-in-out;
-}
-.profile-nav .nav-link i {
-    margin-right: 1rem;
-    font-size: 1.2rem;
-    width: 20px;
-    text-align: center;
-}
-.profile-nav .nav-link.active,
-.profile-nav .nav-link:hover {
-    background-color: #000;
-    color: #fff;
-}
+/* removed the style from here */
 
 /* Right Content */
 .profile-content {
@@ -376,3 +328,165 @@
         background-color: #343a40;
         color: #fff;
     }
+
+    /* ============================================================
+   RESPONSIVE ADJUSTMENTS (ADD THIS TO THE BOTTOM)
+   ============================================================ */
+
+/* 1. Fix the massive top margin on mobile */
+.profile-container {
+    margin-top: 40px !important; /* Small gap for mobile */
+    margin-bottom: 2rem;
+}
+
+.main-container {
+    margin-top: 20px;
+}
+
+@media (min-width: 992px) {
+    .profile-container {
+        margin-top: 100px !important; /* Restores your original design for Desktop */
+    }
+    .main-container {
+        margin-top: 100px;
+    }
+}
+
+/* 2. Responsive Padding for Profile Content */
+@media (max-width: 768px) {
+    .profile-content {
+        padding: 1.5rem 1rem;
+        border-radius: 10px;
+    }
+    
+    .section-title-responsive {
+        font-size: 1.25rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+}
+
+/* 3. Form Control Adjustments */
+.profile-content .form-control {
+    max-width: 100%;
+}
+
+@media (max-width: 576px) {
+    .add-address-form-container {
+        padding: 1.5rem !important;
+    }
+    
+    .form-section-title {
+        font-size: 1.1rem;
+    }
+}
+
+/* 4. Responsive Buttons (Full width on very small screens) */
+@media (max-width: 576px) {
+    .btn-cancel, 
+    .btn-add-address, 
+    .btn-add-new, 
+    .update-btn {
+        width: 100%;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+        display: block;
+        text-align: center;
+    }
+    
+    /* Ensure breadcrumbs don't wrap ugly */
+    .breadcrumb {
+        font-size: 0.8rem;
+    }
+}
+
+/* 5. Address Card Mobile Layout */
+@media (max-width: 768px) {
+    .address-card {
+        padding: 1rem !important;
+    }
+    
+    .address-actions {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+
+/* 6. Sidebar Mobile Fix */
+@media (max-width: 991px) {
+    .profile-sidebar {
+        margin-bottom: 20px;
+    }
+    
+    .profile-header {
+        justify-content: center;
+    }
+}
+
+
+/* ============================================================
+   RESPONSIVE ADDRESS LIST OVERRIDES (ADD TO BOTTOM)
+   ============================================================ */
+
+/* Ensure the wrapper doesn't have too much padding on small phones */
+@media (max-width: 576px) {
+    .address-wrapper {
+        padding: 1rem !important;
+    }
+    
+    .address-card {
+        padding: 1.25rem !important;
+    }
+
+    .address-actions {
+        flex-direction: column !important; /* Stack actions on very small phones */
+        align-items: stretch !important;
+    }
+
+    .address-actions .me-auto {
+        margin-right: 0 !important;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .address-actions .d-flex {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .btn-set-default, .btn-delete {
+        width: 100%; /* Make buttons full width for thumb-tapping */
+    }
+}
+
+/* Add New Address Button Responsiveness */
+@media (max-width: 768px) {
+    .btn-add-new {
+        width: 100%;
+        padding: 12px;
+    }
+}
+
+/* Profile Content Section Title */
+.section-title-responsive {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+    .section-title-responsive {
+        font-size: 1.4rem !important;
+    }
+}
+
+/* Ensure the row doesn't cause horizontal overflow */
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+/* Truncate long names to keep card height consistent */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

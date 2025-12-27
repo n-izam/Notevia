@@ -53,17 +53,32 @@ class StaticProductListView(View):
         cat_option = request.GET.get('cat', '').strip()
         brand_option = request.GET.getlist('brand')
         page = request.GET.get('page', 1)
+        min_price = request.GET.get('min_price', '').strip()
+        max_price = request.GET.get('max_price', '').strip()
 
-        
+        if max_price and not min_price:
+            min_price = ''
+            max_price = ''
+            info_notify(request, "price range apply properly")
+        if min_price and not max_price:
+            min_price = ''
+            max_price = ''
+            info_notify(request, "price range apply properly")  
+
+        if max_price and min_price:
+            if Decimal(min_price) > Decimal(max_price):
+                min_price = ''
+                max_price = ''
+                info_notify(request, "price range apply properly")
 
         category = Category.objects.filter(is_listed=True)
         brand = Brand.objects.all()
         
         products = Product.objects.filter(is_deleted=False, is_listed=True)
+        products = products.order_by('-updated_at')
 
         if search_q:
-            products = products.filter(Q(brand__name__icontains=search_q)| 
-                                       Q(category__name__icontains=search_q) | 
+            products = products.filter(Q(name__icontains=search_q)|
                                        Q(variants__name__icontains=search_q)).distinct()
             
         if brand_option:
@@ -74,6 +89,8 @@ class StaticProductListView(View):
         if cat_option and cat_option.lower() != 'clear':
             products = products.filter(category__name__iexact=cat_option)
             
+        if min_price and max_price:
+            products = products.filter(base_price__gte=min_price, base_price__lte=max_price)
 
             
         # apply sorting
@@ -138,6 +155,8 @@ class StaticProductListView(View):
             "sort_option": sort_option,
             "cat_option" : cat_option,
             "brand_option" : brand_option,
+            "min_price": min_price,
+            "max_price": max_price,
             "paginator" : paginator,
             "page_obj" : paginated_products,
             # "wishlist_products": wishlist_products,
@@ -178,7 +197,7 @@ class StaticProductDetailsView(View):
 
         # for related products
 
-        related_products = Product.objects.filter(is_deleted=False, is_listed=True).order_by('-created_at')[:4]
+        related_products = Product.objects.filter(is_deleted=False, is_listed=True).exclude(id=product_id).order_by('-created_at')[:4]
 
         product_with_image = []
         for product in related_products:
@@ -187,6 +206,8 @@ class StaticProductDetailsView(View):
                 "product": product,
                 "main_image": main_image,
             })
+        
+        reviews = Review.objects.filter(product=main_product)
 
         # breadcrumb
         breadcrumb = [
@@ -203,6 +224,7 @@ class StaticProductDetailsView(View):
             "main_variant": main_variant,
             "product_with_image":product_with_image,
             "breadcrumb": breadcrumb,
+            "reviews": reviews,
         }
 
         return render(request, 'cores/static_product_detail.html', context)
@@ -434,7 +456,7 @@ class ProductDetailsView(View):
 
         # for related products
 
-        related_products = Product.objects.filter(is_deleted=False, is_listed=True).order_by('-created_at')[:4]
+        related_products = Product.objects.filter(is_deleted=False, is_listed=True).exclude(id=product_id).order_by('-created_at')[:4]
 
         product_with_image = []
         for product in related_products:

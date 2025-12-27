@@ -11852,3 +11852,1760 @@ INFO 2025-12-23 17:41:31,127 autoreload 67976 8378845248 Watching for file chang
 INFO 2025-12-23 17:41:35,493 autoreload 67976 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/adminpanel/utils.py changed, reloading.
 INFO 2025-12-23 17:41:35,826 autoreload 67987 8378845248 Watching for file changes with StatReloader
 INFO 2025-12-23 17:44:33,704 autoreload 68618 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-23 19:34:21,177 autoreload 70613 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-23 19:35:14,735 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:40:32,999 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:47:50,343 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:48:01,716 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 19:48:19,080 views 70613 6127874048 the item count is :1
+WARNING 2025-12-23 19:48:21,207 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:48:29,777 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:48:37,658 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:48:43,298 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:48:49,012 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:48:56,606 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:49:10,702 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:49:18,980 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:49:26,815 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:49:32,030 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:49:38,084 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:49:45,664 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:50:11,035 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:50:17,317 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:50:21,310 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 19:50:25,363 views 70613 6127874048 the item count is :1
+WARNING 2025-12-23 19:50:27,632 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:50:31,195 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:50:38,426 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:50:41,101 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:50:45,248 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:50:50,680 log 70613 6144700416 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:50:56,196 log 70613 6144700416 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:51:02,013 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:51:05,837 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:51:08,251 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:51:11,618 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:51:14,982 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:51:33,815 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:51:39,193 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:51:44,982 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:51:48,917 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:52:00,192 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:52:02,055 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:52:06,276 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:52:16,607 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:52:25,249 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:52:27,367 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:53:49,272 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:54:01,498 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:54:04,146 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 19:54:09,064 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:11:47,619 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:12:05,549 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:12:16,188 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:12:44,208 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:12:47,524 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:13:01,423 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:13:09,840 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:21:24,652 log 70613 6127874048 Not Found: /favicon.ico
+WARNING 2025-12-23 20:22:57,794 log 70613 6161526784 Not Found: /favicon.ico
+WARNING 2025-12-23 20:24:09,017 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:24:22,503 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:24:32,192 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:24:35,689 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:24:46,323 log 70613 6144700416 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:24:53,995 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:24:57,962 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:25:01,170 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:25:04,826 log 70613 6127874048 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 20:29:27,238 autoreload 70613 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-23 20:29:45,411 autoreload 72442 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-23 20:37:56,091 views 72442 6171537408 refferal for : Mohammad Nisam
+INFO 2025-12-23 20:38:11,602 views 72442 6171537408 refferal for : Mohammad Nisam
+INFO 2025-12-23 20:38:35,603 views 72442 6171537408 refferal for : Mohammad Nisam
+WARNING 2025-12-23 20:43:01,910 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:43:21,015 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:43:34,573 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:44:14,438 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:44:21,927 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:44:29,355 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:44:30,617 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 20:44:37,087 views 72442 6171537408 refferal for : Mohammad Nisam
+WARNING 2025-12-23 20:44:37,167 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:44:44,720 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:44:46,754 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:44:55,428 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:44:57,158 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:44:58,029 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:44:59,072 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:45:07,990 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 20:45:22,172 views 72442 6171537408 the item count is :1
+DEBUG 2025-12-23 20:45:36,225 connectionpool 72442 6171537408 Starting new HTTPS connection (1): api.razorpay.com:443
+DEBUG 2025-12-23 20:45:37,358 connectionpool 72442 6171537408 https://api.razorpay.com:443 "POST /v1/orders HTTP/1.1" 200 217
+WARNING 2025-12-23 20:47:50,252 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:47:51,977 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:47:54,604 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:48:02,406 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:48:06,007 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:48:12,678 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:48:47,890 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:49:09,663 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:49:19,630 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:49:30,645 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:49:35,907 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:49:43,337 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:01,757 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:07,922 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:14,575 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:19,742 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:37,931 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:40,999 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:49,855 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:51,280 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:55,544 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:55,969 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:50:59,034 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:51:03,616 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:51:03,805 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:51:06,418 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:51:10,464 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:51:10,632 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 20:51:11,997 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:06:22,755 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:06:53,051 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:07:05,873 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:07:12,387 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:07:14,941 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:11:04,201 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:11:19,510 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:11:21,190 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:11:22,379 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 21:13:58,476 views 72442 6171537408 the item count is :0
+WARNING 2025-12-23 21:14:10,970 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:17:33,104 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:17:42,421 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:18:17,427 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:25:54,430 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:26:11,017 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:26:14,666 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:27:09,910 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:27:26,326 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+ERROR 2025-12-23 21:28:56,502 log 72442 6171537408 Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py", line 44, in get
+    return render(request, 'cores/static_home.html', context)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/urls/base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'signout' with keyword arguments '{'user_id': ''}' not found. 1 pattern(s) tried: ['accounts/signout/(?P<user_id>[0-9]+)/\\Z']
+WARNING 2025-12-23 21:35:35,783 log 72442 6188363776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:42:24,124 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:43:11,409 log 72442 6188363776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:44:24,445 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:44:25,721 log 72442 6188363776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:45:51,162 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:46:01,168 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:46:10,572 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:46:14,001 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:46:17,119 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:46:21,562 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:46:23,435 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:46:25,888 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:46:27,662 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:46:32,734 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:46:54,615 log 72442 6171537408 Not Found: /favicon.ico
+WARNING 2025-12-23 21:47:02,979 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:47:23,979 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:49:53,962 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:49:54,887 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:50:16,380 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:55:09,013 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:55:18,859 log 72442 6188363776 Not Found: /favicon.ico
+WARNING 2025-12-23 21:55:23,928 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:57:22,873 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 21:57:23,873 log 72442 6171537408 Not Found: /favicon.ico
+WARNING 2025-12-23 22:04:10,051 log 72442 6171537408 Not Found: /favicon.ico
+WARNING 2025-12-23 22:04:12,944 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 22:05:04,456 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 22:05:05,502 log 72442 6205190144 Not Found: /favicon.ico
+WARNING 2025-12-23 22:05:16,313 log 72442 6188363776 Not Found: /favicon.ico
+WARNING 2025-12-23 22:05:18,296 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 22:05:47,423 log 72442 6188363776 Not Found: /favicon.ico
+WARNING 2025-12-23 22:05:49,674 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 22:06:25,250 log 72442 6171537408 Not Found: /favicon.ico
+WARNING 2025-12-23 22:06:44,633 log 72442 6188363776 Not Found: /favicon.ico
+WARNING 2025-12-23 22:06:47,299 log 72442 6188363776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 22:07:19,715 log 72442 6171537408 Not Found: /favicon.ico
+WARNING 2025-12-23 22:07:21,968 log 72442 6171537408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 22:08:05,446 autoreload 76163 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-23 22:08:16,822 log 76163 6153334784 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 22:35:37,331 autoreload 76782 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-23 22:40:53,883 log 76782 6154268672 Not Found: /favicon.ico
+WARNING 2025-12-23 22:42:53,347 log 76782 6137442304 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 22:43:26,866 autoreload 77158 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-23 22:49:04,288 log 77158 6172372992 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 22:49:37,849 autoreload 77382 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-23 22:50:10,133 log 77382 6134312960 Not Found: /favicon.ico
+WARNING 2025-12-23 22:55:10,493 log 77382 6134312960 Not Found: /favicon.ico
+WARNING 2025-12-23 22:55:58,104 log 77382 6134312960 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 22:56:25,889 log 77382 6134312960 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 22:56:27,501 log 77382 6167965696 Not Found: /favicon.ico
+WARNING 2025-12-23 22:56:43,101 log 77382 6134312960 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:07:42,460 log 77382 6134312960 Not Found: /favicon.ico
+WARNING 2025-12-23 23:08:17,017 log 77382 6134312960 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:08:30,087 log 77382 6134312960 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:10:37,445 log 77382 6134312960 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-23 23:11:31,514 autoreload 77927 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-23 23:11:50,506 log 77927 6123155456 Not Found: /favicon.ico
+WARNING 2025-12-23 23:14:36,453 log 77927 6123155456 Not Found: /favicon.ico
+WARNING 2025-12-23 23:16:25,538 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:17:08,390 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:17:14,287 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:17:22,388 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:28:49,360 log 77927 6139981824 Not Found: /favicon.ico
+WARNING 2025-12-23 23:29:13,744 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:33:06,462 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:34:10,207 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:34:23,096 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:34:31,829 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:36:33,297 log 77927 6139981824 Not Found: /favicon.ico
+WARNING 2025-12-23 23:36:40,967 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:36:46,316 log 77927 6123155456 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:37:56,165 log 77927 6123155456 Not Found: /favicon.ico
+DEBUG 2025-12-23 23:41:50,946 connectionpool 77927 6123155456 Starting new HTTPS connection (1): api.cloudinary.com:443
+DEBUG 2025-12-23 23:41:56,790 connectionpool 77927 6123155456 https://api.cloudinary.com:443 "POST /v1_1/dbufuuut7/image/upload HTTP/1.1" 200 None
+WARNING 2025-12-23 23:50:07,362 log 77927 6123155456 Not Found: /favicon.ico
+WARNING 2025-12-23 23:51:07,615 log 77927 6156808192 Not Found: /favicon.ico
+INFO 2025-12-23 23:54:38,489 autoreload 79461 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-23 23:54:46,424 log 79461 6159364096 Not Found: /favicon.ico
+WARNING 2025-12-23 23:55:46,602 log 79461 6124564480 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-23 23:59:33,848 log 79461 6158217216 Not Found: /favicon.ico
+WARNING 2025-12-23 23:59:36,568 log 79461 6124564480 Not Found: /favicon.ico
+WARNING 2025-12-23 23:59:38,506 log 79461 6124564480 Not Found: /favicon.ico
+WARNING 2025-12-23 23:59:39,291 log 79461 6124564480 Not Found: /favicon.ico
+WARNING 2025-12-23 23:59:40,015 log 79461 6141390848 Not Found: /favicon.ico
+INFO 2025-12-23 23:59:59,740 autoreload 79724 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-24 00:00:22,396 log 79724 6161412096 Not Found: /favicon.ico
+INFO 2025-12-24 00:03:03,971 autoreload 79962 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-24 00:03:18,810 log 79962 6162903040 Not Found: /favicon.ico
+WARNING 2025-12-24 00:09:50,919 log 79962 6179729408 Not Found: /favicon.ico
+WARNING 2025-12-24 00:10:00,479 log 79962 6162903040 Not Found: /favicon.ico
+DEBUG 2025-12-24 00:10:13,221 connectionpool 79962 6162903040 Starting new HTTPS connection (1): api.cloudinary.com:443
+DEBUG 2025-12-24 00:10:15,018 connectionpool 79962 6162903040 https://api.cloudinary.com:443 "POST /v1_1/dbufuuut7/image/destroy HTTP/1.1" 200 None
+WARNING 2025-12-24 00:14:49,130 log 79962 6162903040 Not Found: /favicon.ico
+WARNING 2025-12-24 00:17:35,496 log 79962 6179729408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:17:58,209 log 79962 6179729408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:18:29,007 log 79962 6179729408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:21:29,826 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:24:33,659 log 79962 6179729408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:24,801 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:25,359 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:25,992 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:30,358 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:31,015 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:33,589 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:37,819 log 79962 6162903040 Not Found: /favicon.ico
+WARNING 2025-12-24 00:26:39,917 log 79962 6179729408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:40,693 log 79962 6179729408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:41,253 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:41,789 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:41,972 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:42,176 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:42,340 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:42,531 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:42,790 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:43,066 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:43,217 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:46,303 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:47,187 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:26:57,777 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:27:08,686 log 79962 6162903040 Not Found: /favicon.ico
+WARNING 2025-12-24 00:27:17,825 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:27:20,940 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:27:56,525 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+DEBUG 2025-12-24 00:28:03,787 connectionpool 79962 6162903040 Starting new HTTPS connection (2): api.cloudinary.com:443
+DEBUG 2025-12-24 00:28:05,020 connectionpool 79962 6162903040 https://api.cloudinary.com:443 "POST /v1_1/dbufuuut7/image/destroy HTTP/1.1" 200 None
+DEBUG 2025-12-24 00:28:09,228 connectionpool 79962 6162903040 https://api.cloudinary.com:443 "POST /v1_1/dbufuuut7/image/upload HTTP/1.1" 200 None
+WARNING 2025-12-24 00:28:09,416 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:28:27,485 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:28:29,300 log 79962 6213382144 Not Found: /favicon.ico
+WARNING 2025-12-24 00:29:34,819 log 79962 6179729408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:29:44,677 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:29:46,595 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:29:49,141 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:29:56,721 log 79962 6179729408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:05,109 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:06,104 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:07,395 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:08,323 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 00:30:15,382 views 79962 6162903040 refferal for : Mohammad Nisam
+WARNING 2025-12-24 00:30:15,474 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:17,543 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:18,171 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 00:30:34,050 views 79962 6162903040 refferal for : Mohammad Nisam
+WARNING 2025-12-24 00:30:34,134 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:43,794 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:53,835 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:55,623 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:56,396 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:30:57,159 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 00:30:57,895 views 79962 6162903040 refferal for : Mohammad Nisam
+WARNING 2025-12-24 00:30:57,919 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:34:26,659 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:34:27,150 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:34:27,753 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:34:28,690 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:37:18,770 log 79962 6196555776 Not Found: /favicon.ico
+WARNING 2025-12-24 00:37:26,723 log 79962 6162903040 Not Found: /favicon.ico
+WARNING 2025-12-24 00:37:46,570 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:37:46,769 log 79962 6162903040 Not Found: /favicon.ico
+WARNING 2025-12-24 00:37:49,508 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:37:51,123 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:37:51,803 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:37:52,542 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:37:54,080 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 00:37:55,957 views 79962 6179729408 refferal for : Mohammad Nisam
+WARNING 2025-12-24 00:37:56,003 log 79962 6179729408 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:38:00,434 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:38:05,178 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:38:12,283 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:38:15,966 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:38:19,937 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:38:35,260 log 79962 6196555776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:41:10,181 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:41:11,070 log 79962 6196555776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:43:14,164 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:43:16,488 log 79962 6196555776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:43:25,385 log 79962 6162903040 Not Found: /favicon.ico
+WARNING 2025-12-24 00:44:38,403 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:44:55,017 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:44:56,882 log 79962 6162903040 Not Found: /favicon.ico
+WARNING 2025-12-24 00:46:45,544 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:47:05,263 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:47:06,858 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:47:08,122 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:47:12,253 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:47:15,593 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:48:23,623 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:48:28,587 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:48:41,576 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:50:00,613 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:50:02,900 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:50:09,496 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:50:11,562 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:53:13,947 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 00:53:14,763 log 79962 6162903040 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 19:01:44,251 autoreload 84749 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-24 19:02:46,941 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 19:05:33,436 views 84749 6124302336 refferal for : Mohammad Nisam
+INFO 2025-12-24 19:06:41,616 views 84749 6124302336 refferal for : Mohammad Nisam
+WARNING 2025-12-24 19:07:12,867 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:07:20,477 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:07:21,628 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:07:22,903 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:07:23,855 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:07:33,343 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:07:42,002 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:07:43,207 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:07:43,894 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:07:44,757 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 19:07:48,752 views 84749 6124302336 refferal for : Mohammad Nisam
+WARNING 2025-12-24 19:07:48,781 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:12:20,153 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:12:23,617 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:12:53,606 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:13:03,057 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:13:07,918 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:13:16,303 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:13:30,456 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 19:16:16,252 log 84749 6124302336 Not Found: /favicon.ico
+WARNING 2025-12-24 19:16:23,094 log 84749 6124302336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:21:52,667 log 84749 6158528512 Not Found: /favicon.ico
+WARNING 2025-12-24 20:22:17,117 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:22:30,335 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:24:22,820 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:25:03,219 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:25:20,186 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:25:22,665 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:25:23,612 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:25:24,405 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:25:25,555 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:25:39,747 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 20:26:06,665 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:10:00,580 log 84749 6124875776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:10:07,924 log 84749 6124875776 Not Found: /favicon.ico
+WARNING 2025-12-24 21:10:33,495 log 84749 6124875776 Not Found: /favicon.ico
+WARNING 2025-12-24 21:10:47,309 log 84749 6124875776 Not Found: /favicon.ico
+WARNING 2025-12-24 21:10:48,889 log 84749 6158528512 Not Found: /favicon.ico
+INFO 2025-12-24 21:10:58,984 autoreload 86643 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-24 21:11:36,310 views 86643 6166949888 refferal for : Mohammad Nisam
+INFO 2025-12-24 21:12:07,838 autoreload 86792 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-24 21:12:13,398 log 86792 6123646976 Not Found: /favicon.ico
+WARNING 2025-12-24 21:12:17,128 log 86792 6140473344 Not Found: /favicon.ico
+WARNING 2025-12-24 21:12:18,533 log 86792 6123073536 Not Found: /favicon.ico
+WARNING 2025-12-24 21:12:19,537 log 86792 6123073536 Not Found: /favicon.ico
+WARNING 2025-12-24 21:12:21,793 log 86792 6123073536 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:12:47,182 log 86792 6123073536 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:12:48,234 log 86792 6123073536 Not Found: /favicon.ico
+WARNING 2025-12-24 21:12:52,083 log 86792 6123073536 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:12:52,711 log 86792 6139899904 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:12:53,861 log 86792 6123073536 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:12:54,512 log 86792 6139899904 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 21:12:55,784 views 86792 6123073536 refferal for : Mohammad Nisam
+WARNING 2025-12-24 21:12:55,816 log 86792 6123073536 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:12:58,164 log 86792 6123073536 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:12:58,695 log 86792 6123073536 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:12:59,375 log 86792 6123073536 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:13:00,227 log 86792 6123073536 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:13:00,745 log 86792 6123073536 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:13:50,910 log 86792 6123073536 Not Found: /favicon.ico
+WARNING 2025-12-24 21:13:53,088 log 86792 6123073536 Not Found: /favicon.ico
+INFO 2025-12-24 21:13:57,267 views 86792 6123073536 refferal for : Mohammad Nisam
+WARNING 2025-12-24 21:14:11,051 log 86792 6156726272 Not Found: /favicon.ico
+WARNING 2025-12-24 21:14:13,103 log 86792 6123073536 Not Found: /favicon.ico
+INFO 2025-12-24 21:14:19,804 views 86792 6123073536 refferal for : Mohammad Nisam
+INFO 2025-12-24 21:25:07,292 autoreload 87378 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-24 21:25:16,130 log 87378 6151991296 Not Found: /favicon.ico
+WARNING 2025-12-24 21:25:20,480 log 87378 6135164928 Not Found: /favicon.ico
+WARNING 2025-12-24 21:26:57,169 log 87378 6135164928 Not Found: /favicon.ico
+WARNING 2025-12-24 21:27:00,390 log 87378 6151991296 Not Found: /favicon.ico
+WARNING 2025-12-24 21:27:12,426 log 87378 6151991296 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:19,820 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:22,609 log 87378 6151991296 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:25,342 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:27,842 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 21:27:30,311 views 87378 6135164928 refferal for : Mohammad Nisam
+WARNING 2025-12-24 21:27:30,345 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:42,017 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:44,161 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:45,416 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:50,835 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:52,892 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:54,692 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:27:56,766 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:06,713 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 21:28:13,364 views 87378 6135164928 refferal for : Mohammad Nisam
+WARNING 2025-12-24 21:28:13,391 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:19,324 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:22,595 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:26,742 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:30,829 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:35,029 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:41,115 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:46,815 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:48,788 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:55,552 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:28:59,942 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 21:29:11,890 views 87378 6135164928 refferal for : Mohammad Nisam
+WARNING 2025-12-24 21:29:21,300 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:29:38,747 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:29:45,047 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:29:46,446 log 87378 6151991296 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:29:48,496 log 87378 6151991296 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:29:55,622 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:30:03,583 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:30:05,914 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:31:07,846 log 87378 6135164928 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 21:46:21,823 autoreload 88015 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-24 21:46:25,410 log 88015 6171684864 Not Found: /favicon.ico
+WARNING 2025-12-24 21:46:44,082 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:47:05,275 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:47:11,652 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:47:14,736 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:47:18,831 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:47:20,247 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:47:23,067 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:47:23,750 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:47:25,540 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:47:27,489 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:47:49,729 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:48:00,092 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-24 21:49:45,386 views 88015 6171111424 the item count is :1
+INFO 2025-12-24 21:49:48,835 views 88015 6171111424 the item count is :2
+INFO 2025-12-24 21:49:52,213 views 88015 6171111424 the item count is :3
+INFO 2025-12-24 21:49:53,579 views 88015 6171111424 the item count is :3
+INFO 2025-12-24 21:49:57,120 views 88015 6171111424 the item count is :4
+INFO 2025-12-24 21:49:59,026 views 88015 6171111424 the item count is :5
+WARNING 2025-12-24 21:51:21,165 log 88015 6171111424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-24 21:58:37,441 log 88015 6187937792 Not Found: /favicon.ico
+WARNING 2025-12-24 21:58:38,250 log 88015 6187937792 Not Found: /favicon.ico
+WARNING 2025-12-24 22:00:38,721 log 88015 6171111424 Not Found: /favicon.ico
+WARNING 2025-12-24 22:03:28,082 log 88015 6187937792 Not Found: /favicon.ico
+WARNING 2025-12-24 22:08:47,123 log 88015 6187937792 Not Found: /favicon.ico
+WARNING 2025-12-24 22:09:00,514 log 88015 6171111424 Not Found: /favicon.ico
+WARNING 2025-12-24 22:09:32,584 log 88015 6187937792 Not Found: /favicon.ico
+INFO 2025-12-24 22:10:11,419 views 88015 6171111424 the item count is :5
+INFO 2025-12-26 10:53:25,647 autoreload 4152 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-26 10:53:40,824 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:02,064 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:04,087 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:06,313 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:08,386 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:15,139 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:17,890 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:43,285 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:45,740 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-26 10:54:50,452 views 4152 6168915968 refferal for : Mohammad Nisam
+WARNING 2025-12-26 10:54:50,486 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:52,950 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:54,871 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:54:59,703 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:55:03,900 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:55:10,081 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:55:14,162 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:55:18,047 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+DEBUG 2025-12-26 10:55:27,050 connectionpool 4152 6168915968 Starting new HTTPS connection (1): api.razorpay.com:443
+DEBUG 2025-12-26 10:55:29,008 connectionpool 4152 6168915968 https://api.razorpay.com:443 "POST /v1/orders HTTP/1.1" 200 226
+WARNING 2025-12-26 10:55:29,141 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+ERROR 2025-12-26 10:56:14,374 log 4152 6168915968 Internal Server Error: /cart/wallet/razorpay/callback/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/fields/__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: '300]'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py", line 380, in razorpay_callback_wallet
+    transaction = get_object_or_404(WalletTransaction, id=transaction_id)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/shortcuts.py", line 90, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 619, in get
+    clone = self._chain() if self.query.combinator else self.filter(*args, **kwargs)
+                                                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 1493, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 1511, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 1518, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1588, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1415, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/fields/__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got '300]'.
+WARNING 2025-12-26 10:58:58,126 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:58:58,937 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:59:01,432 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:59:08,099 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:59:21,405 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:59:27,382 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-26 10:59:38,156 views 4152 6168915968 the item count is :5
+WARNING 2025-12-26 10:59:38,281 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-26 10:59:44,485 views 4152 6168915968 the item count is :5
+WARNING 2025-12-26 10:59:44,595 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 10:59:53,097 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:00:15,499 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:00:20,695 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:00:27,684 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:00:32,557 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:07,286 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:14,715 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:18,394 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:23,726 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:30,319 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:42,355 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:44,528 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:45,878 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:48,323 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:51,826 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:55,095 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:01:59,869 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:02:01,670 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:02:04,435 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 11:02:06,715 log 4152 6168915968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-26 11:48:34,678 autoreload 5461 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-26 11:48:44,313 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 12:23:04,882 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 12:23:48,137 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 12:24:08,936 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 12:24:15,597 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 12:25:30,334 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 12:29:56,067 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 12:30:08,630 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:07:22,735 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 16:07:40,499 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:28:02,698 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 16:28:11,592 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 16:28:55,721 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:05,242 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:09,160 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:11,936 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:14,470 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:16,199 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:18,083 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:20,144 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:25,561 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:34,402 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:36,830 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:51,633 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:29:53,905 log 5461 6169358336 Not Found: /favicon.ico
+WARNING 2025-12-26 16:30:08,467 log 5461 6152531968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:30:09,259 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 16:33:08,592 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 16:33:51,897 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:33:59,958 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:34:09,180 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:34:17,079 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:34:22,227 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:34:38,551 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:34:42,944 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:44:22,232 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:44:46,684 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:44:53,866 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:44:57,974 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:45:03,554 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:45:09,281 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:45:10,560 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:45:23,139 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:47:37,772 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:50:40,336 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:51:03,491 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:51:19,340 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:51:20,102 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 16:51:57,869 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:03,601 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:05,978 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:11,453 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:14,321 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:22,117 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:34,944 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:36,412 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:38,162 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:41,279 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:45,307 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:47,229 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:50,366 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:52:52,135 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:53:39,330 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 16:53:58,816 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 16:54:14,295 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 16:56:08,021 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 16:57:00,671 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 16:59:01,785 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 17:01:23,186 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 17:02:26,204 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 17:26:20,437 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 17:26:45,227 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 17:40:27,671 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 17:42:20,618 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 18:01:56,403 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 18:03:48,391 log 5461 6135705600 Not Found: /favicon.ico
+WARNING 2025-12-26 18:04:22,960 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:04:29,503 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:04:31,487 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:04:34,945 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:04:37,542 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:04:41,143 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:04:44,832 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:04:45,236 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:06:17,674 log 5461 6135705600 Not Found: /favicon.ico
+INFO 2025-12-26 18:06:58,003 views 5461 6135705600 the item count is :5
+INFO 2025-12-26 18:07:12,459 views 5461 6135705600 the item count is :5
+INFO 2025-12-26 18:07:27,063 views 5461 6135705600 the item count is :3
+INFO 2025-12-26 18:07:57,023 views 5461 6135705600 the item count is :4
+WARNING 2025-12-26 18:10:33,694 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 18:11:01,626 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 18:11:37,094 log 5461 6152531968 Not Found: /favicon.ico
+WARNING 2025-12-26 18:16:24,365 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:16:27,410 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:16:32,340 log 5461 6152531968 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:16:32,425 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:16:32,428 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:16:34,135 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:16:36,462 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:16:43,689 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:24,154 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:27,439 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:30,371 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:32,113 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:33,369 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:34,620 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:36,523 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:38,129 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:39,296 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:40,405 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:49,617 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:17:58,171 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:18:04,604 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:18:09,547 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:18:17,201 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:18:18,812 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 18:18:21,414 log 5461 6135705600 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-26 20:56:10,731 autoreload 16047 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-26 20:56:20,751 log 16047 6186086400 Not Found: /favicon.ico
+WARNING 2025-12-26 20:56:24,585 log 16047 6186086400 Not Found: /favicon.ico
+ERROR 2025-12-26 20:56:26,602 log 16047 6169260032 Internal Server Error: /static_product_list/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/fields/__init__.py", line 2128, in get_prep_value
+    return int(value)
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'SimpleLazyObject'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py", line 135, in get
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 946, in get_or_create
+    return self.get(**kwargs), False
+           ~~~~~~~~^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 619, in get
+    clone = self._chain() if self.query.combinator else self.filter(*args, **kwargs)
+                                                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 1493, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 1511, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/query.py", line 1518, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1588, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1415, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/fields/related_lookups.py", line 112, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/fields/__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+TypeError: Field 'id' expected a number but got <SimpleLazyObject: <django.contrib.auth.models.AnonymousUser object at 0x107c6ba80>>.
+INFO 2025-12-26 20:58:09,446 autoreload 16047 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 20:58:10,025 autoreload 16105 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 20:58:20,626 autoreload 16105 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 20:58:21,116 autoreload 16124 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-26 20:58:37,657 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 20:58:43,893 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 20:58:46,078 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 20:58:47,972 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 20:58:49,723 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 20:58:51,265 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 20:58:58,882 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 20:59:10,333 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 20:59:14,023 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 21:05:34,397 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 21:05:53,270 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 21:06:45,589 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 21:07:17,139 log 16124 6153580544 Not Found: /favicon.ico
+WARNING 2025-12-26 21:07:21,998 log 16124 6153580544 Not Found: /favicon.ico
+WARNING 2025-12-26 21:07:27,871 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 21:07:43,095 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 21:08:21,405 log 16124 6136754176 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-26 21:35:11,743 autoreload 16124 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:35:12,402 autoreload 17031 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:35:14,562 autoreload 17031 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:35:14,844 autoreload 17042 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:35:16,959 autoreload 17042 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:35:17,299 autoreload 17045 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:35:18,628 autoreload 17045 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:35:19,126 autoreload 17059 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:35:20,415 autoreload 17059 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:35:20,750 autoreload 17066 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:35:39,645 autoreload 17066 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:35:40,134 autoreload 17079 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:35:42,461 autoreload 17079 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:35:42,870 autoreload 17089 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:35:44,985 autoreload 17089 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:35:45,337 autoreload 17093 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:35:46,625 autoreload 17093 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:35:46,923 autoreload 17103 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:35:58,633 autoreload 17103 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:35:59,122 autoreload 17114 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:36:00,447 autoreload 17114 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:36:00,770 autoreload 17120 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:36:02,059 autoreload 17120 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:36:02,365 autoreload 17126 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:36:03,672 autoreload 17126 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:36:04,112 autoreload 17134 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:36:06,299 autoreload 17134 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:36:06,564 autoreload 17140 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:36:07,811 autoreload 17140 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:36:08,140 autoreload 17144 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:36:09,417 autoreload 17144 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:36:09,731 autoreload 17148 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:36:44,207 autoreload 17148 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:36:44,692 autoreload 17172 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:36:51,161 autoreload 17172 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:36:51,618 autoreload 17187 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:36:52,890 autoreload 17187 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:36:53,188 autoreload 17192 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:36:54,449 autoreload 17192 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:36:54,758 autoreload 17196 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-26 21:40:08,482 log 17196 6131478528 Not Found: /favicon.ico
+INFO 2025-12-26 21:40:37,169 autoreload 17196 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:40:37,763 autoreload 17324 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-26 21:40:50,655 autoreload 17324 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cores/views.py changed, reloading.
+INFO 2025-12-26 21:40:51,125 autoreload 17342 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-26 21:44:19,457 log 17342 6132035584 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-26 21:44:46,826 log 17342 6132035584 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-27 11:51:10,525 autoreload 22853 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-27 11:51:28,164 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:55:08,912 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:55:39,594 log 22853 6191837184 Not Found: /favicon.ico
+WARNING 2025-12-27 11:57:31,589 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:57:52,428 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:57:55,018 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:58:15,545 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:58:16,818 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:58:25,213 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:59:04,804 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:59:17,362 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:59:28,417 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:59:33,803 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:59:50,179 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:59:50,305 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 11:59:55,424 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 12:00:03,153 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 12:00:08,124 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 12:00:13,078 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 12:00:22,453 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 12:00:35,010 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 12:00:38,370 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 12:01:34,789 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 12:01:35,709 log 22853 6208663552 Not Found: /favicon.ico
+WARNING 2025-12-27 12:02:51,168 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 12:03:01,454 log 22853 6191837184 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-27 12:03:08,484 views 22853 6191837184 the item count is :4
+INFO 2025-12-27 12:07:29,932 autoreload 22853 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:07:30,525 autoreload 23425 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:07:32,872 autoreload 23425 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:07:33,267 autoreload 23438 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:07:34,558 autoreload 23438 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:07:34,857 autoreload 23442 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:08:26,009 autoreload 23442 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:08:26,589 autoreload 23464 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:08:27,664 autoreload 23464 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:08:27,954 autoreload 23474 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:08:45,607 autoreload 23474 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:08:46,031 autoreload 23486 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:08:47,107 autoreload 23486 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:08:47,387 autoreload 23492 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:09:04,029 autoreload 23492 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:09:04,551 autoreload 23504 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:09:07,682 autoreload 23504 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:09:08,042 autoreload 23516 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:09:11,178 autoreload 23516 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:09:11,523 autoreload 23528 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:09:33,332 autoreload 23528 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:09:33,747 autoreload 23540 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:11:16,019 autoreload 23540 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:11:16,518 autoreload 23578 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:11:54,321 autoreload 23578 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:11:54,809 autoreload 23618 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:12:43,933 autoreload 23618 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:12:44,417 autoreload 23698 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:12:47,774 autoreload 23698 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:12:48,086 autoreload 23711 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:15:07,751 autoreload 23711 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:15:08,232 autoreload 23792 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:15:12,672 autoreload 23792 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:15:13,033 autoreload 23805 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:15:14,347 autoreload 23805 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:15:14,657 autoreload 23812 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:15:24,220 autoreload 23812 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:15:24,651 autoreload 23824 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:15:25,926 autoreload 23824 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:15:26,224 autoreload 23830 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:15:28,509 autoreload 23830 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:15:28,813 autoreload 23838 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:15:33,173 autoreload 23838 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:15:33,533 autoreload 23849 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:15:36,862 autoreload 23849 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:15:37,209 autoreload 23855 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:15:38,474 autoreload 23855 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:15:38,804 autoreload 23863 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:15:40,073 autoreload 23863 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:15:40,414 autoreload 23868 8378845248 Watching for file changes with StatReloader
+ERROR 2025-12-27 12:16:00,902 log 23868 6171963392 Internal Server Error: /cart/cart_update/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py", line 192, in post
+    if int(quantity) >= cart_item.variant.stock:
+                        ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'cart_item' where it is not associated with a value
+INFO 2025-12-27 12:16:35,838 autoreload 23868 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:16:36,322 autoreload 23900 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:16:39,703 autoreload 23900 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:16:40,009 autoreload 23911 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 12:19:31,600 autoreload 23911 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/cart/views.py changed, reloading.
+INFO 2025-12-27 12:19:32,140 autoreload 24112 8378845248 Watching for file changes with StatReloader
+DEBUG 2025-12-27 12:21:15,673 connectionpool 24112 6190329856 Starting new HTTPS connection (1): api.razorpay.com:443
+DEBUG 2025-12-27 12:21:16,927 connectionpool 24112 6190329856 https://api.razorpay.com:443 "POST /v1/orders HTTP/1.1" 200 219
+DEBUG 2025-12-27 12:22:07,745 connectionpool 24112 6190329856 https://api.razorpay.com:443 "POST /v1/orders HTTP/1.1" 200 219
+WARNING 2025-12-27 12:25:24,931 log 24112 6190329856 Not Found: /favicon.ico
+WARNING 2025-12-27 12:25:30,494 log 24112 6190329856 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 12:26:36,292 log 24112 6223982592 Not Found: /favicon.ico
+WARNING 2025-12-27 12:27:24,537 log 24112 6190329856 Not Found: /favicon.ico
+WARNING 2025-12-27 12:28:55,756 log 24112 6223982592 Not Found: /favicon.ico
+WARNING 2025-12-27 12:32:34,593 log 24112 6190329856 Not Found: /favicon.ico
+WARNING 2025-12-27 12:33:01,320 log 24112 6223982592 Not Found: /favicon.ico
+WARNING 2025-12-27 12:33:47,092 log 24112 6190329856 Not Found: /favicon.ico
+WARNING 2025-12-27 12:34:11,113 log 24112 6223982592 Not Found: /favicon.ico
+WARNING 2025-12-27 12:34:27,138 log 24112 6190329856 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+INFO 2025-12-27 13:01:20,135 views 24112 6190329856 the item count is :0
+INFO 2025-12-27 13:01:28,942 views 24112 6190329856 the item count is :1
+INFO 2025-12-27 13:01:31,161 views 24112 6190329856 the item count is :2
+INFO 2025-12-27 13:01:39,156 views 24112 6190329856 the item count is :3
+INFO 2025-12-27 13:01:54,732 views 24112 6190329856 the item count is :4
+DEBUG 2025-12-27 13:03:02,152 connectionpool 24112 6190329856 Resetting dropped connection: api.razorpay.com
+DEBUG 2025-12-27 13:03:03,391 connectionpool 24112 6190329856 https://api.razorpay.com:443 "POST /v1/orders HTTP/1.1" 200 219
+INFO 2025-12-27 14:15:04,128 autoreload 26227 8378845248 Watching for file changes with StatReloader
+ERROR 2025-12-27 14:28:33,013 log 26227 6136229888 Internal Server Error: /orders/admin_order/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 615, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 1132, in get
+    return render(request, 'orders/admin_order_listing.html', context)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+        (
+    ...<2 lines>...
+        )
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+        (
+    ...<2 lines>...
+        )
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 483, in parse
+    raise self.error(
+        token, "Empty variable tag on line %d" % token.lineno
+    )
+django.template.exceptions.TemplateSyntaxError: Empty variable tag on line 434
+WARNING 2025-12-27 14:28:33,133 log 26227 6136229888 Not Found: /favicon.ico
+INFO 2025-12-27 14:35:32,875 autoreload 26227 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/models.py changed, reloading.
+INFO 2025-12-27 14:35:33,526 autoreload 26792 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:35:39,765 autoreload 26792 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/models.py changed, reloading.
+INFO 2025-12-27 14:35:40,261 autoreload 26807 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:35:59,234 autoreload 26807 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/models.py changed, reloading.
+INFO 2025-12-27 14:35:59,706 autoreload 26820 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:36:03,117 autoreload 26820 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/models.py changed, reloading.
+INFO 2025-12-27 14:36:03,522 autoreload 26830 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:37:48,535 autoreload 26830 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/models.py changed, reloading.
+INFO 2025-12-27 14:37:49,512 autoreload 26953 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:37:54,140 autoreload 26953 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/models.py changed, reloading.
+INFO 2025-12-27 14:37:54,443 autoreload 26969 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:37:55,592 autoreload 26969 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/models.py changed, reloading.
+INFO 2025-12-27 14:37:55,952 autoreload 26974 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:39:16,374 autoreload 26974 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:39:17,104 autoreload 27013 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:41:19,745 autoreload 27013 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:41:20,656 autoreload 27058 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:41:24,853 autoreload 27058 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:41:25,384 autoreload 27075 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:41:26,648 autoreload 27075 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:41:27,127 autoreload 27086 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:41:28,274 autoreload 27086 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:41:28,662 autoreload 27089 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:41:29,808 autoreload 27089 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:41:30,229 autoreload 27092 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:41:31,334 autoreload 27092 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:41:31,992 autoreload 27099 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:41:41,459 autoreload 27099 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:41:42,459 autoreload 27110 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:41:49,227 autoreload 27110 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:41:50,558 autoreload 27122 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:42:01,255 autoreload 27122 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:42:02,106 autoreload 27134 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:42:04,516 autoreload 27134 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:42:04,897 autoreload 27144 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:42:13,504 autoreload 27144 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:42:14,226 autoreload 27159 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:42:15,567 autoreload 27159 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:42:15,964 autoreload 27165 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:42:24,527 autoreload 27165 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:42:25,113 autoreload 27176 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:42:26,605 autoreload 27176 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:42:27,049 autoreload 27182 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:42:28,373 autoreload 27182 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:42:28,776 autoreload 27186 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:42:30,930 autoreload 27186 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:42:31,321 autoreload 27196 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:42:32,789 autoreload 27196 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:42:33,284 autoreload 27200 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:42:34,652 autoreload 27200 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:42:35,334 autoreload 27204 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:21,249 autoreload 27204 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:22,067 autoreload 27285 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:25,494 autoreload 27285 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:26,391 autoreload 27305 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:27,724 autoreload 27305 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:28,132 autoreload 27315 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:31,479 autoreload 27315 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:32,145 autoreload 27324 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:33,446 autoreload 27324 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:33,917 autoreload 27330 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:35,364 autoreload 27330 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:36,034 autoreload 27338 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:40,425 autoreload 27338 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:40,865 autoreload 27350 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:46,459 autoreload 27350 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:46,850 autoreload 27360 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:49,163 autoreload 27360 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:49,655 autoreload 27371 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:53,059 autoreload 27371 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:53,643 autoreload 27378 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:45:56,108 autoreload 27378 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:45:56,510 autoreload 27386 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:03,898 autoreload 27386 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:04,488 autoreload 27398 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:06,637 autoreload 27398 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:08,685 autoreload 27421 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:09,977 autoreload 27421 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:11,375 autoreload 27463 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:17,199 autoreload 27463 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:17,923 autoreload 27523 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:19,375 autoreload 27523 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:20,261 autoreload 27528 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:22,675 autoreload 27528 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:23,480 autoreload 27539 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:24,902 autoreload 27539 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:26,494 autoreload 27542 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:38,298 autoreload 27542 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:38,823 autoreload 27557 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:40,139 autoreload 27557 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:40,648 autoreload 27565 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:45,103 autoreload 27565 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:45,501 autoreload 27575 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:53,058 autoreload 27575 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:53,715 autoreload 27587 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:55,166 autoreload 27587 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:55,551 autoreload 27593 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:56,924 autoreload 27593 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:46:57,307 autoreload 27598 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:46:59,680 autoreload 27598 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:00,141 autoreload 27608 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:01,496 autoreload 27608 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:02,352 autoreload 27615 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:04,721 autoreload 27615 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:05,140 autoreload 27853 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:12,631 autoreload 27853 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:13,036 autoreload 27877 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:14,306 autoreload 27877 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:14,856 autoreload 27885 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:16,247 autoreload 27885 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:16,632 autoreload 27889 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:17,953 autoreload 27889 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:18,377 autoreload 27893 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:19,710 autoreload 27893 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:20,238 autoreload 27899 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:21,691 autoreload 27899 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:22,208 autoreload 27903 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:24,535 autoreload 27903 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:24,969 autoreload 27914 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:26,448 autoreload 27914 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:26,784 autoreload 27918 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:28,091 autoreload 27918 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:28,460 autoreload 27922 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:55,847 autoreload 27922 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:56,438 autoreload 27941 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:47:57,529 autoreload 27941 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:47:58,237 autoreload 27950 8378845248 Watching for file changes with StatReloader
+ERROR 2025-12-27 14:48:14,176 log 27950 6166163456 Internal Server Error: /orders/admin_order/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 615, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 1108, in get
+    return_item_request_orders.append(return_item_requests.order)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'QuerySet' object has no attribute 'order'. Did you mean: 'ordered'?
+INFO 2025-12-27 14:48:33,816 autoreload 27950 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:48:34,333 autoreload 27980 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:48:37,722 autoreload 27980 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:48:38,127 autoreload 27992 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:48:40,303 autoreload 27992 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:48:40,913 autoreload 27998 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:49:04,029 autoreload 27998 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:49:04,464 autoreload 28020 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:49:07,110 autoreload 28020 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:49:07,641 autoreload 28032 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:49:12,120 autoreload 28032 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:49:12,430 autoreload 28049 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:49:17,857 autoreload 28049 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:49:18,291 autoreload 28061 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:49:22,741 autoreload 28061 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:49:23,175 autoreload 28074 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:49:24,536 autoreload 28074 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:49:25,100 autoreload 28078 8378845248 Watching for file changes with StatReloader
+ERROR 2025-12-27 14:49:31,230 log 28078 6166736896 Internal Server Error: /orders/admin_order/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 615, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 1108, in get
+    print('return',return_item_requests.order)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'QuerySet' object has no attribute 'order'. Did you mean: 'ordered'?
+INFO 2025-12-27 14:50:08,202 autoreload 28078 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:50:09,070 autoreload 28104 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:50:39,750 autoreload 28104 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:50:40,644 autoreload 28127 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:50:42,364 autoreload 28127 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:50:42,725 autoreload 28134 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:50:44,040 autoreload 28134 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:50:44,384 autoreload 28139 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:51:53,307 autoreload 28139 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:51:54,042 autoreload 28179 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:51:59,485 autoreload 28179 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:00,055 autoreload 28195 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:01,478 autoreload 28195 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:02,024 autoreload 28200 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:16,773 autoreload 28200 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:17,635 autoreload 28213 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:25,955 autoreload 28213 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:26,478 autoreload 28227 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:27,570 autoreload 28227 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:28,134 autoreload 28236 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:29,223 autoreload 28236 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:29,756 autoreload 28242 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:30,905 autoreload 28242 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:31,373 autoreload 28246 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:32,586 autoreload 28246 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:33,094 autoreload 28253 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:34,260 autoreload 28253 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:34,722 autoreload 28258 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:37,913 autoreload 28258 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:38,440 autoreload 28270 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:46,727 autoreload 28270 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:47,168 autoreload 28282 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:48,267 autoreload 28282 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:48,724 autoreload 28292 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:50,842 autoreload 28292 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:51,664 autoreload 28295 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:52:53,256 autoreload 28295 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:52:53,909 autoreload 28308 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:54:31,272 autoreload 28308 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:54:31,997 autoreload 28363 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:54:36,803 autoreload 28363 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:54:37,310 autoreload 28377 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:54:42,587 autoreload 28377 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:54:43,172 autoreload 28393 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:54:44,269 autoreload 28393 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:54:44,687 autoreload 28400 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:54:46,839 autoreload 28400 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:54:47,243 autoreload 28413 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:54:55,547 autoreload 28413 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:54:56,180 autoreload 28428 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:55:00,371 autoreload 28428 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:55:00,759 autoreload 28438 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:55:02,294 autoreload 28438 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:55:02,788 autoreload 28444 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:55:04,110 autoreload 28444 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:55:04,577 autoreload 28451 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:55:44,712 autoreload 28451 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:55:45,703 autoreload 28484 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:55:49,264 autoreload 28484 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:55:49,740 autoreload 28495 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:56:05,615 autoreload 28495 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:56:06,244 autoreload 28515 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:57:59,661 autoreload 28515 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:58:00,326 autoreload 28597 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:58:01,694 autoreload 28597 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:58:02,244 autoreload 28608 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:58:05,446 autoreload 28608 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:58:05,873 autoreload 28619 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 14:58:10,051 autoreload 28619 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 14:58:10,403 autoreload 28630 8378845248 Watching for file changes with StatReloader
+ERROR 2025-12-27 15:04:52,037 log 28630 6168604672 Internal Server Error: /orders/admin_order/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'endfor'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 615, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 1143, in get
+    return render(request, 'orders/admin_order_listing.html', context)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+        (
+    ...<2 lines>...
+        )
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+        (
+    ...<2 lines>...
+        )
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+        (
+    ...<2 lines>...
+        )
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 438: 'endfor', expected 'elif', 'else' or 'endif'. Did you forget to register or load this tag?
+ERROR 2025-12-27 15:05:25,919 log 28630 6168604672 Internal Server Error: /orders/admin_order_detail/311/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 1192, in get
+    "return_item_requests": return_item_requests,
+                            ^^^^^^^^^^^^^^^^^^^^
+NameError: name 'return_item_requests' is not defined. Did you mean: 'ReturnItemRequest'?
+INFO 2025-12-27 15:06:06,689 autoreload 28630 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:06:07,696 autoreload 29072 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-27 15:22:26,550 log 29072 6187839488 Not Found: /favicon.ico
+WARNING 2025-12-27 15:23:45,183 log 29072 6187839488 Not Found: /favicon.ico
+INFO 2025-12-27 15:31:18,147 autoreload 29072 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:31:19,139 autoreload 29833 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:31:27,959 autoreload 29833 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:31:28,564 autoreload 29851 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:31:36,160 autoreload 29851 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:31:36,971 autoreload 29873 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:31:47,617 autoreload 29873 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:31:48,207 autoreload 29884 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:31:56,767 autoreload 29884 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:31:57,384 autoreload 29897 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:31:58,886 autoreload 29897 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:31:59,549 autoreload 29904 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:32:05,127 autoreload 29904 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:32:05,609 autoreload 29918 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:32:09,227 autoreload 29918 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:32:09,836 autoreload 29932 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:32:14,291 autoreload 29932 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:32:14,681 autoreload 29946 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:32:15,951 autoreload 29946 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:32:16,341 autoreload 29951 8378845248 Watching for file changes with StatReloader
+ERROR 2025-12-27 15:36:11,712 log 29951 6160347136 Internal Server Error: /orders/admin_order/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 615, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/views/generic/base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py", line 1160, in get
+    return render(request, 'orders/admin_order_listing.html', context)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+        (
+    ...<2 lines>...
+        )
+    )
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/defaulttags.py", line 1531, in do_with
+    extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 1127, in token_kwargs
+    kwargs[key] = parser.compile_filter(value)
+                  ~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 609, in compile_filter
+    return FilterExpression(token, self)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 706, in __init__
+    self.args_check(filter_name, filter_func, args)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/template/base.py", line 768, in args_check
+    raise TemplateSyntaxError(
+        "%s requires %d arguments, %d provided" % (name, alen - dlen, plen)
+    )
+django.template.exceptions.TemplateSyntaxError: dictsort requires 2 arguments, 1 provided
+INFO 2025-12-27 15:37:22,248 autoreload 29951 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:37:23,099 autoreload 30156 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:37:28,349 autoreload 30156 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:37:28,808 autoreload 30172 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:37:40,506 autoreload 30172 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:37:41,492 autoreload 30186 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:37:48,278 autoreload 30186 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:37:48,829 autoreload 30210 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:39:19,605 autoreload 30210 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:39:20,264 autoreload 30283 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:39:21,595 autoreload 30283 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:39:22,025 autoreload 30289 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:39:23,117 autoreload 30289 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:39:23,598 autoreload 30294 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:39:25,959 autoreload 30294 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:39:26,284 autoreload 30307 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:39:27,542 autoreload 30307 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:39:27,987 autoreload 30311 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:39:29,251 autoreload 30311 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:39:29,641 autoreload 30316 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:39:32,791 autoreload 30316 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:39:33,163 autoreload 30326 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:46:13,157 autoreload 30326 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:46:14,408 autoreload 30461 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-27 15:46:20,721 autoreload 30461 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/views.py changed, reloading.
+INFO 2025-12-27 15:46:21,152 autoreload 30476 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-27 15:47:15,358 log 30476 6202126336 Not Found: /favicon.ico
+WARNING 2025-12-27 16:09:23,202 log 30476 6202126336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-27 16:09:37,860 log 30476 6202126336 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+DEBUG 2025-12-27 16:21:21,108 connectionpool 30476 6202126336 Starting new HTTPS connection (1): api.cloudinary.com:443
+DEBUG 2025-12-27 16:21:23,688 connectionpool 30476 6202126336 https://api.cloudinary.com:443 "POST /v1_1/dbufuuut7/image/upload HTTP/1.1" 200 None
+DEBUG 2025-12-27 16:21:24,586 connectionpool 30476 6202126336 https://api.cloudinary.com:443 "POST /v1_1/dbufuuut7/image/upload HTTP/1.1" 200 None
+DEBUG 2025-12-27 16:21:39,153 connectionpool 30476 6202126336 https://api.cloudinary.com:443 "POST /v1_1/dbufuuut7/image/upload HTTP/1.1" 200 None

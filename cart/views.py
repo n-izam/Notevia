@@ -184,27 +184,37 @@ class CartQuantityUpdateView(View):
 
         cart_item_id = request.POST.get('cart_product')
         quantity = request.POST.get('quantity')
-        if int(quantity) > 10:
-            info_notify(request, "Please note: A maximum of 10 units per item can be added to your cart.")
-            return redirect('cart_page')
 
-        
+        cart_item = get_object_or_404(CartItem, id=cart_item_id)
 
         if not CartItem.objects.filter(id=cart_item_id ,is_active=True).exists():
             error_notify(request, "the item is not exists in cart")
             return redirect('cart_page')
-        
-        cart_item = get_object_or_404(CartItem, id=cart_item_id)
-
-        # if not int(quantity) <= cart_item.variant.stock:
-        #     error_notify(request, f"stock is only for {{quantity-1}}")
-        #     return redirect('cart_page')
         
         if int(quantity) > cart_item.variant.stock:
             cart_item.quantity=1
             cart_item.save()
             info_notify(request, f"maximum stock reached")
             return redirect('cart_page')
+
+        if int(quantity) > 10:
+            info_notify(request, "Please note: A maximum of 10 units per item can be added to your cart.")
+            return redirect('cart_page')
+
+        
+
+        
+        
+        
+
+        # if not int(quantity) <= cart_item.variant.stock:
+        #     error_notify(request, f"stock is only for {{quantity-1}}")
+        #     return redirect('cart_page')
+        
+        
+        # elif int(quantity) == cart_item.variant.stock:
+        #     info_notify(request, f"maximum stock reached")
+        #     return redirect('cart_page')
             
         
         cart_item.quantity = quantity
