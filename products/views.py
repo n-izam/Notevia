@@ -23,7 +23,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from accounts.utils import info_notify, error_notify, success_notify
-from cart.models import Cart, CartItem
+from cart.models import Cart, CartItem, Wallet
 from django.urls import reverse
 from django.db import models
 
@@ -76,8 +76,8 @@ class AdminSalesView(View):
         
 
         total_orders = orders.count()
-        total_items = sum(item.quantity for order in orders for item in order.items.filter(is_cancel=False))
-        total_revenue = sum(order.over_all_amount_all for order in orders if order.over_all_amount_all)
+        total_items = sum(item.quantity for order in orders for item in order.items.filter(is_cancel=False, is_return=False))
+        total_revenue = sum(order.over_all_amount for order in orders )
         avg_order_value = total_revenue / total_orders if total_orders else 0
 
 
@@ -149,116 +149,325 @@ class AdminSalesView(View):
     
     def generate_pdf_reportlab(self, data):
         buffer = BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=A4)
+        doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=30, bottomMargin=30)
         elements = []
         styles = getSampleStyleSheet()
 
         # Title
-        elements.append(Paragraph(f"<font size=16>ADMIN SALES REPORT - {data['store_name']}</font>", styles["Title"]))
+        elements.append(Paragraph(f"<font size=18><b>ADMIN SALES REPORT - {data['store_name']}</b></font>", styles["Title"]))
         elements.append(Paragraph(f"Period: {data['period']}", styles["Normal"]))
-        elements.append(Spacer(1, 12))
-
-        # Table data
-        table_data = [['Order ID', 'Date', 'Customer', 'Items', 'Payment', 'Total', 'Coupon', 'Return\n Split', 'Status']]
-        for order in data['orders']:
-            table_data.append([
-                order.order_id,
-                order.created_at.strftime('%d/%m/%Y'),
-                order.user.full_name or order.user.email,
-                str(order.total_quantity()),
-                order.get_payment_method_display(),
-                f"Rs. {order.over_all_amount_all}",
-                # f"₹{order.over_all_amount_all * 0.1:.2f}",
-                order.coupon_code or '-',
-                f"Rs. {order.returned_amount}",
-                order.get_status_display()
-            ])
-
-        table = Table(table_data)
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#16213e')),
-            ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-            ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
-        ]))
-        elements.append(table)
-
-        # Footer
+        elements.append(Paragraph(f"Generated at: {data['generated_at']}", styles["Normal"]))
         elements.append(Spacer(1, 20))
-        elements.append(Paragraph(f"Total Item: {data['total_items']} | Total Order: {data['total_orders']}", styles["Normal"]))
-        elements.append(Spacer(1, 10))
-        elements.append(Paragraph(f"Average Order: Rs.{data['avg_order']}", styles["Normal"]))
-        elements.append(Spacer(1, 10))
-        elements.append(Paragraph(f"TOTAL REVENUE: Rs.{data['total_revenue']}", styles["Normal"]))
 
+        for index, order in enumerate(data['orders'], start=1):
+            # Order Header
+            elements.append(Paragraph(
+                f"<b>SL.No:</b> {index} | "
+                f"<b>Order ID:</b> {order.order_id} | "
+                f"<b>Date:</b> {order.created_at.strftime('%d/%m/%Y %H:%M')} | "
+                f"<b>Customer:</b> {order.user.full_name or order.user.email} | "
+                f"<b>Payment:</b> {order.get_payment_method_display()} | "
+                f"<b>Status:</b> {order.get_status_display()} |"
+                f"<b>Order Total:</b> {order.over_all_amount_all}",
+                styles["Normal"]
+            ))
+            elements.append(Spacer(1, 8))
+
+            # Items Table Header
+            item_table_data = [
+                ['#', 'Product', 'Variant', 'Qty', 'Price', 'Discount Price \n per Qty', 'Line Total', 'Return \n Status', 'Cancel \n Status']
+            ]
+            
+
+            total_items_amount = 0
+            for idx, item in enumerate(order.items.all(), start=1):
+                if item.product and item.variant:
+                    product_name = item.product.name
+                    variant_details = str(item.variant)  # assuming __str__ on Variant is good
+                elif item.product:
+                    product_name = item.product.name
+                    variant_details = "-"
+                else:
+                    product_name = "Deleted Product"
+                    variant_details = "-"
+
+                line_total = item.quantity * item.price
+                total_items_amount += line_total
+
+                discount_display = f"Rs. {item.discount_price}" if item.discount_price else "-"
+                r_status = "Return" if item.is_return else "-"
+                c_status = "Cancel" if item.is_cancel else "-"
+
+                item_table_data.append([
+                    str(idx),
+                    product_name,
+                    variant_details,
+                    str(item.quantity),
+                    f"Rs. {item.real_price}",
+                    discount_display,
+                    f"Rs. {line_total:.2f}",
+                    r_status,
+                    c_status
+                ])
+
+            # Create Items Table
+            item_table = Table(item_table_data, colWidths=[25, 130, 80, 40, 65, 70, 70, 35, 35])
+            item_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#16213e')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, -1), 10),
+                ('LEFTPADDING', (0, 0), (-1, -1), 6),
+                ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+            ]))
+            elements.append(item_table)
+
+            # Order Totals Section
+            elements.append(Spacer(1, 12))
+
+            # Right-aligned totals
+            totals_data = [
+                ["", "", "", "", "", "Subtotal:", f"Rs. {total_items_amount:.2f}"],
+            ]
+
+            if order.coupon_code and order.coupon_amount:
+                totals_data.append(["", "", "", "", "", f"Coupon ({order.coupon_code}):", f"- Rs. {order.coupon_amount:.2f}"])
+
+            wallet, created = Wallet.objects.get_or_create(user=order.user)
+            if wallet.return_order_amount(order):
+                totals_data.append(["", "", "", "", "", "Return amount :", f" Rs. {wallet.return_order_amount(order):.2f}"])
+
+            grand_total = order.over_all_amount or 0
+            totals_data.append(["", "", "", "", "", "Grand Total:", f"Rs. {grand_total:.2f}"])
+
+            totals_table = Table(totals_data, colWidths=[30, 150, 100, 40, 70, 100, 80])
+            totals_table.setStyle(TableStyle([
+                ('ALIGN', (-2, -1), (-1, -1), 'RIGHT'),  # Align last two columns right
+                ('ALIGN', (-2, 0), (-2, -1), 'RIGHT'),   # Label right-aligned
+                ('GRID', (0, 0), (-1, -1), 0, colors.white),  # No grid
+                ('FONTSIZE', (0, 0), (-1, -1), 11),
+            ]))
+            elements.append(totals_table)
+
+            elements.append(Spacer(1, 20))  # Space between orders
+
+        # Final Summary at the bottom
+        elements.append(Paragraph("<font size=14><b>REPORT SUMMARY</b></font>", styles["Heading2"]))
+        elements.append(Spacer(1, 10))
+        elements.append(Paragraph(f"Total Orders: {data['total_orders']}", styles["Normal"]))
+        elements.append(Paragraph(f"Total Items Sold: {data['total_items']}", styles["Normal"]))
+        elements.append(Paragraph(f"Average Order Value: Rs. {data['avg_order']}", styles["Normal"]))
+        elements.append(Paragraph(f"<b>TOTAL REVENUE: Rs. {data['total_revenue']}</b>", styles["Normal"]))
+
+        # Build PDF
         doc.build(elements)
         buffer.seek(0)
+
         response = HttpResponse(buffer, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="sales_report.pdf"'
+        response['Content-Disposition'] = 'attachment; filename="detailed_sales_report.pdf"'
         return response
     
     def generate_excel(self, data):
         wb = Workbook()
         ws = wb.active
-        ws.title = "Admin Sales Report"
+        ws.title = "Detailed Sales Report"
 
-        # Headers
-        headers = ['Order ID', 'Date', 'Customer Name', 'Customer Email', 'Items', 'Payment Method', 
-                'Order Total (₹)', 'Coupon Code', 'Status']
-        ws.append(headers)
-
-        # Style header
+        # Minimal Styles
         header_fill = PatternFill(start_color="16213e", end_color="16213e", fill_type="solid")
         header_font = Font(color="FFFFFF", bold=True)
-        for cell in ws[1]:
-            cell.fill = header_fill
-            cell.font = header_font
-            cell.alignment = Alignment(horizontal="center")
+        bold_font = Font(bold=True)
+        center_align = Alignment(horizontal="center", vertical="center")
+        right_align = Alignment(horizontal="right")
+        left_align = Alignment(horizontal="left")
 
-        # Data
-        for order in data['orders']:
-            ws.append([
-                order.order_id,
-                order.created_at.strftime('%d/%m/%Y'),
-                order.user.full_name or '',
-                order.user.email,
-                order.items.count(),
-                order.get_payment_method_display(),
-                float(order.over_all_amount_all),
-                # float(order.over_all_amount_all * 0.1),
-                order.coupon_code or 'N/A',
-                order.get_status_display()
-            ])
+        light_gray_fill = PatternFill(start_color="E8E8E8", end_color="E8E8E8", fill_type="solid")
+        summary_fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
 
-        # Summary
-        ws.append([])
-        ws.append(['SALES SUMMARY'])
-        ws.append([f"Report Period", data['period']])
-        ws.append([f"Total Orders", data['total_orders']])
-        ws.append([f"Total Items Sold", data['total_items']])
-        ws.append([f"Total Revenue", f"₹{data['total_revenue']}"])
-        # ws.append([f"Total Commission", f"₹{data['total_commission']}"])
-        ws.append([f"Average Order Value", f"₹{data['avg_order']}"])
+        row_idx = 1
 
-        # Auto-adjust columns
-        for col in ws.columns:
-            max_length = 0
-            column = col[0].column_letter
-            for cell in col:
-                try:
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(str(cell.value))
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            ws.column_dimensions[column].width = adjusted_width
+        # Main Title
+        ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=9)
+        title_cell = ws.cell(row=row_idx, column=1)
+        title_cell.value = f"ADMIN SALES REPORT - {data['store_name']}"
+        title_cell.font = Font(size=16, bold=True)
+        title_cell.alignment = center_align
+        row_idx += 2
 
+        # Period and Generated At
+        ws.cell(row=row_idx, column=1).value = f"Period: {data['period']}"
+        row_idx += 1
+        ws.cell(row=row_idx, column=1).value = f"Generated at: {data['generated_at']}"
+        row_idx += 3  # Extra space before first order
+
+        # Loop through each order
+        for index, order in enumerate(data['orders'], start=1):
+            # Order Header (Light gray background)
+            ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=9)
+            header_cell = ws.cell(row=row_idx, column=1)
+            header_cell.value = (
+                f"SL.No: {index} | Order ID: {order.order_id} | "
+                f"Date: {order.created_at.strftime('%d/%m/%Y %H:%M')} | "
+                f"Customer: {order.user.full_name or order.user.email} | "
+                f"Payment: {order.get_payment_method_display()} | "
+                f"Status: {order.get_status_display()} | "
+                f"Order Total: ₹{order.over_all_amount_all or 0:.2f}"
+            )
+            header_cell.font = Font(bold=True, size=12)
+            header_cell.fill = light_gray_fill
+            header_cell.alignment = left_align
+            row_idx += 2
+
+            # Item Table Headers (Dark blue)
+            item_headers = ['#', 'Product', 'Variant', 'Qty', 'Real Price (per unit)', 
+                            'Discount Price (per unit)', 'Line Total', 'Return Status', 'Cancel Status']
+            for col_num, header in enumerate(item_headers, 1):
+                cell = ws.cell(row=row_idx, column=col_num)
+                cell.value = header
+                cell.fill = header_fill
+                cell.font = header_font
+                cell.alignment = center_align
+            row_idx += 1
+
+            # Item Rows (Plain, no borders or fills)
+            total_items_amount = 0
+            items = order.items.all()
+            for idx, item in enumerate(items, start=1):
+                if item.product and item.variant:
+                    product_name = item.product.name
+                    variant_details = str(item.variant)
+                elif item.product:
+                    product_name = item.product.name
+                    variant_details = "-"
+                else:
+                    product_name = "Deleted Product"
+                    variant_details = "-"
+
+                line_total = item.quantity * item.price
+                total_items_amount += line_total
+
+                discount_display = f"₹{item.discount_price:.2f}" if item.discount_price else "-"
+                return_status = "Returned" if item.is_return else "-"
+                cancel_status = "Cancelled" if item.is_cancel else "-"
+
+                row_data = [
+                    idx,
+                    product_name,
+                    variant_details,
+                    item.quantity,
+                    f"₹{item.real_price:.2f}",
+                    discount_display,
+                    f"₹{line_total:.2f}",
+                    return_status,
+                    cancel_status
+                ]
+
+                for col_num, value in enumerate(row_data, 1):
+                    cell = ws.cell(row=row_idx, column=col_num)
+                    cell.value = value
+                    # Alignment: center for index/qty/status, right for prices, left for names
+                    if col_num in [1, 4, 8, 9]:  # #, Qty, Return, Cancel
+                        cell.alignment = center_align
+                    elif col_num in [5, 6, 7]:  # Prices
+                        cell.alignment = right_align
+                    else:
+                        cell.alignment = left_align
+                row_idx += 1
+
+            # Order Totals (Plain, right-aligned)
+            row_idx += 1  # Blank line
+
+            ws.cell(row=row_idx, column=6).value = "Subtotal:"
+            ws.cell(row=row_idx, column=6).font = bold_font
+            ws.cell(row=row_idx, column=6).alignment = right_align
+            ws.cell(row=row_idx, column=7).value = f"₹{total_items_amount:.2f}"
+            ws.cell(row=row_idx, column=7).font = bold_font
+            row_idx += 1
+
+            if order.coupon_code and order.coupon_amount:
+                ws.cell(row=row_idx, column=6).value = f"Coupon ({order.coupon_code}):"
+                ws.cell(row=row_idx, column=6).font = bold_font
+                ws.cell(row=row_idx, column=6).alignment = right_align
+                ws.cell(row=row_idx, column=7).value = f"- ₹{order.coupon_amount:.2f}"
+                ws.cell(row=row_idx, column=7).font = bold_font
+                row_idx += 1
+
+            # Return amount
+            try:
+                wallet, _ = Wallet.objects.get_or_create(user=order.user)
+                return_amount = wallet.return_order_amount(order)
+                if return_amount and return_amount > 0:
+                    ws.cell(row=row_idx, column=6).value = "Return Amount:"
+                    ws.cell(row=row_idx, column=6).font = bold_font
+                    ws.cell(row=row_idx, column=6).alignment = right_align
+                    ws.cell(row=row_idx, column=7).value = f"₹{return_amount:.2f}"
+                    ws.cell(row=row_idx, column=7).font = bold_font
+                    row_idx += 1
+            except:
+                pass
+
+            # Grand Total
+            grand_total = order.over_all_amount or 0
+            ws.cell(row=row_idx, column=6).value = "Grand Total:"
+            ws.cell(row=row_idx, column=6).font = Font(bold=True, size=13)
+            ws.cell(row=row_idx, column=6).alignment = right_align
+            ws.cell(row=row_idx, column=7).value = f"₹{grand_total:.2f}"
+            ws.cell(row=row_idx, column=7).font = Font(bold=True, size=13)
+            row_idx += 3  # Space before next order
+
+        # Final Summary Section
+        ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=9)
+        summary_title = ws.cell(row=row_idx, column=1)
+        summary_title.value = "REPORT SUMMARY"
+        summary_title.font = Font(size=14, bold=True)
+        summary_title.alignment = center_align
+        summary_title.fill = summary_fill
+        row_idx += 2
+
+        summary_items = [
+            ("Total Orders", data['total_orders']),
+            ("Total Items Sold", data['total_items']),
+            ("Average Order Value", f"₹{data['avg_order']}"),
+            ("TOTAL REVENUE", f"₹{data['total_revenue']}"),
+        ]
+
+        for label, value in summary_items:
+            ws.cell(row=row_idx, column=5).value = label + ":"
+            ws.cell(row=row_idx, column=5).font = bold_font if "TOTAL REVENUE" in label else Font(bold=True)
+            ws.cell(row=row_idx, column=5).alignment = right_align
+            ws.cell(row=row_idx, column=7).value = value
+            ws.cell(row=row_idx, column=7).font = bold_font if "TOTAL REVENUE" in label else Font(bold=True)
+            row_idx += 1
+
+        # Column widths for readability
+        column_widths = {
+            'A': 6,
+            'B': 28,
+            'C': 18,
+            'D': 8,
+            'E': 18,
+            'F': 20,
+            'G': 18,
+            'H': 14,
+            'I': 14,
+        }
+        for col, width in column_widths.items():
+            ws.column_dimensions[col].width = width
+
+        # Save
         buffer = BytesIO()
         wb.save(buffer)
         buffer.seek(0)
 
-        response = HttpResponse(buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = f'attachment; filename="NoteVia_Sales_Report_{data["period"]}.xlsx"'
+        response = HttpResponse(
+            buffer,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        safe_period = data['period'].replace('/', '-').replace(' ', '_')
+        filename = f"NoteVia_Detailed_Sales_Report_{safe_period}.xlsx"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
     
 @method_decorator(login_required(login_url='signin'), name='dispatch')

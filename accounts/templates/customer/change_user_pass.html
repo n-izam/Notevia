@@ -3,7 +3,7 @@
 
 {% load static %}
 
-{% block title %} Customer {% endblock %}
+{% block title %} Change Password {% endblock %}
 
 {% block style %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -112,7 +112,7 @@
                             {% if form.current_password.errors %}
                             <p class="text-danger small">{{ form.current_password.errors.0 }}</p>
                             {% endif %}
-                            <a href="#" class="form-text forgot-password-link">Forgot current password?</a>
+                            <!-- <a href="#" class="form-text forgot-password-link">Forgot current password?</a> -->
                         </div>
                         <div class="mb-3">
                             <label for="newPassword" class="form-label">Enter New Password</label>

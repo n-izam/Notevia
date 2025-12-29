@@ -156,8 +156,10 @@ class Variant(models.Model):
         if discounts:
             max_discount = max(discounts)
             price = price * (max_discount / 100)
+        else:
+            price = 0.00
 
-        return round(price, 2)
+        return round(price, 2) if price is not None else 0
     
     @property
     def discount_percent(self):

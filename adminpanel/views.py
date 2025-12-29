@@ -31,7 +31,7 @@ from  django.contrib.auth import authenticate, login, logout
 from django.db import transaction
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from .utils import cart_update
-
+import cloudinary.uploader
 
 
 # Create your views here.
@@ -472,8 +472,13 @@ class EditProductView(View):
                     product.brand = brand
                     product.save()
                     
-                
-                    ProductImage.objects.filter(product_id=product_id).delete()
+
+                    images = ProductImage.objects.filter(product_id=product_id)
+                    for image in images:
+                        if image.image:
+                            cloudinary.uploader.destroy(image.image.public_id)
+                        image.delete()
+                    # ProductImage.objects.filter(product_id=product_id).delete()
 
                     for index, image_file in enumerate(valid_images[:3]):
                         ProductImage.objects.create(

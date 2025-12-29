@@ -35,7 +35,7 @@ class Cart(models.Model):
         items_total_price = sum(item.after_subtotal() for item in self.items.filter(is_active=True, variant__is_listed=True))
         return items_total_price
     
-    # over all product discount
+    # over all products discount
     @property
     def deduct_amount(self):
         items_total_price = sum(item.discount_subtotal_amount() for item in self.items.filter(is_active=True, variant__is_listed=True))
@@ -98,7 +98,10 @@ class CartItem(models.Model):
     
     # discount amount with quantity
     def discount_subtotal_amount(self):
-        price = self.variant.discount_price
+        if self.variant.discount_price:
+            price = self.variant.discount_price
+        else:
+            price = Decimal('0.00')
         return price * self.quantity
 
 
@@ -174,6 +177,10 @@ class Wallet(models.Model):
         self.balance -= amount
         self.save()
         return self.balance
+    
+    def return_order_amount(self, order):
+        amount = sum(trans.amount for trans in self.transactions.filter(order=order, transaction_type='Credit'))
+        return amount
 
 def generate_transaction_id():
     return f"TXN-{timezone.now().strftime('%Y%m%d')}-{uuid.uuid4().hex[:4].upper()}"
@@ -196,6 +203,7 @@ class WalletTransaction(models.Model):
     razorpay_order_id = models.CharField(max_length=255, blank=True, null=True)
     razorpay_payment_id = models.CharField(max_length=255, blank=True, null=True)
     razorpay_signature = models.CharField(max_length=255, blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.transaction_type} ₹{self.amount} - {self.message} ({self.transaction_id})"

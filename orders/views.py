@@ -277,8 +277,7 @@ class PlaceOrderView(View):
         applied_coupon = request.POST.get('apply_coupon','').strip()
         final_over_all_amount = request.POST.get('final_amount')
 
-        if request.session.get('selected_address'):
-            request.session.pop('selected_address', None)
+        
         # if not request.session.get('payment_confirm'):
         #     return redirect('order_listing')
 
@@ -381,12 +380,9 @@ class PlaceOrderView(View):
             cart.items.filter(is_active=True).delete()
 
 
-            context = {
-            "user_id": request.user.id,
-            "order": order,
-            }
-            success_notify(request, "Order placed successfully!")
-            return render(request, 'orders/success_order.html', context)
+            request.session["payment_confirm"] = True
+            request.session['session_order'] = order.id
+            return redirect('order_success', order_id=order.id)
         elif payment_method == 'Wallet':
             wallet, create = Wallet.objects.get_or_create(user=request.user)
             # wallet = get_object_or_404(Wallet, user=request.user)
@@ -403,7 +399,7 @@ class PlaceOrderView(View):
             order.save()
 
             cart = get_object_or_404(Cart, user=request.user)
-            cart.items.filter(is_active=True).delete()
+            
 
             transaction = wallet.debit(Decimal(order.over_all_amount), message=f"Order #{order.order_id} payment")
             transaction.order=order
@@ -411,12 +407,10 @@ class PlaceOrderView(View):
 
             
 
-            context = {
-            "user_id": request.user.id,
-            "order": order,
-            }
-            success_notify(request, "Order placed successfully!")
-            return render(request, 'orders/success_order.html', context)
+            cart.items.filter(is_active=True).delete()
+            request.session["payment_confirm"] = True
+            request.session['session_order'] = order.id
+            return redirect('order_success', order_id=order.id)
         
         elif payment_method == 'ONLINE':
             amount_in_paise = int(order.over_all_amount * 100)   # Razorpay uses paise
@@ -480,7 +474,7 @@ def razorpay_callback(request):
 
             
             cart.items.filter(is_active=True).delete()
-            return redirect('order_success', order_id=order.order_id)
+            return redirect('order_success', order_id=order.id)
         except Exception as e:
 
             info_notify(request, f"We couldn’t complete your order due to an {e}. The amount has been added to your wallet. Please try again.")
@@ -528,7 +522,7 @@ class OrderSuccessView(View):
             request.session.pop('payment_confirm', None)
             del request.session['session_order']
 
-        order = get_object_or_404(Order, order_id=order_id, user=request.user)
+        order = get_object_or_404(Order, id=order_id, user=request.user)
         success_notify(request, "Order placed successfully!")
         return render(request, 'orders/success_order.html', {'user_id': request.user.id ,'order': order})
     
@@ -729,6 +723,8 @@ class OrderDetailView(View):
                 "main_image": main_image,
             })
         
+        wallet, created = Wallet.objects.get_or_create(user=order.user)
+        order.return_price = wallet.return_order_amount(order)
 
         breadcrumb = [
             {"name": "Profile", "url": "/accounts/profile/"},
@@ -842,19 +838,40 @@ class CancelOrderItemView(View):
         order = get_object_or_404(Order, id=order_id, user=request.user)
         if order.status not in ['Pending', 'Processing']:
             error_notify(request, "Order can't able to cancel after processing")
-            return redirect('order_details', order_id-order.id )
+            return redirect('order_details', order_id=order.id )
         
         item = get_object_or_404(OrderItem, id=item_id, order=order)
+
+        
         
         
         if item.variant:
             if order.payment_method not in ['COD', 'Cash on Delivery']:
                 refund_amount = item.return_with_tax_price()
-                
+                # if order.coupon_code and Coupon.objects.filter(code=order.coupon_code).exists():
+                    
+                #     coupon = get_object_or_404(Coupon, code=order.coupon_code)
+                #     balance_amount = order.over_all_amount - refund_amount
+                #     apply_discount = coupon.apply_discount_access(balance_amount)
+
+                #     if  not apply_discount:
+
+                #         order.coupon_code=''
+                #         order.coupon_amount=0.00
+                #         order.coupon_amount_static=0.00
+                #         order.save()
+
                 wallet = get_object_or_404(Wallet, user=request.user)
                 transaction = wallet.credit(Decimal(refund_amount), message=f"Order #{order.order_id} refund for item:{item.product.name} ")
                 transaction.order=order
                 transaction.save()
+            
+            if order.payment_method in ['COD', 'Cash on Delivery'] and order.coupon_code and Coupon.objects.filter(code=order.coupon_code).exists():
+                refund_amount = item.return_with_tax_price()
+            
+
+                
+            
             item.variant.stock += item.quantity
             item.is_cancel = True
             item.item_status = 'Cancelled'
@@ -989,7 +1006,7 @@ class InvoiceDownloadView(View):
 
         # --- Items Table Section ---
         items_data = [
-            ['Product', 'Variant', 'Qty', 'Price', 'Discount\n per Qty', "Coupon\n Split", 'Subtotal']
+            ['Product', 'Variant', 'Qty', 'Price', 'Discount\n per Qty', 'Subtotal']
         ]
         
         for item in order.items.filter(is_cancel=False).exclude(is_return=True):
@@ -999,7 +1016,7 @@ class InvoiceDownloadView(View):
                 item.quantity,
                 f"Rs. {item.real_price:.2f}",
                 f"Rs. {item.discount_price:.2f}" if item.discount_price else "Rs. 0.00",
-                f"Rs. {item.coupon_discount():.2f}" if item.coupon_discount() else "Rs. 0.00",
+                
                 f"Rs. {item.sub_real_price:.2f}"
             ]
             items_data.append(row)
@@ -1102,17 +1119,9 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
         if stat:
             orders = orders.filter(status=stat)
 
-        # return_item_request_orders = []
-        # for order in orders:
-        #     return_item_requests = ReturnItemRequest.objects.filter(order=order).order_by('-status')
-        #     return_item_request_orders.append(return_item_requests)
+        
 
-        # print('return',return_item_request_orders)
-        # for order_item_requests in return_item_request_orders:
-        #     if order_item_requests:
-        #         print("hi")
-
-        return_summary = {}
+        
 
         for order in orders:
             requests = ReturnItemRequest.objects.filter(order=order)
@@ -1146,7 +1155,7 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
             "stat": stat,
             'status_choices': Order.STATUS_CHOICES,
             "custom_range": custom_range,
-            'return_summary': return_summary
+            
         }
 
         return render(request, 'orders/admin_order_listing.html', context)
@@ -1183,6 +1192,10 @@ class AdminOrderDetailView(View):
                 "order_item": order_item,
                 "main_image": main_image,
             })
+        
+        wallet, created = Wallet.objects.get_or_create(user=order.user)
+        order.return_price = wallet.return_order_amount(order)
+        
         
 
         breadcrumb = [
@@ -1331,7 +1344,11 @@ class ItemReturnUpdateView(View):
         return_item_request = get_object_or_404(ReturnItemRequest, order=order, order_item=item)
 
         if return_status in ['Approved']:
+            
             refund_amount = item.return_with_tax_price()
+              
+                
+            
             wallet = get_object_or_404(Wallet, user=user)
             transaction = wallet.credit(Decimal(refund_amount), message=f"Order {order.order_id} Return Amount for item {item.product.name}" )
             transaction.order=order
@@ -1348,7 +1365,9 @@ class ItemReturnUpdateView(View):
             return_item_request.status = 'Approved'
             return_item_request.save()
             if not order.items.filter(is_return=False).exclude(is_cancel=True).exists():
+                
                 order.status='Returned'
+                order.coupon_amount=0.00
                 order.is_paid=False
                 order.save()
             # email for approval

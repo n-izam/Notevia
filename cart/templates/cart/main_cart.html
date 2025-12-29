@@ -153,7 +153,8 @@
                         <div class="col-md-2 col-4 text-end total-col">
                             <del class="text-muted extra-small" style="font-size: 0.7rem;">Rs. {{item.cart_item.main_subtotal}}</del>
                             <strong class="small">Rs. {{item.cart_item.after_discount_subtotal}}</strong>
-                            <span class="text-success extra-small" style="font-size: 0.7rem;">-{{item.cart_item.discount_subtotal}}</span>
+                            <!-- <span class="text-success extra-small" style="font-size: 0.7rem;">-{{item.cart_item.discount_subtotal}}</span> -->
+                            <span class="text-success extra-small" style="font-size: 0.7rem;">-{{item.cart_item.discount_subtotal_amount}}</span>
                         </div>
                     </div>
                     {% endfor %}

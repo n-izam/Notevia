@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %} Add Variant {% endblock %}
+{% block title %} {% if request.resolver_match.url_name == 'add-variant' %}Add Variant{% else %} Edit Variant {% endif %}{% endblock %}
 <!-- {% block head %} {% endblock %} -->
 
 {% block content %}

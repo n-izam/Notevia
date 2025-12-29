@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %} Shope Page {{main_product.name}} {% endblock %}
+{% block title %} Shope Detail Page {{main_product.name}} {% endblock %}
 <!-- {% block head %} {% endblock %} -->
 {% block style %}
 <style>
@@ -198,8 +198,10 @@
                 
                 <div class="price-section d-flex align-items-center mb-3">
                     <span class="final-price">Rs. {{main_variant.final_price}}</span>
+                    {% if main_variant.discount_percent %}
                     <del class="base-price ms-2">Rs. {{main_variant.price}}</del>
                     <span class="discount-badge ms-2">{{main_variant.discount_percent}}% OFF</span>
+                    {% endif %}
                 </div>
                 
                 <div class="options-section mb-4">

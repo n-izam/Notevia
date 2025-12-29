@@ -55,7 +55,7 @@ class Order(models.Model):
         total_main_amount = self.total_amount()
         if self.coupon_amount:
             total_main_amount = self.total_amount() - self.coupon_amount
-        total_main_amount = total_main_amount + self.tax_amount()
+        total_main_amount = Decimal(total_main_amount + self.tax_amount())
         return round(total_main_amount, 2)
     
     def tax_amount(self):
@@ -92,7 +92,7 @@ class Order(models.Model):
         return sum(item.sub_discount() for item in self.items.filter(is_cancel=False).exclude(is_return=True))
 
 
-#  get order amount if it cancelld
+#  get order amount if it cancelld ( not proper return amount return is properly calculating the wallet model)
     @property
     def returned_amount(self):
         returned = Decimal(self.over_all_amount_all) - Decimal(self.over_all_amount)
@@ -153,9 +153,10 @@ class Order(models.Model):
     def delivery_date(self):
         return self.created_at + timedelta(days = 6)
     
-
+    def total_cancel_amount(self):
+        amount = sum(item.cancel_amount() for item in self.items.filter(is_cancel=True).exclude(is_return=True))
+        return amount
     
-
     # 👇 Helper method to get first product image
     def get_first_product_image(self):
         first_item = self.items.first()
@@ -251,9 +252,8 @@ class OrderItem(models.Model):
     
     #  return price with tax
     def return_with_tax_price(self):
-        tax_price = round((self.total_price()/self.order.total_amount_with_coupon_all()) * self.order.tax_amount_all(), 2)
-        total_return = self.total_price()
-        if self.order.coupon_amount:
+        
+        if self.order.coupon_code:
             
             # coupon_price = round((self.total_price()/self.order.total_amount()) * self.order.coupon_amount, 2)
             tax_price = round(((self.total_price()-self.coupon_discount())/self.order.total_amount_with_coupon_all()) * self.order.tax_amount_all(), 2)
@@ -264,14 +264,25 @@ class OrderItem(models.Model):
             self.order.coupon_amount -= self.coupon_discount()
             self.order.save()
             
-
-        
-        
+        else:
+            tax_price = round((self.total_price()/self.order.total_amount_with_coupon_all()) * self.order.tax_amount_all(), 2)
+            total_return = self.total_price()
 
         return round(total_return + tax_price, 2)
         
+
+    def cancel_amount(self):
+        total_amount = self.total_price()
+        tax_price = round((self.total_price()/self.order.total_amount_with_coupon_all()) * self.order.tax_amount_all())
+        if self.order.coupon_code:
+            coupon_price = self.order.coupon_amount_static
+            coupon_discount_price = round((self.total_price() / self.order.total_amount_all()) * coupon_price, 2)
+            tax_price = round(((self.total_price()-coupon_discount_price)/self.order.total_amount_with_coupon_all()) * self.order.tax_amount_all(), 2)
+            total_amount = self.total_price() - coupon_discount_price
+
+        return round(total_amount + tax_price, 2)
     
-    
+
     def __str__(self):
         return f"{self.product.name} (x{self.quantity})"
     

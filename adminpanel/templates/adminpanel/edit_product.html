@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NoteVia Admin Dashboard</title>
+    <title> Edit Product </title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -33,26 +33,26 @@
                 class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-product' %}active{% endif %}">
                     <i class="bi bi-box-seam-fill me-2"></i>Products
                 </a>
-                <a href="#" class="list-group-item list-group-item-action">
+                <a href="{% url 'admin_order_list' %}" class="list-group-item list-group-item-action">
                     <i class="bi bi-list-ul me-2"></i>Order List
                 </a>
                 <a href="{% url 'admin-customers' %}" 
                 class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-customers' %}active{% endif %}">
                     <i class="bi bi-person-fill me-2"></i>Customer
                 </a>
-                <a href="#" class="list-group-item list-group-item-action">
+                <a href="{% url 'admin_sales' %}" class="list-group-item list-group-item-action">
                     <i class="bi bi-currency-dollar me-2"></i>Sales
                 </a>
                 <a href="{% url 'admin-category' %}" 
                 class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'admin-category' %}active{% endif %}">
                     <i class="bi bi-grid-fill me-2"></i>Category
                 </a>
-                <a href="#" 
+                <a href="{% url 'admin_coupon_list' %}" 
                 class="list-group-item list-group-item-action ">
                     <i class="bi bi-ticket-perforated-fill me-2"></i>Coupons
                 </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <i class="bi bi-image-fill me-2"></i>Banner
+                <a href="{% url 'admin_View_transactions' %}" class="list-group-item list-group-item-action">
+                    <i class="bi bi-image-fill me-2"></i>Transactions
                 </a>
             </div>
             <div class="sidebar-footer">

@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %} productlist {% endblock %}
+{% block title %} Admin Order Detail {% endblock %}
 
 {% block head %} <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> {% endblock %}
 
@@ -307,6 +307,19 @@
                                 <span>₹{{order.over_all_amount_all}}</span>
                                 
                             </div>
+                            {% if order.return_price %}
+                            <div class="d-flex justify-content-between py-1 fw-light mb-0">
+                                <span>Ruturn Total</span>
+                                <span>₹{{order.return_price}}</span>
+                            </div>
+                            {% endif %}
+                            {% if order.total_cancel_amount %}
+                            <div class="d-flex justify-content-between py-1 fw-light mb-0">
+                                <span>Cancel Total</span>
+                                <span>₹{{order.total_cancel_amount}}</span>
+                            </div>
+                            {% endif %}
+
                             <hr>
                             <div class="d-flex justify-content-between align-items-center">
                                 <h6 class="mb-0">Status :</h6>
