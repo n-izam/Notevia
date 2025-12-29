@@ -114,23 +114,23 @@ WSGI_APPLICATION = 'notevia.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='mydb'),
-        'USER': config('DB_USER', default='user'),
-        'PASSWORD': config('DB_PASS', default='pass'),
-        'HOST': config('DB_HOST', default='localhost'),
-    }
-}
-
-# import dj_database_url
-
 # DATABASES = {
-#     'default': dj_database_url.config(
-#         default=config('DATABASE_URL')  # reads from .env
-#     )
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DB_NAME', default='mydb'),
+#         'USER': config('DB_USER', default='user'),
+#         'PASSWORD': config('DB_PASS', default='pass'),
+#         'HOST': config('DB_HOST', default='localhost'),
+#     }
 # }
+
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')  # reads from .env
+    )
+}
 
 
 # Password validation
