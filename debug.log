@@ -18066,3 +18066,202 @@ INFO 2025-12-29 20:07:24,558 autoreload 91663 8378845248 Watching for file chang
 INFO 2025-12-29 20:07:26,870 autoreload 91663 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/orders/models.py changed, reloading.
 INFO 2025-12-29 20:07:28,083 autoreload 91672 8378845248 Watching for file changes with StatReloader
 INFO 2025-12-30 11:43:58,223 autoreload 2287 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:11:51,669 autoreload 4424 8378845248 Watching for file changes with StatReloader
+DEBUG 2025-12-30 12:12:40,008 connectionpool 4424 6170013696 Starting new HTTPS connection (1): oauth2.googleapis.com:443
+DEBUG 2025-12-30 12:12:40,347 connectionpool 4424 6170013696 https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+ERROR 2025-12-30 12:12:40,904 log 4424 6170013696 Internal Server Error: /accounts/google/login/callback/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/options.py", line 683, in get_field
+    return self.fields_map[field_name]
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'username'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/providers/oauth2/views.py", line 102, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/providers/oauth2/views.py", line 151, in dispatch
+    return complete_social_login(request, login)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/helpers.py", line 67, in complete_social_login
+    return flows.login.complete_login(request, sociallogin)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/internal/flows/login.py", line 53, in complete_login
+    return _authenticate(request, sociallogin)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/internal/flows/login.py", line 80, in _authenticate
+    ret = process_signup(request, sociallogin)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/internal/flows/signup.py", line 117, in process_signup
+    get_account_adapter(request).clean_username(username)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/account/adapter.py", line 358, in clean_username
+    for validator in app_settings.USERNAME_VALIDATORS:
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/account/app_settings.py", line 585, in __getattr__
+    return getattr(_app_settings, name)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/account/app_settings.py", line 497, in USERNAME_VALIDATORS
+    ._meta.get_field(self.USER_MODEL_USERNAME_FIELD)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/options.py", line 685, in get_field
+    raise FieldDoesNotExist(
+        "%s has no field named '%s'" % (self.object_name, field_name)
+    )
+django.core.exceptions.FieldDoesNotExist: CustomUser has no field named 'username'
+INFO 2025-12-30 12:19:01,643 autoreload 4424 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:19:02,387 autoreload 4695 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:19:11,073 autoreload 4695 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:19:11,571 autoreload 4719 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:19:28,967 autoreload 4825 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-30 12:19:39,250 log 4825 6147878912 Not Found: /favicon.ico
+WARNING 2025-12-30 12:19:40,786 log 4825 6131052544 Not Found: /favicon.ico
+DEBUG 2025-12-30 12:19:49,222 connectionpool 4825 6131052544 Starting new HTTPS connection (1): oauth2.googleapis.com:443
+DEBUG 2025-12-30 12:19:49,594 connectionpool 4825 6131052544 https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+ERROR 2025-12-30 12:19:50,081 log 4825 6131052544 Internal Server Error: /accounts/google/login/callback/
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/options.py", line 683, in get_field
+    return self.fields_map[field_name]
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'username'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/providers/oauth2/views.py", line 102, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/providers/oauth2/views.py", line 151, in dispatch
+    return complete_social_login(request, login)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/helpers.py", line 67, in complete_social_login
+    return flows.login.complete_login(request, sociallogin)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/internal/flows/login.py", line 53, in complete_login
+    return _authenticate(request, sociallogin)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/internal/flows/login.py", line 80, in _authenticate
+    ret = process_signup(request, sociallogin)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/socialaccount/internal/flows/signup.py", line 117, in process_signup
+    get_account_adapter(request).clean_username(username)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/account/adapter.py", line 358, in clean_username
+    for validator in app_settings.USERNAME_VALIDATORS:
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/account/app_settings.py", line 585, in __getattr__
+    return getattr(_app_settings, name)
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/allauth/account/app_settings.py", line 497, in USERNAME_VALIDATORS
+    ._meta.get_field(self.USER_MODEL_USERNAME_FIELD)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nizam/python/week 9/noteVia_1/main1_env/lib/python3.13/site-packages/django/db/models/options.py", line 685, in get_field
+    raise FieldDoesNotExist(
+        "%s has no field named '%s'" % (self.object_name, field_name)
+    )
+django.core.exceptions.FieldDoesNotExist: CustomUser has no field named 'username'
+INFO 2025-12-30 12:20:05,740 autoreload 4825 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:20:06,280 autoreload 4862 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:20:09,653 autoreload 4862 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:20:10,053 autoreload 4873 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:20:13,405 autoreload 4873 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:20:13,745 autoreload 4882 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:20:18,116 autoreload 4882 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:20:18,468 autoreload 4893 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:20:21,879 autoreload 4893 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:20:22,273 autoreload 4899 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:20:24,564 autoreload 4899 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:20:24,901 autoreload 4906 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-30 12:20:33,183 log 4906 6185545728 Not Found: /favicon.ico
+INFO 2025-12-30 12:20:40,374 autoreload 5011 8378845248 Watching for file changes with StatReloader
+DEBUG 2025-12-30 12:21:02,614 connectionpool 5011 6123417600 Starting new HTTPS connection (1): oauth2.googleapis.com:443
+DEBUG 2025-12-30 12:21:02,908 connectionpool 5011 6123417600 https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+INFO 2025-12-30 12:21:22,353 autoreload 5011 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:22,943 autoreload 5066 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:24,272 autoreload 5066 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:24,607 autoreload 5071 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:25,862 autoreload 5071 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:26,295 autoreload 5074 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:27,617 autoreload 5074 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:27,937 autoreload 5078 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:29,175 autoreload 5078 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:29,497 autoreload 5083 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:31,777 autoreload 5083 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:32,097 autoreload 5091 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:33,339 autoreload 5091 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:33,659 autoreload 5096 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:36,121 autoreload 5096 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:36,476 autoreload 5104 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:40,832 autoreload 5104 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:41,188 autoreload 5113 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:42,427 autoreload 5113 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:42,759 autoreload 5116 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:44,005 autoreload 5116 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:44,333 autoreload 5122 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:45,600 autoreload 5122 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:45,964 autoreload 5125 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:47,228 autoreload 5125 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:47,561 autoreload 5128 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:48,816 autoreload 5128 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:49,132 autoreload 5133 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:50,552 autoreload 5133 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:50,854 autoreload 5136 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:52,112 autoreload 5136 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:52,435 autoreload 5139 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:57,847 autoreload 5139 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:58,288 autoreload 5149 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:21:59,554 autoreload 5149 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:21:59,901 autoreload 5154 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:01,196 autoreload 5154 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:01,636 autoreload 5158 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:02,896 autoreload 5158 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:03,273 autoreload 5161 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:04,497 autoreload 5161 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:04,938 autoreload 5167 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:13,628 autoreload 5167 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:13,992 autoreload 5181 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:15,284 autoreload 5181 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:15,606 autoreload 5186 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:16,878 autoreload 5186 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:17,218 autoreload 5190 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:18,512 autoreload 5190 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:18,834 autoreload 5194 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:20,196 autoreload 5194 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:20,629 autoreload 5201 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:41,577 autoreload 5201 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:42,060 autoreload 5215 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:45,413 autoreload 5215 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:45,775 autoreload 5225 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:22:51,191 autoreload 5225 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:22:51,528 autoreload 5235 8378845248 Watching for file changes with StatReloader
+DEBUG 2025-12-30 12:23:29,189 connectionpool 5235 6132232192 Starting new HTTPS connection (1): oauth2.googleapis.com:443
+DEBUG 2025-12-30 12:23:29,565 connectionpool 5235 6132232192 https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+INFO 2025-12-30 12:25:37,412 autoreload 5396 8378845248 Watching for file changes with StatReloader
+DEBUG 2025-12-30 12:25:51,871 connectionpool 5396 6193524736 Starting new HTTPS connection (1): oauth2.googleapis.com:443
+DEBUG 2025-12-30 12:25:52,274 connectionpool 5396 6193524736 https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+INFO 2025-12-30 12:26:04,959 autoreload 5396 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:26:05,508 autoreload 5427 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:26:06,816 autoreload 5427 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:26:07,161 autoreload 5432 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:26:08,460 autoreload 5432 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:26:08,895 autoreload 5435 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:26:10,179 autoreload 5435 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:26:10,489 autoreload 5438 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:26:11,759 autoreload 5438 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:26:12,121 autoreload 5443 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:26:14,415 autoreload 5443 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:26:14,772 autoreload 5447 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:26:16,127 autoreload 5447 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:26:16,531 autoreload 5452 8378845248 Watching for file changes with StatReloader
+DEBUG 2025-12-30 12:26:31,804 connectionpool 5452 6167834624 Starting new HTTPS connection (1): oauth2.googleapis.com:443
+DEBUG 2025-12-30 12:26:32,145 connectionpool 5452 6167834624 https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+INFO 2025-12-30 12:26:41,948 autoreload 5452 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:26:42,415 autoreload 5486 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:26:49,963 autoreload 5486 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:26:50,419 autoreload 5504 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 12:26:53,760 autoreload 5504 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 12:26:54,259 autoreload 5517 8378845248 Watching for file changes with StatReloader
+DEBUG 2025-12-30 12:27:07,990 connectionpool 5517 6137245696 Starting new HTTPS connection (1): oauth2.googleapis.com:443
+DEBUG 2025-12-30 12:27:08,278 connectionpool 5517 6137245696 https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
