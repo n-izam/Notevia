@@ -18265,3 +18265,8 @@ INFO 2025-12-30 12:26:53,760 autoreload 5504 8378845248 /Users/nizam/python/week
 INFO 2025-12-30 12:26:54,259 autoreload 5517 8378845248 Watching for file changes with StatReloader
 DEBUG 2025-12-30 12:27:07,990 connectionpool 5517 6137245696 Starting new HTTPS connection (1): oauth2.googleapis.com:443
 DEBUG 2025-12-30 12:27:08,278 connectionpool 5517 6137245696 https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+INFO 2025-12-30 14:34:34,777 autoreload 8614 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 14:40:44,552 autoreload 8860 8378845248 Watching for file changes with StatReloader
+INFO 2025-12-30 14:41:58,235 autoreload 8860 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
+INFO 2025-12-30 14:46:40,431 autoreload 9207 8378845248 Watching for file changes with StatReloader
+WARNING 2025-12-30 14:47:04,049 log 9207 6161444864 Not Found: /favicon.ico
