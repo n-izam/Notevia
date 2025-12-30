@@ -41,13 +41,13 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['notevia.mhdnisam.site', 'www.notevia.mhdnisam.site', '13.204.222.186', 'localhost', '127.0.0.1']
 
-SECURE_SETTINGS = os.getenv('PRODUCTION_SECURE', 'False').lower() == 'true'
+# SECURE_SETTINGS = os.getenv('PRODUCTION_SECURE', 'False').lower() == 'true'
 # Secure cookies over HTTPS only (required for login/Google Auth to work properly on HTTPS)
-SESSION_COOKIE_SECURE = SECURE_SETTINGS
-CSRF_COOKIE_SECURE = SECURE_SETTINGS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Extra safety: redirect HTTP → HTTPS (Certbot already does this via Nginx, but Django backup)
-SECURE_SSL_REDIRECT = SECURE_SETTINGS
+SECURE_SSL_REDIRECT = True
 
 # Recommended for better security (prevents clickjacking)
 SECURE_BROWSER_XSS_FILTER = True
