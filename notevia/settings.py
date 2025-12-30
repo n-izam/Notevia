@@ -48,6 +48,9 @@ CSRF_COOKIE_SECURE = True
 
 # Extra safety: redirect HTTP → HTTPS (Certbot already does this via Nginx, but Django backup)
 SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 # Recommended for better security (prevents clickjacking)
 SECURE_BROWSER_XSS_FILTER = True
