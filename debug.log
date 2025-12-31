@@ -18270,3 +18270,7 @@ INFO 2025-12-30 14:40:44,552 autoreload 8860 8378845248 Watching for file change
 INFO 2025-12-30 14:41:58,235 autoreload 8860 8378845248 /Users/nizam/python/week 9/noteVia_1/notevia/notevia/settings.py changed, reloading.
 INFO 2025-12-30 14:46:40,431 autoreload 9207 8378845248 Watching for file changes with StatReloader
 WARNING 2025-12-30 14:47:04,049 log 9207 6161444864 Not Found: /favicon.ico
+INFO 2025-12-31 10:57:23,865 autoreload 3201 8451098688 Watching for file changes with StatReloader
+WARNING 2025-12-31 10:58:49,002 log 3201 6193754112 Not Found: /favicon.ico
+WARNING 2025-12-31 11:14:59,253 log 3201 6193754112 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-12-31 11:15:05,851 log 3201 6193754112 Not Found: /.well-known/appspecific/com.chrome.devtools.json
