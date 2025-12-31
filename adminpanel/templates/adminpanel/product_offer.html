@@ -30,11 +30,11 @@
 <div class="container-fluid mt-4">
     <div class="add-offer-container">
         <h4 class="mb-4">{% if request.resolver_match.url_name == 'addproduct_offer' %}Add Offer {{product.name}} {% else %} Edit Offer '{{product.offer.title}}' from product {{product.name}} {% endif %}</h4>
-        <form action="{% if request.resolver_match.url_name == 'addproduct_offer' %} {% url 'addproduct_offer' product_id=product.id %} {% else %} {% url 'editproduct_offer' product_id=product.id %} {% endif %}" method="POST">
+        <form action="{% if request.resolver_match.url_name == 'addproduct_offer' %} {% url 'addproduct_offer' product_id=product.id %} {% else %} {% url 'editproduct_offer' product_id=product.id %} {% endif %}" method="POST" novalidate>
             {% csrf_token %}
             <div class="form-group">
                 <label for="offerTitle">Title</label>
-                <input type="text" class="form-control" name="offer_title" id="offerTitle" placeholder="e.g., Summer Sale" value="{% if request.resolver_match.url_name == 'addproduct_offer' %}{{ form.offer_title.value|default:'' }}{% else %} {{product.offer.title|default:''}} {% endif %}">
+                <input type="text" class="form-control" name="offer_title" id="offerTitle" placeholder="e.g., Summer Sale" value="{% if request.resolver_match.url_name == 'addproduct_offer' %}{{ form.offer_title.value|default:'' }}{% else %} {{product.offer.title|default:''}}{% endif %}">
                 {% if form.offer_title.errors %}
                     <p class="text-danger small">{{ form.offer_title.errors.0 }}</p>
                     {% endif %}
@@ -42,7 +42,7 @@
             <div class="form-group">
                 <label for="discountPercentage">Discount in Percentage</label>
                 <div class="input-group">
-                    <input type="number" class="form-control" name="discount" id="discountPercentage" placeholder="e.g., 25" value="{% if request.resolver_match.url_name == 'addproduct_offer' %}{{ form.discount.value|default:'' }}{% else %} {{product.offer.offer_percent|default:''}} {% endif %}">
+                    <input type="number" class="form-control" name="discount" id="discountPercentage" placeholder="e.g., 25" value="{% if request.resolver_match.url_name == 'addproduct_offer' %}{{ form.discount.value|default:'' }}{% else %}{{product.offer.offer_percent|default:''}}{% endif %}">
                     <div class="input-group-append">
                         <span class="input-group-text">%</span>
                     </div>

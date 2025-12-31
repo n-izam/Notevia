@@ -37,6 +37,10 @@ logger = logging.getLogger(__name__)
 class AdminSalesView(View):
 
     def get(self, request):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
         filter_type = request.GET.get('filter')
         custom_start = request.GET.get('start_date')
         custom_end = request.GET.get('end_date')

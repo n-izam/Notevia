@@ -17,6 +17,10 @@ from .forms import CouponForm
 class AdminCouponListingView(View):
 
     def get(self, request):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
 
         coupons = Coupon.objects.all().order_by('-valid_from')
 

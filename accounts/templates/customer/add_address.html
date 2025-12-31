@@ -134,10 +134,12 @@
                     <div class="col-md-6 mb-3 mb-md-4">
                         <label for="district" class="form-label">District</label>
                         <input type="text" class="form-control" id="district" name="district" placeholder="eg: Ernakulam" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.district.value|default:'' }}{% else %}{{edit_address.district}}{% endif %}" >
+                        {% if form.district.errors %}<p class="text-danger small mt-1">{{ form.district.errors.0 }}</p>{% endif %}
                     </div>
                     <div class="col-md-6 mb-3 mb-md-4">
                         <label for="state" class="form-label">State</label>
                         <input type="text" class="form-control" id="state" name="state" placeholder="eg: Kerala" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.state.value|default:'' }}{% else %}{{edit_address.state}}{% endif %}">
+                        {% if form.state.errors %}<p class="text-danger small mt-1">{{ form.state.errors.0 }}</p>{% endif %}
                     </div>
                 </div>
 
@@ -145,10 +147,12 @@
                     <div class="col-md-6 mb-3 mb-md-4">
                         <label for="city" class="form-label">City</label>
                         <input type="text" class="form-control" id="city" name="city" placeholder="eg: Kochi" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.city.value|default:'' }}{% else %}{{edit_address.city}}{% endif %}" >
+                        {% if form.city.errors %}<p class="text-danger small mt-1">{{ form.city.errors.0 }}</p>{% endif %}
                     </div>
                     <div class="col-md-6 mb-3 mb-md-4">
                         <label for="pinCode" class="form-label">Pin Code</label>
                         <input type="text" class="form-control" id="pinCode" name="pincode" placeholder="eg: 689230" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.pincode.value|default:'' }}{% else %}{{edit_address.pin_code}}{% endif %}" >
+                        {% if form.pincode.errors %}<p class="text-danger small mt-1">{{ form.pincode.errors.0 }}</p>{% endif %}
                     </div>
                 </div>
 
@@ -173,6 +177,7 @@
                     <div class="col-md-6 mb-4">
                         <label for="phoneNumber" class="form-label">Phone Number</label>
                         <input type="tel" class="form-control" id="phoneNumber" name="phone_no" placeholder="eg: +91 6892303458" value="{% if request.resolver_match.url_name == 'add_address' %}{{ form.phone_no.value|default:'' }}{% else %}{{edit_address.phone_no}}{% endif %}" >
+                        {% if form.phone_no.errors %}<p class="text-danger small mt-1">{{ form.phone_no.errors.0 }}</p>{% endif %}
                     </div>
                 </div>
 

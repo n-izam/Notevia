@@ -94,6 +94,10 @@ class AddressForm(forms.Form):
         phone = self.cleaned_data.get("phone_no")
         if phone and (not phone.isdigit() or len(phone) != 10):
             validationerror("Phone number must be exactly 10 digits")
+        elif phone:
+            pattern = r'^[6-9]\d{9}$'
+            if not re.match(pattern, phone):
+                validationerror("Enter a valid Indian mobile number")
         else:
             return phone
         
@@ -102,14 +106,16 @@ class AddressForm(forms.Form):
         
         if not re.match(r'^[A-Za-z\s]+$', full_name):
             validationerror("Name can contain only alphabets and spaces.")
-        elif not full_name or len(full_name) < 3:
-            validationerror("Name must contain greater that 3 charecters.")
+        elif not full_name or len(full_name) < 3 or len(full_name) > 20:
+            validationerror("Name must contain greater that 3 charecters. also not too long")
         else:
             return full_name
         
     def clean_address_field(self):
         address_field = self.cleaned_data.get("address_field")
-        if not address_field.replace(" ", "").isalpha():
+        if not address_field or len(address_field) < 15:
+            validationerror("Address must contain greater that 15 charecters.")
+        elif not address_field.replace(" ", "").isalpha():
             validationerror("Address can contain only alphabets and spaces.")
         else:
             return address_field

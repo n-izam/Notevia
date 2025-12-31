@@ -45,6 +45,10 @@ class AdminDashView(View):
     
     def get(self, request, user_id):
         # user = CustomUser.objects.filter(id = user_id)
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
         total_customers = CustomUser.objects.count()
         
         total_pending = Order.objects.filter(status='Pending').count()
@@ -180,6 +184,10 @@ class AdminDashView(View):
 @method_decorator(never_cache, name='dispatch')
 class AdminProductView(View):
     def get(self, request):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
 
         search_q = request.GET.get('q', '').strip()
         cat_option = request.GET.get('cat', '').strip()
@@ -227,6 +235,10 @@ class AdminProductView(View):
 @method_decorator(never_cache, name='dispatch')
 class AddProductView(LoginRequiredMixin, View):
     def get(self, request):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
         brands = Brand.objects.all()
         categories = Category.objects.filter(is_listed=True)
         return render(request, 'adminpanel/product_add.html', {
@@ -252,8 +264,15 @@ class AddProductView(LoginRequiredMixin, View):
                 errors['product_name'] = 'Product name can contain only alphabets and spaces.'
             if  len(product_name) < 4:
                 errors['product_name'] = 'proper product name needed'
+            if  len(product_name) > 30:
+                errors['product_name'] = 'proper product name needed, name too long'
             if not product_description:
                 errors['product_description'] = 'Product description is required.'
+            if  len(product_description) < 17:
+                errors['product_description'] = 'proper product description length needed, '
+            
+            if not product_description.replace(" ", "").replace(".", "").replace(",", "").replace("-", "").isalpha():
+                errors['product_description'] = 'product description can contain only alphabets and spaces.'
             if not category_id or not Category.objects.filter(id=category_id, is_listed=True).exists():
                 errors['category'] = 'Valid category is required.'
             if not brand_id or not Brand.objects.filter(id=brand_id).exists():
@@ -285,12 +304,25 @@ class AddProductView(LoginRequiredMixin, View):
                 errors['variant_name'] = 'Variant name can contain only alphabets and spaces.'
             if  len(variant_name) < 4:
                 errors['variant_name'] = 'proper Variant name needed'
-            if not variant_price or not re.match(r'^\d+(\.\d{1,2})?$', variant_price):
-                errors['variant_price'] = 'Variant price must be a valid number (e.g., 99.99).'
-            if not variant_stock.isdigit() or int(variant_stock) < 0:
+            if  len(variant_name) > 25:
+                errors['variant_name'] = 'proper Variant name needed, given name too long'
+            if  len(variant_description) < 15:
+                errors['variant_description'] = 'proper Variant description length needed'
+            if not variant_description.replace(" ", "").replace(".", "").replace(",", "").replace("-", "").isalpha():
+                errors['variant_description'] = 'Variant description can contain only alphabets and spaces.'
+            
+            if (
+                not variant_price
+                or not re.match(r'^\d+(\.\d{1,2})?$', variant_price)
+                or float(variant_price) == 0
+                or len(variant_price) > 7
+                or len(variant_price) < 2
+            ):
+                errors['variant_price'] = 'Variant price must be greater than zero, Please enter a sensible amount.'
+            if not variant_stock.isdigit() or int(variant_stock) == 0:
                 errors['variant_stock'] = 'Variant stock must be a non-negative integer.'
-            if not re.match(r'^(100(\.00?)?|[0-9]?\d(\.\d{1,2})?)$', variant_discount):
-                errors['variant_discount'] = 'Variant percentage must be a valid number (e.g., 0 to 100.00) or 0.'
+            if not re.match(r'^(80(\.00?)?|[0-7]?\d(\.\d{1,2})?)$', str(variant_discount)):
+                errors['variant_discount'] = 'Variant percentage must be a valid number (e.g., 0 to 80.00) or 0.'
 
             if errors:
                 return JsonResponse({'success': False, 'errors': errors}, status=400)
@@ -339,7 +371,7 @@ class AddProductView(LoginRequiredMixin, View):
                     #     stock=int(variant_stock),
                     #     is_listed=variant_is_listed
                     # )
-
+                success_notify(request, "Product added successfully!")
                 return JsonResponse({'success': True, 'message': 'Product added successfully!'})
             except Exception as e:
                 return JsonResponse({"error": str(e)}, status=400)
@@ -354,6 +386,10 @@ class AddProductView(LoginRequiredMixin, View):
 class EditProductView(View):
 
     def get(self, request, product_id):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
         product = get_object_or_404(Product, id=product_id)
         brands = Brand.objects.all()
         # existing_images = list(product.images.all().order_by('id'))
@@ -391,8 +427,15 @@ class EditProductView(View):
                 errors['product_name'] = 'Product name can contain only alphabets and spaces.'
             if  len(product_name) < 4:
                 errors['product_name'] = 'proper product name needed'
+            if  len(product_name) > 30:
+                errors['product_name'] = 'proper product name needed, name too long'
             if not product_description:
                 errors['product_description'] = 'Product description is required.'
+            
+            if  len(product_description) < 17:
+                errors['product_description'] = 'proper product description length needed, '
+            if not product_description.replace(" ", "").replace(".", "").replace(",", "").replace("-", "").isalpha():
+                errors['product_description'] = 'Product description can contain only alphabets and spaces.'
             if not category_id or not Category.objects.filter(id=category_id, is_listed=True).exists():
                 errors['category'] = 'Valid category is required.'
             if not brand_id or not Brand.objects.filter(id=brand_id).exists():
@@ -494,8 +537,8 @@ class EditProductView(View):
 
             
             
-
-                return JsonResponse({'success': True, 'message': 'Product added successfully!'})
+                success_notify(request, "Product updated successfully!")
+                return JsonResponse({'success': True, 'message': 'Product updated successfully!'})
             except Exception as e:
                 return JsonResponse({"error": str(e)}, status=400)
                 
@@ -506,6 +549,10 @@ class EditProductView(View):
 @method_decorator(never_cache, name='dispatch')
 class AddProductOfferView(View):
     def get(self, request, product_id): # add product id
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
         product = get_object_or_404(Product, id=product_id)
 
         errors = request.session.pop("add_offer_error", None)
@@ -541,7 +588,7 @@ class AddProductOfferView(View):
             
 
             offer = Offer.objects.create(
-                title=form.cleaned_data['offer_title'],
+                title=request.POST.get('offer_title'),
                 offer_percent=form.cleaned_data['discount'],
                 about=form.cleaned_data['about'],
                 start_date=form.cleaned_data['start_date'],  # ✅ date object
@@ -565,6 +612,10 @@ class AddProductOfferView(View):
 @method_decorator(never_cache, name='dispatch')
 class EditProductOfferView(View):
     def get(sel, request, product_id): #add product is also
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
         product = get_object_or_404(Product, id=product_id)
 
         errors = request.session.pop("edit_product_offer_error", None)
@@ -606,7 +657,7 @@ class EditProductOfferView(View):
 
             offer = get_object_or_404(Offer, id=product.offer_id)
 
-            offer.title = form.cleaned_data['offer_title']
+            offer.title = title
             offer.about = form.cleaned_data['about']
             offer.offer_percent = offer_discount
             offer.start_date = form.cleaned_data['start_date']
@@ -626,6 +677,10 @@ class EditProductOfferView(View):
 class RemoveProductOfferView(View):
 
     def get(self, request, product_id):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
 
         product = get_object_or_404(Product, id=product_id)
         product.offer = None
@@ -684,6 +739,10 @@ class AddBrandView(LoginRequiredMixin, View):
 class AdminCustomersView(View):
     
     def get(self, request):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
 
         search_q = request.GET.get('q', '').strip()
         page = request.GET.get('page', 1)
@@ -738,6 +797,10 @@ class ToggleCustomerStatusView(View):
 class AdminCategoryView(View):
 
     def get(self, request):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
 
         search_q = request.GET.get('q', '').strip()
 
@@ -766,6 +829,10 @@ class TogglCategoryStatusView(View):
 class AddCategoryView(View):
 
     def get(self, request):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
 
         errors = request.session.pop("add_category_error", None)
         data = request.session.pop("add_category_data", None)
@@ -804,6 +871,10 @@ class AddCategoryView(View):
             
             if len(description) < 10:
                 request.session["add_category_error"] = {"description": ["proper description needed"]}
+                request.session["add_category_data"] = request.POST
+                return redirect('add-category')
+            if not description.replace(" ", "").replace(".", "").replace(",", "").replace("-", "").isalpha():
+                request.session["add_category_error"] = {"description": [" description can contain only alphabets and spaces."]}
                 request.session["add_category_data"] = request.POST
                 return redirect('add-category')
 
@@ -858,7 +929,9 @@ class CategoryUpdateView(UpdateView):
             form.add_error('description',"please leave, proper description required")
             return self.form_invalid(form)
         
-        
+        if not description.replace(" ", "").replace(".", "").replace(",", "").replace("-", "").isalpha():
+            form.add_error('description',"description can contain only alphabets and spaces.")
+            return self.form_invalid(form)
         
         if len(name) < 4:
             form.add_error('name',"give the proper category name")
@@ -892,6 +965,10 @@ class CategoryUpdateView(UpdateView):
 @method_decorator(never_cache, name='dispatch')
 class AddCategoryOffer(View):
     def get(self, request, category_id):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
         category = get_object_or_404(Category, id=category_id)
         today = timezone.now().date()
         
@@ -940,7 +1017,7 @@ class AddCategoryOffer(View):
             #     start_date=start_date, end_date=end_date,
             # )
             offer = Offer.objects.create(
-                title=form.cleaned_data['offer_title'],
+                title=title,
                 offer_percent=form.cleaned_data['discount'],
                 about=form.cleaned_data['about'],
                 start_date=form.cleaned_data['start_date'],  # ✅ date object
@@ -962,6 +1039,10 @@ class AddCategoryOffer(View):
 class EditCategoryOffer(View):
 
     def get(self, request, category_id):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
 
         category = get_object_or_404(Category, id=category_id)
         errors = request.session.pop("edit_category_offer_error", None)
@@ -989,6 +1070,7 @@ class EditCategoryOffer(View):
 
         form = OfferForm(request.POST)
         if form.is_valid():
+            offer_title = request.POST.get('offer_title')
             title = form.cleaned_data['offer_title']
             about = form.cleaned_data['about']
             discount = form.cleaned_data['discount']
@@ -1001,7 +1083,7 @@ class EditCategoryOffer(View):
             # end_date = datetime.strptime(end_date, '%m/%d/%Y').date()
 
 
-            offer.title = title
+            offer.title = offer_title
             offer.about = about
             offer.offer_percent = discount
             offer.start_date = start_date
@@ -1053,6 +1135,10 @@ class CategoryDeleteView(DeleteView):
 class ViewVariantView(View):
 
     def get(self, request, product_id):# we see variants for specific product in product addinf time use (product id)
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
 
         product = get_object_or_404(Product, id=product_id)
         variants = Variant.objects.filter(product_id=product_id)
@@ -1064,6 +1150,10 @@ class ViewVariantView(View):
 class AddVariantView(View):
 
     def get(self, request, product_id):# we add variants for specific product in product addinf time use (product id)
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
 
         product = get_object_or_404(Product, id=product_id)
 
@@ -1120,6 +1210,10 @@ class AddVariantView(View):
 class EditVariantView(View):
 
     def get(self, request, variant_id):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
         
         variant = get_object_or_404(Variant, id=variant_id)
         product = get_object_or_404(Product, id=variant.product.id)

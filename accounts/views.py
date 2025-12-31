@@ -214,7 +214,7 @@ class VerifySignUpOTPView(View):
             return redirect("signin")
         else:
             otp_obj.delete()
-            error_notify('otp expiried try again')
+            error_notify(request, 'otp expiried try again')
             return redirect("signup")
         
 @method_decorator(never_cache, name='dispatch')

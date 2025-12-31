@@ -15,6 +15,13 @@ class OfferForm(forms.Form):
     start_date = forms.DateField(required=True, input_formats=['%d/%m/%Y'])
     end_date = forms.DateField(required=True, input_formats=['%d/%m/%Y'])
 
+    def clean_offer_title(self):
+        offer_title = self.cleaned_data.get('offer_title')
+        if len(offer_title) < 4 or len(offer_title) > 15:
+            validationerror('proper Offer name needed, not too long or too small' )
+        else:
+            return offer_title
+
     def clean_start_date(self):
         today = timezone.now().date()
         start_date = self.cleaned_data.get('start_date')
@@ -37,8 +44,19 @@ class OfferForm(forms.Form):
         discount = self.cleaned_data.get('discount')
         if discount <= 0:
             validationerror("discount must be a positive number")
+        elif not re.match(r'^(80(\.00?)?|[0-7]?\d(\.\d{1,2})?)$', str(discount)):
+            validationerror("Offer percentage must be a valid number (e.g., 1 to 80.00) or 0.")
         else:
             return discount
+    
+    def clean_about(self):
+        about = self.cleaned_data.get('about')
+        if len(about) < 9:
+            validationerror('proper Offer description needed.')
+        elif not about.replace(" ", "").replace(".", "").replace(",", "").replace("-", "").replace("!", "").isalpha():
+            validationerror('Offer description can contain only alphabets and spaces.')
+        else:
+            return about
         
 class VariantForm(forms.Form):
     
@@ -53,8 +71,8 @@ class VariantForm(forms.Form):
     def clean_discount_percent(self):
         discount_percent = self.cleaned_data.get('discount_percent')
 
-        if not re.match(r'^(100(\.00?)?|[0-9]?\d(\.\d{1,2})?)$', str(discount_percent)):
-                validationerror('Variant percentage must be a valid number (e.g., 0 to 100.00) or 0.')
+        if not re.match(r'^(80(\.00?)?|[0-7]?\d(\.\d{1,2})?)$', str(discount_percent)):
+                validationerror('Variant percentage must be a valid number (e.g., 0 to 80.00) or 0.')
         else:
             return discount_percent
         
@@ -65,6 +83,8 @@ class VariantForm(forms.Form):
                 
         elif  len(name) < 4:
             validationerror('proper Variant name needed more character')
+        elif  len(name) > 25:
+            validationerror('proper Variant name needed, given name too long')
             
         else:
             return name
@@ -79,7 +99,10 @@ class VariantForm(forms.Form):
     def clean_price(self):
         price = self.cleaned_data.get('price')
         if price <= 0:
-            validationerror("stock must be a positive number")
+            validationerror("price must be a positive number")
+        elif not re.match(r'^\d+(\.\d{1,2})?$', str(price)):
+            validationerror("Please enter a sensible amount.")
+    
         else:
             return price
         

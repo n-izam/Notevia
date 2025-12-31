@@ -299,6 +299,15 @@ class PlaceOrderView(View):
                 # url = f'{reverse("order_confirmation")}?address={address.id}'
                 return redirect('order_confirmation')
         
+        wallet, create = Wallet.objects.get_or_create(user=request.user)
+        # wallet = get_object_or_404(Wallet, user=request.user)
+        if wallet.balance < Decimal(final_over_all_amount):
+            
+
+            error_notify(request, "Insufficient wallet balance, try an another method")
+            # url = f'{reverse("order_confirmation")}?address={address.id}'
+            return redirect('order_confirmation')
+        
         address = get_object_or_404(Address, id=address_id)
         
         if not Cart.objects.filter(user=request.user).exists():
@@ -382,11 +391,17 @@ class PlaceOrderView(View):
 
             request.session["payment_confirm"] = True
             request.session['session_order'] = order.id
+            if request.session.get('selected_address'):
+                request.session.pop('selected_address', None)
             return redirect('order_success', order_id=order.id)
         elif payment_method == 'Wallet':
             wallet, create = Wallet.objects.get_or_create(user=request.user)
             # wallet = get_object_or_404(Wallet, user=request.user)
             if wallet.balance < order.over_all_amount:
+                for item in order.items.all():
+                    item.variant.stock += item.quantity
+                    item.variant.save()
+
                 order.items.all().delete()
                 order.orders_address.delete()
                 order.delete()
@@ -410,6 +425,8 @@ class PlaceOrderView(View):
             cart.items.filter(is_active=True).delete()
             request.session["payment_confirm"] = True
             request.session['session_order'] = order.id
+            if request.session.get('selected_address'):
+                request.session.pop('selected_address', None)
             return redirect('order_success', order_id=order.id)
         
         elif payment_method == 'ONLINE':
@@ -1078,6 +1095,10 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
 
     def get(self, request):
         # user_profile = get_object_or_404(UserProfile, user=request.user)
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
         if request.session.get('payment_confirm'):
             if request.session.get('session_order'):
                 order_id = request.session.get('session_order')
@@ -1166,6 +1187,10 @@ class AdminSideOrderListingView(OrderStatusUpdateByDateMixin,View):
 class AdminOrderDetailView(View):
 
     def get(self, request, order_id):
+        if request.user.is_authenticated:
+            if not request.user.is_superuser:
+                
+                return redirect("cores-home", user_id=request.user.id)
 
         # user_profile = get_object_or_404(UserProfile, user=request.user)
         order = get_object_or_404(Order, id=order_id)

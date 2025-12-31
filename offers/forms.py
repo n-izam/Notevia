@@ -64,8 +64,9 @@ class CouponForm(forms.Form):
         discount = self.cleaned_data.get('discount')
         if discount <= 0:
             validationerror("discount must be a positive number")
-        elif not re.match(r'^(100(\.00?)?|[0-9]?\d(\.\d{1,2})?)$', str(discount)):
-                validationerror('Coupon percentage must be a valid number (e.g., 1 to 100.00)')
+        # elif not re.match(r'^(100(\.00?)?|[0-9]?\d(\.\d{1,2})?)$', str(discount)):
+        elif not re.match(r'^(80(\.00?)?|[0-7]?\d(\.\d{1,2})?)$', str(discount)):
+                validationerror('Coupon percentage must be a valid number (e.g., 1 to 80.00)')
         else:
             return discount
         
