@@ -20770,3 +20770,10 @@ INFO 2025-12-31 22:07:16,129 autoreload 17967 8451098688 /Users/nizam/python/wee
 INFO 2025-12-31 22:07:16,433 autoreload 17970 8451098688 Watching for file changes with StatReloader
 INFO 2025-12-31 22:07:17,706 autoreload 17970 8451098688 /Users/nizam/python/week 9/noteVia_1/notevia/accounts/forms.py changed, reloading.
 INFO 2025-12-31 22:07:18,001 autoreload 17979 8451098688 Watching for file changes with StatReloader
+INFO 2026-01-01 20:31:52,147 autoreload 29980 8451098688 Watching for file changes with StatReloader
+WARNING 2026-01-01 20:32:15,581 log 29980 6196572160 Not Found: /favicon.ico
+INFO 2026-01-01 20:33:22,354 views 29980 6196572160 the item count is :0
+INFO 2026-01-01 20:33:33,868 views 29980 6213398528 the item count is :1
+INFO 2026-01-01 20:33:39,946 views 29980 6196572160 the item count is :2
+DEBUG 2026-01-01 20:34:39,368 connectionpool 29980 6196572160 Starting new HTTPS connection (1): api.razorpay.com:443
+DEBUG 2026-01-01 20:34:40,625 connectionpool 29980 6196572160 https://api.razorpay.com:443 "POST /v1/orders HTTP/1.1" 200 219

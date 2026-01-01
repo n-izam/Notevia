@@ -298,15 +298,15 @@ class PlaceOrderView(View):
                 info_notify(request, "The order amount is geater than 1000, try an another payment method")
                 # url = f'{reverse("order_confirmation")}?address={address.id}'
                 return redirect('order_confirmation')
-        
-        wallet, create = Wallet.objects.get_or_create(user=request.user)
-        # wallet = get_object_or_404(Wallet, user=request.user)
-        if wallet.balance < Decimal(final_over_all_amount):
-            
+        if payment_method == 'Wallet':
+            wallet, create = Wallet.objects.get_or_create(user=request.user)
+            # wallet = get_object_or_404(Wallet, user=request.user)
+            if wallet.balance < Decimal(final_over_all_amount):
+                
 
-            error_notify(request, "Insufficient wallet balance, try an another method")
-            # url = f'{reverse("order_confirmation")}?address={address.id}'
-            return redirect('order_confirmation')
+                error_notify(request, "Insufficient wallet balance, try an another method")
+                # url = f'{reverse("order_confirmation")}?address={address.id}'
+                return redirect('order_confirmation')
         
         address = get_object_or_404(Address, id=address_id)
         
